@@ -1,10 +1,16 @@
 import React from 'react';
 import { Outlet } from 'react-router';
+import Navbar from '../../Components/Shared/Navbar/Navbar';
+import Footer from '../../Components/Shared/Footer/Footer';
 
 const MainLayout = () => {
     return (
         <div>
-           <Outlet></Outlet>
+            <Navbar></Navbar>
+            <div className="max-w-[1440px] mx-auto">
+                <Outlet></Outlet>
+            </div>
+            <Footer></Footer>
         </div>
     );
 };
