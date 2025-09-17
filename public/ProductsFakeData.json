@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "name": "Gigabyte A16 GA6H Core i7 13th Gen 16\" FHD+ WUXGA Nvidia RTX 5050 Gaming Laptop",
+    "processor": "Intel Core i7-13620H (24MB Cache, Up to 4.9GHz)",
+    "ram": "16GB DDR5 5200MHz",
+    "storage": "512GB PCIe Gen4x4 SSD",
+    "graphics": "Nvidia RTX 5050 8GB GDDR6",
+    "features": ["RGB Backlit Keyboard", "Type-C", "Wi-Fi 6E"],
+    "price": "145000৳",
+    "image": "https://i.ibb.co.com/TBPDcXc8/1.webp"
+  },
+  {
+    "id": 2,
+    "name": "Gigabyte A16 GA6H Core i7 13th Gen 16\" FHD+ Gaming Laptop",
+    "processor": "Intel Core i7-13620H (24MB Cache, Up to 4.9GHz)",
+    "ram": "16GB DDR5 5200MHz",
+    "storage": "512GB PCIe Gen4x4 SSD",
+    "graphics": "Nvidia RTX 5050 8GB GDDR6",
+    "features": ["RGB Backlit Keyboard", "Thunderbolt 4", "Wi-Fi 6E"],
+    "price": "144500৳",
+    "image": "https://i.ibb.co.com/N6Cv0pGY/2.webp"
+  },
+  {
+    "id": 3,
+    "name": "Gigabyte A16 GA6H Core i7 Gaming Laptop RTX 5050",
+    "processor": "Intel Core i7-13620H (Up to 4.9GHz)",
+    "ram": "16GB DDR5",
+    "storage": "512GB SSD",
+    "graphics": "Nvidia RTX 5050 8GB",
+    "features": ["Backlit Keyboard", "Type-C", "Wi-Fi 6E"],
+    "price": "143500৳",
+    "image": "https://i.ibb.co.com/gLWxYh6R/3.webp"
+  },
+  {
+    "id": 4,
+    "name": "Gigabyte A16 GA6H Gaming Laptop 13th Gen i7",
+    "processor": "Intel Core i7-13620H",
+    "ram": "16GB DDR5 5200MHz",
+    "storage": "512GB PCIe SSD",
+    "graphics": "Nvidia RTX 5050",
+    "features": ["RGB Keyboard", "Type-C", "HD Webcam"],
+    "price": "145500৳",
+    "image": "https://i.ibb.co.com/7dr66wg6/4.webp"
+  },
+  {
+    "id": 5,
+    "name": "Gigabyte GA6H RTX 5050 Gaming Laptop",
+    "processor": "Intel Core i7-13620H (24MB Cache, 4.9GHz)",
+    "ram": "16GB DDR5",
+    "storage": "512GB SSD",
+    "graphics": "Nvidia RTX 5050 8GB",
+    "features": ["Wi-Fi 6E", "RGB Keyboard", "HDMI 2.1"],
+    "price": "142500৳",
+    "image": "https://i.ibb.co.com/9kzpmqF1/5.webp"
+  },
+  {
+    "id": 6,
+    "name": "Gigabyte A16 RTX 5050 Gaming Laptop",
+    "processor": "Intel Core i7-13620H (24MB Cache, Up to 4.9GHz)",
+    "ram": "16GB DDR5 5200MHz",
+    "storage": "512GB PCIe SSD",
+    "graphics": "Nvidia RTX 5050 8GB",
+    "features": ["Backlit Keyboard", "USB 3.2", "Wi-Fi 6E"],
+    "price": "146000৳",
+    "image": "https://i.ibb.co.com/Q7sdWYbD/6.webp"
+  },
+  {
+    "id": 7,
+    "name": "Gigabyte A16 16\" RTX 5050 Laptop",
+    "processor": "Intel Core i7-13620H",
+    "ram": "16GB DDR5",
+    "storage": "512GB SSD",
+    "graphics": "Nvidia RTX 5050",
+    "features": ["RGB Keyboard", "Type-C", "Wi-Fi 6E"],
+    "price": "145200৳",
+    "image": "https://i.ibb.co.com/gLWxYh6R/3.webp"
+  },
+  {
+    "id": 8,
+    "name": "Gigabyte GA6H Core i7 13th Gen RTX 5050",
+    "processor": "Intel Core i7-13620H (24MB Cache)",
+    "ram": "16GB DDR5",
+    "storage": "512GB SSD",
+    "graphics": "Nvidia RTX 5050 8GB",
+    "features": ["Wi-Fi 6E", "Type-C", "HD Webcam"],
+    "price": "143800৳",
+    "image": "https://i.ibb.co.com/zT3hgXWB/8.webp"
+  },
+  {
+    "id": 9,
+    "name": "Gigabyte A16 RTX 5050 16GB Gaming Laptop",
+    "processor": "Intel Core i7-13620H (24MB Cache, Up to 4.9GHz)",
+    "ram": "16GB DDR5",
+    "storage": "512GB SSD",
+    "graphics": "Nvidia RTX 5050 8GB GDDR6",
+    "features": ["RGB Backlit Keyboard", "HDMI 2.1", "Wi-Fi 6E"],
+    "price": "144000৳",
+    "image": "https://i.ibb.co.com/v4jtZqmb/9.webp"
+  },
+  {
+    "id": 10,
+    "name": "Gigabyte A16 GA6H Core i7 13th Gen RTX 5050 Gaming Laptop",
+    "processor": "Intel Core i7-13620H",
+    "ram": "16GB DDR5 5200MHz",
+    "storage": "512GB SSD",
+    "graphics": "Nvidia RTX 5050",
+    "features": ["RGB Keyboard", "Wi-Fi 6E", "USB Type-C"],
+    "price": "145800৳",
+    "image": "https://i.ibb.co.com/0jwTwn0J/10.webp"
+  }
+]
