@@ -4,10 +4,8 @@ import './index.css'
 import { RouterProvider } from 'react-router-dom';
 import MainRoute from './router/MainRoute.jsx';
 
-
-
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-  <RouterProvider router={MainRoute} />,
+  <RouterProvider router={MainRoute} />
   </StrictMode>,
 )

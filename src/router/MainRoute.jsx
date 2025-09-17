@@ -22,7 +22,6 @@ const MainRoute = createBrowserRouter([
         path: "/mobile",
         Component: Mobile
       },
-      
     ]
   },
 ]);
