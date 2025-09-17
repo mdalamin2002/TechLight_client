@@ -1,42 +1,39 @@
 import React from "react";
+import { FiShoppingCart, FiHeart, FiEye } from "react-icons/fi";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
-import { FcViewDetails } from "react-icons/fc";
 
 const products = [
   {
     id: 1,
-    name: "4K Smart TV",
-    price: "$899",
-    image: "https://i.ibb.co.com/W4N2qq64/O9FG5V0.jpg",
-    description: "Ultra HD 55-inch Smart TV with HDR10 and voice control.",
-    rating: 4.6
+    name: "Smartphone X200",
+    price: "$699",
+    image: "https://i.ibb.co.com/h1Bm9YKW/330788-P9-NVVS-165.jpg",
+    description: "High-performance smartphone with 5G and 128GB storage.",
+    rating: 4.5
   },
   {
     id: 2,
-    name: "Bluetooth Speaker",
-    price: "$149",
-    image: "https://i.ibb.co.com/hFNZ14Vd/high-angle-smart-speaker-home.jpg",
-    description: "Portable waterproof Bluetooth speaker with deep bass.",
-    rating: 4.3
+    name: "Gaming Laptop Pro",
+    price: "$1199",
+    image: "https://i.ibb.co.com/6JPFHv1b/c9e100cb-9265-43f6-9142-ba4e46f4c003.jpg",
+    description: "Powerful laptop with RTX graphics and 16GB RAM.",
+    rating: 4.8
   },
   {
     id: 3,
-    name: "DSLR Camera Pro",
-    price: "$1299",
-    image: "https://i.ibb.co.com/mr4ZPFTw/photo-camera-still-life.jpg",
-    description: "Professional DSLR with 24MP sensor and 4K video recording.",
-    rating: 4.9
+    name: "Wireless Headphones",
+    price: "$199",
+    image: "https://i.ibb.co/W48n2kWQ/headphones-displayed-against-dark-background.jpg",
+    description: "Noise-canceling headphones with 30h battery life.",
+    rating: 4.2
   },
-  
-
-
   {
     id: 4,
-    name: "Gaming Console Z",
-    price: "$499",
-    image: "https://i.ibb.co.com/nqdMmt5d/high-angle-controller-vr-glasses.jpg",
-    description: "Next-gen gaming console with ultra-fast loading and 1TB SSD.",
-    rating: 4.7
+    name: "Smartwatch Z3",
+    price: "$249",
+    image: "https://i.ibb.co.com/svd0VLbf/rendering-smart-home-device.jpg",
+    description: "Stylish smartwatch with health adsf aalk;dj dlas f;afldas fakfl;af kfl;dasf",
+    rating: 4.0
   }
 ];
 
@@ -55,15 +52,17 @@ const Rating = ({ value }) => {
   return <div className="flex items-center gap-1 mt-1">{stars}</div>;
 };
 
-const FeaturedSection = () => {
-  
+const TopProducts = () => {
+  const handleAddToCart = (name) => alert(`${name} added to cart!`);
+  const handleWishlist = (name) => alert(`${name} added to wishlist!`);
+  const handleQuickView = (name) => alert(`Quick view for ${name}`);
 
   return (
-    <section className="py-8 bg-background">
+    <section className="py-5 bg-background">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Heading */}
         <div className="flex items-center justify-between mb-12">
-          <h2 className="text-3xl font-bold text-dark">Featured Section</h2>
+          <h2 className="text-3xl font-bold text-dark">Top Selling Electronics</h2>
           <button
             type="button"
             className="hidden sm:inline-block text-sm font-medium px-5 py-2 rounded-lg border border-accent text-accent hover:bg-accent hover:text-primary transition"
@@ -84,12 +83,52 @@ const FeaturedSection = () => {
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-102"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
                 />
+
+                {/* Hover Buttons */}
+                <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition">
+                  <button
+                    onClick={() => handleWishlist(product.name)}
+                    className="p-2 rounded-full bg-white shadow hover:bg-red-400 hover:bg-accent hover:text-primary transition"
+                    aria-label="Wishlist"
+                  >
+                    <FiHeart size={18} />
+                  </button>
+                  <button
+                    onClick={() => handleQuickView(product.name)}
+                    className="p-2 rounded-full bg-white shadow hover:bg-green-200 hover:bg-accent hover:text-primary transition"
+                    aria-label="Quick View"
+                  >
+                    <FiEye size={18} />
+                  </button>
+                </div>
               </div>
 
-              
+              {/* Product Info */}
+              <div className="p-4 flex flex-col flex-1 justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-dark">{product.name}</h3>
+                  <p className="text-sm text-subtext mt-2 line-clamp-3">{product.description}</p>
+                </div>
+                <div className="flex items-center mt-2 gap-2">
+                  <Rating value={product.rating} /><span className="text-[11px]">120</span>
+                </div>
+
+                {/* Price + Cart */}
+                <div className="mt-2 flex items-center justify-between">
+                  <span className="text-xl font-bold text-dark">{product.price}</span>
+                  <button
+                    onClick={() => handleAddToCart(product.name)}
+                    
+                    className=" flex items-center gap-2 px-3 py-2 bg-[#3749BB] text-[#FFFFFF] text-sm font-medium rounded-lg hover:opacity-90 transition"
+                  >
+                    <FiShoppingCart size={16} />
+                    Add
+                  </button>
+                </div>
+              </div>
             </article>
           ))}
         </div>
@@ -98,4 +137,4 @@ const FeaturedSection = () => {
   );
 };
 
-export default FeaturedSection;
+export default TopProducts;
