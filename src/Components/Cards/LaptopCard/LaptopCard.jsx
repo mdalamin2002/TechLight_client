@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router";
 
 const LaptopCard = ({ laptop }) => {
-  const { name, image, processor, graphics, ram, storage, features, price } = laptop;
+  const { name, image, processor, graphics, ram, features, price } = laptop;
   console.log(laptop);
   return (
     <div className="bg-white p-4 flex flex-col shadow-lg rounded-lg">
