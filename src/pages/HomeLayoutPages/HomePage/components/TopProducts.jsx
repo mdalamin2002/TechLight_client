@@ -113,7 +113,7 @@ const TopProducts = () => {
                   <p className="text-sm text-subtext mt-2 line-clamp-3">{product.description}</p>
                 </div>
                 <div className="flex items-center mt-2 gap-2">
-                  <Rating value={product.rating} /><span className="text-[11px]">120</span>
+                  <Rating value={product.rating} /><span className="text-[11px]">420</span>
                 </div>
 
                 {/* Price + Cart */}
