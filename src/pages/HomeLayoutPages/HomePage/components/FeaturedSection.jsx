@@ -90,7 +90,10 @@ const FeaturedSection = () => {
                             </div>
                             {/* Product Info */}
                             <div className="p-4 flex flex-col flex-1 justify-between">
-                                
+                                <div>
+                                    <h3 className="text-lg font-semibold text-dark">{product.name}</h3>
+                                    
+                                </div>
                                 <div className="flex items-center mt-2 gap-2">
                                     <Rating value={product.rating} /><span className="text-[11px]">120</span>
                                 </div>
