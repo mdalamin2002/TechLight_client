@@ -1,1 +1,72 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+/* @custom-variant dark (&:is(.dark *)); */
+:root {
+  --color-primary: #FFFFFF;
+  --color-accent: #3749BB;
+  --color-background: #FAF8F5;
+  --color-dark-text: #030303;
+  --color-subtext: #8a94a6;
+
+  /* Map shadcn expected tokens */
+  --background: var(--color-background);
+  --foreground: var(--color-dark-text);
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-accent);
+  --accent: var(--color-accent);
+  --accent-foreground: var(--color-primary);
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: var(--color-accent);
+}
+
+.bg-background {
+    background-color: var(--color-background);
+}
+.bg-primary {
+    background-color: var(--color-primary);
+}
+.bg-accent {
+    background-color: var(--color-accent);
+}
+.text-primary {
+    color: var(--color-primary);
+}
+.text-accent {
+    color: var(--color-accent)
+}
+.text-dark {
+    color: var(--color-dark-text);
+}
+.text-subtext {
+    color: var(--color-subtext);
+}
+
+.hover\:text-primary:hover {
+  color: var(--color-primary);
+}
+.hover\:text-accent:hover {
+  color: var(--color-accent);
+}
+
+
+
+.dark {
+  --color-background: #18181B;
+  --color-primary: #27272A;
+  --color-accent: #6366F1;
+  --color-dark-text: #FAFAFA;
+  --color-subtext: #A1A1AA;
+
+  --background: var(--color-background);
+  --foreground: var(--color-dark-text);
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-accent);
+  --accent: var(--color-accent);
+  --accent-foreground: var(--color-primary);
+  --border: #3F3F46;
+  --input: #27272A;
+  --ring: var(--color-accent);
+}
+
