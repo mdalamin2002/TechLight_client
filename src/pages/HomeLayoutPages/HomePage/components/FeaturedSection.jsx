@@ -91,6 +91,9 @@ const FeaturedSection = () => {
                             {/* Product Info */}
                             <div className="p-4 flex flex-col flex-1 justify-between">
                                 
+                                <div className="flex items-center mt-2 gap-2">
+                                    <Rating value={product.rating} /><span className="text-[11px]">120</span>
+                                </div>
 
                                 {/* Price + Cart */}
                                 <div className="mt-2 flex items-center justify-between">
