@@ -14,7 +14,7 @@ export const ContactUs = () => {
         {/* Contact Form */}
         <div className="card bg-blue-950 shadow-xl p-6 rounded-xl text-white">
           <h2 className="text-2xl font-bold mb-4 border-b border-white/30 pb-2">
-            Direct Contact
+            Send Message
           </h2>
           <form className="space-y-4">
             {/* Support Category */}
@@ -22,7 +22,7 @@ export const ContactUs = () => {
               <label className="label">
                 <span className="label-text text-white">Category</span>
               </label>
-              <select className="select select-bordered w-full bg-white text-gray-500">
+              <select className="select select-bordered w-full bg-white text-gray-500 rounded-lg p-1">
                 <option disabled selected>
                   Select a category
                 </option>
@@ -41,7 +41,7 @@ export const ContactUs = () => {
               <input
                 type="text"
                 placeholder="Your Name"
-                className="input input-bordered w-full bg-white text-gray-900 px-1"
+                className="input input-bordered w-full bg-white text-gray-900 py-1 px-2 rounded-lg"
               />
             </div>
 
@@ -53,7 +53,7 @@ export const ContactUs = () => {
               <input
                 type="email"
                 placeholder="Your Email"
-                className="input input-bordered w-full bg-white text-gray-900 px-1"
+                className="input input-bordered w-full bg-white text-gray-900 py-1 px-2 rounded-lg"
               />
             </div>
 
@@ -65,7 +65,7 @@ export const ContactUs = () => {
               <input
                 type="text"
                 placeholder="Subject"
-                className="input input-bordered w-full bg-white text-gray-900 px-1"
+                className="input input-bordered w-full bg-white text-gray-900 py-1 px-2 rounded-lg"
               />
             </div>
 
@@ -75,7 +75,7 @@ export const ContactUs = () => {
                 <span className="label-text text-white">Message</span>
               </label>
               <textarea
-                className="textarea textarea-bordered w-full bg-white text-gray-900 px-1"
+                className="textarea textarea-bordered w-full bg-white text-gray-900 py-1 px-2 rounded-lg"
                 rows="4"
                 placeholder="Write your message..."
               ></textarea>
@@ -93,7 +93,7 @@ export const ContactUs = () => {
         </div>
 
         {/* Direct Info / Map / Links */}
-        <div className="flex flex-col justify-between ">
+        <div className="flex flex-col justify-between gap-5">
           {/* Contact Info */}
           <div className="card  bg-blue-950 shadow-xl p-6 text-white rounded-xl">
             <h2 className="text-2xl font-bold mb-4 border-b border-white/30 pb-2">
@@ -122,7 +122,7 @@ export const ContactUs = () => {
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.8458121738366!2d90.39156347415207!3d23.750876378692525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8942a2b6e17%3A0x5f2d8c74c329fac5!2sDhaka!5e0!3m2!1sen!2sbd!4v1694882956781!5m2!1sen!2sbd"
               width="100%"
-              height="300"
+              height="340"
               allowFullScreen=""
               loading="lazy"
               title="Google Map"
