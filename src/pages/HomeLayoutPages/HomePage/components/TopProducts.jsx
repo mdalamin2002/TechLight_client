@@ -58,7 +58,7 @@ const TopProducts = () => {
   const handleQuickView = (name) => alert(`Quick view for ${name}`);
 
   return (
-    <section className="py-5 bg-background">
+    <section className="mt-15 bg-background">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Heading */}
         <div className="flex items-center justify-between mb-12">
