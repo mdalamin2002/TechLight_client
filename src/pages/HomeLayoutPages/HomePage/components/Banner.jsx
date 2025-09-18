@@ -1,8 +1,30 @@
 import React, { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { motion , AnimatePresence } from "framer-motion";
+import Slider from "./Slider";
 
 const Banner = () => {
+  const slides = [
+    {
+      id: 1,
+      title: "iPhone 14 Series",
+      subtitle: "Up to 10% off Voucher",
+      image: "https://i.ibb.co.com/rKFXxDDp/Slider1.webp",
+    },
+    {
+      id: 2,
+      title: "Smart TVs",
+      subtitle: "Flat 15% Discount",
+      image:
+        "https://i.ibb.co.com/ynF19j8j/a-bold-e-commerce-banner-displaying-a-tablet-with.webp",
+    },
+    {
+      id: 3,
+      title: "Headphones",
+      subtitle: "Grab Now – 20% Off",
+      image: "https://i.ibb.co.com/tMQc170R/slider3.jpg",
+    },
+  ];
   const shopMegaMenu = [
     {
       title: "Mobiles & Tablets",
@@ -109,8 +131,8 @@ const Banner = () => {
         </aside>
 
         {/* Carousel */}
-        <div className="md:col-span-3 bg-gray-50 rounded p-6">
-          <p>Carousel</p>
+        <div className="md:col-span-3">
+          <Slider slides={slides} />
         </div>
       </div>
     </section>

@@ -22,8 +22,8 @@ export default function Navbar() {
             <Link to="/laptop" className="text-dark hover:text-accent">
               Laptop
             </Link>
-            <Link to="/signup" className="text-dark hover:text-accent">
-              Signup
+            <Link to="/privacy_policy" className="text-dark hover:text-accent">
+              PrivacyPolicy
             </Link>
           </nav>
 
