@@ -6,7 +6,7 @@ import ReviewSection from '../../pages/HomeLayoutPages/HomePage/components/Revie
 
 const MainLayout = () => {
     return (
-        <div>
+        <div className='bg-background'>
             <Navbar></Navbar>
             <div className="max-w-[1440px] mx-auto">
                 <Outlet></Outlet>
