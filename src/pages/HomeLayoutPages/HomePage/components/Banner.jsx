@@ -9,7 +9,7 @@ const Banner = () => {
       id: 1,
       title: "iPhone 14 Series",
       subtitle: "Up to 10% off Voucher",
-      image: "https://i.ibb.co.com/rKFXxDDp/Slider1.webp",
+      image: "https://i.ibb.co.com/tMQc170R/slider3.jpg",
     },
     {
       id: 2,
@@ -22,7 +22,7 @@ const Banner = () => {
       id: 3,
       title: "Headphones",
       subtitle: "Grab Now – 20% Off",
-      image: "https://i.ibb.co.com/tMQc170R/slider3.jpg",
+      image: "https://i.ibb.co.com/5XB5C0CG/slide3.webp",
     },
   ];
   const shopMegaMenu = [

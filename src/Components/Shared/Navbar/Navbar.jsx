@@ -16,9 +16,6 @@ export default function Navbar() {
             <Link to="/" className="text-dark hover:text-accent">
               Home
             </Link>
-            <Link to="/mobile" className="text-dark hover:text-accent">
-              Mobile
-            </Link>
             <Link to="/laptop" className="text-dark hover:text-accent">
               Laptop
             </Link>
