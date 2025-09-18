@@ -101,7 +101,7 @@ export const ContactUs = () => {
             </h2>
             <p className="mb-2">
               <span className="font-semibold">Email:</span>{" "}
-              support@yourstore.com
+              sabrinaboby786@gmail.com
             </p>
             <p className="mb-2">
               <span className="font-semibold">Phone/WhatsApp:</span> +880 1234
