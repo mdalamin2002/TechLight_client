@@ -1,10 +1,11 @@
 import { Heart, ShoppingCart } from "lucide-react";
+import { Link } from "react-router";
 
 export default function Navbar() {
   return (
     <header className="bg-background text-foreground shadow-sm">
       <div className="max-w-[1440px] mx-auto">
-        <div className="flex justify-between items-center h-16">
+        <div className="max-w-11/12 mx-auto flex justify-between items-center h-16">
           {/* LEFT - Logo */}
           <div className="flex-shrink-0 text-xl font-bold text-dark hover:text-accent">
             TechLight
@@ -12,18 +13,18 @@ export default function Navbar() {
 
           {/* CENTER - Menu */}
           <nav className="hidden md:flex space-x-6 text-sm font-medium">
-            <a href="#" className="text-dark hover:text-accent">
+            <Link to="/" className="text-dark hover:text-accent">
               Home
-            </a>
-            <a href="#" className="text-dark hover:text-accent">
-              About
-            </a>
-            <a href="#" className="text-dark hover:text-accent">
-              Contact
-            </a>
-            <a href="#" className="text-dark hover:text-accent">
+            </Link>
+            <Link to="/mobile" className="text-dark hover:text-accent">
+              Mobile
+            </Link>
+            <Link to="/laptop" className="text-dark hover:text-accent">
+              Laptop
+            </Link>
+            <Link to="/signup" className="text-dark hover:text-accent">
               Signup
-            </a>
+            </Link>
           </nav>
 
           {/* RIGHT - Search + Icons */}
