@@ -6,7 +6,7 @@ export default function Slider({ slides }) {
   return (
     <div className="relative">
       {/* Slide */}
-      <div className="relative overflow-hidden flex items-center justify-between p-10 text-white h-[390px]">
+      <div className="relative overflow-hidden flex items-center justify-between text-white h-[390px]">
         
         <img
           src={slides[activeSlide].image}
