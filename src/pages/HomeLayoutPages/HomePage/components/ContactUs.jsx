@@ -111,10 +111,7 @@ export const ContactUs = () => {
               <span className="font-semibold">Address:</span> 123 Main Street,
               Dhaka
             </p>
-            <p className="mb-2">
-              <span className="font-semibold">Business Hours:</span> Mon–Fri, 9
-              AM – 6 PM
-            </p>
+            
           </div>
 
           {/* Map */}
