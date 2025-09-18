@@ -11,6 +11,7 @@ const Home = () => {
             <ContactUs></ContactUs>
             <TopProducts></TopProducts>
             <FeaturedSection></FeaturedSection>
+            
 </div>
     );
 };
