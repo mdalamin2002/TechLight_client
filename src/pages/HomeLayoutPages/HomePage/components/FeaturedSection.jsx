@@ -59,7 +59,7 @@ const FeaturedSection = () => {
     const handleAddToCart = (name) => alert(`${name} added View Details`);
 
     return (
-        <section className="py-8 bg-background">
+        <section className="mt-15 bg-background">
             <div className="max-w-7xl mx-auto px-6">
                 {/* Section Heading */}
                 <div className="flex items-center justify-between mb-12">
