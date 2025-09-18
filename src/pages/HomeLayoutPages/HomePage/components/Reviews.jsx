@@ -13,6 +13,10 @@ const ReviewSection = () => {
     { id: 8, name: "Emily Brown", rating: 5, comment: "Fantastic! Will buy again." },
     { id: 9, name: "Michael Johnson", rating: 3, comment: "Okayish, value for money." },
     { id: 10, name: "Nusrat Jahan", rating: 4, comment: "Very useful and good packaging." },
+    { id: 11, name: "Michael Johnson", rating: 3, comment: "Okayish, value for money." },
+    { id: 12, name: "Nusrat Jahan", rating: 4, comment: "Very useful and good packaging." },
+    { id: 13, name: "Michael Johnson", rating: 3, comment: "Okayish, value for money." },
+    { id: 14, name: "Nusrat Jahan", rating: 4, comment: "Very useful and good packaging." },
   ]);
 
   const [currentPage, setCurrentPage] = useState(1);
