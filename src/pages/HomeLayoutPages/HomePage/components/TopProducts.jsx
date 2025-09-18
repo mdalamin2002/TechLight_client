@@ -58,14 +58,14 @@ const TopProducts = () => {
   const handleQuickView = (name) => alert(`Quick view for ${name}`);
 
   return (
-    <section className="py-5 bg-background">
+    <section className="mt-15 bg-background">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Heading */}
         <div className="flex items-center justify-between mb-12">
           <h2 className="text-3xl font-bold text-dark">Top Selling Electronics</h2>
           <button
             type="button"
-            className="hidden sm:inline-block text-sm font-medium px-5 py-2 rounded-lg border border-accent text-accent hover:bg-accent hover:text-primary transition"
+            className="hidden hover:bg-amber-100 cursor-pointer sm:inline-block text-sm font-medium px-5 py-2 rounded-lg border border-accent text-accent hover:bg-accent hover:text-primary transition"
           >
             View All
           </button>
@@ -122,7 +122,7 @@ const TopProducts = () => {
                   <button
                     onClick={() => handleAddToCart(product.name)}
                     
-                    className=" flex items-center gap-2 px-3 py-2 bg-[#3749BB] text-[#FFFFFF] text-sm font-medium rounded-lg hover:opacity-90 transition"
+                    className=" flex cursor-pointer items-center gap-2 px-3 py-2 bg-[#3749BB] text-[#FFFFFF] text-sm font-medium rounded-lg hover:opacity-90 transition"
                   >
                     <FiShoppingCart size={16} />
                     Add
