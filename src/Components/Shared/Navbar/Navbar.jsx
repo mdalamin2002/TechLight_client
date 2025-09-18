@@ -1,5 +1,4 @@
 import { Heart, ShoppingCart } from "lucide-react";
-import { Input } from "../../ui/input";
 
 export default function Navbar() {
   return (
@@ -29,11 +28,6 @@ export default function Navbar() {
 
           {/* RIGHT - Search + Icons */}
           <div className="flex items-center space-x-4">
-            <Input
-              type="text"
-              placeholder="Search..."
-              className="h-9 w-32 sm:w-48 bg-primary text-dark placeholder:text-subtext"
-            />
             <button className="text-dark hover:text-accent">
               <Heart size={20} />
             </button>
