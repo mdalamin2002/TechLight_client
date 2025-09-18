@@ -66,7 +66,7 @@ const FeaturedSection = () => {
                     <h2 className="text-3xl font-bold text-dark">Featured Section</h2>
                     <button
                         type="button"
-                        className="hidden sm:inline-block text-sm font-medium px-5 py-2 rounded-lg border border-accent text-accent hover:bg-accent hover:text-primary transition"
+                        className="hidden hover:bg-amber-100 cursor-pointer sm:inline-block text-sm font-medium px-5 py-2 rounded-lg border border-accent text-accent hover:bg-accent hover:text-primary transition"
                     >
                         View All
                     </button>
@@ -102,7 +102,7 @@ const FeaturedSection = () => {
                                 <div className="mt-2 flex items-center justify-between">
                                     <button
                                         onClick={() => handleAddToCart(product.name)}
-                                        className=" w-full flex items-center justify-center gap-2 px-3 py-2 bg-[#3749BB] text-[#FFFFFF] text-sm font-medium rounded-lg hover:opacity-90 transition"
+                                        className=" w-full cursor-pointer flex items-center justify-center gap-2 px-3 py-2 bg-[#3749BB] text-[#FFFFFF] text-sm font-medium rounded-lg hover:opacity-90 transition"
                                     >
                                         <FcViewDetails size={16} />
                                         View Details
