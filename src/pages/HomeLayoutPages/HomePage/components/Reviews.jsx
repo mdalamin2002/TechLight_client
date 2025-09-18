@@ -6,21 +6,79 @@ import "swiper/css/navigation";
 import { Star, Quote } from "lucide-react";
 import { motion } from "framer-motion";
 
-
-const ReviewSection = () => {
+const Reviews = () => {
   const reviews = [
-    { id: 1, name: "John Doe", rating: 5, comment: "Excellent product! Highly recommend." },
-    { id: 2, name: "Jane Smith", rating: 4, comment: "Very good quality, fast shipping." },
-    { id: 3, name: "Ali Khan", rating: 3, comment: "Average, could be better." },
-    { id: 4, name: "Maria Garcia", rating: 5, comment: "Loved it! Perfect quality." },
-    { id: 5, name: "David Miller", rating: 4, comment: "Works great, satisfied with the purchase." },
-    { id: 6, name: "Sophia Lee", rating: 5, comment: "Best product I have bought this year!" },
-    { id: 7, name: "Rahim Uddin", rating: 2, comment: "Not happy, product was delayed." },
-    { id: 8, name: "Emily Brown", rating: 5, comment: "Fantastic! Will buy again." },
-    { id: 9, name: "Michael Johnson", rating: 3, comment: "Okayish, value for money." },
-    { id: 10, name: "Nusrat Jahan", rating: 4, comment: "Very useful and good packaging." },
+    {
+      id: 1,
+      name: "John Doe",
+      rating: 5,
+      comment: "Excellent product! Highly recommend.",
+      image: "https://i.pravatar.cc/150?img=1",
+    },
+    {
+      id: 2,
+      name: "Jane Smith",
+      rating: 4,
+      comment: "Very good quality, fast shipping.",
+      image: "https://i.pravatar.cc/150?img=2",
+    },
+    {
+      id: 3,
+      name: "Ali Khan",
+      rating: 3,
+      comment: "Average, could be better.",
+      image: "https://i.pravatar.cc/150?img=3",
+    },
+    {
+      id: 4,
+      name: "Maria Garcia",
+      rating: 5,
+      comment: "Loved it! Perfect quality.",
+      image: "https://i.pravatar.cc/150?img=4",
+    },
+    {
+      id: 5,
+      name: "David Miller",
+      rating: 4,
+      comment: "Works great, satisfied with the purchase.",
+      image: "https://i.pravatar.cc/150?img=5",
+    },
+    {
+      id: 6,
+      name: "Sophia Lee",
+      rating: 5,
+      comment: "Best product I have bought this year!",
+      image: "https://i.pravatar.cc/150?img=6",
+    },
+    {
+      id: 7,
+      name: "Rahim Uddin",
+      rating: 2,
+      comment: "Not happy, product was delayed.",
+      image: "https://i.pravatar.cc/150?img=7",
+    },
+    {
+      id: 8,
+      name: "Emily Brown",
+      rating: 5,
+      comment: "Fantastic! Will buy again.",
+      image: "https://i.pravatar.cc/150?img=8",
+    },
+    {
+      id: 9,
+      name: "Michael Johnson",
+      rating: 3,
+      comment: "Okayish, value for money.",
+      image: "https://i.pravatar.cc/150?img=9",
+    },
+    {
+      id: 10,
+      name: "Nusrat Jahan",
+      rating: 4,
+      comment: "Very useful and good packaging.",
+      image: "https://i.pravatar.cc/150?img=10",
+    },
   ];
-
 
   // Render Stars
   const renderStars = (rating) => {
@@ -34,7 +92,6 @@ const ReviewSection = () => {
     ));
   };
 
-
   return (
     <section className="bg-base-200 py-20 px-4 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -47,13 +104,12 @@ const ReviewSection = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl lg:text-4xl font-bold text-base-content mb-4">
-            ⭐ Customer <span className="text-primary">Reviews</span>
+            Customer <span className="text-primary">Reviews</span>
           </h2>
           <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
             See what our valued customers say about their experience.
           </p>
         </motion.div>
-
 
         {/* Swiper Slider */}
         <motion.div
@@ -88,25 +144,33 @@ const ReviewSection = () => {
                   viewport={{ once: false }}
                 >
                   <div className="bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 p-8 h-full rounded-2xl flex flex-col justify-between">
+                    {/* User Image */}
+                    <div className="flex justify-center mb-4">
+                      <img
+                        src={review.image}
+                        alt={review.name}
+                        className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+                      />
+                    </div>
+
                     {/* Quote */}
                     <div className="flex justify-center mb-4">
                       <Quote className="w-6 h-6 text-primary" />
                     </div>
-
 
                     {/* Feedback */}
                     <p className="text-center text-base-content/70 leading-relaxed italic mb-6">
                       "{review.comment}"
                     </p>
 
-
                     {/* Stars */}
                     <div className="flex justify-center mb-4">
-                      <div className="flex space-x-1">{renderStars(review.rating)}</div>
+                      <div className="flex space-x-1">
+                        {renderStars(review.rating)}
+                      </div>
                     </div>
 
-
-                    {/* User Info */}
+                    {/* User Name */}
                     <div className="text-center">
                       <h4 className="font-semibold text-base-content text-lg">
                         {review.name}
@@ -118,7 +182,6 @@ const ReviewSection = () => {
             ))}
           </Swiper>
 
-
           {/* Custom Navigation Buttons */}
           <div className="flex justify-center items-center space-x-4 mt-8">
             <button className="swiper-button-prev-custom bg-base-100 hover:bg-primary hover:text-base-100 text-primary rounded-full p-3 shadow-lg transition-all duration-300 border border-base-200">
@@ -128,7 +191,12 @@ const ReviewSection = () => {
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
             <button className="swiper-button-next-custom bg-base-100 hover:bg-primary hover:text-base-100 text-primary rounded-full p-3 shadow-lg transition-all duration-300 border border-base-200">
@@ -138,7 +206,12 @@ const ReviewSection = () => {
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </div>
@@ -148,8 +221,4 @@ const ReviewSection = () => {
   );
 };
 
-
-export default ReviewSection;
-
-
-
+export default Reviews;
