@@ -26,7 +26,7 @@ const companyLogos = [
 
 const CompanyLogoMarquee = () => {
   return (
-    <section className="py-10 bg-gray-50">
+    <section className="pb-10 pt-4 mt-15 shadow-sm rounded-lg">
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-2xl font-bold pb-4 text-center mb-8">Trusted by Top Companies</h2>
         <Marquee speed={60} gradient={false} pauseOnHover={true}>
