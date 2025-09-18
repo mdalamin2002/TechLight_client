@@ -1,18 +1,115 @@
-import React from "react";
+import React, { useState } from "react";
+import { ChevronRight } from "lucide-react";
+import { motion , AnimatePresence } from "framer-motion";
 
 const Banner = () => {
+  const shopMegaMenu = [
+    {
+      title: "Mobiles & Tablets",
+      items: [
+        "Smartphones",
+        "Tablets",
+        "Mobile Accessories (Covers, Chargers, Earphones)",
+      ],
+    },
+    {
+      title: "Laptops & Computers",
+      items: ["Laptops", "Desktops", "Keyboards, Mouse, Monitors"],
+    },
+    {
+      title: "Smart Watches & Wearables",
+      items: ["Smart Watches", "Fitness Bands"],
+    },
+    {
+      title: "Audio Devices",
+      items: ["Headphones", "Earbuds", "Bluetooth Speakers"],
+    },
+    {
+      title: "Gaming Consoles & Accessories",
+      items: ["PlayStation, Xbox", "VR Headsets", "Gaming Accessories"],
+    },
+    {
+      title: "Smart Home Devices",
+      items: ["Smart Lights", "Security Cameras", "Voice Assistants"],
+    },
+    {
+      title: "Accessories",
+      items: [
+        "Power Banks",
+        "Cables & Chargers",
+        "Storage Devices (HDD/SSD, Pendrive)",
+      ],
+    },
+  ];
+
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleOpen = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   return (
-    <section className=" py-6">
+    <section className="py-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
-        {/* Left - Vertical Navigation (1/4 width on md and up) */}
-        <aside className="md:col-span-1">
-          {/* category nav/menu */}
-          <p>Sidebar</p>
+        {/* Sidebar */}
+        <aside className="md:col-span-1 border-r border-gray-300 pr-4 bg-white">
+          <nav>
+            {shopMegaMenu.map((section, idx) => {
+              const isOpen = openIndex === idx;
+
+              return (
+                <div key={idx} className="mb-4">
+                  <button
+                    onClick={() => toggleOpen(idx)}
+                    className="flex justify-between items-center cursor-pointer w-full text-left text-gray-800 font-semibold py-2  rounded focus:outline-none"
+                    aria-expanded={isOpen}
+                    aria-controls={`submenu-${idx}`}
+                    id={`menuitem-${idx}`}
+                  >
+                    {section.title}
+                    <ChevronRight
+                      className={` text-gray-500 transition-transform duration-300 ${
+                        isOpen ? "rotate-90" : "rotate-0"
+                      }`}
+                      size={20}
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.ul
+                        key="content"
+                        id={`submenu-${idx}`}
+                        role="region"
+                        aria-labelledby={`menuitem-${idx}`}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="mt-2 list-none space-y-1 text-gray-600 overflow-hidden"
+                      >
+                        {section.items.map((item, i) => (
+                          <li key={i}>
+                            <button
+                              type="button"
+                              className="w-full text-left py-1 rounded focus:outline-none cursor-pointer transition"
+                            >
+                              {item}
+                            </button>
+                          </li>
+                        ))}
+                      </motion.ul>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </nav>
         </aside>
 
-        {/* Right - Carousel (3/4 width on md and up) */}
-        <div className="md:col-span-3 bg-amber-950">
-          {/* carousel/slider */}
+        {/* Carousel */}
+        <div className="md:col-span-3 bg-gray-50 rounded p-6">
           <p>Carousel</p>
         </div>
       </div>
