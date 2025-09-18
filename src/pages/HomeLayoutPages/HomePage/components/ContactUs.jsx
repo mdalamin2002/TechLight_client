@@ -138,7 +138,6 @@ export const ContactUs = () => {
           <a href="/faq" className="link link-primary">
             FAQ page
           </a>
-          .
         </p>
         <p className="text-sm text-base-content/70 mt-2">
           We respect your privacy. Your details are safe with us.
