@@ -82,7 +82,7 @@ export const ContactUs = () => {
             </div>
 
             {/* Submit */}
-            <button className="bg-white text-blue-950 font-bold py-2 px-6 rounded-lg  hover:bg-gray-100 transition mx-auto block">
+            <button className="bg-white text-blue-950 font-bold py-2 px-6 rounded-lg hover:bg-gray-100 transition mx-auto block cursor-pointer">
               Submit
             </button>
 
