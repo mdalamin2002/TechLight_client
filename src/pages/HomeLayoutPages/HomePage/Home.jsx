@@ -13,7 +13,7 @@ const Home = () => {
             <TopProducts></TopProducts>
             <FeaturedSection></FeaturedSection>
             <CompanyLogoMarquee></CompanyLogoMarquee>
-</div>
+        </div>
     );
 };
 
