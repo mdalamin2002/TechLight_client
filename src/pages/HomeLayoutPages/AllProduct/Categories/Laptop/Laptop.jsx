@@ -4,7 +4,7 @@ import LaptopCard from "../../../../../Components/Cards/LaptopCard/LaptopCard";
 const Laptop = () => {
   const [laptops, setLaptops] = useState([]);
   useEffect(() => {
-    fetch("./public/ProductsFakeData.json")
+    fetch("/ProductsFakeData.json")
       .then((res) => res.json())
       .then((result) => setLaptops(result));
   }, []);
