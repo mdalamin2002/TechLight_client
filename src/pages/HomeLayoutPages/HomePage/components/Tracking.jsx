@@ -4,6 +4,15 @@ export const Tracking = () => {
   const [orderId, setOrderId] = useState("");
   const [status, setStatus] = useState(null);
 
+  // Steps of tracking
+  const steps = [
+    { title: "Ordered", date: "Nov 20" },
+    { title: "Order ready", date: "Nov 20" },
+    { title: "Shipped", date: "Nov 21" },
+    { title: "Out for delivery", date: "Nov 21" },
+    { title: "Delivered", date: "Nov 22" },
+  ];
+
   // Dummy order tracking simulation
   const handleTrack = () => {
     if (orderId === "12345") {
@@ -19,8 +28,8 @@ export const Tracking = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-lg rounded-2xl">
-      <h2 className="text-2xl font-bold text-center mb-4 text-blue-950">
+    <div className="max-w-xl mx-auto p-6 bg-blue-950 shadow-lg rounded-2xl mt-12">
+      <h2 className="text-2xl font-bold mb-4 border-b border-white/30 pb-2 text-white text-center">
         Track Your Order
       </h2>
 
@@ -31,11 +40,18 @@ export const Tracking = () => {
           placeholder="Enter Order ID"
           value={orderId}
           onChange={(e) => setOrderId(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-950"
+          className="w-full border text-white border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-950"
         />
-        <button
+        {/* <button
           onClick={handleTrack}
           className="bg-blue-950 text-white px-5 py-2 rounded-lg hover:bg-blue-900 transition cursor-pointer"
+        >
+          Track
+        </button> */}
+
+        <button
+          onClick={handleTrack}
+          className="bg-sky-300 text-blue-950 font-bold py-2 px-6 rounded-lg hover:bg-gray-100 transition mx-auto block cursor-pointer"
         >
           Track
         </button>
@@ -50,22 +66,50 @@ export const Tracking = () => {
             </p>
           ) : (
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <p>
+              <p className="mb-2">
                 <span className="font-semibold">Order ID:</span> {status.id}
               </p>
-              <p>
+              <p className="mb-2">
                 <span className="font-semibold">Product:</span> {status.product}
               </p>
-              <p>
-                <span className="font-semibold">Status:</span>{" "}
-                <span className="text-green-600 font-semibold">
-                  {status.progress}
-                </span>
-              </p>
-              <p>
+              <p className="mb-4">
                 <span className="font-semibold">Expected Delivery:</span>{" "}
                 {status.expected}
               </p>
+
+              {/* Timeline */}
+              <div className="relative border-l-4 border-blue-950 pl-6">
+                {steps.map((step, index) => {
+                  const isActive =
+                    steps.findIndex((s) => s.title === status.progress) >=
+                    index;
+
+                  return (
+                    <div key={index} className="mb-6 last:mb-0 relative">
+                      {/* Circle */}
+                      <span
+                        className={`absolute -left-[37px] flex items-center justify-center w-6 h-6 rounded-full border-2 ${
+                          isActive
+                            ? "bg-green-700 text-white border-green-700"
+                            : "bg-white text-gray-400 border-gray-300"
+                        }`}
+                      >
+                        ✓
+                      </span>
+
+                      {/* Text */}
+                      <p
+                        className={`font-semibold ${
+                          isActive ? "text-blue-950" : "text-gray-500"
+                        }`}
+                      >
+                        {step.title}
+                      </p>
+                      <p className="text-sm text-gray-500">{step.date}</p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
