@@ -2,7 +2,7 @@ import React from "react";
 
 export const ContactUs = () => {
   return (
-    <div className="min-h-screen bg-base-100 flex flex-col items-center px-4 py-10">
+    <div className="min-h-screen bg-base-100 flex flex-col items-center px-4 py-10 mt-12">
       {/* Header */}
       <h1 className="text-3xl font-bold mb-6 text-center">Contact Us</h1>
       <p className="text-base-content/80 max-w-xl text-center mb-10">
@@ -82,7 +82,7 @@ export const ContactUs = () => {
             </div>
 
             {/* Submit */}
-            <button className="bg-white text-blue-950 font-bold py-2 px-6 rounded-lg hover:bg-gray-100 transition mx-auto block cursor-pointer">
+            <button className="bg-sky-300 text-blue-950 font-bold py-2 px-6 rounded-lg hover:bg-gray-100 transition mx-auto block cursor-pointer">
               Submit
             </button>
 
@@ -147,7 +147,7 @@ export const ContactUs = () => {
         <div className="flex flex-wrap justify-center gap-4 mt-6">
           <a
             href="mailto:support@yourstore.com"
-            className="px-6 py-2 rounded-lg font-semibold text-blue-950 border-2 hover:text-white hover:bg-blue-950 transition shadow-md"
+            className=" px-6 py-2 rounded-lg font-semibold text-blue-950 border-2 hover:text-white hover:bg-blue-950 transition shadow-md"
           >
             Email Us
           </a>
