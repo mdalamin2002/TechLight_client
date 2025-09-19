@@ -13,7 +13,7 @@ const Laptop = () => {
     <div className="w-full min-h-screen">
       <div className="w-11/12 mx-auto">
         {/* Top side */}
-        <div className=" bg-white p-3 my-3 rounded-lg">
+        <div className=" bg-white p-3 my-3 rounded-lg shadow-sm">
           <h3 className="text-2xl font-semibold">All Laptop</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
