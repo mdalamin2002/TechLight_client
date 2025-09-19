@@ -86,6 +86,75 @@ const PrivacyPolicy = () => {
           </div>
         </section>
 
+        {/* How We Use Information */}
+        <section>
+          <h2 className="text-2xl font-bold mb-6">How We Use Information</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="p-4 rounded-lg border border-[var(--border)] text-center">
+              <ShoppingCart className="w-8 h-8 mx-auto mb-2 text-[var(--custom-blue)]" />
+              <h4 className="font-semibold mb-1">Order Processing</h4>
+              <p className="text-sm">Process and fulfill orders</p>
+            </div>
+            <div className="p-4 rounded-lg border border-[var(--border)] text-center">
+              <MessageSquare className="w-8 h-8 mx-auto mb-2 text-green-600" />
+              <h4 className="font-semibold mb-1">Communication</h4>
+              <p className="text-sm">Keep you updated</p>
+            </div>
+            <div className="p-4 rounded-lg border border-[var(--border)] text-center">
+              <Lock className="w-8 h-8 mx-auto mb-2 text-purple-600" />
+              <h4 className="font-semibold mb-1">Security</h4>
+              <p className="text-sm">Prevent fraud & ensure safety</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Your Rights */}
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Your Rights</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              Access your personal data
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-[var(--custom-blue)]" />
+              Correct inaccurate data
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
+              Delete your account
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-orange-600" />
+              Opt-out of marketing
+            </div>
+          </div>
+        </section>
+
+        {/* Third Party & Children */}
+        <section className="grid md:grid-cols-2 gap-8">
+          <div>
+            <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
+              <ExternalLink className="w-5 h-5 text-[var(--custom-blue)]" />
+              Third-Party Links
+            </h2>
+            <p className="text-sm">
+              We may link to third-party sites. We are not responsible for their
+              privacy practices.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
+              <Baby className="w-5 h-5 text-[var(--custom-blue)]" />
+              Children's Privacy
+            </h2>
+            <p className="text-sm">
+              Our services are not for children under 13. We do not knowingly
+              collect data from them.
+            </p>
+          </div>
+        </section>
+
 
       </div>
     </div>
