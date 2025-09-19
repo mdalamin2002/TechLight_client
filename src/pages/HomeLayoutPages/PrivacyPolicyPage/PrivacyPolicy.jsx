@@ -155,7 +155,38 @@ const PrivacyPolicy = () => {
           </div>
         </section>
 
+        {/* Policy Updates */}
+        <section>
+          <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
+            <RefreshCcw className="w-5 h-5 text-[var(--custom-blue)]" />
+            Changes to This Policy
+          </h2>
+          <p>
+            We may update this policy from time to time. Updates will be posted
+            here with a new "Last updated" date.
+          </p>
+        </section>
 
+        {/* Contact Information */}
+        <section className="rounded-lg p-8 text-center bg-[var(--custom-blue)] text-[var(--primary-foreground)]">
+          <h2 className="text-2xl font-bold mb-6">Contact Us</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div>
+              <Mail className="w-6 h-6 mx-auto mb-2" />
+              <p className="text-sm">support@techlight.com</p>
+            </div>
+            <div>
+              <Phone className="w-6 h-6 mx-auto mb-2" />
+              <p className="text-sm">+880 1234-567890</p>
+            </div>
+            <div>
+              <MapPin className="w-6 h-6 mx-auto mb-2" />
+              <p className="text-sm">
+                123 Electronics Street <br /> Dhaka 1000, Bangladesh
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
