@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       {/* Header */}
       <div className="border-b border-[var(--border)]">
-        <div className="max-w-5xl mx-auto px-6 py-12 text-center">
+        <div className="max-w-11/12 mx-auto px-6 py-12 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-[var(--custom-blue)] rounded-full mb-4">
             <Shield className="w-8 h-8 text-[var(--primary-foreground)]" />
           </div>
@@ -40,7 +40,7 @@ const PrivacyPolicy = () => {
       </div>
 
       {/* Content */}
-      <div className="max-w-5xl mx-auto px-6 py-12 space-y-10">
+      <div className="max-w-11/12 mx-auto  py-12 space-y-10">
         {/* Introduction */}
         <section>
           <h2 className="text-2xl font-bold mb-4">Introduction</h2>
