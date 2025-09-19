@@ -2,7 +2,7 @@ import React from "react";
 
 export const ContactUs = () => {
   return (
-    <div className="min-h-screen bg-base-100 flex flex-col items-center px-4 py-10">
+    <div className="min-h-screen bg-base-100 flex flex-col items-center px-4 py-10 mt-12">
       {/* Header */}
       <h1 className="text-3xl font-bold mb-6 text-center">Contact Us</h1>
       <p className="text-base-content/80 max-w-xl text-center mb-10">
@@ -12,17 +12,17 @@ export const ContactUs = () => {
 
       <div className="grid lg:grid-cols-2 gap-8 w-full max-w-6xl">
         {/* Contact Form */}
-        <div className="card bg-blue-950 shadow-xl p-6 rounded-xl text-white">
-          <h2 className="text-2xl font-bold mb-4 border-b border-white/30 pb-2">
+        <div className="card bg-gray-50  shadow-xl p-6 rounded-xl text-black">
+          <h2 className="text-2xl font-bold mb-4 border-b border-black/30 pb-2">
             Send Message
           </h2>
           <form className="space-y-4">
             {/* Support Category */}
             <div>
               <label className="label">
-                <span className="label-text text-white">Category</span>
+                <span className="label-text text-black">Category</span>
               </label>
-              <select className="select select-bordered w-full bg-white text-gray-500 rounded-lg p-1">
+              <select className="select select-bordered w-full border border-gray-300 bg-white text-gray-500 rounded-lg p-1">
                 <option disabled selected>
                   Select a category
                 </option>
@@ -36,53 +36,53 @@ export const ContactUs = () => {
             {/* Name */}
             <div>
               <label className="label">
-                <span className="label-text text-white">Name</span>
+                <span className="label-text text-black">Name</span>
               </label>
               <input
                 type="text"
                 placeholder="Your Name"
-                className="input input-bordered w-full bg-white text-gray-900 py-1 px-2 rounded-lg"
+                className="input input-bordered w-full bg-white border border-gray-300 text-gray-900 py-1 px-2 rounded-lg"
               />
             </div>
 
             {/* Email */}
             <div>
               <label className="label">
-                <span className="label-text text-white">Email</span>
+                <span className="label-text text-black">Email</span>
               </label>
               <input
                 type="email"
                 placeholder="Your Email"
-                className="input input-bordered w-full bg-white text-gray-900 py-1 px-2 rounded-lg"
+                className="input input-bordered w-full bg-white border border-gray-300 text-gray-900 py-1 px-2 rounded-lg"
               />
             </div>
 
             {/* Subject */}
             <div>
               <label className="label">
-                <span className="label-text text-white">Subject</span>
+                <span className="label-text text-black">Subject</span>
               </label>
               <input
                 type="text"
                 placeholder="Subject"
-                className="input input-bordered w-full bg-white text-gray-900 py-1 px-2 rounded-lg"
+                className="input input-bordered w-full bg-white border border-gray-300 text-gray-900 py-1 px-2 rounded-lg"
               />
             </div>
 
             {/* Message */}
             <div>
               <label className="label">
-                <span className="label-text text-white">Message</span>
+                <span className="label-text text-black">Message</span>
               </label>
               <textarea
-                className="textarea textarea-bordered w-full bg-white text-gray-900 py-1 px-2 rounded-lg"
+                className="textarea textarea-bordered w-full border border-gray-300 bg-white text-gray-900 py-1 px-2 rounded-lg"
                 rows="4"
                 placeholder="Write your message..."
               ></textarea>
             </div>
 
-            {/* Submit */}
-            <button className="bg-white text-blue-950 font-bold py-2 px-6 rounded-lg hover:bg-gray-100 transition mx-auto block cursor-pointer">
+
+            <button className="w-full cursor-pointer flex items-center justify-center gap-2 px-3 py-2 bg-[#3749BB] text-[#FFFFFF] text-sm font-medium rounded-lg hover:opacity-90 transition">
               Submit
             </button>
 
@@ -95,8 +95,8 @@ export const ContactUs = () => {
         {/* Direct Info / Map / Links */}
         <div className="flex flex-col justify-between gap-5">
           {/* Contact Info */}
-          <div className="card  bg-blue-950 shadow-xl p-6 text-white rounded-xl">
-            <h2 className="text-2xl font-bold mb-4 border-b border-white/30 pb-2">
+          <div className="card  bg-gray-50 shadow-xl p-6 text-black rounded-xl">
+            <h2 className="text-2xl font-bold mb-4 border-b border-black/30 pb-2">
               Direct Contact
             </h2>
             <p className="mb-2">
@@ -147,7 +147,7 @@ export const ContactUs = () => {
         <div className="flex flex-wrap justify-center gap-4 mt-6">
           <a
             href="mailto:support@yourstore.com"
-            className="px-6 py-2 rounded-lg font-semibold text-blue-950 border-2 hover:text-white hover:bg-blue-950 transition shadow-md"
+            className=" px-6 py-2 rounded-lg font-semibold text-blue-950 border-2 hover:text-white hover:bg-blue-950 transition shadow-md"
           >
             Email Us
           </a>
