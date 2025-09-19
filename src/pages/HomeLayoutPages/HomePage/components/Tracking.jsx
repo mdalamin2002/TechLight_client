@@ -28,8 +28,8 @@ export const Tracking = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-blue-950 shadow-lg rounded-2xl mt-12">
-      <h2 className="text-2xl font-bold mb-4 border-b border-white/30 pb-2 text-white text-center">
+    <div className="max-w-xl mx-auto p-6  shadow-lg rounded-2xl mt-12">
+      <h2 className="text-2xl font-bold mb-4 border-b border-black/30 pb-2 text-black text-center">
         Track Your Order
       </h2>
 
@@ -40,18 +40,12 @@ export const Tracking = () => {
           placeholder="Enter Order ID"
           value={orderId}
           onChange={(e) => setOrderId(e.target.value)}
-          className="w-full border text-white border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-950"
+          className="w-full border text-black border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-950"
         />
-        {/* <button
-          onClick={handleTrack}
-          className="bg-blue-950 text-white px-5 py-2 rounded-lg hover:bg-blue-900 transition cursor-pointer"
-        >
-          Track
-        </button> */}
 
         <button
-          onClick={handleTrack}
-          className="bg-sky-300 text-blue-950 font-bold py-2 px-6 rounded-lg hover:bg-gray-100 transition mx-auto block cursor-pointer"
+        onClick={handleTrack}
+          className="cursor-pointer flex items-center justify-center gap-2 px-3 py-2 bg-[#3749BB] text-[#FFFFFF] text-sm font-medium rounded-lg hover:opacity-90 transition"
         >
           Track
         </button>
