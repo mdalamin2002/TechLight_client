@@ -2,8 +2,8 @@ import React from 'react';
 
 const AdminDashboard = () => {
     return (
-        <div>
-            
+        <div className='bg-primary min-h-screen'>
+            adslf;
         </div>
     );
 };

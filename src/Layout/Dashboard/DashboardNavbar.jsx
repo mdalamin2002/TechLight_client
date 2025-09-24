@@ -2,13 +2,13 @@ import React from 'react';
 import { Bell, User } from "lucide-react";
 const DashboardNavbar = () => {
     return (
-        <header className="flex items-center justify-between px-6 py-3 bg-purple-800/60 backdrop-blur border-b ">
+        <header className="flex items-center justify-between px-6 py-3 bg-primary border-b ">
             {/* Search box */}
             <div className="w-full max-w-md">
                 <input
                     type="text"
                     placeholder="Search..."
-                    className="w-full px-4 py-2 rounded-lg bg-purple-900/60 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                    className="w-full input:focus"
                 />
             </div>
 

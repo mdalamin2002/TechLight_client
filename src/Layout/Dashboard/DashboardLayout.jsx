@@ -6,7 +6,7 @@ import DashboardNavbar from "./DashboardNavbar";
 
 const DashboardLayout = () => {
   return (
-    <div className="flex min-h-screen  text-white">
+    <div className="flex min-h-screen  bg-background">
       {/* Sidebar */}
       <DashboardSidebar />
 
@@ -19,6 +19,7 @@ const DashboardLayout = () => {
         <main className="flex-1 p-6 overflow-y-auto">
           <Outlet />
         </main>
+        
       </div>
     </div>
   );

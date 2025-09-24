@@ -6,30 +6,41 @@ import Mobile from "../pages/HomeLayoutPages/AllProduct/Categories/Mobile/Mobile
 import Laptop from "../pages/HomeLayoutPages/AllProduct/Categories/Laptop/Laptop";
 import DashboardLayout from "@/Layout/Dashboard/DashboardLayout";
 import MainDashboard from "@/Layout/Dashboard/MainDashboard";
+import Login from "@/pages/authentication/Login/Login";
+import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
+import Register from "@/pages/authentication/register/Register";
+import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers";
 
 const MainRoute = createBrowserRouter([
-
   {
     path: "/",
     element: <MainLayout></MainLayout>,
     children: [
       {
         index: true,
-        Component: Home
+        Component: Home,
       },
       {
         path: "/privacy_policy",
-        Component: PrivacyPolicy
+        Component: PrivacyPolicy,
       },
       {
         path: "/mobile",
-        Component: Mobile
+        Component: Mobile,
       },
       {
         path: "/laptop",
-        Component: Laptop
+        Component: Laptop,
       },
-    ]
+    ],
+  },
+  {
+    path: "/auth",
+    Component: AuthLayout,
+    children: [
+      { path: "login", Component: Login },
+      { path: "register", Component: Register },
+    ],
   },
   {
     path: "/dashboard",
@@ -39,6 +50,10 @@ const MainRoute = createBrowserRouter([
         index: true,
         element: <MainDashboard></MainDashboard>
       },
+      {
+        path: "all-users",
+        element: <AllUsers></AllUsers>
+      }
       
     ]
   }

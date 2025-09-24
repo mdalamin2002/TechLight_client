@@ -4,7 +4,7 @@ import ModeratorDashboard from './ModeratorDashboard/ModeratorDashboard';
 import UserDashboard from './UserDashboard/UserDashboard';
 
 const MainDashboard = () => {
-    const role = "admin"; 
+    const role = "moderator"; 
     return (
         <div>
             {role === "admin" && <AdminDashboard></AdminDashboard>}

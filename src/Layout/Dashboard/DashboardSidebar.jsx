@@ -1,6 +1,17 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Home, Users, FileText, DollarSign, User } from "lucide-react"; // icons
+import {
+  Home,
+  Users,
+  Store,
+  Box,
+  ShoppingCart,
+  DollarSign,
+  MessageSquare,
+  BarChart3,
+  Settings,
+  Zap,
+} from "lucide-react"; // icons
 
 export default function DashboardSidebar() {
   const role = "admin"; // "moderator" or "user"
@@ -13,7 +24,7 @@ export default function DashboardSidebar() {
         ${
           isActive
             ? ""
-            : "text-gray-300 hover:bg-purple-700/50 hover:text-white"
+            : "text-gray-300 hover:bg-purple-200 hover:text-white"
         }`
       }
     >
@@ -23,27 +34,31 @@ export default function DashboardSidebar() {
   );
 
   const navConfig = {
-    admin: [
+   admin: [
       { to: "/dashboard", label: "Dashboard", icon: Home },
-      { to: "/dashboard/AllUsers", label: "Users", icon: Users },
-      { to: "/dashboard/AllDonationRequests", label: "Requests", icon: FileText },
-      { to: "/dashboard/ContentManagementPage", label: "Content", icon: FileText },
-      { to: "/dashboard/funding-money", label: "Funding", icon: DollarSign },
-      { to: "/dashboard/profile", label: "Profile", icon: User },
+      { to: "/dashboard/users", label: "Users", icon: Users },
+      { to: "/dashboard/sellers", label: "Sellers", icon: Store },
+      { to: "/dashboard/products", label: "Products", icon: Box },
+      { to: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
+      { to: "/dashboard/finance", label: "Finance", icon: DollarSign },
+      { to: "/dashboard/communication", label: "Communication", icon: MessageSquare },
+      { to: "/dashboard/reports", label: "Reports", icon: BarChart3 },
+      { to: "/dashboard/settings", label: "Settings", icon: Settings },
+      { to: "/dashboard/advanced", label: "Advanced", icon: Zap },
     ],
-    moderator: [
-      { to: "/dashboard", label: "Dashboard", icon: Home },
-      { to: "/dashboard/AllDonationRequests", label: "Requests", icon: FileText },
-      { to: "/dashboard/ContentManagementPage", label: "Content", icon: FileText },
-      { to: "/dashboard/funding-money", label: "Funding", icon: DollarSign },
-      { to: "/dashboard/profile", label: "Profile", icon: User },
-    ],
-    user: [
-      { to: "/dashboard", label: "Dashboard", icon: Home },
-      { to: "/dashboard/MyDonationRequests", label: "My Requests", icon: FileText },
-      { to: "/dashboard/create-donation-request", label: "Create Donation", icon: FileText },
-      { to: "/dashboard/profile", label: "Profile", icon: User },
-    ],
+    // moderator: [
+    //   { to: "/dashboard", label: "Dashboard", icon: Home },
+    //   { to: "/dashboard/AllDonationRequests", label: "Requests", icon: FileText },
+    //   { to: "/dashboard/ContentManagementPage", label: "Content", icon: FileText },
+    //   { to: "/dashboard/funding-money", label: "Funding", icon: DollarSign },
+    //   { to: "/dashboard/profile", label: "Profile", icon: User },
+    // ],
+    // user: [
+    //   { to: "/dashboard", label: "Dashboard", icon: Home },
+    //   { to: "/dashboard/MyDonationRequests", label: "My Requests", icon: FileText },
+    //   { to: "/dashboard/create-donation-request", label: "Create Donation", icon: FileText },
+    //   { to: "/dashboard/profile", label: "Profile", icon: User },
+    // ],
   };
 
   const items = navConfig[role] || navConfig["user"];
@@ -51,8 +66,8 @@ export default function DashboardSidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <nav className="hidden md:flex flex-col gap-6 p-4 min-h-screen w-64 bg-gradient-to-b from-purple-900 via-purple-800 to-purple-900 text-white">
-        <h2 className="text-xl font-bold px-4">Admin Panel</h2>
+      <nav className="hidden md:flex flex-col gap-6 p-4 min-h-screen w-64 bg-gradient-to-b bg-primary">
+        <h2 className="text-xl font-bold px-4">moderator</h2>
         <ul className="flex flex-col gap-2">
           {items.map((item) => (
             <NavItem key={item.to} to={item.to} label={item.label} icon={item.icon} />
@@ -61,7 +76,7 @@ export default function DashboardSidebar() {
       </nav>
 
       {/* Mobile Navbar */}
-      <nav className="flex md:hidden gap-2 overflow-x-auto bg-purple-900 text-white shadow p-2">
+      <nav className="flex md:hidden gap-2 overflow-x-auto shadow p-2">
         <ul className="flex gap-2">
           {items.map((item) => (
             <NavItem key={item.to} to={item.to} label={item.label} icon={item.icon} />
