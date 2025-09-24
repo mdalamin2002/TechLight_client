@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -9,7 +10,10 @@
   --color-accent: #4B5BC2;     /* Accent (10%) */
   --color-text-dark: #000000;  /* Text */
   --color-text-subtext: #8a94a6;
-  --color-link-hover: #D51E3A;
+
+  /* Link Hover Variants */
+  --color-link-hover-red: #E63946; /* refined red */
+  --color-link-hover-blue: #3A4EB8; /* accent darker variant */
 
   /* Dark Mode */
   --color-background-dark: #121212;
@@ -37,7 +41,12 @@ a {
   text-decoration: none;
 }
 a:hover {
-  color: var(--color-link-hover);
+  color: var(--color-link-hover-blue); /* default hover = blue */
+}
+
+/* Red Hover Option (utility class style for emphasis links) */
+a.hover-red:hover {
+  color: var(--color-link-hover-red);
 }
 
 /* ===== CONTAINER ===== */
