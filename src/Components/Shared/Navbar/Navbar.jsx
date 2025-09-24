@@ -41,7 +41,7 @@ export default function Navbar() {
         ${showNavbar ? "translate-y-0" : "-translate-y-full"}
         bg-gray-100/70 backdrop-blur-md shadow-sm`}
       >
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto md:px-0 px-4 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="text-xl font-bold text-textPrimary">
             <TechLightLogo />
