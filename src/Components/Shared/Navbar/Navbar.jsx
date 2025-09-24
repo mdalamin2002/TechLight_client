@@ -22,6 +22,7 @@ export default function Navbar() {
             <Link to="/privacy_policy" className="text-dark hover:text-accent">
               PrivacyPolicy
             </Link>
+            <Link to="/dashboard">Dashboard</Link>
           </nav>
 
           {/* RIGHT - Search + Icons */}
