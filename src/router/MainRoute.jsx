@@ -4,30 +4,40 @@ import MainLayout from "../Layout/MainLayout/MainLayout";
 import PrivacyPolicy from "../pages/HomeLayoutPages/PrivacyPolicyPage/PrivacyPolicy";
 import Mobile from "../pages/HomeLayoutPages/AllProduct/Categories/Mobile/Mobile";
 import Laptop from "../pages/HomeLayoutPages/AllProduct/Categories/Laptop/Laptop";
+import Login from "@/pages/authentication/Login/Login";
+import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
+import Register from "@/pages/authentication/register/Register";
 
 const MainRoute = createBrowserRouter([
-
   {
     path: "/",
     element: <MainLayout></MainLayout>,
     children: [
       {
         index: true,
-        Component: Home
+        Component: Home,
       },
       {
         path: "/privacy_policy",
-        Component: PrivacyPolicy
+        Component: PrivacyPolicy,
       },
       {
         path: "/mobile",
-        Component: Mobile
+        Component: Mobile,
       },
       {
         path: "/laptop",
-        Component: Laptop
+        Component: Laptop,
       },
-    ]
+    ],
+  },
+  {
+    path: "/auth",
+    Component: AuthLayout,
+    children: [
+      { path: "login", Component: Login },
+      { path: "register", Component: Register },
+    ],
   },
 ]);
 
