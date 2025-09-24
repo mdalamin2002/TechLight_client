@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { motion , AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Slider from "./Slider";
 
 const Banner = () => {
@@ -71,31 +71,36 @@ const Banner = () => {
   };
 
   return (
-    <section className="py-6">
+    <section className="section">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
         {/* Sidebar */}
-        <aside className="md:col-span-1 border-r border-gray-300 pr-4 bg-white">
+        <aside className="md:col-span-1 bg-white/80 backdrop-blur-md rounded-xl shadow-md border border-gray-200 py-10 px-4">
           <nav>
             {shopMegaMenu.map((section, idx) => {
               const isOpen = openIndex === idx;
 
               return (
-                <div key={idx} className="mb-4">
+                <div
+                  key={idx}
+                  className="mb-2 border-b border-gray-100 last:border-0"
+                >
                   <button
                     onClick={() => toggleOpen(idx)}
-                    className="flex justify-between items-center cursor-pointer w-full text-left text-gray-800 font-semibold py-2  rounded focus:outline-none"
+                    className="flex justify-between items-center w-full text-left text-gray-800 font-medium py-3 px-3 rounded-lg hover:bg-gradient-to-r hover:from-indigo-50 hover:to-indigo-100 transition-all duration-300 group cursor-pointer"
                     aria-expanded={isOpen}
                     aria-controls={`submenu-${idx}`}
                     id={`menuitem-${idx}`}
                   >
-                    {section.title}
-                    <ChevronRight
-                      className={` text-gray-500 transition-transform duration-300 ${
-                        isOpen ? "rotate-90" : "rotate-0"
-                      }`}
-                      size={20}
-                      aria-hidden="true"
-                    />
+                    <span className="flex items-center gap-2">
+                      <ChevronRight
+                        className={`w-4 h-4 text-indigo-500 transform transition-transform duration-300 ${
+                          isOpen ? "rotate-90" : "rotate-0"
+                        }`}
+                      />
+                      <span className="group-hover:text-indigo-600 transition-colors">
+                        {section.title}
+                      </span>
+                    </span>
                   </button>
 
                   <AnimatePresence initial={false}>
@@ -109,13 +114,13 @@ const Banner = () => {
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="mt-2 list-none space-y-1 text-gray-600 overflow-hidden"
+                        className="pl-8 pb-2 space-y-2 text-gray-600 overflow-hidden"
                       >
                         {section.items.map((item, i) => (
                           <li key={i}>
                             <button
                               type="button"
-                              className="w-full text-left py-1 rounded focus:outline-none cursor-pointer transition"
+                              className="w-full text-left py-1 px-2 rounded-md hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-200 cursor-pointer"
                             >
                               {item}
                             </button>
