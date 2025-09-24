@@ -10,6 +10,14 @@ import Login from "@/pages/authentication/Login/Login";
 import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
 import Register from "@/pages/authentication/register/Register";
 import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers";
+import Sellers from "@/Layout/Dashboard/AdminDashboard/components/Sellers";
+import Products from "@/Layout/Dashboard/AdminDashboard/components/Products";
+import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders";
+import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance";
+import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication";
+import Reports from "@/Layout/Dashboard/AdminDashboard/components/Reports";
+import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings";
+import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced";
 
 const MainRoute = createBrowserRouter([
   {
@@ -51,10 +59,42 @@ const MainRoute = createBrowserRouter([
         element: <MainDashboard></MainDashboard>
       },
       {
-        path: "all-users",
+        path: "users",
         element: <AllUsers></AllUsers>
+      },
+      {
+        path: "sellers",
+        element: <Sellers></Sellers>
+      },
+      {
+        path: "products",
+        element: <Products></Products>
+      },
+      {
+        path: "orders",
+        element: <Orders></Orders>,
+      },
+      {
+        path: "finance",
+        element: <Finance></Finance>
+      },
+      {
+        path: "communication",
+        element: <Communication></Communication>
+      },
+      {
+        path: "reports",
+        element: <Reports></Reports>
+      },
+      {
+        path: "settings",
+        element: <Settings></Settings>
+      },
+      {
+        path: "advanced",
+        element: <Advanced></Advanced>
       }
-      
+
     ]
   }
 ]);
