@@ -46,9 +46,9 @@ export const OrderTrackingPolicy = () => {
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, delay: 0.6 }}
-      className=""
+      className="bg-white"
     >
-      <div className=" mt-5">
+      <div className="container mx-auto py-5">
         <div className="flex items-center gap-4 mb-8">
           <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl shadow-lg">
             <Package className="w-8 h-8 text-white" />
@@ -66,7 +66,7 @@ export const OrderTrackingPolicy = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-8">
+        <div className="grid grid-cols-2 gap-6 mb-8">
           {trackingFeatures.map((feature, index) => (
             <motion.div
               key={index}
@@ -125,7 +125,7 @@ export const OrderTrackingPolicy = () => {
                 </div>
                 <div>
                   <p className="text-gray-800 font-semibold ">{step.title}</p>
-                  <p className="text-gray-400 text-sm">{step.description}</p>
+                  <p className="text-gray-500 text-sm">{step.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -148,7 +148,7 @@ export const OrderTrackingPolicy = () => {
                       index < 2 ? "bg-indigo-400" : "bg-gray-600"
                     }`}
                   ></div>
-                  <p className="text-xs text-gray-400">{status}</p>
+                  <p className="text-xs text-gray-500">{status}</p>
                 </div>
               )
             )}
