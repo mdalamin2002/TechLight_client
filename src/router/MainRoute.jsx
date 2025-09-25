@@ -14,7 +14,7 @@ import Sellers from "@/Layout/Dashboard/AdminDashboard/components/Sellers";
 import Products from "@/Layout/Dashboard/AdminDashboard/components/Products";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
-import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication";
+import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication/Communication";
 import Reports from "@/Layout/Dashboard/AdminDashboard/components/Reports";
 import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings";
 import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced";
