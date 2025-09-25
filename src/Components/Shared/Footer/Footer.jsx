@@ -59,6 +59,7 @@ const Footer = () => {
     { name: "Terms of Service", href: "#" },
     { name: "Returns & Refunds", href: "/returns-refunds" },
     { name: "Order Tracking", href: "/order-tracking" },
+    { name: "Warranty", href: "/warranty" },
   ];
 
   const categories = [
