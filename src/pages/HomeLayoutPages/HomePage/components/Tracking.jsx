@@ -187,7 +187,7 @@ const Tracking = () => {
   };
 
   return (
-    <div className="bg-custom-background">
+    <div className="bg-custom-background section">
       {/* Toast Notification */}
       {showToast && error && (
         <div className="fixed top-4 right-4 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-top duration-300">

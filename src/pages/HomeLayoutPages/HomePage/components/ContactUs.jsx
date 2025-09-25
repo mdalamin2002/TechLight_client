@@ -120,7 +120,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-custom-background flex flex-col items-center px-4 py-10 mt-12">
+    <div className="min-h-screen bg-custom-background flex flex-col items-center section">
       {/* Header */}
       <h1>Contact Us</h1>
       <p className="text-custom-subtext max-w-xl text-center mb-10">
