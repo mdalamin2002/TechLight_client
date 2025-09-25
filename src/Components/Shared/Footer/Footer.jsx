@@ -78,7 +78,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-gradient-to-b from-gray-200 to-gray-300 dark:from-gray-900 dark:to-gray-800 mt-30">
+    <footer className="relative bg-gradient-to-b from-gray-200 to-gray-300 dark:from-gray-900 dark:to-gray-800 mt-30 md:mb-0 mb-12">
       {/* Scroll to top button */}
       <motion.button
         onClick={scrollToTop}
@@ -102,7 +102,7 @@ const Footer = () => {
           <motion.div variants={itemVariants} className="lg:col-span-1">
             <div className="mb-6">
               <Link to="/" className="text-xl font-bold text-textPrimary">
-                <TechLightLogo className="mb-4"/>
+                <TechLightLogo className="mb-4" />
               </Link>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
                 We are dedicated to providing exceptional products and services
@@ -250,27 +250,33 @@ const Footer = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0">
             {/* Social Links */}
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-600 dark:text-gray-400 mr-2">
+            <div className="flex flex-col sm:flex-row items-center sm:space-x-4 gap-3 sm:gap-0">
+              <span className="text-gray-600 dark:text-gray-400 mb-2 sm:mb-0">
                 Follow us:
               </span>
-              {socialLinks.map((social, index) => {
-                const IconComponent = social.icon;
-                return (
-                  <motion.a
-                    key={index}
-                    href={social.href}
-                    className="bg-gray-200 dark:bg-gray-700 hover:bg-custom-accent text-gray-700 dark:text-gray-300 hover:text-white p-3 rounded-full transition-all duration-300 shadow-md hover:shadow-lg group"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={social.label}
-                  >
-                    <IconComponent className="w-5 h-5" />
-                  </motion.a>
-                );
-              })}
+              <div className="flex space-x-3">
+                {socialLinks.map((social, index) => {
+                  const IconComponent = social.icon;
+                  return (
+                    <motion.a
+                      key={index}
+                      href={social.href}
+                      className="flex items-center justify-center w-10 h-10 rounded-full
+                         bg-gray-200 dark:bg-gray-700
+                         text-gray-700 dark:text-gray-300
+                         hover:bg-accent hover:text-white
+                         transition-all duration-300 shadow-md hover:shadow-lg"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label={social.label}
+                    >
+                      <IconComponent className="w-5 h-5" />
+                    </motion.a>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Copyright */}
@@ -278,7 +284,7 @@ const Footer = () => {
               <p className="flex items-center justify-center space-x-1">
                 <span>© 2024 YourCompany. Made with</span>
                 <Heart className="w-4 h-4 text-red-500 fill-current animate-pulse" />
-                <span>in Bangladesh</span>
+                <span className="lg:block hidden">in Bangladesh</span>
               </p>
             </div>
           </div>
