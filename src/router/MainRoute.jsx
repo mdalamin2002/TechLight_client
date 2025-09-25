@@ -13,7 +13,7 @@ import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers";
 import Sellers from "@/Layout/Dashboard/AdminDashboard/components/Sellers";
 import Products from "@/Layout/Dashboard/AdminDashboard/components/Products";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders";
-import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance";
+import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
 import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication";
 import Reports from "@/Layout/Dashboard/AdminDashboard/components/Reports";
 import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings";
