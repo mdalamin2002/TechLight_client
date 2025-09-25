@@ -15,10 +15,10 @@ import Products from "@/Layout/Dashboard/AdminDashboard/components/Products";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
 import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication/Communication";
-import Reports from "@/Layout/Dashboard/AdminDashboard/components/Reports";
 import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings";
 import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced";
 import Admin_Home from "@/Layout/Dashboard/AdminDashboard/components/Admin_Home/Admin_Home";
+import { Reports } from "@/Layout/Dashboard/AdminDashboard/components/Reports_page/Reports";
 
 const MainRoute = createBrowserRouter([
   {
