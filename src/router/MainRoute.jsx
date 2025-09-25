@@ -16,7 +16,7 @@ import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
 import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication/Communication";
 import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings/Settings";
-import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced";
+import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced/Advanced";
 import Admin_Home from "@/Layout/Dashboard/AdminDashboard/components/Admin_Home/Admin_Home";
 import { Reports } from "@/Layout/Dashboard/AdminDashboard/components/Reports_page/Reports";
 
