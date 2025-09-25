@@ -71,8 +71,8 @@ const Banner = () => {
   };
 
   return (
-    <section className="section">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+    <section className="container mx-auto md:mt-12 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
         {/* Sidebar */}
         <aside className="md:col-span-1 bg-white/80 backdrop-blur-md rounded-xl shadow-md border border-gray-200 py-10 px-4">
           <nav>

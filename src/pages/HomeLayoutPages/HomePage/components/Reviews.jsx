@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -7,7 +7,7 @@ import { Star, Quote } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Reviews = () => {
-  const reviews = [
+  const reviews = useMemo(() => [
     {
       id: 1,
       name: "John Doe",
@@ -78,35 +78,76 @@ const Reviews = () => {
       comment: "Very useful and good packaging.",
       image: "https://i.pravatar.cc/150?img=10",
     },
-  ];
+  ], []);
 
-  // Render Stars
-  const renderStars = (rating) => {
+  // Optimized Star Render Function
+  const renderStars = useMemo(() => (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
-        className={`w-4 h-4 ${
+        className={`w-4 h-4 transition-colors duration-200 ${
           index < rating ? "text-yellow-400 fill-current" : "text-gray-300"
         }`}
       />
     ));
+  }, []);
+
+  // Animation variants for better performance
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        staggerChildren: 0.1
+      }
+    }
   };
 
+  const slideVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6 }
+    }
+  };
+
+  const NavigationButton = ({ direction, className }) => (
+    <button
+      className={`${className} bg-custom-primary hover:bg-custom-accent hover:text-custom-primary text-custom-accent rounded-full p-3 shadow-lg transition-all duration-300 border border-custom-subtext group`}
+      aria-label={`${direction} review`}
+    >
+      <svg
+        className="w-5 h-5 transition-transform duration-200 group-hover:scale-110"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d={direction === 'Previous' ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"}
+        />
+      </svg>
+    </button>
+  );
+
   return (
-    <section className="bg-base-200 py-20 px-4 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <section className="bg-custom-background section ">
+      <div className="container mx-auto">
         {/* Header */}
         <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
         >
-          <h2 className="text-3xl lg:text-4xl font-bold text-base-content mb-4">
-            Customer <span className="text-primary">Reviews</span>
-          </h2>
-          <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+          <h2>Customer Reviews</h2>
+          <p className="text-custom-subtext max-w-2xl mx-auto">
             See what our valued customers say about their experience.
           </p>
         </motion.div>
@@ -115,8 +156,8 @@ const Reviews = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-50px" }}
         >
           <Swiper
             modules={[Navigation, Autoplay]}
@@ -131,35 +172,49 @@ const Reviews = () => {
               nextEl: ".swiper-button-next-custom",
               prevEl: ".swiper-button-prev-custom",
             }}
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true
+            }}
             loop={true}
             className="review-swiper pb-12"
+            lazy={true}
           >
-            {reviews.map((review, idx) => (
+            {reviews.map((review) => (
               <SwiperSlide key={review.id}>
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: idx * 0.1 }}
-                  viewport={{ once: false }}
+                  variants={slideVariants}
+                  className="h-full"
                 >
-                  <div className="bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 p-8 h-full rounded-2xl flex flex-col justify-between">
+                  <div className="bg-custom-primary shadow-lg hover:shadow-xl transition-all duration-300 p-8 h-full rounded-2xl flex flex-col justify-between group hover:-translate-y-1">
                     {/* User Image */}
                     <div className="flex justify-center mb-4">
-                      <img
-                        src={review.image}
-                        alt={review.name}
-                        className="w-16 h-16 rounded-full object-cover border-2 border-primary"
-                      />
+                      <div className="relative">
+                        <img
+                          src={review.image}
+                          alt={`${review.name}'s profile`}
+                          className="w-16 h-16 rounded-full object-cover border-2 border-custom-accent transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/150?text=User';
+                          }}
+                        />
+                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-custom-accent rounded-full flex items-center justify-center">
+                          <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Quote */}
+                    {/* Quote Icon */}
                     <div className="flex justify-center mb-4">
-                      <Quote className="w-6 h-6 text-primary" />
+                      <Quote className="w-6 h-6 text-custom-accent opacity-60" />
                     </div>
 
                     {/* Feedback */}
-                    <p className="text-center text-base-content/70 leading-relaxed italic mb-6">
+                    <p className="text-center text-custom-subtext leading-relaxed italic mb-6 flex-grow">
                       "{review.comment}"
                     </p>
 
@@ -172,7 +227,7 @@ const Reviews = () => {
 
                     {/* User Name */}
                     <div className="text-center">
-                      <h4 className="font-semibold text-base-content text-lg">
+                      <h4 className="font-semibold text-custom-text">
                         {review.name}
                       </h4>
                     </div>
@@ -184,36 +239,14 @@ const Reviews = () => {
 
           {/* Custom Navigation Buttons */}
           <div className="flex justify-center items-center space-x-4 mt-8">
-            <button className="swiper-button-prev-custom bg-base-100 hover:bg-primary hover:text-base-100 text-primary rounded-full p-3 shadow-lg transition-all duration-300 border border-base-200">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-            <button className="swiper-button-next-custom bg-base-100 hover:bg-primary hover:text-base-100 text-primary rounded-full p-3 shadow-lg transition-all duration-300 border border-base-200">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
+            <NavigationButton
+              direction="Previous"
+              className="swiper-button-prev-custom"
+            />
+            <NavigationButton
+              direction="Next"
+              className="swiper-button-next-custom"
+            />
           </div>
         </motion.div>
       </div>
