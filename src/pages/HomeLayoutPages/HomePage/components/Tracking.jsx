@@ -224,7 +224,7 @@ const Tracking = () => {
               <button
                 onClick={handleTrack}
                 disabled={loading}
-                className="bg-custom-accent hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors duration-200 disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
+                className="bg-custom-accent hover:bg-[#3749BB] text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors duration-200 disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -362,7 +362,7 @@ const Tracking = () => {
 
                 {/* Timeline Steps */}
                 <div className="space-y-4 sm:space-y-6 md:space-y-8 min-w-[300px]">
-                  {trackingData.timeline.map((step, index) => (
+                  {trackingData.timeline.map((step) => (
                     <div
                       key={step.id}
                       className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 relative"
