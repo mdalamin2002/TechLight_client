@@ -1,121 +1,73 @@
+import OutlineButton from "@/Components/Shared/Buttots/OutlineButton";
+import AllFeatureProductShare from "@/Components/Shared/Feature Product/AllFeatureProductShare";
 import React from "react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { FcViewDetails } from "react-icons/fc";
 
 const products = [
-    {
-        id: 1,
-        name: "4K Smart TV",
-        price: "$899",
-        image: "https://i.ibb.co.com/W4N2qq64/O9FG5V0.jpg",
-        description: "Ultra HD 55-inch Smart TV with HDR10 and voice control.",
-        rating: 4.6
-    },
-    {
-        id: 2,
-        name: "Bluetooth Speaker",
-        price: "$149",
-        image: "https://i.ibb.co.com/hFNZ14Vd/high-angle-smart-speaker-home.jpg",
-        description: "Portable waterproof Bluetooth speaker with deep bass.",
-        rating: 4.3
-    },
-    {
-        id: 3,
-        name: "DSLR Camera Pro",
-        price: "$1299",
-        image: "https://i.ibb.co.com/mr4ZPFTw/photo-camera-still-life.jpg",
-        description: "Professional DSLR with 24MP sensor and 4K video recording.",
-        rating: 4.9
-    },
+  {
+    id: 1,
+    name: "4K Smart TV",
+    price: "$899",
+    image: "https://i.ibb.co.com/W4N2qq64/O9FG5V0.jpg",
+    description: "Ultra HD 55-inch Smart TV with HDR10 and voice control.",
+    rating: 4.6,
+  },
+  {
+    id: 2,
+    name: "Bluetooth Speaker",
+    price: "$149",
+    image: "https://i.ibb.co.com/hFNZ14Vd/high-angle-smart-speaker-home.jpg",
+    description: "Portable waterproof Bluetooth speaker with deep bass.",
+    rating: 4.3,
+  },
+  {
+    id: 3,
+    name: "DSLR Camera Pro",
+    price: "$1299",
+    image: "https://i.ibb.co.com/mr4ZPFTw/photo-camera-still-life.jpg",
+    description: "Professional DSLR with 24MP sensor and 4K video recording.",
+    rating: 4.9,
+  },
 
-
-
-    {
-        id: 4,
-        name: "Gaming Console Z",
-        price: "$499",
-        image: "https://i.ibb.co.com/nqdMmt5d/high-angle-controller-vr-glasses.jpg",
-        description: "Next-gen gaming console with ultra-fast loading and 1TB SSD.",
-        rating: 4.7
-    }
+  {
+    id: 4,
+    name: "Gaming Console Z",
+    price: "$499",
+    image: "https://i.ibb.co.com/nqdMmt5d/high-angle-controller-vr-glasses.jpg",
+    description: "Next-gen gaming console with ultra-fast loading and 1TB SSD.",
+    rating: 4.7,
+  },
 ];
 
-// Rating Component
-const Rating = ({ value }) => {
-    const stars = [];
-    const fullStars = Math.floor(value);
-    const halfStar = value - fullStars >= 0.5;
-
-    for (let i = 0; i < 5; i++) {
-        if (i < fullStars) stars.push(<AiFillStar key={i} className="text-yellow-400" />);
-        else if (i === fullStars && halfStar) stars.push(<AiFillStar key={i} className="text-yellow-400 opacity-50" />);
-        else stars.push(<AiOutlineStar key={i} className="text-yellow-400" />);
-    }
-
-    return <div className="flex items-center gap-1 mt-1">{stars}</div>;
-};
-
 const FeaturedSection = () => {
-    const handleAddToCart = (name) => alert(`${name} added View Details`);
+  const handleAddToCart = (name) => alert(`${name} added View Details`);
+  const handleWishlist = (name) => alert(`${name} added to wishlist!`);
+  const handleQuickView = (name) => alert(`Quick view for ${name}`);
+  return (
+    <section className="section bg-background">
+      <div className="">
+        {/* Section Heading */}
+        <div className="flex items-center justify-between mb-12">
+          <h2>Featured Section</h2>
+          <OutlineButton>View All</OutlineButton>
+        </div>
 
-    return (
-        <section className="mt-15 bg-background">
-            <div className="max-w-7xl mx-auto px-6">
-                {/* Section Heading */}
-                <div className="flex items-center justify-between mb-12">
-                    <h2 className="text-3xl font-bold text-dark">Featured Section</h2>
-                    <button
-                        type="button"
-                        className="hidden hover:bg-amber-100 cursor-pointer sm:inline-block text-sm font-medium px-5 py-2 rounded-lg border border-accent text-accent hover:bg-accent hover:text-primary transition"
-                    >
-                        View All
-                    </button>
-                </div>
-
-                {/* Product Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {products.map((product) => (
-                        <article
-                            key={product.id}
-                            className="bg-primary rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden group flex flex-col"
-                        >
-                            {/* Image */}
-                            <div className="relative cursor-pointer w-full h-54 sm:h-54 md:h-54 lg:h-54">
-                                <img
-                                    src={product.image}
-                                    alt={product.name}
-                                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-102"
-                                    loading="lazy"
-                                />
-                            </div>
-                            {/* Product Info */}
-                            <div className="p-4 flex flex-col flex-1 justify-between">
-                                <div>
-                                    <h3 className="text-lg font-semibold text-dark">{product.name}</h3>
-                                    <p className="text-sm text-subtext mt-2 line-clamp-3">{product.description}</p>
-                                </div>
-                                <div className="flex items-center mt-2 gap-2">
-                                    <Rating value={product.rating} /><span className="text-[11px]">120</span>
-                                </div>
-
-                                {/* Price + Cart */}
-                                <div className="mt-2 flex items-center justify-between">
-                                    <button
-                                        onClick={() => handleAddToCart(product.name)}
-                                        className=" w-full cursor-pointer flex items-center justify-center gap-2 px-3 py-2 bg-[#3749BB] text-[#FFFFFF] text-sm font-medium rounded-lg hover:opacity-90 transition"
-                                    >
-                                        <FcViewDetails size={16} />
-                                        View Details
-                                    </button>
-                                </div>
-                            </div>
-
-                        </article>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {products.map((p) => (
+            <AllFeatureProductShare
+              key={p.id}
+              product={p}
+              handleAddToCart={handleAddToCart}
+              handleWishlist={handleWishlist}
+              handleQuickView={handleQuickView}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default FeaturedSection;
