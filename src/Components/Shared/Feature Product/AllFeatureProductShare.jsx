@@ -1,18 +1,33 @@
 import React from "react";
 import { FiHeart, FiEye, FiShoppingCart } from "react-icons/fi";
+import { Star, StarHalf, Star as StarOutline } from "lucide-react";
 import FilledButton from "../Buttots/FilledButton";
 
-// Dummy Rating Component
+// Dynamic Rating Component using Lucide icons
 const Rating = ({ value }) => {
-  const stars = Array.from({ length: 5 }, (_, i) => (
-    <span key={i} className={i < value ? "text-yellow-500" : "text-gray-300"}>
-      ★
-    </span>
-  ));
-  return <div className="flex items-center">{stars}</div>;
+  const stars = [];
+  const fullStars = Math.floor(value);
+  const hasHalfStar = value - fullStars >= 0.5;
+
+  for (let i = 0; i < 5; i++) {
+    if (i < fullStars) {
+      stars.push(<Star key={i} className="text-yellow-400 fill-current" size={16} />);
+    } else if (i === fullStars && hasHalfStar) {
+      stars.push(<StarHalf key={i} className="text-yellow-400 fill-current" size={16} />);
+    } else {
+      stars.push(<StarOutline key={i} className="text-gray-300 fill-current" size={16} />);
+    }
+  }
+
+  return <div className="flex items-center gap-1">{stars}</div>;
 };
 
-const AllFeatureProductShare = ({ product, handleWishlist, handleQuickView, handleAddToCart }) => {
+const AllFeatureProductShare = ({
+  product,
+  handleWishlist,
+  handleQuickView,
+  handleAddToCart,
+}) => {
   return (
     <article className="bg-primary rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden group flex flex-col">
       {/* Image */}
@@ -47,14 +62,18 @@ const AllFeatureProductShare = ({ product, handleWishlist, handleQuickView, hand
       <div className="p-4 flex flex-col flex-1 justify-between">
         <div>
           <h3 className="text-lg font-semibold text-dark">{product.name}</h3>
-          <p className="text-sm text-subtext mt-2 line-clamp-3">{product.description}</p>
+          <p className="text-sm text-subtext mt-2 line-clamp-3">
+            {product.description}
+          </p>
         </div>
 
         {/* Rating */}
         <div className="flex items-center mt-2 gap-2">
           <Rating value={product.rating} />
           {product.reviewCount && (
-            <span className="text-[11px] text-gray-500">{product.reviewCount}</span>
+            <span className="text-[11px] text-gray-500">
+              ({product.reviewCount})
+            </span>
           )}
         </div>
 

@@ -42,23 +42,6 @@ const products = [
   },
 ];
 
-// Rating Component
-const Rating = ({ value }) => {
-  const stars = [];
-  const fullStars = Math.floor(value);
-  const halfStar = value - fullStars >= 0.5;
-
-  for (let i = 0; i < 5; i++) {
-    if (i < fullStars)
-      stars.push(<AiFillStar key={i} className="text-yellow-400" />);
-    else if (i === fullStars && halfStar)
-      stars.push(<AiFillStar key={i} className="text-yellow-400 opacity-50" />);
-    else stars.push(<AiOutlineStar key={i} className="text-yellow-400" />);
-  }
-
-  return <div className="flex items-center gap-1 mt-1">{stars}</div>;
-};
-
 const TopProducts = () => {
   const handleAddToCart = (name) => alert(`${name} added to cart!`);
   const handleWishlist = (name) => alert(`${name} added to wishlist!`);
@@ -69,7 +52,7 @@ const TopProducts = () => {
       <div className="">
         {/* Section Heading */}
         <div className="flex items-center justify-between mb-12">
-          <h2 >Top Selling Electronics</h2>
+          <h2>Top Selling Electronics</h2>
           <OutlineButton>View All</OutlineButton>
         </div>
 
