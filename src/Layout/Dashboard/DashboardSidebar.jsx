@@ -20,13 +20,12 @@ export default function DashboardSidebar() {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-sm md:text-base transition-all duration-300 
-        ${
-          isActive
-            ? ""
-            : "text-gray-300 hover:bg-purple-200 hover:text-white"
-        }`
-      }
+                  `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 border border-purple-500/30'
+                      : 'text-gray-300 hover:text-purple-300 hover:bg-purple-500/10'
+                  }`
+                }
     >
       {Icon && <Icon size={18} />}
       {label}
@@ -35,7 +34,7 @@ export default function DashboardSidebar() {
 
   const navConfig = {
    admin: [
-      { to: "/dashboard", label: "Dashboard", icon: Home },
+      { to: "/dashboard/home", label: "Dashboard", icon: Home },
       { to: "/dashboard/users", label: "Users", icon: Users },
       { to: "/dashboard/sellers", label: "Sellers", icon: Store },
       { to: "/dashboard/products", label: "Products", icon: Box },
@@ -67,7 +66,7 @@ export default function DashboardSidebar() {
     <>
       {/* Desktop Sidebar */}
       <nav className="hidden md:flex flex-col gap-6 p-4 min-h-screen w-64 bg-gradient-to-b bg-primary">
-        <h2 className="text-xl font-bold px-4">moderator</h2>
+        <h2 className="text-xl font-bold px-4">Admin</h2>
         <ul className="flex flex-col gap-2">
           {items.map((item) => (
             <NavItem key={item.to} to={item.to} label={item.label} icon={item.icon} />

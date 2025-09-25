@@ -18,6 +18,7 @@ import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communic
 import Reports from "@/Layout/Dashboard/AdminDashboard/components/Reports";
 import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings";
 import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced";
+import Admin_Home from "@/Layout/Dashboard/AdminDashboard/components/Admin_Home/Admin_Home";
 
 const MainRoute = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const MainRoute = createBrowserRouter([
       {
         index: true,
         element: <MainDashboard></MainDashboard>
+      },
+      {
+        path: "home",
+        element: <Admin_Home></Admin_Home>
       },
       {
         path: "users",

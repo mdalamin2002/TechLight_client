@@ -16,10 +16,9 @@ const DashboardLayout = () => {
        <DashboardNavbar />
 
         {/* Main Outlet */}
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="flex-1 p-2 overflow-y-auto">
           <Outlet />
         </main>
-        
       </div>
     </div>
   );
