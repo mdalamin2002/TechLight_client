@@ -1,39 +1,104 @@
-@import url('https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
 /* ===== COLORS ===== */
 :root {
   /* Light Mode */
-  --color-background: #F2F4F8; /* Main (60%) */
-  --color-primary: #FFFFFF;    /* Secondary (30%) */
-  --color-accent: #4B5BC2;     /* Accent (10%) */
-  --color-text-dark: #000000;  /* Text */
-  --color-text-subtext: #8a94a6;
+  --color-background: #f2f4f8;
+  --color-primary: #ffffff;
+  --color-accent: #4b5bc2;
+  --color-text: #000000;
+  --color-subtext: #8a94a6;
 
   /* Link Hover Variants */
-  --color-link-hover-red: #E63946; /* refined red */
-  --color-link-hover-blue: #3A4EB8; /* accent darker variant */
-
-  /* Dark Mode */
-  --color-background-dark: #121212;
-  --color-primary-dark: #1E1E1E;
-  --color-accent-dark: #5865F2;
-  --color-text-dark-mode: #FAFAFA;
-  --color-subtext-dark: #B0B0B0;
+  --color-link-hover-red: #e63946;
+  --color-link-hover-blue: #3a4eb8;
 }
 
+/* Dark Mode */
+[data-theme="dark"] {
+  --color-background: #121212;
+  --color-primary: #1e1e1e;
+  --color-accent: #5865f2;
+  --color-text: #fafafa;
+  --color-subtext: #b0b0b0;
+}
 
+/* ===== COLOR UTILITIES ===== */
+@layer utilities {
+  .text-background {
+    color: var(--color-background);
+  }
+  .bg-background {
+    background-color: var(--color-background);
+  }
+  .text-primary {
+    color: var(--color-primary);
+  }
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+  .text-accent {
+    color: var(--color-accent);
+  }
+  .bg-accent {
+    background-color: var(--color-accent);
+  }
+  .text-dark {
+    color: var(--color-text);
+  }
+  .text-subtext {
+    color: var(--color-subtext);
+  }
+}
 
 /* ===== TYPOGRAPHY ===== */
-h1 { font-family: 'Poppins', sans-serif; font-size: 40px; font-weight: 700; line-height: 1.3; }
-h2 { font-family: 'Poppins', sans-serif; font-size: 30px; font-weight: 600; line-height: 1.35; }
-h3 { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 600; line-height: 1.35; }
-h4 { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 500; line-height: 1.4; }
-h5 { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 500; line-height: 1.4; }
-p  { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 400; line-height: 1.5; }
-small { font-size: 14px; line-height: 1.4; }
-.caption { font-size: 12px; line-height: 1.3; }
+h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+h3 {
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+h4 {
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+h5 {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+p {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+small {
+  font-size: 14px;
+  line-height: 1.4;
+}
+.caption {
+  font-size: 12px;
+  line-height: 1.3;
+}
 
 /* ===== LINKS ===== */
 a {
@@ -41,35 +106,37 @@ a {
   text-decoration: none;
 }
 a:hover {
-  color: var(--color-link-hover-blue); /* default hover = blue */
+  color: var(--color-link-hover-blue);
 }
-
-/* Red Hover Option (utility class style for emphasis links) */
 a.hover-red:hover {
   color: var(--color-link-hover-red);
 }
 
 /* ===== CONTAINER ===== */
 .container {
-  max-width: 1440px; /* Updated */
-  width: 91.666667%; /* ~w-11/12 */
+  max-width: 1440px;
+  width: 91.666667%;
   margin: 0 auto;
   padding: 0 16px;
 }
 
-/* All sections spacing */
+/* Sections */
 .section {
-  margin-top: 3.75rem; /* mt-15 (60px) */
+  margin-top: 3.75rem; /* 60px */
 }
 
 /* ===== FORMS ===== */
-input, select, textarea {
+input,
+select,
+textarea {
   padding: 8px 16px;
-  border: 1px solid var(--color-text-subtext);
+  border: 1px solid var(--color-subtext);
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--color-accent);
 }
