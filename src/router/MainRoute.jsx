@@ -41,9 +41,6 @@ const MainRoute = createBrowserRouter([
         Component: OrderTrackingPolicy,
       },
     ],
-
-      },
-    ],
   },
   {
     path: "/auth",
