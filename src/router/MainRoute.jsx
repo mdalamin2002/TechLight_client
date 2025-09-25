@@ -9,6 +9,7 @@ import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/Ord
 import Login from "@/pages/authentication/Login/Login";
 import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
 import Register from "@/pages/authentication/register/Register";
+import Warranty from "@/pages/PolicyPages/Warranty/Warranty";
 
 const MainRoute = createBrowserRouter([
   {
@@ -40,6 +41,11 @@ const MainRoute = createBrowserRouter([
         path: "/order-tracking",
         Component: OrderTrackingPolicy,
       },
+      {
+        path: "/warranty",
+        Component: Warranty,
+      },
+
     ],
   },
   {
