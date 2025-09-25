@@ -49,7 +49,7 @@ export const ReturnsRefundsPolicy = () => {
         <div className="grid grid-cols-2 gap-6 mb-8">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="bg-gray-200 rounded-xl p-8 border border-gray-300 flex justify-center items-center gap-3"
+            className="bg-gray-100 rounded-xl p-8 border border-gray-300 flex justify-center items-center gap-3 hover:shadow-lg transition-all duration-300"
           >
             <Clock className="w-6 h-6 text-blue-400 mb-2" />
             <p className="text-black font-semibold">30 Days</p>
@@ -58,7 +58,7 @@ export const ReturnsRefundsPolicy = () => {
 
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="bg-gray-200 rounded-xl  border border-gray-300 p-8 flex justify-center items-center gap-3"
+            className="bg-gray-100 rounded-xl  border border-gray-300 p-8 flex justify-center items-center gap-3 hover:shadow-lg transition-all duration-300"
           >
             <Shield className="w-6 h-6 text-blue-400 mb-2" />
             <p className="text-black font-semibold">Full Refund</p>
@@ -85,7 +85,7 @@ export const ReturnsRefundsPolicy = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.6 + index * 0.1 }}
-                className="flex items-start gap-3 p-3 bg-gray-200 rounded-lg border border-gray-300 hover:border-gray-700 transition-all duration-300"
+                className="flex items-start gap-3 p-3 bg-gray-100 rounded-lg border border-gray-300 hover:shadow-lg transition-all duration-300"
               >
                 <div className="w-2 h-2  rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-sm text-gray-500">{rule}</p>
@@ -103,9 +103,10 @@ export const ReturnsRefundsPolicy = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + index * 0.2 }}
-                className="flex items-center gap-4 p-4 bg-gray-200 border-gray-300 rounded-xl border hover:border-gray-700 transition-all duration-300"
+                className="flex items-center gap-4 p-4 bg-gray-100 border-gray-300 rounded-xl border hover:shadow-lg transition-all duration-300"
               >
                 <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400">
+                
                   {step.icon}
                 </div>
                 <div>
