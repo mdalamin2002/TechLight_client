@@ -45,7 +45,7 @@ const FeaturedSection = () => {
   const handleWishlist = (name) => alert(`${name} added to wishlist!`);
   const handleQuickView = (name) => alert(`Quick view for ${name}`);
   return (
-    <section className="section bg-background">
+    <section className="container mx-auto section bg-background">
       <div className="">
         {/* Section Heading */}
         <div className="flex items-center justify-between mb-12">
