@@ -10,7 +10,7 @@ import Login from "@/pages/authentication/Login/Login";
 import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
 import Register from "@/pages/authentication/register/Register";
 import FAQ from "@/pages/PolicyPages/FAQ/FAQ";
-import { Terms } from "@/pages/PolicyPages/Terms/Terms";
+import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 
 
 const MainRoute = createBrowserRouter([
@@ -33,7 +33,6 @@ const MainRoute = createBrowserRouter([
       {
         path: "/laptop",
         Component: Laptop,
-
       },
       {
         path: "/returns-refunds",
@@ -44,12 +43,12 @@ const MainRoute = createBrowserRouter([
         Component: OrderTrackingPolicy,
       },
       {
-        path: "/faq",
+        path: "faq",
         Component: FAQ,
       },
       {
-        path: "/terms-services",
-        Component: Terms,
+        path: "terms-service",
+        Component: TermsOfService,
       },
     ],
   },
