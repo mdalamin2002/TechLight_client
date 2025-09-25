@@ -6,6 +6,9 @@ import Mobile from "../pages/HomeLayoutPages/AllProduct/Categories/Mobile/Mobile
 import Laptop from "../pages/HomeLayoutPages/AllProduct/Categories/Laptop/Laptop";
 import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/ReturnsRefundsPolicy";
 import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
+import Login from "@/pages/authentication/Login/Login";
+import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
+import Register from "@/pages/authentication/register/Register";
 
 const MainRoute = createBrowserRouter([
   {
@@ -27,6 +30,7 @@ const MainRoute = createBrowserRouter([
       {
         path: "/laptop",
         Component: Laptop,
+
       },
       {
         path: "/returns-refunds",
@@ -36,6 +40,17 @@ const MainRoute = createBrowserRouter([
         path: "/order-tracking",
         Component: OrderTrackingPolicy,
       },
+    ],
+
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    Component: AuthLayout,
+    children: [
+      { path: "login", Component: Login },
+      { path: "register", Component: Register },
     ],
   },
 ]);
