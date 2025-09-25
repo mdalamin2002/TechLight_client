@@ -54,9 +54,9 @@ const Footer = () => {
 
   const supportLinks = [
     { name: "Help Center", href: "#" },
-    { name: "FAQ", href: "#" },
+    { name: "FAQ", href: "/faq" },
     { name: "Privacy Policy", href: "/privacy_policy" },
-    { name: "Terms of Service", href: "#" },
+    { name: "Terms of Service", href: "/terms-service" },
     { name: "Returns & Refunds", href: "/returns-refunds" },
     { name: "Order Tracking", href: "/order-tracking" },
   ];
