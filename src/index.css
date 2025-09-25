@@ -52,6 +52,31 @@
   .text-subtext {
     color: var(--color-subtext);
   }
+
+  .bg-custom-background { background-color: var(--color-background); }
+  .bg-custom-primary { background-color: var(--color-primary); }
+  .bg-custom-accent { background-color: var(--color-accent); }
+
+  .text-custom-text { color: var(--color-text); }
+  .text-custom-subtext { color: var(--color-subtext); }
+  .text-custom-accent { color: var(--color-accent); }
+
+  .border-custom-subtext { border-color: var(--color-subtext); }
+  .border-custom-accent { border-color: var(--color-accent); }
+
+  .custom-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(75, 91, 194, 0.1);
+  }
+
+  .timeline-line {
+    background: linear-gradient(to bottom, #22c55e 0%, #22c55e 60%, #e5e7eb 60%, #e5e7eb 100%);
+  }
+
+  .pulse-animation {
+    animation: pulse 2s infinite;
+  }
 }
 
 /* ===== TYPOGRAPHY ===== */
