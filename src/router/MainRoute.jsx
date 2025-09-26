@@ -6,7 +6,6 @@ import Mobile from "../pages/HomeLayoutPages/AllProduct/Categories/Mobile/Mobile
 import Laptop from "../pages/HomeLayoutPages/AllProduct/Categories/Laptop/Laptop";
 import DashboardLayout from "@/Layout/Dashboard/DashboardLayout";
 import MainDashboard from "@/Layout/Dashboard/MainDashboard";
-import Login from "@/pages/authentication/Login/Login";
 import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
 import Register from "@/pages/authentication/register/Register";
 import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers";
@@ -19,6 +18,12 @@ import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings/Sett
 import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced/Advanced";
 import Admin_Home from "@/Layout/Dashboard/AdminDashboard/components/Admin_Home/Admin_Home";
 import { Reports } from "@/Layout/Dashboard/AdminDashboard/components/Reports_page/Reports";
+import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/ReturnsRefundsPolicy";
+import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
+import Login from "@/pages/authentication/Login/Login";
+import FAQ from "@/pages/PolicyPages/FAQ/FAQ";
+import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
+
 
 const MainRoute = createBrowserRouter([
   {
@@ -40,6 +45,22 @@ const MainRoute = createBrowserRouter([
       {
         path: "/laptop",
         Component: Laptop,
+      },
+      {
+        path: "/returns-refunds",
+        Component: ReturnsRefundsPolicy,
+      },
+      {
+        path: "/order-tracking",
+        Component: OrderTrackingPolicy,
+      },
+      {
+        path: "faq",
+        Component: FAQ,
+      },
+      {
+        path: "terms-service",
+        Component: TermsOfService,
       },
     ],
   },
