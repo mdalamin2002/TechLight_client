@@ -4,7 +4,7 @@
 @import "tw-animate-css";
 
 /* ===== COLORS ===== */
-:root {
+@theme {
   /* Light Mode */
   --color-background: #f2f4f8;
   --color-primary: #ffffff;
