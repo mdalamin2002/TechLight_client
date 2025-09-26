@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   Home,
   Users,
@@ -12,6 +12,7 @@ import {
   Settings,
   Zap,
 } from "lucide-react"; // icons
+import TechLightLogo from "@/Components/Shared/Logo/TechLightLogo";
 
 export default function DashboardSidebar() {
   const role = "admin"; // "moderator" or "user"
@@ -66,7 +67,10 @@ export default function DashboardSidebar() {
     <>
       {/* Desktop Sidebar */}
       <nav className="hidden md:flex flex-col gap-6 p-4 min-h-screen w-64 bg-gradient-to-b bg-primary">
-        <h2 className="text-xl font-bold px-4">Admin</h2>
+       {/* Logo */}
+          <Link to="/" className="text-xl font-bold text-textPrimary">
+            <TechLightLogo />
+          </Link>
         <ul className="flex flex-col gap-2">
           {items.map((item) => (
             <NavItem key={item.to} to={item.to} label={item.label} icon={item.icon} />
