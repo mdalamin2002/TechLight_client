@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, } from "../../../store/authSlice";
+import { loginUser, forgotPassword } from "../../../store/authSlice";
 import { useNavigate } from "react-router-dom";
 
 import React from "react";
@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,8 +24,11 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
+
+  const watchedEmail = watch("email");
 
   const onSubmit = async (data) => {
     const { email, password } = data;
@@ -34,6 +38,15 @@ const Login = () => {
       navigate("/");
     } else {
       console.error("Login error:", resultAction.payload);
+    }
+  };
+  const handleReset = async (email) => {
+    const result = await dispatch(forgotPassword(email));
+
+    if (forgotPassword.fulfilled.match(result)) {
+      alert("Check your email for the reset link.");
+    } else {
+      alert("Error: " + result.payload);
     }
   };
 
@@ -81,7 +94,14 @@ const Login = () => {
 
       {/* Forgot Password Link */}
       <div className="mb-6 text-right">
-        <Link href="#" underline="hover" className="text-sm text-black">
+        <Link
+          component="button"
+          type="button"
+          onClick={() => handleReset(watchedEmail)}
+          underline="hover"
+          className="text-sm text-black"
+          disabled={!watchedEmail}
+        >
           Forgot password?
         </Link>
       </div>
