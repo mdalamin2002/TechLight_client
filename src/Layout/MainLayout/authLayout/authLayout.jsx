@@ -3,6 +3,7 @@ import { Link, Outlet } from "react-router";
 // import Logo from "../Pages/Shared/Logo/Logo";
 import Lottie from "lottie-react";
 import loginAnimation from "../../../assets/login-animation";
+import TechLightLogo from "@/Components/Shared/Logo/TechLightLogo";
 // import DynamicTitle from "../Pages/Shared/pageTitle/DynamicTitle";
 const AuthLayout = () => {
   return (
@@ -12,7 +13,9 @@ const AuthLayout = () => {
         {/* Logo at top */}
         <div className="w-full flex justify-start">
           {/* <Logo color="text-white" /> */}
-          <Link to="/">TechLight</Link>
+          <Link to="/">
+          <TechLightLogo/>
+          </Link>
         </div>
 
         {/* Main content - centered */}
