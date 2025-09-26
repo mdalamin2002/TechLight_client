@@ -1,18 +1,19 @@
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
   updateProfile,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../firebase/firebase.init";
 
 const googleProvider = new GoogleAuthProvider();
 
-
+// Register User
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async ({ name, email, password }, { rejectWithValue }) => {
@@ -30,6 +31,7 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+// Login User
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, { rejectWithValue }) => {
@@ -46,6 +48,7 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+// Login With Google
 export const loginWithGoogle = createAsyncThunk(
   "auth/loginWithGoogle",
   async (_, { rejectWithValue }) => {
@@ -58,9 +61,51 @@ export const loginWithGoogle = createAsyncThunk(
   }
 );
 
-export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
-  await signOut(auth);
-});
+// Forgot Password
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async (email, { rejectWithValue }) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      return "Password reset email sent";
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Check Authentication State (on app load)
+export const checkAuthState = createAsyncThunk(
+  "auth/checkAuthState",
+  async () => {
+    return new Promise((resolve) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          resolve({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+          });
+        } else {
+          resolve(null);
+        }
+      });
+    });
+  }
+);
+
+// Logout User
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -79,9 +124,6 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         const user = action.payload;
-        console.log("Registration successful:", user);
-
-       
         state.user = {
           uid: user.uid,
           email: user.email,
@@ -90,10 +132,14 @@ const authSlice = createSlice({
         };
         state.loading = false;
       })
-
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // Check Auth State
+      .addCase(checkAuthState.fulfilled, (state, action) => {
+        state.user = action.payload;
       })
 
       // Login
@@ -113,6 +159,20 @@ const authSlice = createSlice({
       // Google Login
       .addCase(loginWithGoogle.fulfilled, (state, action) => {
         state.user = action.payload;
+      })
+
+      // Forgot Password
+      .addCase(forgotPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgotPassword.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
       // Logout

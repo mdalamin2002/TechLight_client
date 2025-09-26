@@ -14,6 +14,7 @@ import {
   Divider,
   Link,
 } from "@mui/material";
+import SocialLogin from "../SocialLogin/SocialLogin";
 
 const getStrengthLabel = (score) => {
   switch (score) {
@@ -189,8 +190,9 @@ const Register = () => {
       )}
 
       {/* Divider */}
-      <Divider className="my-6">or</Divider>
-
+      <Divider className="my-6">-</Divider>
+      <SocialLogin />
+      <Divider className="my-6">-</Divider>
       {/* Login prompt */}
       <Typography variant="body2" align="center">
         Already have an account?{" "}
