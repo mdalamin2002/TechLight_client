@@ -2,7 +2,6 @@ import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 
 import {
   Leftbar,
-  Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
