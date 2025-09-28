@@ -33,7 +33,7 @@ const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
 const SidebarContext = React.createContext(null)
 
-function useSidebar() {
+function UseSidebar() {
   const context = React.useContext(SidebarContext)
   if (!context) {
     throw new Error("useSidebar must be used within a SidebarProvider.")
@@ -129,7 +129,7 @@ function SidebarProvider({
   );
 }
 
-function leftBar({
+function Sidebar({
   side = "left",
   variant = "sidebar",
   collapsible = "offcanvas",
@@ -137,7 +137,7 @@ function leftBar({
   children,
   ...props
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { isMobile, state, openMobile, setOpenMobile } = UseSidebar()
 
   if (collapsible === "none") {
     return (
@@ -227,7 +227,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar } = UseSidebar()
 
   return (
     <Button
@@ -251,7 +251,7 @@ function SidebarRail({
   className,
   ...props
 }) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar } = UseSidebar()
 
   return (
     <button
@@ -484,7 +484,7 @@ function SidebarMenuButton({
   ...props
 }) {
   const Comp = asChild ? Slot : "button"
-  const { isMobile, state } = useSidebar()
+  const { isMobile, state } = UseSidebar()
 
   const button = (
     <Comp
@@ -656,7 +656,7 @@ function SidebarMenuSubButton({
 }
 
 export {
-  leftBar,
+  Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
@@ -679,5 +679,5 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  useSidebar,
+  UseSidebar,
 }
