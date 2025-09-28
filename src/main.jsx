@@ -12,8 +12,8 @@ createRoot(document.getElementById("root")).render(
     <AuthProvider>
       <Provider store={store}>
         <RouterProvider router={MainRoute} />
-      </Provider>
-    </AuthProvider>
+        </Provider>
+      </AuthProvider>
   </StrictMode>
 );
 
