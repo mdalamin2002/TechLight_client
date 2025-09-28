@@ -129,7 +129,7 @@ function SidebarProvider({
   );
 }
 
-function Leftbar({
+function Sidebar({
   side = "left",
   variant = "sidebar",
   collapsible = "offcanvas",
@@ -656,7 +656,7 @@ function SidebarMenuSubButton({
 }
 
 export {
-  Leftbar,
+  Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,

@@ -1,7 +1,7 @@
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 
 import {
-  Leftbar,
+  Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
@@ -43,7 +43,7 @@ const items = [
 export const FAQ = () => {
   return (
     <div>
-      <Leftbar>
+      <Sidebar>
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel>Application</SidebarGroupLabel>
@@ -63,7 +63,7 @@ export const FAQ = () => {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-      </Leftbar>
+      </Sidebar>
     </div>
   );
 };
