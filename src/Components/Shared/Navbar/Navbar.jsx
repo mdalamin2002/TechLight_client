@@ -42,7 +42,7 @@ export default function Navbar() {
           bg-background/70 backdrop-blur-md shadow-sm text-foreground
         `}
       >
-        <div className="max-w-11/12 mx-auto md:px-0 px-4 h-16 flex items-center justify-between">
+        <div className="container mx-auto md:px-0 px-4 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="text-xl font-bold">
             <TechLightLogo />
@@ -50,11 +50,17 @@ export default function Navbar() {
 
           {/* Search Bar - Desktop */}
           <div className="hidden md:flex flex-1 justify-center px-4">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full max-w-md border border-border rounded px-4 py-1 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            />
+            <div className="relative w-full max-w-md">
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="w-full border border-border rounded-full px-4 py-2 text-sm bg-card text-card-foreground placeholder:text-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200"
+              />
+              <Search
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary cursor-pointer"
+                size={18}
+              />
+            </div>
           </div>
 
           {/* Icons */}
@@ -123,11 +129,17 @@ export default function Navbar() {
         {/* Mobile Search (Dropdown style) */}
         {searchOpen && (
           <div className="md:hidden px-4 pb-2">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full border border-border rounded px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            />
+            <div className="relative w-full">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full border border-border rounded-full px-4 py-2 text-sm bg-card text-card-foreground placeholder:text-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200"
+              />
+              <Search
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary cursor-pointer"
+                size={18}
+              />
+            </div>
           </div>
         )}
       </header>

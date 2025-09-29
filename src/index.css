@@ -35,7 +35,7 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
 
-  /* Footer & Category (💥 নতুন যা চেয়েছো) */
+  /* Footer & Category*/
   --color-footer: var(--footer);
   --color-footer-foreground: var(--footer-foreground);
   --color-category: var(--category);
@@ -76,7 +76,7 @@
   /* Background Colors */
   --background: oklch(0.986 0.004 267.58);         /* #f5f5f7 */
   --card: oklch(1 0 0);                             /* #ffffff */
-  --footer: oklch(0.986 0.004 267.58);              /* #f5f5f7 */
+  --footer: oklch(91.541% 0.02022 267.307);              /* #f5f5f7 */
   --category: oklch(0.986 0.004 267.58);            /* #f5f5f7 */
 
   /* Foregrounds / Texts */
@@ -169,6 +169,84 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);           /* Sidebar focus ring: #5a5af0 */
 }
 
+/* ===== CONTAINER ===== */
+.container {
+  max-width: 1440px;
+  width: 91.666667%;
+}
+
+/* Sections */
+.section {
+  margin-top: 5rem; /* 80px */
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+h3 {
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+h4 {
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+h5 {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+p {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+small {
+  font-size: 14px;
+  line-height: 1.4;
+}
+.caption {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 32px;
+  }
+  h2 {
+    font-size: 24px;
+  }
+  h3 {
+    font-size: 20px;
+  }
+  h4 {
+    font-size: 18px;
+  }
+  h5 {
+    font-size: 14px;
+  }
+  p {
+    font-size: 14px;
+  }
+}
 
 @layer base {
   * {
