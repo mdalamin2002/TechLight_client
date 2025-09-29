@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { loginWithGoogle } from "../../../store/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -18,14 +17,13 @@ const SocialLogin = () => {
   };
 
   return (
-    <Button
+    <button
       onClick={handleGoogleLogin}
-      variant="outlined"
-      fullWidth
-      sx={{ mt: 2 }}
+      className="w-full mt-2 py-3 border border-gray-400 rounded-md text-gray-700 hover:bg-gray-100 transition-colors font-semibold"
+      type="button"
     >
       Sign in with Google
-    </Button>
+    </button>
   );
 };
 

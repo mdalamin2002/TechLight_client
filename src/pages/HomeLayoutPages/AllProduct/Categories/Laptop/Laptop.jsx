@@ -11,6 +11,7 @@ const Laptop = () => {
 
   return (
     <div className="w-full min-h-screen">
+      
       <div className="w-11/12 mx-auto">
         {/* Top side */}
         <div className=" bg-white p-3 my-3 rounded-lg shadow-sm">

@@ -13,14 +13,12 @@ import {
   Heart,
 } from "lucide-react";
 import TechLightLogo from "../Logo/TechLightLogo";
-import { Link } from "react-router-dom";
 
 const Footer = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
@@ -54,9 +52,9 @@ const Footer = () => {
 
   const supportLinks = [
     { name: "Help Center", href: "#" },
-    { name: "FAQ", href: "#" },
+    { name: "FAQ", href: "/faq" },
     { name: "Privacy Policy", href: "/privacy_policy" },
-    { name: "Terms of Service", href: "#" },
+    { name: "Terms of Service", href: "/terms-service" },
     { name: "Returns & Refunds", href: "/returns-refunds" },
     { name: "Order Tracking", href: "/order-tracking" },
     { name: "Warranty", href: "/warranty" },
@@ -72,16 +70,16 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-gradient-to-b from-gray-200 to-gray-300 dark:from-gray-900 dark:to-gray-800 mt-30 md:mb-0 mb-12">
+    <footer className="relative bg-footer dark:bg-background dark:text-foreground  mt-30 md:mb-0 mb-12">
       {/* Scroll to Top */}
       <motion.button
         onClick={scrollToTop}
-        className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-custom-accent hover:bg-custom-primary text-white p-3 rounded-full shadow-lg transition-all duration-300 group border border-custom-subtext"
+        className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground p-3 rounded-full shadow-lg transition-all duration-300 border border-border hover:bg-accent hover:text-accent-foreground"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         aria-label="Scroll to top"
       >
-        <ArrowUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+        <ArrowUp className="w-5 h-5" />
       </motion.button>
 
       <div className="container mx-auto px-4 pt-20 pb-8">
@@ -96,11 +94,11 @@ const Footer = () => {
           {/* Company Info */}
           <motion.div variants={itemVariants}>
             <TechLightLogo className="mb-4" />
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+            <p className="text-muted-foreground leading-relaxed mb-6">
               TechLight is your go-to electronics store for high-quality
               gadgets, smart devices, and home appliances.
             </p>
-            <div className="space-y-3">
+            <div className="space-y-3 text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Mail className="w-5 h-5" /> info@yourcompany.com
               </div>
@@ -115,15 +113,13 @@ const Footer = () => {
 
           {/* Quick Links */}
           <motion.div variants={itemVariants}>
-            <h4 className="font-semibold mb-6 text-gray-900 dark:text-white">
-              Quick Links
-            </h4>
+            <h4 className="font-semibold mb-6 text-foreground">Quick Links</h4>
             <ul className="space-y-3">
               {quickLinks.map((link, i) => (
                 <li key={i}>
                   <a
                     href={link.href}
-                    className="hover:text-custom-accent transition-colors"
+                    className="hover:text-accent transition-colors"
                   >
                     {link.name}
                   </a>
@@ -134,15 +130,13 @@ const Footer = () => {
 
           {/* Support */}
           <motion.div variants={itemVariants}>
-            <h4 className="font-semibold mb-6 text-gray-900 dark:text-white">
-              Support
-            </h4>
+            <h4 className="font-semibold mb-6 text-foreground">Support</h4>
             <ul className="space-y-3">
               {supportLinks.map((link, i) => (
                 <li key={i}>
                   <a
                     href={link.href}
-                    className="hover:text-custom-accent transition-colors"
+                    className="hover:text-accent transition-colors"
                   >
                     {link.name}
                   </a>
@@ -153,15 +147,13 @@ const Footer = () => {
 
           {/* Categories */}
           <motion.div variants={itemVariants}>
-            <h4 className="font-semibold mb-6 text-gray-900 dark:text-white">
-              Categories
-            </h4>
+            <h4 className="font-semibold mb-6 text-foreground">Categories</h4>
             <ul className="space-y-3">
               {categories.map((cat, i) => (
                 <li key={i}>
                   <a
                     href={cat.href}
-                    className="hover:text-custom-accent transition-colors"
+                    className="hover:text-accent transition-colors"
                   >
                     {cat.name}
                   </a>
@@ -173,13 +165,11 @@ const Footer = () => {
 
         {/* Newsletter */}
         <motion.div
-          className="bg-white dark:bg-gray-900 rounded-2xl p-8 mb-12 shadow-lg text-center"
+          className="bg-card dark:bg-card rounded-2xl p-8 mb-12 shadow-lg text-center"
           variants={itemVariants}
         >
-          <h4 className="text-gray-900 dark:text-white font-semibold mb-2">
-            Stay Updated
-          </h4>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <h4 className="text-foreground font-semibold mb-2">Stay Updated</h4>
+          <p className="text-muted-foreground mb-6">
             Subscribe to our newsletter for the latest updates and exclusive
             offers.
           </p>
@@ -187,10 +177,10 @@ const Footer = () => {
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-lg border dark:bg-gray-800"
+              className="flex-1 px-4 py-3 rounded-lg border border-border dark:bg-input text-foreground"
             />
             <motion.button
-              className="bg-custom-accent text-white px-6 py-3 rounded-lg"
+              className="bg-accent text-accent-foreground px-6 py-3 rounded-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -201,12 +191,12 @@ const Footer = () => {
 
         {/* Social & Bottom */}
         <motion.div
-          className="border-t border-gray-300 dark:border-gray-700 pt-8"
+          className="border-t border-border pt-8"
           variants={itemVariants}
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             {/* Social Links */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 text-muted-foreground">
               <span>Follow us:</span>
               <div className="flex gap-3">
                 {socialLinks.map((s, i) => {
@@ -215,7 +205,7 @@ const Footer = () => {
                     <a
                       key={i}
                       href={s.href}
-                      className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-custom-accent hover:text-white"
+                      className="w-10 h-10 flex items-center justify-center rounded-full bg-muted hover:bg-accent hover:text-accent-foreground transition-colors"
                       aria-label={s.label}
                     >
                       <Icon className="w-5 h-5" />
@@ -226,17 +216,17 @@ const Footer = () => {
             </div>
 
             {/* Payment */}
-            <div className="text-sm text-gray-400">
+            <div className="text-sm text-muted-foreground text-center md:text-right">
               <p>We accept: Visa, Mastercard, PayPal</p>
               <p>Shipping Partners: DHL, FedEx, UPS</p>
             </div>
           </div>
 
           {/* Copyright */}
-          <div className="mt-6 text-center text-gray-500">
+          <div className="mt-6 text-center text-muted-foreground">
             <p className="flex items-center justify-center gap-1">
               © 2025 TechLight. Made with{" "}
-              <Heart className="w-4 h-4 text-red-500 animate-pulse" /> in
+              <Heart className="w-4 h-4 text-destructive animate-pulse" /> in
               Bangladesh
             </p>
           </div>

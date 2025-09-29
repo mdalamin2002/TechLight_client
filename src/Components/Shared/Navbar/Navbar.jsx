@@ -38,12 +38,13 @@ export default function Navbar() {
       {/* TOP NAVBAR */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300
-        ${showNavbar ? "translate-y-0" : "-translate-y-full"}
-        bg-gray-100/70 backdrop-blur-md shadow-sm`}
+          ${showNavbar ? "translate-y-0" : "-translate-y-full"}
+          bg-background/70 backdrop-blur-md shadow-sm text-foreground
+        `}
       >
-        <div className="container mx-auto md:px-0 px-4 h-16 flex items-center justify-between">
+        <div className="max-w-11/12 mx-auto md:px-0 px-4 h-16 flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="text-xl font-bold text-textPrimary">
+          <Link to="/" className="text-xl font-bold">
             <TechLightLogo />
           </Link>
 
@@ -52,7 +53,7 @@ export default function Navbar() {
             <input
               type="text"
               placeholder="Search products..."
-              className="w-full max-w-md border rounded px-4 py-1 text-sm"
+              className="w-full max-w-md border border-border rounded px-4 py-1 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -62,17 +63,18 @@ export default function Navbar() {
             <button
               className="md:hidden"
               onClick={() => setSearchOpen(!searchOpen)}
+              aria-label="Toggle search"
             >
               <Search size={20} />
             </button>
 
             {/* Wishlist */}
-            <Link to="/wishlist">
+            <Link to="/wishlist" aria-label="Wishlist">
               <Heart size={20} />
             </Link>
 
             {/* Cart */}
-            <Link to="/cart" className="relative">
+            <Link to="/cart" className="relative" aria-label="Shopping Cart">
               <ShoppingCart size={20} />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
@@ -85,36 +87,33 @@ export default function Navbar() {
             {isLoggedIn ? (
               <div className="relative group">
                 <img
-                  src={user?.photoURL || "https://i.ibb.co.com/1tKbx3sx/avatar.jpg"}
+                  src={user?.photoURL || "https://i.ibb.co/1tKbx3sx/avatar.jpg"}
                   alt="User"
                   className="w-8 h-8 rounded-full cursor-pointer"
                 />
-                <div className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
+                <div className="absolute right-0 mt-2 w-40 bg-card text-card-foreground shadow-md rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
                   <Link
                     to="/profile"
-                    className="block px-4 py-2 hover:bg-gray-100"
+                    className="block px-4 py-2 hover:bg-muted"
                   >
                     Profile
                   </Link>
                   <Link
                     to="/dashboard"
-                    className="block px-4 py-2 hover:bg-gray-100"
+                    className="block px-4 py-2 hover:bg-muted"
                   >
                     Dashboard
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                    className="w-full text-left px-4 py-2 hover:bg-muted"
                   >
                     Logout
                   </button>
                 </div>
               </div>
             ) : (
-              <Link
-                to="/auth/register"
-                className="text-sm font-medium text-textPrimary hover:text-accent"
-              >
+              <Link to="/auth/register" className="text-sm font-medium">
                 Account
               </Link>
             )}
@@ -127,29 +126,45 @@ export default function Navbar() {
             <input
               type="text"
               placeholder="Search..."
-              className="w-full border rounded px-3 py-2 text-sm"
+              className="w-full border border-border rounded px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
         )}
       </header>
 
       {/* Bottom Mobile Navbar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-inner flex justify-around py-2 z-50">
-        <Link to="/offers" className="flex flex-col items-center text-xs">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border shadow-inner flex justify-around py-2 z-50 text-card-foreground">
+        <Link
+          to="/offers"
+          className="flex flex-col items-center text-xs"
+          aria-label="Offers"
+        >
           <Percent size={20} />
           Offers
         </Link>
-        <Link to="/wishlist" className="flex flex-col items-center text-xs">
+        <Link
+          to="/wishlist"
+          className="flex flex-col items-center text-xs"
+          aria-label="Wishlist"
+        >
           <Heart size={20} />
           Wishlist
         </Link>
         {isLoggedIn ? (
-          <Link to="/profile" className="flex flex-col items-center text-xs">
+          <Link
+            to="/profile"
+            className="flex flex-col items-center text-xs"
+            aria-label="Profile"
+          >
             <User size={20} />
             Profile
           </Link>
         ) : (
-          <Link to="/auth/register" className="flex flex-col items-center text-xs">
+          <Link
+            to="/auth/register"
+            className="flex flex-col items-center text-xs"
+            aria-label="Account"
+          >
             <User size={20} />
             Account
           </Link>
