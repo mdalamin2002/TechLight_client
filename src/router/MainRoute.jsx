@@ -21,9 +21,9 @@ import { Reports } from "@/Layout/Dashboard/AdminDashboard/components/Reports_pa
 import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/ReturnsRefundsPolicy";
 import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
 import Login from "@/pages/authentication/Login/Login";
+import Warranty from "@/pages/PolicyPages/Warranty/Warranty";
 import FAQ from "@/pages/PolicyPages/FAQ/FAQ";
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
-
 
 const MainRoute = createBrowserRouter([
   {
@@ -53,6 +53,10 @@ const MainRoute = createBrowserRouter([
       {
         path: "/order-tracking",
         Component: OrderTrackingPolicy,
+      },
+      {
+        path: "/warranty",
+        Component: Warranty,
       },
       {
         path: "faq",
@@ -120,7 +124,6 @@ const MainRoute = createBrowserRouter([
         path: "advanced",
         element: <Advanced></Advanced>
       }
-
     ]
   }
 ]);

@@ -29,7 +29,7 @@ const AllFeatureProductShare = ({
   handleAddToCart,
 }) => {
   return (
-    <article className="bg-primary rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden group flex flex-col">
+    <article className="bg-backgroun text-foreground rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden group flex flex-col">
       {/* Image */}
       <div className="relative cursor-pointer w-full h-54 flex items-center justify-center">
         <img
