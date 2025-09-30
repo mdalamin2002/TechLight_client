@@ -129,7 +129,7 @@ const CompanyLogoMarquee = () => {
 
   return (
     <>
-      <section className="py-16 bg-background overflow-hidden section">
+      <section className=" bg-background overflow-hidden section">
         <div className="container mx-auto px-4">
           {/* Section Title */}
           <div className="text-center mb-12">
