@@ -1,13 +1,13 @@
-// Slider.jsx
+import React from "react";
+import { Tag, Sparkles } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
-import { Tag, Sparkles } from "lucide-react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
-export default function Slider({ slides }) {
+const Slider = ({ slides }) => {
   return (
     <div className="relative">
       <Swiper
@@ -29,24 +29,22 @@ export default function Slider({ slides }) {
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className="relative h-[390px] md:h-[480px] w-full">
+            <div className="relative h-[280px] sm:h-[340px] md:h-[420px] lg:h-[480px] w-full">
               <img
                 src={slide.image}
                 alt={slide.title}
                 className="w-full h-full object-cover"
               />
-
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center text-white px-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-6 h-6 text-yellow-400 animate-pulse" />
-                  <h2 className="text-3xl md:text-5xl font-bold tracking-wide drop-shadow-lg">
+              <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center text-white px-4 sm:px-6">
+                <div className="flex items-center gap-2 mb-3 md:mb-4">
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-yellow-400 animate-pulse" />
+                  <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold tracking-wide drop-shadow-lg">
                     {slide.title}
                   </h2>
-                  <Sparkles className="w-6 h-6 text-yellow-400 animate-pulse" />
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-yellow-400 animate-pulse" />
                 </div>
-                <p className="flex items-center gap-2 text-lg md:text-2xl font-medium bg-white/20 backdrop-blur-md px-4 py-2 rounded-full shadow-md">
-                  <Tag className="w-5 h-5 text-pink-300" />
+                <p className="flex items-center gap-2 text-sm sm:text-base md:text-xl lg:text-2xl font-medium bg-white/20 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-md">
+                  <Tag className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-pink-300" />
                   {slide.subtitle}
                 </p>
               </div>
@@ -56,4 +54,6 @@ export default function Slider({ slides }) {
       </Swiper>
     </div>
   );
-}
+};
+
+export default Slider;
