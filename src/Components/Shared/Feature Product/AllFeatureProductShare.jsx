@@ -1,95 +1,70 @@
-import React from "react";
-import { FiHeart, FiEye, FiShoppingCart } from "react-icons/fi";
-import { Star, StarHalf, Star as StarOutline } from "lucide-react";
-import FilledButton from "../Buttots/FilledButton";
+import React, { useState } from 'react';
+import { ShoppingCart, Heart, Eye } from 'lucide-react';
+import { useNavigate } from 'react-router';
+import StarRating from '@/pages/HomeLayoutPages/HomePage/components/Top Products/StarRating';
 
-// Dynamic Rating Component using Lucide icons
-const Rating = ({ value }) => {
-  const stars = [];
-  const fullStars = Math.floor(value);
-  const hasHalfStar = value - fullStars >= 0.5;
 
-  for (let i = 0; i < 5; i++) {
-    if (i < fullStars) {
-      stars.push(<Star key={i} className="text-yellow-400 fill-current" size={16} />);
-    } else if (i === fullStars && hasHalfStar) {
-      stars.push(<StarHalf key={i} className="text-yellow-400 fill-current" size={16} />);
-    } else {
-      stars.push(<StarOutline key={i} className="text-gray-300 fill-current" size={16} />);
-    }
-  }
+const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
 
-  return <div className="flex items-center gap-1">{stars}</div>;
-};
+  // Navigate to dynamic product page
+  const handleViewDetails = () => {
+    navigate(``);
+  };
 
-const AllFeatureProductShare = ({
-  product,
-  handleWishlist,
-  handleQuickView,
-  handleAddToCart,
-}) => {
   return (
-    <article className="bg-backgroun text-foreground rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden group flex flex-col">
-      {/* Image */}
-      <div className="relative cursor-pointer w-full h-54 flex items-center justify-center">
+    <div
+      className="group bg-card rounded-lg border border-border overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Image & Favorite */}
+      <div className="relative overflow-hidden bg-muted h-48">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
+        <button
+          onClick={() => onAddToFavorites(product)}
+          className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-all duration-200 hover:scale-110"
+          aria-label="Add to favorites"
+        >
+          <Heart className="w-5 h-5 text-gray-700 hover:text-red-500 transition-colors" />
+        </button>
+      </div>
 
-        {/* Hover Buttons */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition">
+      {/* Details */}
+      <div className="p-5">
+        <h4 className="font-semibold text-foreground mb-2 line-clamp-1">{product.name}</h4>
+        <p className="text-sm text-muted-foreground mb-3 line-clamp-2 min-h-[40px]">{product.description}</p>
+        <div className="mb-3">
+          <StarRating rating={product.rating} />
+        </div>
+        <div className="mb-4 ">
+          <span className="text-2xl font-bold text-primary/90">${product.price}</span>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-2">
           <button
-            onClick={() => handleWishlist(product.name)}
-            className="p-2 rounded-full bg-white shadow hover:bg-rose-500 hover:text-white transition"
-            aria-label="Wishlist"
+            onClick={() => onAddToCart(product)}
+            className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-all duration-200 hover:shadow-md"
           >
-            <FiHeart size={18} />
+            <ShoppingCart className="w-4 h-4" />
+            Add to Cart
           </button>
           <button
-            onClick={() => handleQuickView(product.name)}
-            className="p-2 rounded-full bg-white shadow hover:bg-green-500 hover:text-white transition"
-            aria-label="Quick View"
+            onClick={handleViewDetails}
+            className="flex items-center justify-center px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-all duration-200 hover:shadow-md"
+            aria-label="View details"
           >
-            <FiEye size={18} />
+            <Eye className="w-5 h-5 text-foreground" />
           </button>
         </div>
       </div>
-
-      {/* Product Info */}
-      <div className="p-4 flex flex-col flex-1 justify-between">
-        <div>
-          <h3 className="text-lg font-semibold text-dark">{product.name}</h3>
-          <p className="text-sm text-subtext mt-2 line-clamp-3">
-            {product.description}
-          </p>
-        </div>
-
-        {/* Rating */}
-        <div className="flex items-center mt-2 gap-2">
-          <Rating value={product.rating} />
-          {product.reviewCount && (
-            <span className="text-[11px] text-gray-500">
-              ({product.reviewCount})
-            </span>
-          )}
-        </div>
-
-        {/* Price + Button */}
-        <div className="mt-2 flex items-center justify-between">
-          <span className="text-xl font-bold text-dark">{product.price}</span>
-          <FilledButton
-            onClick={() => handleAddToCart(product.name)}
-            className="flex items-center gap-2 "
-          >
-            <FiShoppingCart size={16} />
-            Add
-          </FilledButton>
-        </div>
-      </div>
-    </article>
+    </div>
   );
 };
 
