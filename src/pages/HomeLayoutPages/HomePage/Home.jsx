@@ -7,6 +7,7 @@ import Reviews from "./components/Reviews";
 import Tracking from "./components/Tracking";
 import ContactUs from "./components/ContactUs";
 
+
 const Home = () => {
   return (
     <div className="w-11/12 mx-auto">
