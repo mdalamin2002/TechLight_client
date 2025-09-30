@@ -1,9 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
-
-
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -69,29 +68,30 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-
 :root {
   --radius: 0.625rem;
 
   /* Background Colors */
-  --background: oklch(0.986 0.004 267.58);         /* #f5f5f7 */
-  --card: oklch(1 0 0);                             /* #ffffff */
-  --footer: oklch(91.541% 0.02022 267.307);              /* #f5f5f7 */
-  --category: oklch(0.986 0.004 267.58);            /* #f5f5f7 */
+  --background: oklch(0.986 0.004 267.58); /* #f5f5f7 */
+  --card: oklch(1 0 0); /* #ffffff */
+  --footer: oklch(91.541% 0.02022 267.307); /* #f5f5f7 */
+  --category: oklch(0.986 0.004 267.58); /* #f5f5f7 */
 
   /* Foregrounds / Texts */
-  --foreground: oklch(0.201 0.02 267.74);           /* #1d1d1f */
-  --card-foreground: oklch(0.201 0.02 267.74);      /* same */
-  --footer-foreground: oklch(0.201 0.02 267.74);    /* same */
-  --category-foreground: oklch(0.201 0.02 267.74);  /* same */
+  --foreground: oklch(0.201 0.02 267.74); /* #1d1d1f */
+  --card-foreground: oklch(0.201 0.02 267.74); /* same */
+  --footer-foreground: oklch(0.201 0.02 267.74); /* same */
+  --category-foreground: oklch(0.201 0.02 267.74); /* same */
 
-  --primary: oklch(0.506 0.198 259.85);             /* #0071e3  for  button as accent color */
-  --primary-foreground: oklch(1 0 0);               /* #ffffff */
+  --primary: oklch(
+    0.506 0.198 259.85
+  ); /* #0071e3  for  button as accent color */
+  --primary-foreground: oklch(1 0 0); /* #ffffff */
 
-  --muted: oklch(0.95 0.005 267.58);                /* lighter background */
-  --muted-foreground: oklch(0.706 0.007 268.76);    /* #afafb2 */
-  --span: oklch(0.443 0.009 267.84);                /* #6e6e73 */
-  --link: oklch(0.997 0.001 85.33);                 /* #fffefc */
+  --muted: oklch(0.95 0.005 267.58); /* lighter background */
+  --muted-foreground: oklch(0.706 0.007 268.76); /* #afafb2 */
+  --span: oklch(0.443 0.009 267.84); /* #6e6e73 */
+  --link: oklch(0.997 0.001 85.33); /* #fffefc */
 
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.201 0.02 267.74);
@@ -123,50 +123,73 @@
   --sidebar-ring: var(--ring);
 }
 
-
 .dark {
-  --background: oklch(0.129 0.042 264.695);           /* Website background and for footer : #212124 */
-  --foreground: oklch(0.984 0.003 247.858);           /* Main text color: #ffffff */
+  --background: oklch(
+    0.129 0.042 264.695
+  ); /* Website background and for footer : #212124 */
+  --foreground: oklch(0.984 0.003 247.858); /* Main text color: #ffffff */
 
-  --card: oklch(0.208 0.042 265.755);                 /* Card background: #2d2d30 */
-  --card-foreground: oklch(0.984 0.003 247.858);      /* Card text color: #ffffff */
+  --card: oklch(0.208 0.042 265.755); /* Card background: #2d2d30 */
+  --card-foreground: oklch(0.984 0.003 247.858); /* Card text color: #ffffff */
 
-  --popover: oklch(0.208 0.042 265.755);              /* Popover background: #2d2d30 */
-  --popover-foreground: oklch(0.984 0.003 247.858);   /* Popover text color: #ffffff */
+  --popover: oklch(0.208 0.042 265.755); /* Popover background: #2d2d30 */
+  --popover-foreground: oklch(
+    0.984 0.003 247.858
+  ); /* Popover text color: #ffffff */
 
-  --primary: oklch(0.929 0.013 255.508);               /* Primary button background: #0071e3 */
-  --primary-foreground: oklch(0.208 0.042 265.755);    /* Primary button text color: #1d1d1f */
+  --primary: oklch(
+    0.929 0.013 255.508
+  ); /* Primary button background: #0071e3 */
+  --primary-foreground: oklch(
+    0.208 0.042 265.755
+  ); /* Primary button text color: #1d1d1f */
 
-  --secondary: oklch(0.279 0.041 260.031);             /* Secondary background: #48484a */
-  --secondary-foreground: oklch(0.984 0.003 247.858);  /* Secondary text color: #ffffff */
+  --secondary: oklch(0.279 0.041 260.031); /* Secondary background: #48484a */
+  --secondary-foreground: oklch(
+    0.984 0.003 247.858
+  ); /* Secondary text color: #ffffff */
 
-  --muted: oklch(0.279 0.041 260.031);                 /* Muted background: #48484a */
-  --muted-foreground: oklch(0.704 0.04 256.788);       /* Muted text color: #6e6e73 */
+  --muted: oklch(0.279 0.041 260.031); /* Muted background: #48484a */
+  --muted-foreground: oklch(0.704 0.04 256.788); /* Muted text color: #6e6e73 */
 
-  --accent: oklch(0.279 0.041 260.031);                /* Accent background: #48484a */
-  --accent-foreground: oklch(0.984 0.003 247.858);     /* Accent text color: #ffffff */
+  --accent: oklch(0.279 0.041 260.031); /* Accent background: #48484a */
+  --accent-foreground: oklch(
+    0.984 0.003 247.858
+  ); /* Accent text color: #ffffff */
 
-  --destructive: oklch(0.704 0.191 22.216);            /* Danger button: #d64545 */
+  --destructive: oklch(0.704 0.191 22.216); /* Danger button: #d64545 */
 
-  --border: oklch(1 0 0 / 10%);                        /* Border: rgba(255,255,255,0.1) */
-  --input: oklch(1 0 0 / 15%);                         /* Input background: rgba(255,255,255,0.15) */
+  --border: oklch(1 0 0 / 10%); /* Border: rgba(255,255,255,0.1) */
+  --input: oklch(1 0 0 / 15%); /* Input background: rgba(255,255,255,0.15) */
 
-  --ring: oklch(0.551 0.027 264.364);                  /* Focus ring: #5a5af0 */
+  --ring: oklch(0.551 0.027 264.364); /* Focus ring: #5a5af0 */
 
-  --chart-1: oklch(0.488 0.243 264.376);               /* Chart color 1: #4751e5 */
-  --chart-2: oklch(0.696 0.17 162.48);                 /* Chart color 2: #42b3a1 */
-  --chart-3: oklch(0.769 0.188 70.08);                 /* Chart color 3: #42d479 */
-  --chart-4: oklch(0.627 0.265 303.9);                 /* Chart color 4: #6f47e7 */
-  --chart-5: oklch(0.645 0.246 16.439);                /* Chart color 5: #d4854a */
+  --chart-1: oklch(0.488 0.243 264.376); /* Chart color 1: #4751e5 */
+  --chart-2: oklch(0.696 0.17 162.48); /* Chart color 2: #42b3a1 */
+  --chart-3: oklch(0.769 0.188 70.08); /* Chart color 3: #42d479 */
+  --chart-4: oklch(0.627 0.265 303.9); /* Chart color 4: #6f47e7 */
+  --chart-5: oklch(0.645 0.246 16.439); /* Chart color 5: #d4854a */
 
-  --sidebar: oklch(0.208 0.042 265.755);               /* Sidebar background: #2d2d30 */
-  --sidebar-foreground: oklch(0.984 0.003 247.858);    /* Sidebar text color: #ffffff */
-  --sidebar-primary: oklch(0.488 0.243 264.376);       /* Sidebar primary background: #4751e5 */
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858); /* Sidebar primary text color: #ffffff */
-  --sidebar-accent: oklch(0.279 0.041 260.031);        /* Sidebar accent background: #48484a */
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858); /* Sidebar accent text color: #ffffff */
-  --sidebar-border: oklch(1 0 0 / 10%);                 /* Sidebar border: rgba(255,255,255,0.1) */
-  --sidebar-ring: oklch(0.551 0.027 264.364);           /* Sidebar focus ring: #5a5af0 */
+  --sidebar: oklch(0.208 0.042 265.755); /* Sidebar background: #2d2d30 */
+  --sidebar-foreground: oklch(
+    0.984 0.003 247.858
+  ); /* Sidebar text color: #ffffff */
+  --sidebar-primary: oklch(
+    0.488 0.243 264.376
+  ); /* Sidebar primary background: #4751e5 */
+  --sidebar-primary-foreground: oklch(
+    0.984 0.003 247.858
+  ); /* Sidebar primary text color: #ffffff */
+  --sidebar-accent: oklch(
+    0.279 0.041 260.031
+  ); /* Sidebar accent background: #48484a */
+  --sidebar-accent-foreground: oklch(
+    0.984 0.003 247.858
+  ); /* Sidebar accent text color: #ffffff */
+  --sidebar-border: oklch(
+    1 0 0 / 10%
+  ); /* Sidebar border: rgba(255,255,255,0.1) */
+  --sidebar-ring: oklch(0.551 0.027 264.364); /* Sidebar focus ring: #5a5af0 */
 }
 
 /* ===== CONTAINER ===== */
@@ -188,7 +211,7 @@ h1 {
   line-height: 1.3;
 }
 h2 {
-  font-family: "Poppins", sans-serif;
+  font-family: "Jost", sans-serif;
   font-size: 30px;
   font-weight: 600;
   line-height: 1.35;
@@ -246,6 +269,10 @@ small {
   p {
     font-size: 14px;
   }
+}
+
+.eagle-lake-regular {
+  font-family: "Eagle Lake", serif;
 }
 
 @layer base {

@@ -13,7 +13,7 @@ const TechLightLogo = ({ size = 7, className = "" }) => {
       </div>
 
       {/* Logo text */}
-      <span className="lg:block hidden text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+      <span className="lg:block eagle-lake-regular hidden text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
         TechLight
       </span>
     </div>

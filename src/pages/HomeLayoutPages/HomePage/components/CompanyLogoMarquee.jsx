@@ -1,3 +1,4 @@
+import { Sparkles } from "lucide-react";
 import React from "react";
 import Marquee from "react-fast-marquee";
 
@@ -132,8 +133,14 @@ const CompanyLogoMarquee = () => {
         <div className="container mx-auto px-4">
           {/* Section Title */}
           <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium text-primary">
+              Company
+            </span>
+          </div>
             <h2 className="text-dark mb-4">Our Trusted Partners</h2>
-            <p className="text-subtext max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
               Trusted by leading companies worldwide. We collaborate with
               industry giants to deliver exceptional solutions.
             </p>
@@ -184,13 +191,6 @@ const CompanyLogoMarquee = () => {
                 </div>
               ))}
             </Marquee>
-          </div>
-
-          {/* Bottom Text */}
-          <div className="text-center mt-12">
-            <small className="text-subtext">
-              Click on any logo to visit their official website
-            </small>
           </div>
         </div>
       </section>

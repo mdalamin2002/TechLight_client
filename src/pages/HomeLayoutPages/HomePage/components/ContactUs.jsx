@@ -1,5 +1,16 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Clock, MessageSquare, Headphones, CheckCircle2, Sparkles, Zap } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Send,
+  Clock,
+  MessageSquare,
+  Headphones,
+  CheckCircle2,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,24 +19,32 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 
 // Modern Gradient Contact Info Card
 const ContactInfoCard = ({ icon: Icon, title, info, subInfo, gradient }) => {
   return (
     <div className="group relative overflow-hidden bg-card rounded-2xl border border-border p-6 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
       {/* Gradient Background on Hover */}
-      <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${gradient}`} />
+      <div
+        className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${gradient}`}
+      />
 
       {/* Content */}
       <div className="relative flex items-start gap-4">
-        <div className={`p-3 rounded-xl bg-gradient-to-br ${gradient} shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+        <div
+          className={`p-3 rounded-xl bg-gradient-to-br ${gradient} shadow-lg group-hover:scale-110 transition-transform duration-300`}
+        >
           <Icon className="w-6 h-6 text-white" />
         </div>
         <div className="flex-1">
-          <h5 className="font-semibold text-foreground mb-1.5 group-hover:text-primary transition-colors">{title}</h5>
+          <h5 className="font-semibold text-foreground mb-1.5 group-hover:text-primary transition-colors">
+            {title}
+          </h5>
           <p className="text-muted-foreground font-medium">{info}</p>
-          {subInfo && <p className="text-sm text-muted-foreground/70 mt-1">{subInfo}</p>}
+          {subInfo && (
+            <p className="text-sm text-muted-foreground/70 mt-1">{subInfo}</p>
+          )}
         </div>
       </div>
     </div>
@@ -35,43 +54,43 @@ const ContactInfoCard = ({ icon: Icon, title, info, subInfo, gradient }) => {
 // Main Contact Us Section
 const ContactUs = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
   });
   const [errors, setErrors] = useState({});
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [focusedField, setFocusedField] = useState('');
+  const [focusedField, setFocusedField] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = "Phone number is required";
     } else if (!/^[0-9+\-() ]{10,}$/.test(formData.phone)) {
-      newErrors.phone = 'Phone number is invalid';
+      newErrors.phone = "Phone number is invalid";
     }
-    if (!formData.subject.trim()) newErrors.subject = 'Subject is required';
+    if (!formData.subject.trim()) newErrors.subject = "Subject is required";
     if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
+      newErrors.message = "Message is required";
     } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters';
+      newErrors.message = "Message must be at least 10 characters";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -84,12 +103,12 @@ const ContactUs = () => {
     setTimeout(() => {
       setIsSubmitting(false);
       setShowSuccessDialog(true);
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
     }, 1500);
   };
 
   return (
-    <section className="relative bg-gradient-to-b from-background via-background to-muted/30 py-20 overflow-hidden">
+    <section className="relative section  py-8 overflow-hidden">
       {/* Decorative Elements */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
@@ -99,13 +118,14 @@ const ContactUs = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Get In Touch</span>
+            <span className="text-sm font-medium text-primary">
+              Get In Touch
+            </span>
           </div>
-          <h2>
-            Let's Start a Conversation
-          </h2>
+          <h2>Let's Start a Conversation</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Questions about our cutting-edge gadgets? Our tech-savvy team is ready to help you find the perfect solution.
+            Questions about our cutting-edge gadgets? Our tech-savvy team is
+            ready to help you find the perfect solution.
           </p>
         </div>
 
@@ -145,7 +165,7 @@ const ContactUs = () => {
             />
 
             {/* Premium Support Card */}
-            <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-blue-600 rounded-2xl p-6 shadow-2xl">
+            <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-blue-600 rounded-2xl p-6 shadow-xl">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16" />
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12" />
 
@@ -155,12 +175,15 @@ const ContactUs = () => {
                     <Headphones className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h5 className="font-bold text-white text-lg">24/7 Premium Support</h5>
+                    <h5 className="font-bold text-white text-lg">
+                      24/7 Premium Support
+                    </h5>
                     <p className="text-white/80 text-sm">Always here to help</p>
                   </div>
                 </div>
                 <p className="text-white/90 text-sm leading-relaxed">
-                  Round-the-clock assistance from our expert tech support team for all your gadget needs.
+                  Round-the-clock assistance from our expert tech support team
+                  for all your gadget needs.
                 </p>
               </div>
             </div>
@@ -178,8 +201,12 @@ const ContactUs = () => {
                     <MessageSquare className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-foreground font-bold">Send us a Message</h3>
-                    <p className="text-sm text-muted-foreground">We'll get back to you quickly</p>
+                    <h3 className="text-foreground font-bold">
+                      Send us a Message
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      We'll get back to you quickly
+                    </p>
                   </div>
                 </div>
 
@@ -187,7 +214,10 @@ const ContactUs = () => {
                   {/* Name and Email Row */}
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-semibold text-foreground mb-2.5">
+                      <label
+                        htmlFor="name"
+                        className="block text-sm font-semibold text-foreground mb-2.5"
+                      >
                         Full Name <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
@@ -197,16 +227,17 @@ const ContactUs = () => {
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
-                          onFocus={() => setFocusedField('name')}
-                          onBlur={() => setFocusedField('')}
+                          onFocus={() => setFocusedField("name")}
+                          onBlur={() => setFocusedField("")}
                           className={`w-full px-4 py-3.5 rounded-xl border-2 ${
-                            errors.name ? 'border-red-500' : focusedField === 'name' ? 'border-primary' : 'border-border'
+                            errors.name
+                              ? "border-red-500"
+                              : focusedField === "name"
+                              ? "border-primary"
+                              : "border-border"
                           } bg-background/50 text-foreground focus:outline-none transition-all duration-300 placeholder:text-muted-foreground/50`}
                           placeholder="John Doe"
                         />
-                        {focusedField === 'name' && (
-                          <div className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-blue-500 to-primary animate-pulse" />
-                        )}
                       </div>
                       {errors.name && (
                         <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
@@ -217,7 +248,10 @@ const ContactUs = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-2.5">
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-semibold text-foreground mb-2.5"
+                      >
                         Email Address <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
@@ -227,16 +261,17 @@ const ContactUs = () => {
                           name="email"
                           value={formData.email}
                           onChange={handleChange}
-                          onFocus={() => setFocusedField('email')}
-                          onBlur={() => setFocusedField('')}
+                          onFocus={() => setFocusedField("email")}
+                          onBlur={() => setFocusedField("")}
                           className={`w-full px-4 py-3.5 rounded-xl border-2 ${
-                            errors.email ? 'border-red-500' : focusedField === 'email' ? 'border-primary' : 'border-border'
+                            errors.email
+                              ? "border-red-500"
+                              : focusedField === "email"
+                              ? "border-primary"
+                              : "border-border"
                           } bg-background/50 text-foreground focus:outline-none transition-all duration-300 placeholder:text-muted-foreground/50`}
                           placeholder="john@example.com"
                         />
-                        {focusedField === 'email' && (
-                          <div className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-blue-500 to-primary animate-pulse" />
-                        )}
                       </div>
                       {errors.email && (
                         <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
@@ -250,7 +285,10 @@ const ContactUs = () => {
                   {/* Phone and Subject Row */}
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-semibold text-foreground mb-2.5">
+                      <label
+                        htmlFor="phone"
+                        className="block text-sm font-semibold text-foreground mb-2.5"
+                      >
                         Phone Number <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
@@ -260,16 +298,17 @@ const ContactUs = () => {
                           name="phone"
                           value={formData.phone}
                           onChange={handleChange}
-                          onFocus={() => setFocusedField('phone')}
-                          onBlur={() => setFocusedField('')}
+                          onFocus={() => setFocusedField("phone")}
+                          onBlur={() => setFocusedField("")}
                           className={`w-full px-4 py-3.5 rounded-xl border-2 ${
-                            errors.phone ? 'border-red-500' : focusedField === 'phone' ? 'border-primary' : 'border-border'
+                            errors.phone
+                              ? "border-red-500"
+                              : focusedField === "phone"
+                              ? "border-primary"
+                              : "border-border"
                           } bg-background/50 text-foreground focus:outline-none transition-all duration-300 placeholder:text-muted-foreground/50`}
                           placeholder="+1 (555) 123-4567"
                         />
-                        {focusedField === 'phone' && (
-                          <div className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-blue-500 to-primary animate-pulse" />
-                        )}
                       </div>
                       {errors.phone && (
                         <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
@@ -280,7 +319,10 @@ const ContactUs = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="subject" className="block text-sm font-semibold text-foreground mb-2.5">
+                      <label
+                        htmlFor="subject"
+                        className="block text-sm font-semibold text-foreground mb-2.5"
+                      >
                         Subject <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
@@ -289,23 +331,29 @@ const ContactUs = () => {
                           name="subject"
                           value={formData.subject}
                           onChange={handleChange}
-                          onFocus={() => setFocusedField('subject')}
-                          onBlur={() => setFocusedField('')}
+                          onFocus={() => setFocusedField("subject")}
+                          onBlur={() => setFocusedField("")}
                           className={`w-full px-4 py-3.5 rounded-xl border-2 ${
-                            errors.subject ? 'border-red-500' : focusedField === 'subject' ? 'border-primary' : 'border-border'
+                            errors.subject
+                              ? "border-red-500"
+                              : focusedField === "subject"
+                              ? "border-primary"
+                              : "border-border"
                           } bg-background/50 text-foreground focus:outline-none transition-all duration-300 appearance-none cursor-pointer`}
                         >
                           <option value="">Select a subject</option>
-                          <option value="product-inquiry">💼 Product Inquiry</option>
-                          <option value="technical-support">🔧 Technical Support</option>
-                          <option value="order-status">📦 Order Status</option>
-                          <option value="warranty">🛡️ Warranty Claim</option>
-                          <option value="return">🔄 Return/Exchange</option>
-                          <option value="other">💬 Other</option>
+                          <option value="product-inquiry">
+                            Product Inquiry
+                          </option>
+                          <option value="technical-support">
+                            {" "}
+                            Technical Support
+                          </option>
+                          <option value="order-status">Order Status</option>
+                          <option value="warranty">Warranty Claim</option>
+                          <option value="return">Return/Exchange</option>
+                          <option value="other">Other</option>
                         </select>
-                        {focusedField === 'subject' && (
-                          <div className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-blue-500 to-primary animate-pulse" />
-                        )}
                       </div>
                       {errors.subject && (
                         <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
@@ -318,7 +366,10 @@ const ContactUs = () => {
 
                   {/* Message */}
                   <div>
-                    <label htmlFor="message" className="block text-sm font-semibold text-foreground mb-2.5">
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-semibold text-foreground mb-2.5"
+                    >
                       Message <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
@@ -327,17 +378,18 @@ const ContactUs = () => {
                         name="message"
                         value={formData.message}
                         onChange={handleChange}
-                        onFocus={() => setFocusedField('message')}
-                        onBlur={() => setFocusedField('')}
+                        onFocus={() => setFocusedField("message")}
+                        onBlur={() => setFocusedField("")}
                         rows="5"
                         className={`w-full px-4 py-3.5 rounded-xl border-2 ${
-                          errors.message ? 'border-red-500' : focusedField === 'message' ? 'border-primary' : 'border-border'
+                          errors.message
+                            ? "border-red-500"
+                            : focusedField === "message"
+                            ? "border-primary"
+                            : "border-border"
                         } bg-background/50 text-foreground focus:outline-none transition-all duration-300 resize-none placeholder:text-muted-foreground/50`}
                         placeholder="Tell us how we can help you with our tech products..."
                       />
-                      {focusedField === 'message' && (
-                        <div className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-blue-500 to-primary animate-pulse" />
-                      )}
                     </div>
                     {errors.message && (
                       <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
@@ -377,7 +429,10 @@ const ContactUs = () => {
         </div>
 
         {/* Success Alert Dialog */}
-        <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <AlertDialog
+          open={showSuccessDialog}
+          onOpenChange={setShowSuccessDialog}
+        >
           <AlertDialogContent className="max-w-md border-0 shadow-2xl bg-card/95 backdrop-blur-xl">
             <AlertDialogHeader>
               <div className="flex justify-center mb-4">
@@ -392,7 +447,8 @@ const ContactUs = () => {
                 Message Sent Successfully!
               </AlertDialogTitle>
               <AlertDialogDescription className="text-center text-base text-muted-foreground leading-relaxed">
-                Thank you for reaching out! Our tech support team has received your message and will respond within 24 hours.
+                Thank you for reaching out! Our tech support team has received
+                your message and will respond within 24 hours.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="flex justify-center sm:justify-center">
