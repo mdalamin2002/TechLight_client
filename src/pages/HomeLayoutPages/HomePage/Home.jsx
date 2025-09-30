@@ -6,6 +6,7 @@ import Reviews from "./components/Reviews/Reviews";
 import Tracking from "./components/Tracking";
 import ContactUs from "./components/ContactUs";
 import Banner from "./components/Banner/Banner";
+import Advertisement from "./components/Advertizement/Advertisement";
 
 const Home = () => {
   return (
@@ -13,10 +14,11 @@ const Home = () => {
       <Banner></Banner>
       <TopProducts></TopProducts>
       <FeaturedSection></FeaturedSection>
-      <Tracking></Tracking>
+      <Advertisement/>
+      <CompanyLogoMarquee></CompanyLogoMarquee>
+      {/* <Tracking></Tracking> */}
       <ContactUs></ContactUs>
       <Reviews></Reviews>
-      <CompanyLogoMarquee></CompanyLogoMarquee>
     </div>
   );
 };
