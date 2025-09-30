@@ -8,7 +8,7 @@ import DashboardLayout from "@/Layout/Dashboard/DashboardLayout";
 import MainDashboard from "@/Layout/Dashboard/MainDashboard";
 import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
 import Register from "@/pages/authentication/register/Register";
-import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers";
+import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
 import Sellers from "@/Layout/Dashboard/AdminDashboard/components/Sellers";
 import Products from "@/Layout/Dashboard/AdminDashboard/components/Products";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders";
