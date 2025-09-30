@@ -224,7 +224,7 @@ const Tracking = () => {
               <button
                 onClick={handleTrack}
                 disabled={loading}
-                className="bg-custom-accent hover:bg-[#3749BB] text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors duration-200 disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
+                className="bg-primary hover:bg-primary/80 text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors duration-200 disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
