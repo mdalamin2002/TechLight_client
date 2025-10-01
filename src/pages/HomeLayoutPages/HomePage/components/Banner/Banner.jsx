@@ -1,7 +1,7 @@
 import React from "react";
 import CategorySidebar from "./CategorySidebar";
 import Slider from "./Slider";
-
+import { motion } from "framer-motion";
 
 const Banner = () => {
   const slides = [
@@ -26,51 +26,47 @@ const Banner = () => {
   ];
 
   const shopMegaMenu = [
-    {
-      title: "Mobiles & Tablets",
-      items: ["Smartphones", "Tablets", "Mobile Accessories"],
-    },
-    {
-      title: "Laptops & Computers",
-      items: ["Laptops", "Desktops", "Keyboards & Mouse"],
-    },
-    {
-      title: "Smart Watches",
-      items: ["Smart Watches", "Fitness Bands"],
-    },
-    {
-      title: "Audio Devices",
-      items: ["Headphones", "Earbuds", "Speakers"],
-    },
-    {
-      title: "Gaming Consoles",
-      items: ["PlayStation & Xbox", "VR Headsets", "Accessories"],
-    },
-    {
-      title: "Smart Home",
-      items: ["Smart Lights", "Security Cameras", "Voice Assistants"],
-    },
-    {
-      title: "Accessories",
-      items: ["Power Banks", "Cables & Chargers", "Storage Devices"],
-    },
+    { title: "Mobiles & Tablets", items: ["Smartphones", "Tablets", "Mobile Accessories"] },
+    { title: "Laptops & Computers", items: ["Laptops", "Desktops", "Keyboards & Mouse"] },
+    { title: "Smart Watches", items: ["Smart Watches", "Fitness Bands"] },
+    { title: "Audio Devices", items: ["Headphones", "Earbuds", "Speakers"] },
+    { title: "Gaming Consoles", items: ["PlayStation & Xbox", "VR Headsets", "Accessories"] },
+    { title: "Smart Home", items: ["Smart Lights", "Security Cameras", "Voice Assistants"] },
+    { title: "Accessories", items: ["Power Banks", "Cables & Chargers", "Storage Devices"] },
   ];
 
   return (
-    <section className="container mx-auto mt-6 md:px-4 sm:px-0">
+    <motion.section
+      className="container mx-auto mt-6 md:px-4 sm:px-0"
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
       {/* Desktop Layout: Sidebar + Slider */}
       <div className="hidden xl:flex gap-6">
-        <CategorySidebar shopMegaMenu={shopMegaMenu} />
-        <div className="flex-1 min-w-0">
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+        >
+          <CategorySidebar shopMegaMenu={shopMegaMenu} />
+        </motion.div>
+
+        <motion.div
+          className="flex-1 min-w-0"
+          initial={{ x: 50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+        >
           <Slider slides={slides} />
-        </div>
+        </motion.div>
       </div>
 
       {/* Mobile/Tablet Layout: Only Slider */}
       <div className="xl:hidden w-full">
         <Slider slides={slides} />
       </div>
-    </section>
+    </motion.section>
   );
 };
 

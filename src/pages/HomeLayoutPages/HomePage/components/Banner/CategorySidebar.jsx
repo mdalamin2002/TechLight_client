@@ -10,14 +10,19 @@ const CategorySidebar = ({ shopMegaMenu }) => {
   };
 
   return (
-    <aside className="w-72 xl:w-80 bg-white dark:bg-card rounded-xl shadow-md border border-gray-200 dark:border-border/50 py-6 px-4 flex-shrink-0">
+    <motion.aside
+      className="w-72 xl:w-80 bg-white dark:bg-card rounded-xl shadow-md border border-gray-200 dark:border-border/50 py-6.5 px-4 flex-shrink-0"
+      initial={{ opacity: 0, x: -30 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6 }}
+    >
       <nav className="max-h-[480px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
         {shopMegaMenu.map((section, idx) => {
           const isOpen = openIndex === idx;
           return (
             <div
               key={idx}
-              className="mb-1 border-b border-gray-100 dark:border-border/30 last:border-0"
+              className="mb-3 border-b border-gray-100 dark:border-border/30 last:border-0"
             >
               <button
                 onClick={() => toggleOpen(idx)}
@@ -55,7 +60,7 @@ const CategorySidebar = ({ shopMegaMenu }) => {
           );
         })}
       </nav>
-    </aside>
+    </motion.aside>
   );
 };
 
