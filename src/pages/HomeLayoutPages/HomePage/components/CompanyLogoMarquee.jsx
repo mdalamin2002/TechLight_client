@@ -4,16 +4,10 @@ import Marquee from "react-fast-marquee";
 
 const CompanyLogoMarquee = () => {
   const companyLogos = [
-    // Electronics & Gadget Brands
     {
       id: 1,
       name: "Apple",
       logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
-    },
-    {
-      id: 2,
-      name: "Samsung",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg",
     },
     {
       id: 3,
@@ -102,7 +96,6 @@ const CompanyLogoMarquee = () => {
   const handleLogoClick = (companyName) => {
     const websites = {
       Apple: "https://www.apple.com",
-      Samsung: "https://www.samsung.com",
       Sony: "https://www.sony.com",
       Intel: "https://www.intel.com",
       Dell: "https://www.dell.com",
@@ -134,11 +127,9 @@ const CompanyLogoMarquee = () => {
           {/* Section Title */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">
-              Company
-            </span>
-          </div>
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-primary">Company</span>
+            </div>
             <h2 className="text-dark mb-4">Our Trusted Partners</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
               Trusted by leading companies worldwide. We collaborate with

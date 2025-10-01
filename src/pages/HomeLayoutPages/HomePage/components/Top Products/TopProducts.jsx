@@ -61,11 +61,13 @@ const TopProducts = () => {
     });
   };
 
-  const handleAddToFavorites = (product) => {
+  const handleAddToFavorites = (product, isAdding) => {
     Swal.fire({
-      icon: "success",
-      title: "Added to Favorites!",
-      text: `${product.name} has been added to your favorites.`,
+      icon: isAdding ? "success" : "info",
+      title: isAdding ? "Added to Favorites!" : "Removed from Favorites!",
+      text: `${product.name} has been ${
+        isAdding ? "added to" : "removed from"
+      } your favorites.`,
       timer: 2000,
       showConfirmButton: false,
       toast: true,

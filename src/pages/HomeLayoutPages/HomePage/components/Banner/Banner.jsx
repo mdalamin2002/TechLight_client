@@ -57,7 +57,7 @@ const Banner = () => {
   ];
 
   return (
-    <section className="container mx-auto md:mt-20 mt-6 md:px-4 sm:px-0">
+    <section className="container mx-auto mt-6 md:px-4 sm:px-0">
       {/* Desktop Layout: Sidebar + Slider */}
       <div className="hidden xl:flex gap-6">
         <CategorySidebar shopMegaMenu={shopMegaMenu} />

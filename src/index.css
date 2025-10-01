@@ -200,7 +200,17 @@
 
 /* Sections */
 .section {
-  margin-top: 6rem; /* 80px */
+  margin-top: 3rem; /* 32px */
+}
+@media (min-width: 768px) {
+  .section {
+    margin-top: 4rem; /* 64px */
+  }
+}
+@media (min-width: 1280px) {
+  .section {
+    margin-top: 6rem; /* 96px */
+  }
 }
 
 /* ===== TYPOGRAPHY ===== */

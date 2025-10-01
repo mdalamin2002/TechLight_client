@@ -214,7 +214,7 @@ const Footer = () => {
                 </div>
                 <button
                   type="submit"
-                  className="px-6 py-3 rounded-xl text-white font-medium bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md shadow-blue-500/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
+                  className="px-6 py-3 rounded-xl text-white font-medium bg-primary shadow-md shadow-blue-500/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
                 >
                   {subscribed ? "Subscribed ✓" : "Subscribe"}
                 </button>

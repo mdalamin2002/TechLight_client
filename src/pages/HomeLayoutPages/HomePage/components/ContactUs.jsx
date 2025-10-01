@@ -129,9 +129,9 @@ const ContactUs = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-8 max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-5 gap-8 mx-auto">
           {/* Contact Information - Left Side - Modern Cards */}
-          <div className="lg:col-span-2 space-y-5">
+          <div className="lg:col-span-2 space-y-6 md:mt-3">
             <ContactInfoCard
               icon={Phone}
               title="Call Us"
@@ -163,35 +163,11 @@ const ContactUs = () => {
               subInfo="Saturday: 10AM - 4PM"
               gradient="from-green-500 to-emerald-500"
             />
-
-            {/* Premium Support Card */}
-            <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-blue-600 rounded-2xl p-6 shadow-xl">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16" />
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12" />
-
-              <div className="relative">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2.5 bg-white/20 backdrop-blur-sm rounded-xl">
-                    <Headphones className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-white text-lg">
-                      24/7 Premium Support
-                    </h5>
-                    <p className="text-white/80 text-sm">Always here to help</p>
-                  </div>
-                </div>
-                <p className="text-white/90 text-sm leading-relaxed">
-                  Round-the-clock assistance from our expert tech support team
-                  for all your gadget needs.
-                </p>
-              </div>
-            </div>
           </div>
 
           {/* Modern Contact Form - Right Side */}
           <div className="lg:col-span-3">
-            <div className="relative bg-card/80 backdrop-blur-xl rounded-3xl border border-border shadow-2xl p-8 lg:p-10">
+            <div className="relative bg-card/80 backdrop-blur-xl rounded-3xl border border-border shadow-xl p-6 lg:p-7">
               {/* Floating gradient orb */}
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-primary/20 to-blue-500/20 rounded-full blur-2xl" />
 
@@ -210,7 +186,7 @@ const ContactUs = () => {
                   </div>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {/* Name and Email Row */}
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>

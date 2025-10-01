@@ -126,7 +126,7 @@ const Advertisement = () => {
                         {ad.title}
                       </h2>
 
-                      <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-full text-xl font-bold mb-4">
+                      <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-2 rounded-full text-xl font-bold mb-4">
                         <Tag size={20} />
                         {ad.discount}
                       </div>
@@ -137,7 +137,7 @@ const Advertisement = () => {
 
                       {/* Price Section */}
                       <div className="flex items-center gap-4 mb-6 text-white text-2xl font-bold">
-                        <span className="text-green-400">
+                        <span className="text-green-600">
                           ৳{discountedPrice.toFixed(2)}
                         </span>
                         <span className="text-gray-400 line-through text-xl">
