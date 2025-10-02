@@ -122,7 +122,7 @@ const CompanyLogoMarquee = () => {
 
   return (
     <>
-      <section className=" bg-primary/10 py-16 overflow-hidden section">
+      <section className=" bg-primary/5 py-16 overflow-hidden section">
         <div className="container mx-auto px-4">
           {/* Section Title */}
           <div className="text-center mb-12 ">
@@ -149,7 +149,7 @@ const CompanyLogoMarquee = () => {
               {companyLogos.map((company) => (
                 <div
                   key={company.id}
-                  className="mx-8 w-32 h-20 rounded-lg shadow-md hover:shadow-lg
+                  className="mx-8 w-32 h-20 bg-background rounded-lg shadow-md hover:shadow-lg
                            transition-all duration-300 cursor-pointer transform hover:scale-105
                            flex items-center justify-center p-4 group border border-gray-200 dark:border-gray-700"
                   onClick={() => handleLogoClick(company.name)}
