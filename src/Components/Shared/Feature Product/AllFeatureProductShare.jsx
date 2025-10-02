@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ShoppingCart, Heart, Eye } from "lucide-react";
 import { useNavigate } from "react-router";
 import StarRating from "@/pages/HomeLayoutPages/HomePage/components/Top Products/StarRating";
+import { motion } from "framer-motion";
 
 const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -18,7 +19,10 @@ const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
   };
 
   return (
-    <div className="group bg-card rounded-lg border border-border overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+    <motion.div
+      whileHover={{ scale: 1.03 }}
+      transition={{ type: "spring", stiffness: 200, damping: 15 }}
+    className="group bg-card rounded-lg border border-border overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       {/* Image with Hover Icons */}
       <div className="relative overflow-hidden bg-muted h-48">
         <img
@@ -30,8 +34,9 @@ const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
         {/* Hover Icons */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
           {/* Heart */}
-          <button
+          <motion.button
             onClick={handleFavoriteClick}
+            whileTap={{ scale: 0.8 }}
             className={`p-2 rounded-full shadow-md transition-all duration-200
       ${isFavorite ? "bg-red-100" : "bg-white/90 hover:bg-red-100"}
     `}
@@ -46,16 +51,17 @@ const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
         }
       `}
             />
-          </button>
+          </motion.button>
 
           {/* Eye */}
-          <button
+          <motion.button
+            whileTap={{ scale: 0.8 }}
             onClick={handleViewDetails}
             className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 hover:bg-blue-100"
             aria-label="View details"
           >
             <Eye className="w-5 h-5 text-gray-700 hover:text-blue-600 transition-colors" />
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -87,7 +93,7 @@ const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

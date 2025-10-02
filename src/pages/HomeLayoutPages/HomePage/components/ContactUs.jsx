@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import {
   Mail,
   Phone,
@@ -6,7 +7,6 @@ import {
   Send,
   Clock,
   MessageSquare,
-  Headphones,
   CheckCircle2,
   Sparkles,
   Zap,
@@ -21,16 +21,27 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-// Modern Gradient Contact Info Card
-const ContactInfoCard = ({ icon: Icon, title, info, subInfo, gradient }) => {
+// Modern Gradient Contact Info Card with motion
+const ContactInfoCard = ({
+  icon: Icon,
+  title,
+  info,
+  subInfo,
+  gradient,
+  index,
+}) => {
   return (
-    <div className="group relative overflow-hidden bg-card rounded-2xl border border-border p-6 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-      {/* Gradient Background on Hover */}
+    <motion.div
+      className="group relative overflow-hidden bg-card rounded-2xl border border-border p-6 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.6 }}
+    >
       <div
         className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${gradient}`}
       />
 
-      {/* Content */}
       <div className="relative flex items-start gap-4">
         <div
           className={`p-3 rounded-xl bg-gradient-to-br ${gradient} shadow-lg group-hover:scale-110 transition-transform duration-300`}
@@ -47,7 +58,7 @@ const ContactInfoCard = ({ icon: Icon, title, info, subInfo, gradient }) => {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -68,30 +79,23 @@ const ContactUs = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Email is invalid";
-    }
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone number is required";
-    } else if (!/^[0-9+\-() ]{10,}$/.test(formData.phone)) {
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    else if (!/^[0-9+\-() ]{10,}$/.test(formData.phone))
       newErrors.phone = "Phone number is invalid";
-    }
     if (!formData.subject.trim()) newErrors.subject = "Subject is required";
-    if (!formData.message.trim()) {
-      newErrors.message = "Message is required";
-    } else if (formData.message.trim().length < 10) {
+    if (!formData.message.trim()) newErrors.message = "Message is required";
+    else if (formData.message.trim().length < 10)
       newErrors.message = "Message must be at least 10 characters";
-    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -108,14 +112,20 @@ const ContactUs = () => {
   };
 
   return (
-    <section className="relative section  py-8 overflow-hidden">
+    <section className="relative section py-8 overflow-hidden">
       {/* Decorative Elements */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto relative z-10">
-        {/* Modern Section Header with Gradient */}
-        <div className="text-center mb-16">
+        {/* Section Header */}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-primary">
@@ -127,36 +137,37 @@ const ContactUs = () => {
             Questions about our cutting-edge gadgets? Our tech-savvy team is
             ready to help you find the perfect solution.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-8 mx-auto">
-          {/* Contact Information - Left Side - Modern Cards */}
+          {/* Contact Cards */}
           <div className="lg:col-span-2 space-y-6 md:mt-3">
             <ContactInfoCard
+              index={0}
               icon={Phone}
               title="Call Us"
               info="+1 (555) 123-4567"
               subInfo="Mon-Fri, 9AM - 6PM EST"
               gradient="from-blue-500 to-cyan-500"
             />
-
             <ContactInfoCard
+              index={1}
               icon={Mail}
               title="Email Us"
               info="support@techgadgets.com"
               subInfo="Response within 24 hours"
               gradient="from-purple-500 to-pink-500"
             />
-
             <ContactInfoCard
+              index={2}
               icon={MapPin}
               title="Visit Our Store"
               info="123 Tech Street, Silicon Valley"
               subInfo="CA 94025, United States"
               gradient="from-orange-500 to-red-500"
             />
-
             <ContactInfoCard
+              index={3}
               icon={Clock}
               title="Business Hours"
               info="Mon-Fri: 9AM - 6PM"
@@ -165,9 +176,15 @@ const ContactUs = () => {
             />
           </div>
 
-          {/* Modern Contact Form - Right Side */}
-          <div className="lg:col-span-3">
-            <div className="relative bg-card/80 backdrop-blur-xl rounded-3xl border border-border shadow-xl p-6 lg:p-7">
+          {/* Contact Form */}
+          <motion.div
+            className="lg:col-span-3"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="relative bg-card/80 backdrop-blur-xl rounded-3xl border border-border shadow-sm p-6 lg:p-7">
               {/* Floating gradient orb */}
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-primary/20 to-blue-500/20 rounded-full blur-2xl" />
 
@@ -401,10 +418,10 @@ const ContactUs = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        {/* Success Alert Dialog */}
+        {/* Success Dialog remains unchanged */}
         <AlertDialog
           open={showSuccessDialog}
           onOpenChange={setShowSuccessDialog}

@@ -122,10 +122,10 @@ const CompanyLogoMarquee = () => {
 
   return (
     <>
-      <section className=" bg-background overflow-hidden section">
+      <section className=" bg-primary/10 py-16 overflow-hidden section">
         <div className="container mx-auto px-4">
           {/* Section Title */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 ">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
               <Sparkles className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium text-primary">Company</span>
@@ -139,22 +139,6 @@ const CompanyLogoMarquee = () => {
 
           {/* Logo Marquee Container */}
           <div className="relative">
-            {/* Gradient overlays for smooth edge effect */}
-            <div
-              className="absolute left-0 top-0 w-20 h-full z-10"
-              style={{
-                background:
-                  "linear-gradient(to right, var(--color-background), transparent)",
-              }}
-            ></div>
-            <div
-              className="absolute right-0 top-0 w-20 h-full z-10"
-              style={{
-                background:
-                  "linear-gradient(to left, var(--color-background), transparent)",
-              }}
-            ></div>
-
             {/* React Fast Marquee */}
             <Marquee
               pauseOnHover={true}

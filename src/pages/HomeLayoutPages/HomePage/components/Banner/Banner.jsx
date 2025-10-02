@@ -37,7 +37,7 @@ const Banner = () => {
 
   return (
     <motion.section
-      className="container mx-auto mt-6 md:px-4 sm:px-0"
+      className="container mx-auto mt-6"
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}

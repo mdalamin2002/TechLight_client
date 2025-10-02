@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import AllFeatureProductShare from "@/Components/Shared/Feature Product/AllFeatureProductShare";
+import { motion } from "framer-motion";
 
 // Mock product data
 const topProducts = [
@@ -110,13 +111,20 @@ const TopProducts = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {topProducts.map((product) => (
-            <AllFeatureProductShare
+          {topProducts.map((product, index) => (
+            <motion.div
               key={product.id}
-              product={product}
-              onAddToCart={handleAddToCart}
-              onAddToFavorites={handleAddToFavorites}
-            />
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
+              viewport={{ once: true }}
+            >
+              <AllFeatureProductShare
+                product={product}
+                onAddToCart={handleAddToCart}
+                onAddToFavorites={handleAddToFavorites}
+              />
+            </motion.div>
           ))}
         </div>
       </div>

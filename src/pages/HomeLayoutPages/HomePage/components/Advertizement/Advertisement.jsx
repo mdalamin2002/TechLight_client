@@ -118,7 +118,7 @@ const Advertisement = () => {
                     >
                       {ad.isHot && (
                         <div className="inline-flex items-center gap-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-4">
-                          🔥 HOT DEAL
+                          HOT DEAL
                         </div>
                       )}
 
