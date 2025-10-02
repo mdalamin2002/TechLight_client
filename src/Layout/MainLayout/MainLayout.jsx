@@ -3,7 +3,7 @@ import { Outlet } from "react-router";
 import Navbar from "../../Components/Shared/Navbar/Navbar";
 import Footer from "../../Components/Shared/Footer/Footer";
 import { useDispatch } from "react-redux";
-import { checkAuthState } from "../../store/authSlice"; 
+import { checkAuthState } from "../../store/authSlice";
 
 const MainLayout = () => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const MainLayout = () => {
   return (
     <div className="bg-background">
       <Navbar />
-      <div className="pt-16">
+      <div className="xl:mt-36 md:mt-22 mt-20">
         <Outlet />
       </div>
       <Footer />
