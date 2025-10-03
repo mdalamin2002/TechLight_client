@@ -3,7 +3,6 @@ import Home from "../pages/HomeLayoutPages/HomePage/Home";
 import MainLayout from "../Layout/MainLayout/MainLayout";
 import PrivacyPolicy from "../pages/HomeLayoutPages/PrivacyPolicyPage/PrivacyPolicy";
 import Mobile from "../pages/HomeLayoutPages/AllProduct/Categories/Mobile/Mobile";
-import Laptop from "../pages/HomeLayoutPages/AllProduct/Categories/Laptop/Laptop";
 import DashboardLayout from "@/Layout/Dashboard/DashboardLayout";
 import MainDashboard from "@/Layout/Dashboard/MainDashboard";
 import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
@@ -24,6 +23,7 @@ import Login from "@/pages/authentication/Login/Login";
 import Warranty from "@/pages/PolicyPages/Warranty/Warranty";
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
+import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
 
 const MainRoute = createBrowserRouter([
   {
@@ -43,8 +43,8 @@ const MainRoute = createBrowserRouter([
         Component: Mobile,
       },
       {
-        path: "/laptop",
-        Component: Laptop,
+        path: "/allProduct",
+        Component: AllProduct,
       },
       {
         path: "/returns-refunds",
