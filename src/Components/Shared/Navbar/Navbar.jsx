@@ -25,9 +25,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from "@/Components/ui/dropdown-menu";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
 
 export default function Navbar() {
   const dispatch = useDispatch();
