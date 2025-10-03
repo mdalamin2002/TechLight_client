@@ -1,0 +1,151 @@
+
+
+[
+  {
+    "key": "1",
+    "name": "iPhone 15 Pro",
+    "sales": 245,
+    "revenue": 244755,
+    "date": "2024-04-10"
+  },
+  {
+    "key": "2",
+    "name": "MacBook Pro",
+    "sales": 89,
+    "revenue": 177911,
+    "date": "2024-03-05"
+  },
+  {
+    "key": "3",
+    "name": "AirPods Pro",
+    "sales": 156,
+    "revenue": 38844,
+    "date": "2024-02-20"
+  },
+  {
+    "key": "4",
+    "name": "iPad Air",
+    "sales": 78,
+    "revenue": 46722,
+    "date": "2024-01-18"
+  },
+  {
+    "key": "5",
+    "name": "Apple Watch Ultra",
+    "sales": 65,
+    "revenue": 51935,
+    "date": "2024-05-14"
+  },
+  {
+    "key": "6",
+    "name": "iPhone 14",
+    "sales": 130,
+    "revenue": 104000,
+    "date": "2024-06-22"
+  },
+  {
+    "key": "7",
+    "name": "MacBook Air M2",
+    "sales": 95,
+    "revenue": 133000,
+    "date": "2024-07-11"
+  },
+  {
+    "key": "8",
+    "name": "iPad Pro",
+    "sales": 60,
+    "revenue": 71400,
+    "date": "2024-08-09"
+  },
+  {
+    "key": "9",
+    "name": "AirPods Max",
+    "sales": 40,
+    "revenue": 22000,
+    "date": "2024-09-17"
+  },
+  {
+    "key": "10",
+    "name": "Apple TV 4K",
+    "sales": 55,
+    "revenue": 9900,
+    "date": "2024-10-12"
+  },
+  {
+    "key": "11",
+    "name": "iPhone 15 Pro",
+    "sales": 310,
+    "revenue": 309890,
+    "date": "2024-11-20"
+  },
+  {
+    "key": "12",
+    "name": "Mac Studio",
+    "sales": 25,
+    "revenue": 99975,
+    "date": "2024-12-05"
+  },
+  {
+    "key": "13",
+    "name": "iMac 24-inch",
+    "sales": 45,
+    "revenue": 62955,
+    "date": "2025-01-16"
+  },
+  {
+    "key": "14",
+    "name": "iPhone 15 Pro",
+    "sales": 340,
+    "revenue": 339660,
+    "date": "2025-02-08"
+  },
+  {
+    "key": "15",
+    "name": "HomePod Mini",
+    "sales": 75,
+    "revenue": 7425,
+    "date": "2025-03-14"
+  },
+  {
+    "key": "16",
+    "name": "iPhone 15 Pro Max",
+    "sales": 290,
+    "revenue": 406000,
+    "date": "2025-04-19"
+  },
+  {
+    "key": "17",
+    "name": "MacBook Pro",
+    "sales": 120,
+    "revenue": 239880,
+    "date": "2025-05-23"
+  },
+  {
+    "key": "18",
+    "name": "AirPods Pro",
+    "sales": 180,
+    "revenue": 44820,
+    "date": "2025-06-27"
+  },
+  {
+    "key": "19",
+    "name": "iPad Air",
+    "sales": 95,
+    "revenue": 56810,
+    "date": "2025-07-30"
+  },
+  {
+    "key": "20",
+    "name": "Apple Watch Ultra",
+    "sales": 110,
+    "revenue": 87990,
+    "date": "2025-09-25"
+  },
+  {
+    "key": "21",
+    "name": "iPhone 15 Pro",
+    "sales": 245,
+    "revenue": 244755,
+    "date": "2025-09-20"
+  }
+]

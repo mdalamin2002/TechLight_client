@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { SalesReport } from "./components/SalesReport";
 import { UsersReport } from "./components/UsersReport";
-import { SellersReport } from "./components/SellersReport";
+import { ReviewTraking } from "./components/ReviewTraking";
 import { OrdersReport } from "./components/OrdersReport";
 import { ModeratorReport } from "./components/ModeratorReport";
 import { FraudReport } from "./components/FraudReport";
 import { tabs } from "./components/tabs";
 import { ExportButton } from "./components/ExportButton";
-
-
 
 export const Reports = () => {
   const [activeTab, setActiveTab] = useState("sales");
@@ -16,13 +14,20 @@ export const Reports = () => {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "sales": return <SalesReport />;
-      case "users": return <UsersReport />;
-      case "sellers": return <SellersReport />;
-      case "orders": return <OrdersReport />;
-      case "moderator": return <ModeratorReport />;
-      case "fraud": return <FraudReport />;
-      default: return <div>Coming Soon 🚀</div>;
+      case "sales":
+        return <SalesReport dateRange={dateRange} />;
+      case "users":
+        return <UsersReport dateRange={dateRange}/>;
+      case "review":
+        return <ReviewTraking dateRange={dateRange}/>;
+      case "orders":
+        return <OrdersReport dateRange={dateRange}/>;
+      case "moderator":
+        return <ModeratorReport dateRange={dateRange}/>;
+      case "fraud":
+        return <FraudReport dateRange={dateRange}/>;
+      default:
+        return <div>Coming Soon 🚀</div>;
     }
   };
 
@@ -38,7 +43,9 @@ export const Reports = () => {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent">
             Reports & Analytics
           </h1>
-          <p className="text-gray-600">Analyze performance and generate detailed reports.</p>
+          <p className="text-gray-600">
+            Analyze performance and generate detailed reports.
+          </p>
         </div>
         <ExportButton onExport={handleExport} />
       </div>
