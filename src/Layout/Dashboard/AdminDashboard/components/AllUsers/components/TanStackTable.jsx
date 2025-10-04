@@ -211,7 +211,25 @@ const TanStackTable = () => {
         </table>
       </div>
 
-     
+      {/* 📑 Pagination */}
+      <div className='flex flex-wrap items-center justify-between gap-4 mt-6'>
+        <div className='flex items-center gap-2'>
+          <button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className='px-3 py-1.5 rounded-lg bg-indigo-500 text-white disabled:bg-gray-300 hover:bg-indigo-600 transition flex items-center gap-1'>
+            <ChevronLeft size={16} /> Prev
+          </button>
+          <button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className='px-3 py-1.5 rounded-lg bg-indigo-500 text-white disabled:bg-gray-300 hover:bg-indigo-600 transition flex items-center gap-1'>
+            Next <ChevronRight size={16} />
+          </button>
+        </div>
+
+        
+      </div>
     </div>
   );
 };
