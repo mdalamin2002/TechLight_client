@@ -232,7 +232,20 @@ const TanStackTable = () => {
           Page <strong>{table.getState().pagination.pageIndex + 1}</strong> of <strong>{table.getPageCount()}</strong>
         </span>
 
-       
+        <div className='flex items-center gap-2 text-sm text-gray-700'>
+          Go to page:
+          <input
+            type="number"
+            defaultValue={table.getState().pagination.pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              table.setPageIndex(page);
+            }}
+            className="w-16 p-1 border rounded-lg shadow-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
+          />
+        </div>
+
+        
       </div>
     </div>
   );
