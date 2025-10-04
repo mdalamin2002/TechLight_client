@@ -137,7 +137,26 @@ const TanStackTable = () => {
         <DownloadBtn data={data} user={"user"} icon />
       </div>
 
-      
+      {/* 📊 Table */}
+      <div className='overflow-x-auto rounded-xl border border-gray-200 shadow-sm'>
+        <table className='min-w-full border-collapse'>
+          <thead className='bg-indigo-600 text-white'>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th key={header.id} className='px-4 py-3 text-sm font-semibold text-left'>
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
+                ))}
+                <th className="px-4 py-3 text-sm font-semibold text-left">Actions</th>
+              </tr>
+            ))}
+          </thead>
+          
+        </table>
+      </div>
+
+     
     </div>
   );
 };
