@@ -152,11 +152,23 @@ const TanStackTable = () => {
               </tr>
             ))}
           </thead>
-          
+          <tbody>
+            {table.getRowModel().rows.map((row, i) => (
+              <tr key={row.id} className={`${i % 2 === 0 ? 'bg-white' : 'bg-indigo-50/40'} hover:bg-indigo-100/70 transition-colors`}>
+                {row.getVisibleCells().map(cell => (
+                  <td key={cell.id} className='px-4 py-3 text-gray-700 text-sm'>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+
+                
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
 
-     
+      
     </div>
   );
 };
