@@ -161,14 +161,57 @@ const TanStackTable = () => {
                   </td>
                 ))}
 
-                
+                {/* ⚙ Actions */}
+                <td className="py-3 px-4 relative">
+                  <button
+                    className="p-2 rounded-full hover:bg-gray-100 transition"
+                    onClick={() => setOpenMenu(openMenu === i ? null : i)}
+                  >
+                    <Settings className="w-5 h-5 text-gray-600" />
+                  </button>
+
+                  {openMenu === i && (
+                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg z-10">
+                      <button
+                        onClick={() => handleToggleBan(row.original.id)}
+                        className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
+                      >
+                        {row.original.status === "active" ? "Ban" : "Unban"}
+                      </button>
+                      {row.original.role === "User" && (
+                        <button
+                          onClick={() => handleMakeModerator(row.original.id)}
+                          className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
+                        >
+                          Make Moderator
+                        </button>
+                      )}
+                      {(row.original.role === "User" || row.original.role === "Moderator") && (
+                        <button
+                          onClick={() => handleMakeAdmin(row.original.id)}
+                          className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
+                        >
+                          Make Admin
+                        </button>
+                      )}
+                      {(row.original.role === "Admin" || row.original.role === "Moderator") && (
+                        <button
+                          onClick={() => handleRemoveRole(row.original.id)}
+                          className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
+                        >
+                          Remove Role
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      
+     
     </div>
   );
 };
