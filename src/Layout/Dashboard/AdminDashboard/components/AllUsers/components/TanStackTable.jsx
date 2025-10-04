@@ -245,7 +245,14 @@ const TanStackTable = () => {
           />
         </div>
 
-        
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={e => table.setPageSize(Number(e.target.value))}
+          className='p-2 border rounded-lg shadow-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400'>
+          {[10, 20, 30, 40, 50].map(size => (
+            <option key={size} value={size}>Show {size}</option>
+          ))}
+        </select>
       </div>
     </div>
   );
