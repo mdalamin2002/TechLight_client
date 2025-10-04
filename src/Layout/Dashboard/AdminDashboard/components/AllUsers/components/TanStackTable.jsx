@@ -228,7 +228,11 @@ const TanStackTable = () => {
           </button>
         </div>
 
-        
+        <span className='text-gray-700 text-sm'>
+          Page <strong>{table.getState().pagination.pageIndex + 1}</strong> of <strong>{table.getPageCount()}</strong>
+        </span>
+
+       
       </div>
     </div>
   );
