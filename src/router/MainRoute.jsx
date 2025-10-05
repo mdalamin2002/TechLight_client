@@ -11,7 +11,7 @@ import Register from "@/pages/authentication/register/Register";
 import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
 import Sellers from "@/Layout/Dashboard/AdminDashboard/components/Sellers";
 import Products from "@/Layout/Dashboard/AdminDashboard/components/Products";
-import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders";
+import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
 import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication/Communication";
 import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings/Settings";

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TransactionsTable from "./components/TransactionsTable";
 import RefundsTable from "./components/RefundsTable";
-import PayoutsTable from "./components/PayoutsTable";
+// import PayoutsTable from "./components/PayoutsTable";
 
 const Finance = () => {
   const [activeTab, setActiveTab] = useState("Transactions");
@@ -16,7 +16,7 @@ const Finance = () => {
 
       {/* Tabs */}
       <div className="flex gap-4 mb-6">
-        {["Transactions", "Refunds", "Payouts"].map((tab) => (
+        {["Transactions", "Refunds"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -34,7 +34,7 @@ const Finance = () => {
       <div className="rounded-2xl border shadow-lg overflow-hidden">
         {activeTab === "Transactions" && <TransactionsTable />}
         {activeTab === "Refunds" && <RefundsTable />}
-        {activeTab === "Payouts" && <PayoutsTable />}
+        {/* {activeTab === "Payouts" && <PayoutsTable />} */}
       </div>
     </div>
   );
