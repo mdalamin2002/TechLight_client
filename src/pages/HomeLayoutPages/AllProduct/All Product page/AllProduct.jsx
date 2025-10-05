@@ -100,8 +100,8 @@ const AllProduct = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="">
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8">
+      <div className="bg-gradient-to-br from-primary/10 via-background to-accent/5 border-b border-border/50">
+        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 -mt-7">
           <div className="flex flex-col gap-5">
             {/* Title */}
             <div className="flex items-center gap-4">
