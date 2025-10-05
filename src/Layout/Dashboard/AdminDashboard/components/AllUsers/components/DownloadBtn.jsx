@@ -18,7 +18,7 @@ const DownloadBtn = ({ data = [], user }) => {
   return (
     <button
       onClick={handleDownload}
-      className='flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition'
+      className='flex items-center gap-2 cursor-pointer bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition'
     >
       <Download size={16} />
       Download

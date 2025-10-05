@@ -1,20 +1,22 @@
 // TanStackTable.jsx
-import { 
-  createColumnHelper, 
-  flexRender, 
-  useReactTable, 
-  getCoreRowModel, 
-  getPaginationRowModel, 
-  getFilteredRowModel 
+import {
+  createColumnHelper,
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel
 } from '@tanstack/react-table';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { 
-  User, Mail, Shield, Calendar, Hash, Search, 
-  ChevronLeft, ChevronRight, Settings 
+import Swal from 'sweetalert2';
+import {
+  User, Mail, Shield, Calendar, Hash, Search,
+  ChevronLeft, ChevronRight, Settings
 } from "lucide-react";
 import DebouncedInput from './DebouncedInput';
 import DownloadBtn from './DownloadBtn';
+import Pagination from './Pagination';
+import UserTable from './UserTable';
 
 const TanStackTable = () => {
   const columnHelper = createColumnHelper();
@@ -30,8 +32,6 @@ const TanStackTable = () => {
       .then(res => setData(res.data))
       .catch(err => console.error(err));
   }, []);
-  console.log(data);
-  
 
   // ===== Action Handlers =====
   const handleToggleBan = (id) => {
@@ -66,6 +66,69 @@ const TanStackTable = () => {
         user.id === id ? { ...user, role: "User" } : user
       )
     );
+  };
+
+  // ===== SweetAlert Wrapper =====
+  const handleActionWithConfirm = (actionType, user) => {
+    let actionText = "";
+    switch (actionType) {
+      case "toggleBan":
+        actionText = user.status === "active" ? "ban" : "unban";
+        break;
+      case "makeModerator":
+        actionText = "make Moderator";
+        break;
+      case "makeAdmin":
+        actionText = "make Admin";
+        break;
+      case "removeRole":
+        actionText = "remove Role";
+        break;
+      default:
+        actionText = actionType;
+    }
+
+    Swal.fire({
+      title: `Are you sure?`,
+      html: `
+        <b>User:</b> ${user.user} <br/>
+        <b>Email:</b> ${user.email} <br/>
+        <b>Current Role:</b> ${user.role} <br/>
+        <b>Status:</b> ${user.status} <br/><br/>
+        You are about to <b>${actionText}</b> this user.
+      `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, proceed!",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        switch (actionType) {
+          case "toggleBan":
+            handleToggleBan(user.id);
+            break;
+          case "makeModerator":
+            handleMakeModerator(user.id);
+            break;
+          case "makeAdmin":
+            handleMakeAdmin(user.id);
+            break;
+          case "removeRole":
+            handleRemoveRole(user.id);
+            break;
+        }
+        Swal.fire({
+          title: "Success!",
+          text: `User updated successfully.`,
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        setOpenMenu(null);
+      }
+    });
   };
 
   // ===== Columns =====
@@ -138,122 +201,15 @@ const TanStackTable = () => {
       </div>
 
       {/* 📊 Table */}
-      <div className='overflow-x-auto rounded-xl border border-gray-200 shadow-sm'>
-        <table className='min-w-full border-collapse'>
-          <thead className='bg-indigo-600 text-white'>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th key={header.id} className='px-4 py-3 text-sm font-semibold text-left'>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-                <th className="px-4 py-3 text-sm font-semibold text-left">Actions</th>
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row, i) => (
-              <tr key={row.id} className={`${i % 2 === 0 ? 'bg-white' : 'bg-indigo-50/40'} hover:bg-indigo-100/70 transition-colors`}>
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id} className='px-4 py-3 text-gray-700 text-sm'>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
+      <UserTable
+        table={table}
+        openMenu={openMenu}
+        setOpenMenu={setOpenMenu}
+        handleActionWithConfirm={handleActionWithConfirm}
+      />
 
-                {/* ⚙ Actions */}
-                <td className="py-3 px-4 relative">
-                  <button
-                    className="p-2 rounded-full hover:bg-gray-100 transition"
-                    onClick={() => setOpenMenu(openMenu === i ? null : i)}
-                  >
-                    <Settings className="w-5 h-5 text-gray-600" />
-                  </button>
-
-                  {openMenu === i && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg z-10">
-                      <button
-                        onClick={() => handleToggleBan(row.original.id)}
-                        className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
-                      >
-                        {row.original.status === "active" ? "Ban" : "Unban"}
-                      </button>
-                      {row.original.role === "User" && (
-                        <button
-                          onClick={() => handleMakeModerator(row.original.id)}
-                          className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
-                        >
-                          Make Moderator
-                        </button>
-                      )}
-                      {(row.original.role === "User" || row.original.role === "Moderator") && (
-                        <button
-                          onClick={() => handleMakeAdmin(row.original.id)}
-                          className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
-                        >
-                          Make Admin
-                        </button>
-                      )}
-                      {(row.original.role === "Admin" || row.original.role === "Moderator") && (
-                        <button
-                          onClick={() => handleRemoveRole(row.original.id)}
-                          className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
-                        >
-                          Remove Role
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* 📑 Pagination */}
-      <div className='flex flex-wrap items-center justify-between gap-4 mt-6'>
-        <div className='flex items-center gap-2'>
-          <button
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className='px-3 py-1.5 rounded-lg bg-indigo-500 text-white disabled:bg-gray-300 hover:bg-indigo-600 transition flex items-center gap-1'>
-            <ChevronLeft size={16} /> Prev
-          </button>
-          <button
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className='px-3 py-1.5 rounded-lg bg-indigo-500 text-white disabled:bg-gray-300 hover:bg-indigo-600 transition flex items-center gap-1'>
-            Next <ChevronRight size={16} />
-          </button>
-        </div>
-
-        <span className='text-gray-700 text-sm'>
-          Page <strong>{table.getState().pagination.pageIndex + 1}</strong> of <strong>{table.getPageCount()}</strong>
-        </span>
-
-        <div className='flex items-center gap-2 text-sm text-gray-700'>
-          Go to page:
-          <input
-            type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="w-16 p-1 border rounded-lg shadow-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
-          />
-        </div>
-
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={e => table.setPageSize(Number(e.target.value))}
-          className='p-2 border rounded-lg shadow-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400'>
-          {[10, 20, 30, 40, 50].map(size => (
-            <option key={size} value={size}>Show {size}</option>
-          ))}
-        </select>
-      </div>
+      {/* Pagination   */}
+      <Pagination table={table} />
     </div>
   );
 };
