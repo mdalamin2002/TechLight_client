@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 
-export const OrdersReport = ({ dateRange }) => {
+export const OrdersReport = ({ dateRange, onDataUpdate }) => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export const OrdersReport = ({ dateRange }) => {
         startDate.setFullYear(now.getFullYear() - 1);
         break;
       default:
-        startDate = new Date("2000-01-01"); // fallback → all data
+        startDate = new Date("2000-01-01");
     }
 
     return orders.filter((order) => {
@@ -44,7 +44,32 @@ export const OrdersReport = ({ dateRange }) => {
 
   const filteredOrders = filterOrders();
 
-  return (
+  // 🟩 Summary for Excel Export
+  const total = filteredOrders.length || 1;
+  const summary = {
+    totalOrders: total,
+    successPercent: (
+      (filteredOrders.filter((o) => o.status === "Completed").length / total) *
+      100
+    ).toFixed(1),
+    pendingPercent: (
+      (filteredOrders.filter((o) => o.status === "Pending").length / total) *
+      100
+    ).toFixed(1),
+    cancelledPercent: (
+      (filteredOrders.filter((o) => o.status === "Cancelled").length / total) *
+      100
+    ).toFixed(1),
+  };
+
+  // 🟩 Send back data to parent (for Excel export)
+  useEffect(() => {
+    if (onDataUpdate) {
+      onDataUpdate({ orders: filteredOrders, summary });
+    }
+  }, [filteredOrders]);
+
+    return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md">
       <h3 className="text-xl font-semibold text-gray-800 mb-6">
         Order Report ({dateRange})

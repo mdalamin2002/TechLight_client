@@ -11,9 +11,16 @@ import {
   Legend,
 } from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-export const ReviewTraking = ({ dateRange }) => {
+export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
   const [reviews, setReviews] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,12 +92,10 @@ export const ReviewTraking = ({ dateRange }) => {
         ).toFixed(1)
       : 0;
   const positivePercent = (
-    (filteredData.filter((r) => r.rating >= 4).length / totalReviews) *
-      100 || 0
+    (filteredData.filter((r) => r.rating >= 4).length / totalReviews) * 100 || 0
   ).toFixed(1);
   const negativePercent = (
-    (filteredData.filter((r) => r.rating <= 2).length / totalReviews) *
-      100 || 0
+    (filteredData.filter((r) => r.rating <= 2).length / totalReviews) * 100 || 0
   ).toFixed(1);
 
   // Chart Data
@@ -104,10 +109,34 @@ export const ReviewTraking = ({ dateRange }) => {
       {
         label: "Reviews",
         data: ratingCounts,
-        backgroundColor: ["#F87171", "#FBBF24", "#60A5FA", "#34D399", "#10B981"],
+        backgroundColor: [
+          "#F87171",
+          "#FBBF24",
+          "#60A5FA",
+          "#34D399",
+          "#10B981",
+        ],
       },
     ],
   };
+  // 🟩 Send data back to parent for Excel export
+  useEffect(() => {
+    if (!onDataUpdate) return;
+
+    const timer = setTimeout(() => {
+      onDataUpdate({
+        reviews: filteredData,
+        summary: {
+          totalReviews,
+          avgRating,
+          positivePercent,
+          negativePercent,
+        },
+      });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [filteredData]);
 
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md space-y-6">
@@ -145,7 +174,9 @@ export const ReviewTraking = ({ dateRange }) => {
         </div>
         <div className="bg-green-50 p-4 rounded-lg text-center">
           <p className="text-green-700 font-medium">Positive %</p>
-          <p className="text-2xl font-bold text-green-800">{positivePercent}%</p>
+          <p className="text-2xl font-bold text-green-800">
+            {positivePercent}%
+          </p>
         </div>
         <div className="bg-red-50 p-4 rounded-lg text-center">
           <p className="text-red-700 font-medium">Negative %</p>
@@ -217,7 +248,10 @@ export const ReviewTraking = ({ dateRange }) => {
         </h4>
         <Bar
           data={chartData}
-          options={{ responsive: true, plugins: { legend: { position: "top" } } }}
+          options={{
+            responsive: true,
+            plugins: { legend: { position: "top" } },
+          }}
         />
       </div>
 
@@ -232,15 +266,32 @@ export const ReviewTraking = ({ dateRange }) => {
               ✕
             </button>
             <h4 className="text-lg font-semibold mb-2">Review Details</h4>
-            <p><span className="font-medium">Review ID:</span> {selectedReview.id}</p>
-            <p><span className="font-medium">User:</span> {selectedReview.user}</p>
-            <p><span className="font-medium">Product:</span> {selectedReview.product}</p>
-            <p><span className="font-medium">Rating:</span> {selectedReview.rating}★</p>
-            <p><span className="font-medium">Date:</span> {selectedReview.date}</p>
-            <p className="mt-2"><span className="font-medium">Comment:</span> {selectedReview.comment}</p>
+            <p>
+              <span className="font-medium">Review ID:</span>{" "}
+              {selectedReview.id}
+            </p>
+            <p>
+              <span className="font-medium">User:</span> {selectedReview.user}
+            </p>
+            <p>
+              <span className="font-medium">Product:</span>{" "}
+              {selectedReview.product}
+            </p>
+            <p>
+              <span className="font-medium">Rating:</span>{" "}
+              {selectedReview.rating}★
+            </p>
+            <p>
+              <span className="font-medium">Date:</span> {selectedReview.date}
+            </p>
+            <p className="mt-2">
+              <span className="font-medium">Comment:</span>{" "}
+              {selectedReview.comment}
+            </p>
           </div>
         </div>
       )}
     </div>
   );
 };
+
