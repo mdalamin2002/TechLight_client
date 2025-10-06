@@ -1,31 +1,64 @@
-import React, { useState } from "react";
-import { Bell, Send, Users, Store, Mail, Star, UserX } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Bell, Send, Users, Store, Star, UserX, Mail } from "lucide-react";
+import axios from "axios";
+
+const API_URL = "http://localhost:5000/api/admin/notifications";
 
 const Notifications = () => {
-  const [notifications, setNotifications] = useState([]);
   const [recipient, setRecipient] = useState("All Users");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState(null);
 
-  const handleSend = () => {
-    if (!subject.trim() || !message.trim()) return;
+  // ✅ Fetch notifications from backend
+  const fetchNotifications = async () => {
+    try {
+      const res = await axios.get(API_URL);
+      setNotifications(res.data);
+    } catch (err) {
+      console.error(err);
+      setFeedback({ type: "error", text: "Failed to load notifications" });
+    }
+  };
 
-    const newNotification = {
-      id: notifications.length + 1,
-      recipient,
-      subject,
-      message,
-      date: new Date().toISOString().split("T")[0],
-    };
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
-    setNotifications([newNotification, ...notifications]);
-    setSubject("");
-    setMessage("");
+  const handleSend = async () => {
+    if (!subject.trim() || !message.trim()) {
+      setFeedback({ type: "error", text: "Subject and message are required!" });
+      return;
+    }
+
+    setLoading(true);
+    setFeedback(null);
+
+    try {
+      const res = await axios.post(`${API_URL}/send`, {
+        recipient,
+        subject,
+        message,
+      });
+
+      // Reload notifications after sending
+      fetchNotifications();
+
+      setSubject("");
+      setMessage("");
+      setFeedback({ type: "success", text: res.data.message });
+    } catch (err) {
+      console.error(err);
+      setFeedback({ type: "error", text: "Failed to send notification" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-      {/* Header */}
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto my-10">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold flex items-center gap-2 text-gray-800">
           <Bell className="w-5 h-5 text-gray-500" />
@@ -33,71 +66,49 @@ const Notifications = () => {
         </h3>
       </div>
 
-      {/* Send Notification Form */}
+      {/* Feedback */}
+      {feedback && (
+        <div
+          className={`mb-4 p-3 rounded-lg text-sm ${
+            feedback.type === "success"
+              ? "bg-green-100 text-green-700 border border-green-300"
+              : "bg-red-100 text-red-700 border border-red-300"
+          }`}
+        >
+          {feedback.text}
+        </div>
+      )}
+
+      {/* Form */}
       <div className="mb-6 bg-gray-50 p-5 rounded-lg space-y-4 border border-gray-200">
         {/* Recipient */}
         <div>
-          <label className="block text-sm mb-2 text-gray-700">
-            Recipient Type
-          </label>
+          <label className="block text-sm mb-2 text-gray-700">Recipient Type</label>
           <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-6">
-            {/* All Users */}
-            <label className="flex items-center gap-2 cursor-pointer text-gray-600">
-              <input
-                type="radio"
-                name="recipient"
-                value="All Users"
-                checked={recipient === "All Users"}
-                onChange={() => setRecipient("All Users")}
-              />
-              <Users className="w-4 h-4 text-gray-500" />
-              All Users
-            </label>
-
-            {/* Sellers */}
-            <label className="flex items-center gap-2 cursor-pointer text-gray-600">
-              <input
-                type="radio"
-                name="recipient"
-                value="Sellers"
-                checked={recipient === "Sellers"}
-                onChange={() => setRecipient("Sellers")}
-              />
-              <Store className="w-4 h-4 text-gray-500" />
-              Sellers
-            </label>
-
-            {/* Premium Users */}
-            <label className="flex items-center gap-2 cursor-pointer text-gray-600">
-              <input
-                type="radio"
-                name="recipient"
-                value="Premium Users"
-                checked={recipient === "Premium Users"}
-                onChange={() => setRecipient("Premium Users")}
-              />
-              <Star className="w-4 h-4 text-yellow-500" />
-              Premium Users
-            </label>
-
-            {/* Inactive Users */}
-            <label className="flex items-center gap-2 cursor-pointer text-gray-600">
-              <input
-                type="radio"
-                name="recipient"
-                value="Inactive Users"
-                checked={recipient === "Inactive Users"}
-                onChange={() => setRecipient("Inactive Users")}
-              />
-              <UserX className="w-4 h-4 text-red-500" />
-              Inactive Users
-            </label>
+            {[
+              { label: "All Users", icon: Users },
+              { label: "Sellers", icon: Store },
+              { label: "Premium Users", icon: Star },
+              { label: "Inactive Users", icon: UserX },
+            ].map(({ label, icon: Icon }) => (
+              <label key={label} className="flex items-center gap-2 cursor-pointer text-gray-600">
+                <input
+                  type="radio"
+                  name="recipient"
+                  value={label}
+                  checked={recipient === label}
+                  onChange={() => setRecipient(label)}
+                />
+                <Icon className="w-4 h-4" />
+                {label}
+              </label>
+            ))}
           </div>
         </div>
 
         {/* Subject */}
         <div>
-          <label className=" text-sm mb-2 text-gray-700 flex items-center gap-2">
+          <label className="text-sm mb-2 text-gray-700 flex items-center gap-2">
             <Mail className="w-4 h-4 text-gray-500" />
             Subject
           </label>
@@ -126,10 +137,13 @@ const Notifications = () => {
         <div className="flex justify-end">
           <button
             onClick={handleSend}
-            className="flex items-center gap-2 px-5 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium text-white transition"
+            disabled={loading}
+            className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium text-white transition ${
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-gray-800 hover:bg-gray-700"
+            }`}
           >
             <Send className="w-4 h-4" />
-            Send Notification
+            {loading ? "Sending..." : "Send Notification"}
           </button>
         </div>
       </div>
@@ -139,16 +153,11 @@ const Notifications = () => {
         {notifications.length === 0 ? (
           <p className="text-gray-500 text-sm">No notifications yet.</p>
         ) : (
-          notifications.map((n) => (
-            <div
-              key={n.id}
-              className="bg-gray-50 p-4 rounded-lg border border-gray-200 hover:bg-gray-100 transition"
-            >
+          notifications.map((n, index) => (
+            <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
               <h4 className="text-gray-800 font-medium text-sm">{n.subject}</h4>
               <p className="text-gray-600 text-sm mt-1">{n.message}</p>
-              <p className="text-xs text-gray-500 mt-2">
-                {n.date} • {n.recipient}
-              </p>
+              <p className="text-xs text-gray-500 mt-2">{new Date(n.date).toLocaleString()} • {n.recipient}</p>
             </div>
           ))
         )}
