@@ -16,7 +16,7 @@ const TransactionsTable = () => {
   ];
 
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-gradient-to-br from-white via-indigo-50 to-indigo-100 shadow-lg rounded-2xl">
+    <div className="max-w-6xl mx-auto rounded-2xl">
       <div className="flex md:flex-row justify-end mb-4">
         <CSVLink
           data={transactions}

@@ -7,7 +7,7 @@ const Finance = () => {
   const [activeTab, setActiveTab] = useState("Transactions");
 
   return (
-    <div className="min-h-screen bg-background p-1">
+    <div className="min-h-screen p-6  bg-background ">
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-gray-800">Finance & Payments</h2>
@@ -31,7 +31,7 @@ const Finance = () => {
       </div>
 
       {/* Tables */}
-      <div className="rounded-2xl border shadow-lg overflow-hidden">
+      <div className="rounded-2xl  overflow-hidden">
         {activeTab === "Transactions" && <TransactionsTable />}
         {activeTab === "Refunds" && <RefundsTable />}
         {/* {activeTab === "Payouts" && <PayoutsTable />} */}

@@ -4,7 +4,7 @@ import TanStackTable from './components/TanStackTable';
 const AllUsers = () => {
  
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen p-6">
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800">User Management</h2>

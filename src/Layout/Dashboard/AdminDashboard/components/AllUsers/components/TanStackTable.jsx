@@ -9,9 +9,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import {
-  User, Mail, Shield, Calendar, Hash, Search,
-  ChevronLeft, ChevronRight, Settings
+import { Calendar, Search,
 } from "lucide-react";
 import DebouncedInput from './DebouncedInput';
 import DownloadBtn from './DownloadBtn';
@@ -136,23 +134,23 @@ const TanStackTable = () => {
     columnHelper.accessor("id", {
       id: "S.No",
       cell: (info) => <span>{info.row.index + 1}</span>,
-      header: () => <div className="flex items-center gap-1"><Hash size={16} /> S.No</div>,
+      header: () => <div className="flex items-center gap-1"> S.No</div>,
     }),
     columnHelper.accessor("avatar", {
       cell: (info) => <img src={info.getValue()} alt="profile" className='rounded-full w-10 h-10 object-cover border-2 border-indigo-200 shadow-sm' />,
-      header: () => <div className="flex items-center gap-1"><User size={16} /> Profile</div>,
+      header: () => <div className="flex items-center gap-1"> Profile</div>,
     }),
     columnHelper.accessor("user", {
       cell: (info) => <span className='font-semibold text-gray-800'>{info.getValue()}</span>,
-      header: () => <div className="flex items-center gap-1"><User size={16} /> User</div>,
+      header: () => <div className="flex items-center gap-1"> User</div>,
     }),
     columnHelper.accessor("email", {
       cell: (info) => <span className='text-gray-600'>{info.getValue()}</span>,
-      header: () => <div className="flex items-center gap-1"><Mail size={16} /> Email</div>,
+      header: () => <div className="flex items-center gap-1"> Email</div>,
     }),
     columnHelper.accessor("role", {
       cell: (info) => <span className='capitalize text-indigo-600 font-medium'>{info.getValue()}</span>,
-      header: () => <div className="flex items-center gap-1"><Shield size={16} /> Role</div>,
+      header: () => <div className="flex items-center gap-1"> Role</div>,
     }),
     columnHelper.accessor("status", {
       cell: (info) => {
@@ -184,7 +182,7 @@ const TanStackTable = () => {
   });
 
   return (
-    <div className='p-6 max-w-6xl mx-auto bg-gradient-to-br from-white via-indigo-50 to-indigo-100 shadow-lg rounded-2xl'>
+    <div className=' max-w-6xl mx-auto  rounded-2xl'>
 
       {/* 🔍 Search + ⬇ Download */}
       <div className='flex flex-col md:flex-row justify-between mb-6 gap-3 items-center'>

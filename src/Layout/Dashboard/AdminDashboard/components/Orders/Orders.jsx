@@ -57,7 +57,7 @@ const Orders = () => {
   );
 
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-gradient-to-br from-white via-indigo-50 to-indigo-100 shadow-lg rounded-2xl">
+    <div className="p-6 max-w-6xl mx-auto  rounded-2xl">
       <header className="mb-6">
         <h2 className="text-3xl font-bold text-gray-800">Order Management</h2>
         <p className="text-sm text-gray-500">
