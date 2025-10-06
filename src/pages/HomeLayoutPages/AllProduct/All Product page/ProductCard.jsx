@@ -1,16 +1,10 @@
-// src/components/AllProductCardShare.jsx
+// src/components/product/ProductCard.jsx
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
+import { priceLabel, toNumber } from "./product";
 
-const toNumber = (val) => {
-  if (typeof val === "number") return val;
-  if (typeof val === "string") return parseInt(val.replace(/[^\d]/g, ""), 10) || 0;
-  return 0;
-};
-const priceLabel = (val) => `৳${toNumber(val).toLocaleString()}`;
-
-const AllProductCardShare = ({
+const ProductCard = ({
   id,
   name,
   image,
@@ -25,6 +19,7 @@ const AllProductCardShare = ({
   buttonAction = () => {},
 }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
+
   const priceNum = toNumber(price);
   const regularPriceNum = toNumber(regularPrice);
   const discount =
@@ -39,11 +34,11 @@ const AllProductCardShare = ({
           -{discount}%
         </div>
       )}
+
       <div className="absolute top-3 right-3 z-10 bg-background/90 backdrop-blur-sm text-foreground px-3 py-1 rounded-full text-xs font-medium border border-border shadow-sm">
         {status}
       </div>
 
-      {/* Wishlist */}
       <motion.button
         whileTap={{ scale: 0.8 }}
         onClick={() => setIsWishlisted(!isWishlisted)}
@@ -61,7 +56,6 @@ const AllProductCardShare = ({
         />
       </motion.button>
 
-      {/* Eye Button */}
       <motion.button
         whileTap={{ scale: 0.8 }}
         className="absolute top-28 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 delay-75 hover:bg-blue-100"
@@ -69,25 +63,26 @@ const AllProductCardShare = ({
         <Eye className="w-5 h-5 text-gray-700 hover:text-blue-600 transition-colors" />
       </motion.button>
 
-      {/* Image */}
       <div className="relative bg-muted/30 overflow-hidden aspect-square">
         <img
           src={image}
           alt={name}
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
       <div className="p-5 space-y-3">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>{brand}</span>•<span>{subcategory}</span>
+        <div className="flex items-center gap-2 text-xs">
+          <span className="text-muted-foreground font-medium">{brand}</span>
+          <span className="text-muted-foreground/50">•</span>
+          <span className="text-muted-foreground">{subcategory}</span>
         </div>
 
         <h4 className="font-semibold text-foreground text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
           {name}
         </h4>
 
-        {/* Rating */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
@@ -100,19 +95,22 @@ const AllProductCardShare = ({
               />
             ))}
           </div>
-          <span className="text-xs font-medium">{rating}</span>
+          <span className="text-xs text-muted-foreground font-medium">
+            {rating}
+          </span>
         </div>
 
-        {/* Features */}
         <div className="space-y-1.5 pt-2 border-t border-border/50">
-          {keyFeatures.slice(0, 2).map((f, i) => (
-            <p key={i} className="text-xs text-muted-foreground line-clamp-1">
-              • {f}
-            </p>
+          {keyFeatures.slice(0, 2).map((feature, index) => (
+            <div key={index} className="flex items-start gap-2">
+              <div className="w-1 h-1 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">
+                {feature}
+              </p>
+            </div>
           ))}
         </div>
 
-        {/* Price + Button */}
         <div className="pt-3 space-y-2">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold text-primary">
@@ -124,11 +122,13 @@ const AllProductCardShare = ({
               </span>
             )}
           </div>
+
           <button
             onClick={buttonAction}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"
           >
-            <ShoppingCart size={18} /> {buttonText}
+            <ShoppingCart size={18} />
+            <span>{buttonText}</span>
           </button>
         </div>
       </div>
@@ -136,4 +136,4 @@ const AllProductCardShare = ({
   );
 };
 
-export default AllProductCardShare;
+export default ProductCard;
