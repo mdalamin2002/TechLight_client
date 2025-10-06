@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Search, Plus, Check, X, Download } from "lucide-react";
 import { CSVLink } from "react-csv";
 import Filter from "./Products/Filter";
@@ -6,71 +6,33 @@ import Searching from "./Products/Searching";
 import FilledButton from "@/Components/Shared/Buttots/FilledButton";
 import AddProduct from "./Products/AddProduct";
 import ProductActions from "./Products/ProductActions";
+import axios from "axios";
 
 const Products = () => {
   const [addProduct, setAddProduct] = useState(false);
-  const [products, setProducts] = useState([
-    {
-      name: "iPhone 15 Pro",
-      category: "Electronics",
-      price: 999,
-      stock: 50,
-      seller: "Tech Store Pro",
-      status: "Approved",
-      discount_price: 780,
-      discount:20,
-    },
-    { name: "Nike Air Max", category: "Fashion", price: 129, stock: 25, seller: "Fashion Hub", status: "Pending" },
-    {
-      name: "MacBook Pro",
-      category: "Electronics",
-      price: 1999,
-      stock: 15,
-      seller: "Electronics World",
-      status: "Approved",
-    },
-    { name: "Coffee Maker", category: "Home", price: 89, stock: 0, seller: "Home & Garden", status: "Rejected" },
-    { name: "Gaming Chair", category: "Furniture", price: 299, stock: 8, seller: "Sports Central", status: "Pending" },
-    {
-      name: "iPhone 15 Pro",
-      category: "Electronics",
-      price: 999,
-      stock: 50,
-      seller: "Tech Store Pro",
-      status: "In stock",
-    },
-    { name: "Nike Air Max", category: "Fashion", price: 129, stock: 25, seller: "Fashion Hub", status: "Pending" },
-    {
-      name: "MacBook Pro",
-      category: "Electronics",
-      price: 1999,
-      stock: 15,
-      seller: "Electronics World",
-      status: "Out of stock",
-    },
-    { name: "Coffee Maker", category: "Home", price: 89, stock: 0, seller: "Home & Garden", status: "Rejected" },
-    { name: "Gaming Chair", category: "Furniture", price: 299, stock: 8, seller: "Sports Central", status: "Pending" },
-    {
-      name: "iPhone 15 Pro",
-      category: "Electronics",
-      price: 999,
-      stock: 50,
-      seller: "Tech Store Pro",
-      status: "Approved",
-    },
-    { name: "Nike Air Max", category: "Fashion", price: 129, stock: 25, seller: "Fashion Hub", status: "Pending" },
-    {
-      name: "MacBook Pro",
-      category: "Electronics",
-      price: 1999,
-      stock: 15,
-      seller: "Electronics World",
-      status: "Approved",
-    },
-    { name: "Coffee Maker", category: "Home", price: 89, stock: 0, seller: "Home & Garden", status: "Rejected" },
-    { name: "Gaming Chair", category: "Furniture", price: 299, stock: 8, seller: "Sports Central", status: "Pending" },
-  ]);
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [selectCategory, setSelectCategory] = useState("");
 
+
+  //Fetching product data from database
+  useEffect(() => {
+    axios.get(`${selectCategory?`http://localhost:5000/api/products/${selectCategory}`:"http://localhost:5000/api/products"}`)
+      .then(res => setProducts(res.data))
+      .catch(error => console.log(error))
+  }, [selectCategory]);
+
+  useEffect(() => {
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/categories");
+      setCategory(res.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+  fetchCategories();
+}, []);
 
   return (<>
     {
@@ -80,11 +42,7 @@ const Products = () => {
       <div className="">
         <h2 className="text-3xl font-bold text-foreground">Product Management</h2>
         <div className="flex gap-4 my-4">
-          <Filter></Filter>
-          <Filter></Filter>
-          <Filter></Filter>
-          <Filter></Filter>
-          <Filter></Filter>
+          <Filter category={category} setSelectCategory={setSelectCategory}></Filter>
         </div>
       </div>
         <div className="flex gap-4 justify-between mb-3">
@@ -121,7 +79,7 @@ const Products = () => {
                 i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
               } hover:bg-indigo-100/70 transition-colors`}
             >
-              <td className="px-4 py-3 text-purple-500 font-medium">{p.name}</td>
+              <td className="px-4 py-3 font-medium">{p.name}</td>
               <td className="px-4 py-3 font-medium">{p.category}</td>
               <td className="px-4 py-3">{p.price}</td>
               <td className="px-4 py-3 font-medium">{p.stock}</td>

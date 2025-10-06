@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -9,20 +9,20 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 
-const Filter = () => {
-    return (
-    <Select>
-      <SelectTrigger className="w-[120px] focus:outline-none text-black bg-input">
+const Filter = ({ category, setSelectCategory }) => {
+  return (
+    <Select onValueChange={(value) => setSelectCategory(value)}>
+      <SelectTrigger className="w-[180px] focus:outline-none text-black bg-input">
         <SelectValue placeholder="Select a category" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Category</SelectLabel>
-          <SelectItem value="apple">Apple</SelectItem>
-          <SelectItem value="banana">Banana</SelectItem>
-          <SelectItem value="blueberry">Blueberry</SelectItem>
-          <SelectItem value="grapes">Grapes</SelectItem>
-          <SelectItem value="pineapple">Pineapple</SelectItem>
+          {category?.map((c) => (
+            <SelectItem key={c._id} value={c.category}>
+              {c.category.toUpperCase()}
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>
