@@ -7,6 +7,7 @@ import FilledButton from "@/Components/Shared/Buttots/FilledButton";
 import AddProduct from "./Products/AddProduct";
 import ProductActions from "./Products/ProductActions";
 import axios from "axios";
+import axiosInstance from "@/utils/axiosInstance";
 
 const Products = () => {
   const [addProduct, setAddProduct] = useState(false);
@@ -17,7 +18,7 @@ const Products = () => {
 
   //Fetching product data from database
   useEffect(() => {
-    axios.get(`${selectCategory?`http://localhost:5000/api/products/${selectCategory}`:"http://localhost:5000/api/products"}`)
+    axiosInstance.get(`${selectCategory?`/products/${selectCategory}`:"/products"}`)
       .then(res => setProducts(res.data))
       .catch(error => console.log(error))
   }, [selectCategory]);
@@ -25,7 +26,7 @@ const Products = () => {
   useEffect(() => {
   const fetchCategories = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/categories");
+      const res = await axiosInstance.get("/categories");
       setCategory(res.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
