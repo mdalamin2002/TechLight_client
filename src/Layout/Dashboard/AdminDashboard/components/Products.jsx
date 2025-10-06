@@ -5,6 +5,7 @@ import Filter from "./Products/Filter";
 import Searching from "./Products/Searching";
 import FilledButton from "@/Components/Shared/Buttots/FilledButton";
 import AddProduct from "./Products/AddProduct";
+import ProductActions from "./Products/ProductActions";
 
 const Products = () => {
   const [addProduct, setAddProduct] = useState(false);
@@ -16,6 +17,8 @@ const Products = () => {
       stock: 50,
       seller: "Tech Store Pro",
       status: "Approved",
+      discount_price: 780,
+      discount:20,
     },
     { name: "Nike Air Max", category: "Fashion", price: 129, stock: 25, seller: "Fashion Hub", status: "Pending" },
     {
@@ -34,7 +37,7 @@ const Products = () => {
       price: 999,
       stock: 50,
       seller: "Tech Store Pro",
-      status: "Approved",
+      status: "In stock",
     },
     { name: "Nike Air Max", category: "Fashion", price: 129, stock: 25, seller: "Fashion Hub", status: "Pending" },
     {
@@ -43,7 +46,7 @@ const Products = () => {
       price: 1999,
       stock: 15,
       seller: "Electronics World",
-      status: "Approved",
+      status: "Out of stock",
     },
     { name: "Coffee Maker", category: "Home", price: 89, stock: 0, seller: "Home & Garden", status: "Rejected" },
     { name: "Gaming Chair", category: "Furniture", price: 299, stock: 8, seller: "Sports Central", status: "Pending" },
@@ -68,17 +71,6 @@ const Products = () => {
     { name: "Gaming Chair", category: "Furniture", price: 299, stock: 8, seller: "Sports Central", status: "Pending" },
   ]);
 
-  const handleApprove = (index) => {
-    const updated = [...products];
-    updated[index].status = "Approved";
-    setProducts(updated);
-  };
-
-  const handleReject = (index) => {
-    const updated = [...products];
-    updated[index].status = "Rejected";
-    setProducts(updated);
-  };
 
   return (<>
     {
@@ -117,7 +109,7 @@ const Products = () => {
                 <th className="py-3 px-4 font-semibold">Category</th>
                 <th className="py-3 px-4 font-semibold">Price</th>
                 <th className="py-3 px-4 font-semibold">Stock</th>
-                <th className="py-3 px-4 font-semibold">Seller</th>
+                <th className="py-3 px-4 font-semibold">Discount</th>
                 <th className="py-3 px-4 font-semibold">Status</th>
                 <th className="py-3 px-4 font-semibold text-right">Actions</th>
               </tr>
@@ -131,15 +123,24 @@ const Products = () => {
                   }`}>
                   <td className="px-4 py-3 font-medium text-primary">{p.name}</td>
                   <td className="px-4 py-3">{p.category}</td>
-                  <td className="px-4 py-3">${p.price}</td>
+                  <td className="px-4 py-3">
+                    {
+                      p.discount_price ?<>
+                      <span className="line-through font-normal text-sm text-red-400">{p.price}</span> <br />
+                        <span>{ p.discount_price}</span>
+                      </> : <span>{ p.price}</span>
+                    }
+                  </td>
                   <td className="px-4 py-3">{p.stock}</td>
-                  <td className="px-4 py-3">{p.seller}</td>
+                  <td className="px-4 py-3">
+                    {p.discount ? <span>{p.discount }%</span>: <span>N/A</span>}
+                  </td>
                   <td className="px-4 py-3">
                     <span
                       className={`px-3 py-1.5 text-xs font-medium rounded-full ${
-                        p.status === "Approved"
+                        p.status === "In stock"
                           ? "bg-green-500/10 text-green-500 border border-green-500/30"
-                          : p.status === "Rejected"
+                          : p.status === "Out of stock"
                           ? "bg-red-500/10 text-red-500 border border-red-500/30"
                           : "bg-yellow-500/10 text-yellow-500 border border-yellow-500/30"
                       }`}>
@@ -147,20 +148,7 @@ const Products = () => {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <div className="flex justify-end gap-3">
-                      <button
-                        onClick={() => handleApprove(i)}
-                        className="p-1.5 rounded-lg bg-green-500/10 hover:bg-green-500/20 transition"
-                        title="Approve">
-                        <Check className="w-4 h-4 text-green-500" />
-                      </button>
-                      <button
-                        onClick={() => handleReject(i)}
-                        className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 transition"
-                        title="Reject">
-                        <X className="w-4 h-4 text-red-500" />
-                      </button>
-                    </div>
+                    <ProductActions></ProductActions>
                   </td>
                 </tr>
               ))}
