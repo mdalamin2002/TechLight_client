@@ -10,8 +10,23 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../firebase/firebase.init";
-
+import axios from '../utils/axiosInstance';
 const googleProvider = new GoogleAuthProvider();
+
+
+const saveUserToDB = async (user) => {
+  try {
+
+    await axios.post('/users/save', {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+    });
+  } catch (error) {
+    console.error('Failed to save user to MongoDB:', error.response?.data || error.message);
+  }
+};
 
 // Register User
 export const registerUser = createAsyncThunk(
@@ -23,8 +38,11 @@ export const registerUser = createAsyncThunk(
         email,
         password
       );
+
+
       await updateProfile(auth.currentUser, { displayName: name });
-      return userCredential.user;
+      const user = auth.currentUser;
+      await saveUserToDB(user);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -41,7 +59,11 @@ export const loginUser = createAsyncThunk(
         email,
         password
       );
-      return userCredential.user;
+      const user = userCredential.user;
+      await saveUserToDB(user);
+
+      return user;
+
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -54,7 +76,10 @@ export const loginWithGoogle = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
-      return userCredential.user;
+      const user = userCredential.user;
+      await saveUserToDB(user);
+
+      return user;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -157,9 +182,19 @@ const authSlice = createSlice({
       })
 
       // Google Login
+      .addCase(loginWithGoogle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(loginWithGoogle.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.loading = false;
       })
+      .addCase(loginWithGoogle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
 
       // Forgot Password
       .addCase(forgotPassword.pending, (state) => {
