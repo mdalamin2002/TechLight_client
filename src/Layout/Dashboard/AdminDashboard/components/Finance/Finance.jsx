@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import TransactionsTable from "./components/TransactionsTable";
 import RefundsTable from "./components/RefundsTable";
-// import PayoutsTable from "./components/PayoutsTable";
+import PayoutsTable from "./components/PayoutsTable";
 
 const Finance = () => {
   const [activeTab, setActiveTab] = useState("Transactions");
 
   return (
-    <div className="min-h-screen p-6  bg-background ">
+    <div className="min-h-screen bg-background p-1">
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-gray-800">Finance & Payments</h2>
@@ -16,7 +16,7 @@ const Finance = () => {
 
       {/* Tabs */}
       <div className="flex gap-4 mb-6">
-        {["Transactions", "Refunds"].map((tab) => (
+        {["Transactions", "Refunds", "Payouts"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -31,10 +31,10 @@ const Finance = () => {
       </div>
 
       {/* Tables */}
-      <div className="rounded-2xl  overflow-hidden">
+      <div className="rounded-2xl border shadow-lg overflow-hidden">
         {activeTab === "Transactions" && <TransactionsTable />}
         {activeTab === "Refunds" && <RefundsTable />}
-        {/* {activeTab === "Payouts" && <PayoutsTable />} */}
+        {activeTab === "Payouts" && <PayoutsTable />}
       </div>
     </div>
   );
