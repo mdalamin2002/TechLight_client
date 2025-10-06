@@ -24,7 +24,7 @@ ChartJS.register(
   TimeScale
 );
 
-export const UsersReport = ({ dateRange }) => {
+export const UsersReport = ({ dateRange, onDataUpdate }) => {
   const [analytics, setAnalytics] = useState([]);
   const [chartKey, setChartKey] = useState(0); // key to force remount
 
@@ -186,14 +186,8 @@ export const UsersReport = ({ dateRange }) => {
   };
 
   const analyticsData = summary();
-  // ========== bar start
-  useEffect(() => {
-    fetch("/UserReport.json")
-      .then((res) => res.json())
-      .then((data) => setAnalytics(data))
-      .catch((err) => console.error("Error fetching User Analytics:", err));
-  }, []);
 
+  // ========== bar start
   useEffect(() => {
     // Force Line chart to remount whenever dateRange or analytics changes
     setChartKey((prev) => prev + 1);
@@ -268,6 +262,16 @@ export const UsersReport = ({ dateRange }) => {
     },
   };
   // ============= bar end
+
+  // Send data to parent for Excel export
+  useEffect(() => {
+    if (onDataUpdate) {
+      onDataUpdate({
+        topProducts: currentData, // or full analytics data, depending on export need
+        summary: analyticsData || [],
+      });
+    }
+  }, [currentData, analyticsData, onDataUpdate]);
 
   return (
     <div className="space-y-6">

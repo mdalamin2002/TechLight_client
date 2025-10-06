@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { CSVLink } from "react-csv";
@@ -14,7 +15,7 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export const ModeratorReport = ({ dateRange }) => {
+export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -97,7 +98,17 @@ export const ModeratorReport = ({ dateRange }) => {
     ],
   };
 
-  return (
+  // 🟩 Send data to parent for Excel export
+  useEffect(() => {
+    if (onDataUpdate) {
+      onDataUpdate({
+        cases: filteredData,
+        summary,
+      });
+    }
+  }, [filteredData]);
+
+ return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md space-y-6">
       <h3 className="text-xl font-semibold text-gray-800">
         Moderator Activity & Complaints ({dateRange})
