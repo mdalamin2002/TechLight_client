@@ -87,9 +87,6 @@ const Products = () => {
           <Filter></Filter>
         </div>
       </div>
-
-      {/* Products Table */}
-      <div className="text-card-foreground mt-10">
         <div className="flex gap-4 justify-between mb-3">
           <Searching></Searching>
           <div className="flex justify-center items-center gap-7">
@@ -101,61 +98,48 @@ const Products = () => {
             </FilledButton>
           </div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse text-sm">
-            <thead className="bg-muted/60">
-              <tr className="text-left">
-                <th className="py-3 px-4 font-semibold">Product</th>
-                <th className="py-3 px-4 font-semibold">Category</th>
-                <th className="py-3 px-4 font-semibold">Price</th>
-                <th className="py-3 px-4 font-semibold">Stock</th>
-                <th className="py-3 px-4 font-semibold">Discount</th>
-                <th className="py-3 px-4 font-semibold">Status</th>
-                <th className="py-3 px-4 font-semibold text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((p, i) => (
-                <tr
-                  key={i}
-                  className={`border-t border-border hover:bg-muted/30 transition-colors ${
-                    i % 2 === 0 ? "bg-background/50" : "bg-card/80"
-                  }`}>
-                  <td className="px-4 py-3 font-medium text-primary">{p.name}</td>
-                  <td className="px-4 py-3">{p.category}</td>
-                  <td className="px-4 py-3">
-                    {
-                      p.discount_price ?<>
-                      <span className="line-through font-normal text-sm text-red-400">{p.price}</span> <br />
-                        <span>{ p.discount_price}</span>
-                      </> : <span>{ p.price}</span>
-                    }
-                  </td>
-                  <td className="px-4 py-3">{p.stock}</td>
-                  <td className="px-4 py-3">
-                    {p.discount ? <span>{p.discount }%</span>: <span>N/A</span>}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`px-3 py-1.5 text-xs font-medium rounded-full ${
-                        p.status === "In stock"
-                          ? "bg-green-500/10 text-green-500 border border-green-500/30"
-                          : p.status === "Out of stock"
-                          ? "bg-red-500/10 text-red-500 border border-red-500/30"
-                          : "bg-yellow-500/10 text-yellow-500 border border-yellow-500/30"
-                      }`}>
-                      {p.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <ProductActions></ProductActions>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+
+      {/* Products Table */}
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+      <table className="min-w-full border-collapse">
+        <thead className="bg-indigo-600 text-white">
+          <tr>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Product</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Category</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Price</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Stock</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Discount</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Status</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((p, i) => (
+            <tr
+              key={i}
+              className={`${
+                i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
+              } hover:bg-indigo-100/70 transition-colors`}
+            >
+              <td className="px-4 py-3 text-purple-500 font-medium">{p.name}</td>
+              <td className="px-4 py-3 font-medium">{p.category}</td>
+              <td className="px-4 py-3">{p.price}</td>
+              <td className="px-4 py-3 font-medium">{p.stock}</td>
+              <td
+                className={`px-4 py-3 font-medium`}
+              >
+                {p.discount ? <span>{ p.discount}%</span>:<span>N/A</span>}
+              </td>
+               <td className="px-4 py-3 font-medium">{p.status}</td>
+              <td className="px-4 py-3 font-medium">
+                <ProductActions></ProductActions>
+               </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
     </div>
 
     }

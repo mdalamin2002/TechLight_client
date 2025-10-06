@@ -16,7 +16,7 @@ const ProductActions = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex justify-end">
+        <div className="">
           <Settings></Settings>
         </div>
       </DropdownMenuTrigger>
