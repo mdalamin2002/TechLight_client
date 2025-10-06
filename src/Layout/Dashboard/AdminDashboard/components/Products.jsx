@@ -1,159 +1,108 @@
-import React, { useState } from "react";
-import { Search, Plus, Edit, Trash2, Check, Package, MoreHorizontal } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Search, Plus, Check, X, Download } from "lucide-react";
+import { CSVLink } from "react-csv";
+import Filter from "./Products/Filter";
+import Searching from "./Products/Searching";
+import FilledButton from "@/Components/Shared/Buttots/FilledButton";
+import AddProduct from "./Products/AddProduct";
+import ProductActions from "./Products/ProductActions";
+import axios from "axios";
+import axiosInstance from "@/utils/axiosInstance";
 
 const Products = () => {
-  const [products, setProducts] = useState([
-    {
-      name: "iPhone 15 Pro",
-      category: "Electronics",
-      price: 999,
-      stock: 50,
-      seller: "Tech Store Pro",
-      status: "Approved",
-    },
-    {
-      name: "Nike Air Max",
-      category: "Fashion",
-      price: 129,
-      stock: 25,
-      seller: "Fashion Hub",
-      status: "Pending",
-    },
-    {
-      name: "MacBook Pro",
-      category: "Electronics",
-      price: 1999,
-      stock: 15,
-      seller: "Electronics World",
-      status: "Approved",
-    },
-    {
-      name: "Coffee Maker",
-      category: "Home",
-      price: 89,
-      stock: 0,
-      seller: "Home & Garden",
-      status: "Rejected",
-    },
-    {
-      name: "Gaming Chair",
-      category: "Furniture",
-      price: 299,
-      stock: 8,
-      seller: "Sports Central",
-      status: "Pending",
-    },
-  ]);
+  const [addProduct, setAddProduct] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [selectCategory, setSelectCategory] = useState("");
 
-  // Approve product
-  const handleApprove = (index) => {
-    const updated = [...products];
-    updated[index].status = "Approved";
-    setProducts(updated);
+
+  //Fetching product data from database
+  useEffect(() => {
+    axiosInstance.get(`${selectCategory?`/products/${selectCategory}`:"/products"}`)
+      .then(res => setProducts(res.data))
+      .catch(error => console.log(error))
+  }, [selectCategory]);
+
+  useEffect(() => {
+  const fetchCategories = async () => {
+    try {
+      const res = await axiosInstance.get("/categories");
+      setCategory(res.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
+  fetchCategories();
+}, []);
 
-  // Delete product
-  const handleDelete = (index) => {
-    const updated = products.filter((_, i) => i !== index);
-    setProducts(updated);
-  };
-
-  return (
-    <div className="min-h-screen bg-background p-1">
-      {/* Header */}
-      <div className="mb-6 flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-800">Product Management</h2>
-          <p className="text-sm text-gray-500">Manage your product catalog and inventory.</p>
+  return (<>
+    {
+      addProduct ? <AddProduct></AddProduct>
+        :
+    <div className="min-h-screen text-foreground p-6 transition-colors duration-300">
+      <div className="">
+        <h2 className="text-3xl font-bold text-foreground">Product Management</h2>
+        <div className="flex gap-4 my-4">
+          <Filter category={category} setSelectCategory={setSelectCategory}></Filter>
         </div>
-        <button className="flex items-center bg-gradient-to-r from-pink-200 to-purple-300  px-4 py-2 rounded-lg text-sm cursor-pointer shadow">
-          <Plus className="w-4 h-4 mr-2" /> Add Product
-        </button>
       </div>
-
-      {/* Search + Filter */}
-      <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
-        <div className="flex items-center  rounded-lg px-3 w-full md:w-1/2">
-          <Search className=" w-5 h-5 mr-2" />
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="w-full "
-          />
+        <div className="flex gap-4 justify-between mb-3">
+          <Searching></Searching>
+          <div className="flex justify-center items-center gap-7">
+            <FilledButton onClick={()=>setAddProduct(true)}>Add Product</FilledButton>
+            <FilledButton>
+              <CSVLink data={products} filename={"products-report.csv"} className="flex items-center gap-2">
+                <Download size={16} /> Export
+              </CSVLink>
+            </FilledButton>
+          </div>
         </div>
-        <select className="px-3 py-2 rounded-lg text-sm outline-none w-full md:w-auto ">
-          <option>All Categories</option>
-          <option>Electronics</option>
-          <option>Fashion</option>
-          <option>Home</option>
-          <option>Furniture</option>
-        </select>
-      </div>
 
       {/* Products Table */}
-      <div className="rounded-2xl shadow-lg overflow-hidden">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b bg-black/10">
-            <tr>
-              <th className="py-3 px-4">Product</th>
-              <th className="py-3 px-4">Category</th>
-              <th className="py-3 px-4">Price</th>
-              <th className="py-3 px-4">Stock</th>
-              <th className="py-3 px-4">Seller</th>
-              <th className="py-3 px-4">Status</th>
-              <th className="py-3 px-4">Actions</th>
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+      <table className="min-w-full border-collapse">
+        <thead className="bg-indigo-600 text-white">
+          <tr>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Product</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Category</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Price</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Stock</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Discount</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Status</th>
+            <th className="px-4 py-3 text-sm font-semibold text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((p, i) => (
+            <tr
+              key={i}
+              className={`${
+                i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
+              } hover:bg-indigo-100/70 transition-colors`}
+            >
+              <td className="px-4 py-3 font-medium">{p.name}</td>
+              <td className="px-4 py-3 font-medium">{p.category}</td>
+              <td className="px-4 py-3">{p.price}</td>
+              <td className="px-4 py-3 font-medium">{p.stock}</td>
+              <td
+                className={`px-4 py-3 font-medium`}
+              >
+                {p.discount ? <span>{ p.discount}%</span>:<span>N/A</span>}
+              </td>
+               <td className="px-4 py-3 font-medium">{p.status}</td>
+              <td className="px-4 py-3 font-medium">
+                <ProductActions></ProductActions>
+               </td>
             </tr>
-          </thead>
-          <tbody>
-            {products.map((p, i) => (
-              <tr key={i} className="border-b transition hover:bg-black/5">
-                <td className="py-3 px-4 flex items-center gap-2">
-                  <Package className="w-5 h-5 text-pink-400" />
-                  {p.name}
-                </td>
-                <td className="py-3 px-4">{p.category}</td>
-                <td className="py-3 px-4 font-bold">${p.price}</td>
-                <td
-                  className={`py-3 px-4 font-medium ${
-                    p.stock > 0 ? "text-green-400" : "text-red-400"
-                  }`}
-                >
-                  {p.stock}
-                </td>
-                <td className="py-3 px-4">{p.seller}</td>
-                <td>
-                  <span
-                    className={`font-medium ${
-                      p.status === "Approved"
-                        ? "text-green-400"
-                        : p.status === "Pending"
-                        ? "text-yellow-400"
-                        : "text-red-400"
-                    }`}
-                  >
-                    {p.status}
-                  </span>
-                </td>
-                <td className="py-3 px-4 flex items-center gap-3">
-                  <Edit className="w-4 h-4 text-purple-400 cursor-pointer" />
-                  <Trash2
-                    onClick={() => handleDelete(i)}
-                    className="w-4 h-4 text-red-500 cursor-pointer"
-                  />
-                  {p.status === "Pending" && (
-                    <Check
-                      onClick={() => handleApprove(i)}
-                      className="w-4 h-4 text-green-400 cursor-pointer"
-                    />
-                  )}
-                  <MoreHorizontal className="w-4 h-4 text-gray-400 cursor-pointer" />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
+
+    </div>
+
+    }
+  </>
   );
 };
 

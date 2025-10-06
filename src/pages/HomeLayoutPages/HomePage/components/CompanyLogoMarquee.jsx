@@ -1,18 +1,13 @@
+import { Sparkles } from "lucide-react";
 import React from "react";
 import Marquee from "react-fast-marquee";
 
 const CompanyLogoMarquee = () => {
   const companyLogos = [
-    // Electronics & Gadget Brands
     {
       id: 1,
       name: "Apple",
       logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
-    },
-    {
-      id: 2,
-      name: "Samsung",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg",
     },
     {
       id: 3,
@@ -101,7 +96,6 @@ const CompanyLogoMarquee = () => {
   const handleLogoClick = (companyName) => {
     const websites = {
       Apple: "https://www.apple.com",
-      Samsung: "https://www.samsung.com",
       Sony: "https://www.sony.com",
       Intel: "https://www.intel.com",
       Dell: "https://www.dell.com",
@@ -128,12 +122,16 @@ const CompanyLogoMarquee = () => {
 
   return (
     <>
-      <section className="py-16 bg-background overflow-hidden section">
+      <section className=" bg-primary/5 py-16 overflow-hidden section">
         <div className="container mx-auto px-4">
           {/* Section Title */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 ">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-primary">Company</span>
+            </div>
             <h2 className="text-dark mb-4">Our Trusted Partners</h2>
-            <p className="text-subtext max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
               Trusted by leading companies worldwide. We collaborate with
               industry giants to deliver exceptional solutions.
             </p>
@@ -141,22 +139,6 @@ const CompanyLogoMarquee = () => {
 
           {/* Logo Marquee Container */}
           <div className="relative">
-            {/* Gradient overlays for smooth edge effect */}
-            <div
-              className="absolute left-0 top-0 w-20 h-full z-10"
-              style={{
-                background:
-                  "linear-gradient(to right, var(--color-background), transparent)",
-              }}
-            ></div>
-            <div
-              className="absolute right-0 top-0 w-20 h-full z-10"
-              style={{
-                background:
-                  "linear-gradient(to left, var(--color-background), transparent)",
-              }}
-            ></div>
-
             {/* React Fast Marquee */}
             <Marquee
               pauseOnHover={true}
@@ -167,7 +149,7 @@ const CompanyLogoMarquee = () => {
               {companyLogos.map((company) => (
                 <div
                   key={company.id}
-                  className="mx-8 w-32 h-20 bg-primary rounded-lg shadow-md hover:shadow-lg
+                  className="mx-8 w-32 h-20 bg-background rounded-lg shadow-md hover:shadow-lg
                            transition-all duration-300 cursor-pointer transform hover:scale-105
                            flex items-center justify-center p-4 group border border-gray-200 dark:border-gray-700"
                   onClick={() => handleLogoClick(company.name)}
@@ -184,13 +166,6 @@ const CompanyLogoMarquee = () => {
                 </div>
               ))}
             </Marquee>
-          </div>
-
-          {/* Bottom Text */}
-          <div className="text-center mt-12">
-            <small className="text-subtext">
-              Click on any logo to visit their official website
-            </small>
           </div>
         </div>
       </section>
