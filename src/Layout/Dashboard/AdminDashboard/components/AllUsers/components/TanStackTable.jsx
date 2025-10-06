@@ -167,7 +167,7 @@ const TanStackTable = () => {
     }),
     columnHelper.accessor("joinDate", {
       cell: (info) => <span className='text-gray-600'>{info.getValue()}</span>,
-      header: () => <div className="flex items-center gap-1"><Calendar size={16} /> Join Date</div>,
+      header: () => <div className="flex items-center gap-1"> Join Date</div>,
     }),
   ];
 
