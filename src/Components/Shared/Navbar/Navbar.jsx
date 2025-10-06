@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import {
   Heart,
@@ -16,7 +15,6 @@ import {
   UserCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { logoutUser } from "../../../store/authSlice";
 import TechLightLogo from "../Logo/TechLightLogo";
 import {
   DropdownMenu,
@@ -30,7 +28,6 @@ import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 
 export default function Navbar() {
-  const dispatch = useDispatch();
   const location = useLocation();
   const [searchOpen, setSearchOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
@@ -42,8 +39,8 @@ export default function Navbar() {
 
   const profileRef = useRef(null);
 
-  const { user } = useSelector((state) => state.auth);
-  const isLoggedIn = !!user;
+
+
   const cartCount = 2;
 
   const categories = [
@@ -78,7 +75,6 @@ export default function Navbar() {
   ];
 
   const handleLogout = () => {
-    dispatch(logoutUser());
     setProfileOpen(false);
   };
 
@@ -209,7 +205,7 @@ export default function Navbar() {
               </div>
 
               {/* Profile / Account */}
-              {isLoggedIn ? (
+             
                 <>
                   {/* Desktop: hover dropdown */}
                   <div className="block relative" ref={profileRef}>
@@ -221,7 +217,7 @@ export default function Navbar() {
                       onMouseLeave={() => setProfileOpen(false)}
                     >
                       <img
-                        src={user?.photoURL || "https://i.ibb.co.com/3mWYSkKt/image.png"}
+                        src={ "https://i.ibb.co.com/3mWYSkKt/image.png"}
                         alt="User"
                         className="w-8 h-8 rounded-full object-cover ring-2 ring-border"
                       />
@@ -267,14 +263,14 @@ export default function Navbar() {
                     </AnimatePresence>
                   </div>
                 </>
-              ) : (
+            
                 <Button size="sm" asChild>
                   <Link to="/auth/register" className="gap-2">
                     <User size={18} />
                     <span className="hidden sm:inline">Sign In</span>
                   </Link>
                 </Button>
-              )}
+              
             </div>
           </div>
         </div>
