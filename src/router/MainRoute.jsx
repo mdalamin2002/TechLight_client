@@ -7,11 +7,8 @@ import DashboardLayout from "@/Layout/Dashboard/DashboardLayout";
 import MainDashboard from "@/Layout/Dashboard/MainDashboard";
 import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
 import Register from "@/pages/authentication/register/Register";
-import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers";
 import Sellers from "@/Layout/Dashboard/AdminDashboard/components/Sellers";
 import Products from "@/Layout/Dashboard/AdminDashboard/components/Products";
-import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders";
-import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
 import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication/Communication";
 import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings/Settings";
 import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced/Advanced";
@@ -24,6 +21,9 @@ import Warranty from "@/pages/PolicyPages/Warranty/Warranty";
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
 import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
+import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
+import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
+import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
 
 const MainRoute = createBrowserRouter([
   {
