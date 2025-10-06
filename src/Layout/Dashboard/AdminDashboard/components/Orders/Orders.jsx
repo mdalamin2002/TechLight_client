@@ -20,7 +20,7 @@ const Orders = () => {
   const [selectedPayment, setSelectedPayment] = useState("All Status");
   const [selectedDelivery, setSelectedDelivery] = useState("All Delivery");
 
-  // ✅ status update
+  //  status update
   const handleStatusChange = (id, field, value) => {
     setOrders(prev =>
       prev.map(order =>
@@ -29,11 +29,11 @@ const Orders = () => {
     );
   };
 
-  // ✅ dynamically generate unique payment & delivery options
+  //  dynamically generate unique payment & delivery options
   const paymentStatuses = ["All Status", ...new Set(orders.map(o => o.payment))];
   const deliveryStatuses = ["All Delivery", ...new Set(orders.map(o => o.delivery))];
 
-  // ✅ dynamic status list for dropdown actions
+  //  dynamic status list for dropdown actions
   const uniquePaymentStatusList = [...new Set(orders.map(o => o.payment))];
   const uniqueDeliveryStatusList = [...new Set(orders.map(o => o.delivery))];
 
