@@ -1,14 +1,10 @@
-// src/components/AllProductCardShare.jsx
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
-
-const toNumber = (val) => {
-  if (typeof val === "number") return val;
-  if (typeof val === "string") return parseInt(val.replace(/[^\d]/g, ""), 10) || 0;
-  return 0;
-};
-const priceLabel = (val) => `৳${toNumber(val).toLocaleString()}`;
+import {
+  priceLabel,
+  toNumber,
+} from "@/pages/HomeLayoutPages/AllProduct/All Product page/product";
+import { Link } from "react-router";
 
 const AllProductCardShare = ({
   id,
@@ -25,6 +21,7 @@ const AllProductCardShare = ({
   buttonAction = () => {},
 }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
+
   const priceNum = toNumber(price);
   const regularPriceNum = toNumber(regularPrice);
   const discount =
@@ -39,15 +36,14 @@ const AllProductCardShare = ({
           -{discount}%
         </div>
       )}
-      <div className="absolute top-3 right-3 z-10 bg-background/90 backdrop-blur-sm text-foreground px-3 py-1 rounded-full text-xs font-medium border border-border shadow-sm">
+
+      <div className="absolute top-3 right-3 z-10 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full font-medium">
         {status}
       </div>
 
-      {/* Wishlist */}
-      <motion.button
-        whileTap={{ scale: 0.8 }}
+      <button
         onClick={() => setIsWishlisted(!isWishlisted)}
-        className={`absolute top-14 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 ${
+        className={`absolute cursor-pointer top-14 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 ${
           isWishlisted ? "bg-red-100" : "hover:bg-red-100"
         }`}
       >
@@ -59,35 +55,40 @@ const AllProductCardShare = ({
               : "text-gray-700 hover:text-red-500"
           }`}
         />
-      </motion.button>
+      </button>
 
-      {/* Eye Button */}
-      <motion.button
-        whileTap={{ scale: 0.8 }}
-        className="absolute top-28 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 delay-75 hover:bg-blue-100"
+      <Link
+        to={id}
+        className="absolute cursor-pointer top-28 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 delay-75 hover:bg-blue-100"
       >
         <Eye className="w-5 h-5 text-gray-700 hover:text-blue-600 transition-colors" />
-      </motion.button>
+      </Link>
 
-      {/* Image */}
-      <div className="relative bg-muted/30 overflow-hidden aspect-square">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-        />
-      </div>
+      <Link to={id}>
+        <div className="relative cursor-pointer bg-muted/30 overflow-hidden aspect-square">
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </div>
+      </Link>
 
       <div className="p-5 space-y-3">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>{brand}</span>•<span>{subcategory}</span>
+        <div className="flex items-center justify-between gap-2 text-xs">
+          <span className="text-muted-foreground">{subcategory}</span>
+          <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full font-medium w-fit">
+            {brand}
+          </span>
         </div>
 
-        <h4 className="font-semibold text-foreground text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
-          {name}
-        </h4>
+        <Link to={id}>
+          <h4 className="font-semibold cursor-pointer text-foreground text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary/90 transition-colors">
+            {name}
+          </h4>
+        </Link>
 
-        {/* Rating */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
@@ -100,19 +101,22 @@ const AllProductCardShare = ({
               />
             ))}
           </div>
-          <span className="text-xs font-medium">{rating}</span>
+          <span className="text-xs text-muted-foreground font-medium">
+            {rating}
+          </span>
         </div>
 
-        {/* Features */}
         <div className="space-y-1.5 pt-2 border-t border-border/50">
-          {keyFeatures.slice(0, 2).map((f, i) => (
-            <p key={i} className="text-xs text-muted-foreground line-clamp-1">
-              • {f}
-            </p>
+          {keyFeatures.slice(0, 2).map((feature, index) => (
+            <div key={index} className="flex items-start gap-2">
+              <div className="w-1 h-1 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">
+                {feature}
+              </p>
+            </div>
           ))}
         </div>
 
-        {/* Price + Button */}
         <div className="pt-3 space-y-2">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold text-primary">
@@ -124,11 +128,13 @@ const AllProductCardShare = ({
               </span>
             )}
           </div>
+
           <button
             onClick={buttonAction}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
+            className="w-full cursor-pointer bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"
           >
-            <ShoppingCart size={18} /> {buttonText}
+            <ShoppingCart size={18} />
+            <span>{buttonText}</span>
           </button>
         </div>
       </div>

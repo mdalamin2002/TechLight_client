@@ -1,4 +1,3 @@
-// src/utils/product.js
 export const toNumber = (val) => {
   if (typeof val === "number") return val;
   if (typeof val === "string")

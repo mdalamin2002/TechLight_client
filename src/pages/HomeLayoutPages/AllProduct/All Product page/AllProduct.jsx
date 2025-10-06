@@ -1,14 +1,14 @@
-// src/pages/AllProduct.jsx
 import React, { useMemo, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, X } from "lucide-react";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import ProductsHeader from "./ProductsHeader";
 import FiltersPanel from "./FiltersPanel";
-import ProductCard from "./ProductCard";
+
 
 import { normalizeProduct, toNumber } from "./product";
 import Pagination from "./Pagination";
+import AllProductCardShare from "@/Components/Shared/All Product/AllProductCardShare";
 
 const AllProduct = () => {
   const axiosPublic = useAxiosPublic();
@@ -324,7 +324,7 @@ const AllProduct = () => {
                   }
                 >
                   {currentProducts.map((product) => (
-                    <ProductCard
+                    <AllProductCardShare
                       key={product.id}
                       {...product}
                       buttonText="Add to Cart"

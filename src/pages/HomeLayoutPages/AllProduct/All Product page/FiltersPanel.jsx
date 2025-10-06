@@ -1,4 +1,3 @@
-// src/components/product/FiltersPanel.jsx
 import React, { useMemo, useState } from "react";
 import { Filter as FilterIcon, ChevronDown, ChevronUp, X } from "lucide-react";
 
@@ -33,8 +32,7 @@ const FiltersPanel = ({
     []
   );
 
-  const hasActive =
-    selectedCategories.length > 0 || selectedBrands.length > 0;
+  const hasActive = selectedCategories.length > 0 || selectedBrands.length > 0;
 
   return (
     <div className="space-y-6">

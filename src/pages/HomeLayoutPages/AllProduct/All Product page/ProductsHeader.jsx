@@ -1,4 +1,3 @@
-// src/components/product/ProductsHeader.jsx
 import React from "react";
 import {
   Sparkles,
