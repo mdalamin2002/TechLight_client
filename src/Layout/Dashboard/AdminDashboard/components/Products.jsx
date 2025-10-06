@@ -6,34 +6,34 @@ import Searching from "./Products/Searching";
 import FilledButton from "@/Components/Shared/Buttots/FilledButton";
 import AddProduct from "./Products/AddProduct";
 import ProductActions from "./Products/ProductActions";
-import axios from "axios";
-import axiosInstance from "@/utils/axiosInstance";
+import useAxiosSecure from "@/utils/useAxiosSecure";
+
 
 const Products = () => {
   const [addProduct, setAddProduct] = useState(false);
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
-
+const axiosSecure = useAxiosSecure()
 
   //Fetching product data from database
   useEffect(() => {
-    axiosInstance.get(`${selectCategory?`/products/${selectCategory}`:"/products"}`)
+    axiosSecure.get(`${selectCategory?`/products/${selectCategory}`:"/products"}`)
       .then(res => setProducts(res.data))
       .catch(error => console.log(error))
-  }, [selectCategory]);
+  }, [selectCategory,axiosSecure]);
 
   useEffect(() => {
   const fetchCategories = async () => {
     try {
-      const res = await axiosInstance.get("/categories");
+      const res = await axiosSecure.get("/categories");
       setCategory(res.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
   };
   fetchCategories();
-}, []);
+}, [axiosSecure]);
 
   return (<>
     {
