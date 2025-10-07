@@ -185,15 +185,15 @@ export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left border-collapse">
-          <thead className="bg-gray-50 border-b border-gray-200">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <table className="min-w-full overflow-hidden">
+          <thead className="bg-indigo-600 border-b border-gray-200">
             <tr>
-              <th className="p-4 text-gray-600 font-medium">Review ID</th>
-              <th className="p-4 text-gray-600 font-medium">User</th>
-              <th className="p-4 text-gray-600 font-medium">Product</th>
-              <th className="p-4 text-gray-600 font-medium">Rating</th>
-              <th className="p-4 text-gray-600 font-medium">Date</th>
+              <th className="p-4 text-white font-medium">Review ID</th>
+              <th className="p-4 text-white font-medium">User</th>
+              <th className="p-4 text-white font-medium">Product</th>
+              <th className="p-4 text-white font-medium">Rating</th>
+              <th className="p-4 text-white font-medium">Date</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -207,7 +207,14 @@ export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
               paginatedData.map((r, index) => (
                 <tr
                   key={index}
-                  className="hover:bg-gray-50 transition-colors cursor-pointer"
+                  className={`
+              cursor-pointer transition-colors
+              ${
+                index % 2 === 0
+                  ? "bg-white hover:bg-indigo-100/70"
+                  : "bg-indigo-50/40 hover:bg-indigo-100/70"
+              }
+            `}
                   onClick={() => setSelectedReview(r)}
                 >
                   <td className="p-4 text-gray-800 font-medium">{r.id}</td>
@@ -294,4 +301,3 @@ export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
     </div>
   );
 };
-
