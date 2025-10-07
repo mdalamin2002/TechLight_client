@@ -1,85 +1,232 @@
-import React, { useState } from "react";
-import { Plus, Edit, Trash2, Tag } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Edit, Trash2, Plus, X } from "lucide-react";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
-const Coupons = () => {
-  const [coupons, setCoupons] = useState([
-    {
-      code: "NEWYEAR50",
-      discount: "50%",
-      expiry: "2024-12-31",
-      status: "Active",
-    },
-    {
-      code: "WELCOME10",
-      discount: "10%",
-      expiry: "2024-06-30",
-      status: "Expired",
-    },
-  ]);
+const Announcements = () => {
+  const axiosSecure = useAxiosSecure();
+  const [announcements, setAnnouncements] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [editingAnnouncement, setEditingAnnouncement] = useState(null);
+
+  // ✅ Fetch announcements
+  const fetchAnnouncements = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosSecure.get("/announcements");
+      setAnnouncements(res.data);
+    } catch (err) {
+      console.error("Error fetching announcements:", err);
+      setError("Failed to load announcements!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, []);
+
+  // ✅ Add or Update Announcement
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const data = {
+      title: e.target.title.value,
+      desc: e.target.desc.value,
+      date: e.target.date.value,
+      status: e.target.status.value,
+    };
+
+    try {
+      if (editingAnnouncement) {
+        await axiosSecure.put(`/announcements/${editingAnnouncement._id}`, data);
+      } else {
+        await axiosSecure.post("/announcements", data);
+      }
+      setShowModal(false);
+      setEditingAnnouncement(null);
+      e.target.reset();
+      fetchAnnouncements();
+    } catch (err) {
+      console.error("Error saving announcement:", err);
+      setError("Failed to save announcement!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ Edit
+  const handleEdit = (announcement) => {
+    setEditingAnnouncement(announcement);
+    setShowModal(true);
+  };
+
+  // ✅ Delete
+  const handleDelete = async (id) => {
+    if (!confirm("Are you sure you want to delete this announcement?")) return;
+    try {
+      await axiosSecure.delete(`/announcements/${id}`);
+      setAnnouncements(announcements.filter((a) => a._id !== id));
+    } catch (err) {
+      console.error("Error deleting announcement:", err);
+      setError("Failed to delete announcement!");
+    }
+  };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+    <div className="p-6 bg-white shadow-md rounded-2xl border border-gray-200">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold flex items-center gap-2 text-gray-800">
-          <Tag className="w-5 h-5 text-gray-500" />
-          Coupon & Discount Management
-        </h3>
-        <button className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium text-white transition">
-          <Plus className="w-4 h-4" />
-          Add Coupon
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">
+          Global Announcements
+        </h2>
+        <button
+          onClick={() => {
+            setEditingAnnouncement(null);
+            setShowModal(true);
+          }}
+          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full shadow-md transition"
+        >
+          <Plus className="w-5 h-5" /> New Announcement
         </button>
       </div>
 
-      {/* Coupons Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm border border-gray-200 rounded-lg overflow-hidden">
-          <thead className="bg-gray-100 text-gray-700">
+      {/* Error */}
+      {error && (
+        <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4">
+          {error}
+        </div>
+      )}
+
+      {/* List */}
+      <div className="overflow-x-auto rounded-xl border border-gray-200">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-indigo-600 text-white">
             <tr>
-              <th className="py-3 px-4">Code</th>
-              <th className="py-3 px-4">Discount</th>
-              <th className="py-3 px-4">Expiry Date</th>
-              <th className="py-3 px-4">Status</th>
-              <th className="py-3 px-4">Actions</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Title</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Description</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Date</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
+              <th className="px-4 py-3 text-center text-sm font-semibold">Actions</th>
             </tr>
           </thead>
+
           <tbody>
-            {coupons.map((c, i) => (
-              <tr
-                key={i}
-                className="border-b border-gray-200 hover:bg-gray-50 transition"
-              >
-                <td className="py-3 px-4 font-semibold text-gray-800">
-                  {c.code}
-                </td>
-                <td className="py-3 px-4 text-gray-600">{c.discount}</td>
-                <td className="py-3 px-4 text-gray-600">{c.expiry}</td>
-                <td className="py-3 px-4">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      c.status === "Active"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
+            {announcements.length > 0 ? (
+              announcements.map((a, i) => (
+                <tr
+                  key={i}
+                  className={`${
+                    i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
+                  } hover:bg-indigo-100/70 transition-colors`}
+                >
+                  <td className="px-4 py-3 font-medium text-indigo-700">{a.title}</td>
+                  <td className="px-4 py-3 text-gray-600">{a.desc}</td>
+                  <td className="px-4 py-3 text-gray-500">{a.date}</td>
+                  <td
+                    className={`px-4 py-3 font-semibold ${
+                      a.status === "Active" ? "text-green-600" : "text-yellow-600"
                     }`}
                   >
-                    {c.status}
-                  </span>
-                </td>
-                <td className="py-3 px-4 flex gap-2">
-                  <button className="p-2 bg-gray-100 rounded hover:bg-gray-200 transition">
-                    <Edit className="w-4 h-4 text-blue-600" />
-                  </button>
-                  <button className="p-2 bg-gray-100 rounded hover:bg-red-100 transition">
-                    <Trash2 className="w-4 h-4 text-red-600" />
-                  </button>
+                    {a.status}
+                  </td>
+                  <td className="px-4 py-3 text-center flex justify-center gap-3">
+                    <button
+                      onClick={() => handleEdit(a)}
+                      className="p-2 rounded-md hover:bg-blue-50 text-blue-600"
+                    >
+                      <Edit className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(a._id)}
+                      className="p-2 rounded-md hover:bg-red-50 text-red-600"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="text-center py-8 text-gray-500 bg-gray-50 font-medium"
+                >
+                  No Announcements Found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
+
+      {/* ✅ Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white w-full max-w-lg rounded-2xl p-8 relative shadow-2xl">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 bg-gray-100 hover:bg-red-100 p-2 rounded-full"
+            >
+              <X className="w-5 h-5 text-gray-600" />
+            </button>
+
+            <h3 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
+              {editingAnnouncement ? "Edit Announcement" : "Add New Announcement"}
+            </h3>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="title"
+                defaultValue={editingAnnouncement?.title || ""}
+                placeholder="Title"
+                required
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <textarea
+                name="desc"
+                defaultValue={editingAnnouncement?.desc || ""}
+                placeholder="Description"
+                required
+                rows="3"
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              ></textarea>
+              <input
+                type="date"
+                name="date"
+                defaultValue={editingAnnouncement?.date || ""}
+                required
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <select
+                name="status"
+                defaultValue={editingAnnouncement?.status || "Active"}
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="Active">Active</option>
+                <option value="Scheduled">Scheduled</option>
+              </select>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 mt-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow-md transition"
+              >
+                {loading
+                  ? "Processing..."
+                  : editingAnnouncement
+                  ? "Update Announcement"
+                  : "Add Announcement"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Coupons;
+export default Announcements;

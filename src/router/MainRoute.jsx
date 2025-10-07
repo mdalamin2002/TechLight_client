@@ -18,6 +18,7 @@ import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/R
 import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
 import Login from "@/pages/authentication/Login/Login";
 import Warranty from "@/pages/PolicyPages/Warranty/Warranty";
+// import FAQ from "@/pages/PolicyPages/FAQ/FAQ";
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
 import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
@@ -58,10 +59,10 @@ const MainRoute = createBrowserRouter([
         path: "/warranty",
         Component: Warranty,
       },
-      {
-        path: "faq",
-        Component: FAQ,
-      },
+      // {
+      //   path: "faq",
+      //   Component: FAQ,
+      // },
       {
         path: "terms-service",
         Component: TermsOfService,
