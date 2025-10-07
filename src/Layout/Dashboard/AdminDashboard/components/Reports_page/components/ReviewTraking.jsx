@@ -145,7 +145,7 @@ export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
       </h3>
 
       {/* Search + Export */}
-      <div className="flex flex-col md:flex-row justify-between gap-3 mb-4">
+      {/* <div className="flex flex-col md:flex-row justify-between gap-3 mb-4">
         <input
           type="text"
           placeholder="Search by user, product, or rating..."
@@ -160,7 +160,7 @@ export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
         >
           Export CSV
         </CSVLink>
-      </div>
+      </div> */}
 
       {/* Summary Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
