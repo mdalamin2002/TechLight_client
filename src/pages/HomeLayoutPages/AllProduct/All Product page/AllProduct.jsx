@@ -5,7 +5,6 @@ import useAxiosPublic from "@/hooks/useAxiosPublic";
 import ProductsHeader from "./ProductsHeader";
 import FiltersPanel from "./FiltersPanel";
 
-
 import { normalizeProduct, toNumber } from "./product";
 import Pagination from "./Pagination";
 import AllProductCardShare from "@/Components/Shared/All Product/AllProductCardShare";
@@ -303,8 +302,8 @@ const AllProduct = () => {
               <div
                 className={
                   viewMode === "grid"
-                    ? "grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"
-                    : "flex flex-col gap-3 sm:gap-4"
+                    ? "grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                    : "flex flex-col gap-4"
                 }
               >
                 {[...Array(productsPerPage)].map((_, i) => (
@@ -319,14 +318,15 @@ const AllProduct = () => {
                 <div
                   className={
                     viewMode === "grid"
-                      ? "grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"
-                      : "flex flex-col gap-3 sm:gap-4"
+                      ? "grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                      : "flex flex-col gap-4"
                   }
                 >
                   {currentProducts.map((product) => (
                     <AllProductCardShare
                       key={product.id}
                       {...product}
+                      variant={viewMode}
                       buttonText="Add to Cart"
                       buttonAction={() =>
                         alert(`Added ${product.name} to cart`)

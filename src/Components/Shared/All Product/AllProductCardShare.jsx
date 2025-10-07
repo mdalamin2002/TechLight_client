@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
-import {
-  priceLabel,
-  toNumber,
-} from "@/pages/HomeLayoutPages/AllProduct/All Product page/product";
-import { Link } from "react-router";
+import { priceLabel, toNumber } from "@/pages/HomeLayoutPages/AllProduct/All Product page/product";
+import { Link } from "react-router-dom"; // <-- এটা ঠিক করো
 
 const AllProductCardShare = ({
   id,
@@ -19,6 +16,7 @@ const AllProductCardShare = ({
   keyFeatures = [],
   buttonText = "Add to Cart",
   buttonAction = () => {},
+  variant = "grid", // grid | list  <-- নতুন
 }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
@@ -30,7 +28,12 @@ const AllProductCardShare = ({
       : 0;
 
   return (
-    <div className="group relative bg-card rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl border border-border/50 hover:border-primary/30">
+    <div
+      className={[
+        "group relative bg-card rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl border border-border/50 hover:border-primary/30",
+        variant === "list" ? "md:flex md:items-stretch" : "",
+      ].join(" ")}
+    >
       {discount > 0 && (
         <div className="absolute top-3 left-3 z-10 bg-destructive text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
           -{discount}%
@@ -65,17 +68,27 @@ const AllProductCardShare = ({
       </Link>
 
       <Link to={id}>
-        <div className="relative cursor-pointer bg-muted/30 overflow-hidden aspect-square">
+        <div
+          className={
+            variant === "list"
+              ? "relative cursor-pointer bg-muted/30 overflow-hidden md:w-56 md:h-56 flex-shrink-0"
+              : "relative cursor-pointer bg-muted/30 overflow-hidden aspect-square"
+          }
+        >
           <img
             src={image}
             alt={name}
-            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+            className={
+              variant === "list"
+                ? "w-full h-full object-cover"
+                : "w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+            }
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
       </Link>
 
-      <div className="p-5 space-y-3">
+      <div className="p-5 space-y-3 flex-1">
         <div className="flex items-center justify-between gap-2 text-xs">
           <span className="text-muted-foreground">{subcategory}</span>
           <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full font-medium w-fit">

@@ -50,6 +50,7 @@ const MainRoute = createBrowserRouter([
       {
         path: "/allProduct/:id",
         Component: ProductDetails,
+        loader: ({params}) => fetch(`http://localhost:5000/api/products/${params.id}`)
       },
       {
         path: "/returns-refunds",
