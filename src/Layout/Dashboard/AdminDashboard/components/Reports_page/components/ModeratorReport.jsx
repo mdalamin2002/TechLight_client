@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { CSVLink } from "react-csv";
@@ -13,7 +12,14 @@ import {
   Legend,
 } from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
   const [data, setData] = useState([]);
@@ -29,7 +35,9 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
     fetch("/ModeratorReport_Data.json")
       .then((res) => res.json())
       .then((json) => setData(json))
-      .catch((err) => console.error("Error loading ModeratorReport data:", err));
+      .catch((err) =>
+        console.error("Error loading ModeratorReport data:", err)
+      );
   }, []);
 
   // Date filter logic
@@ -69,7 +77,8 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
     const matchesSearch =
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.complaintId.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "All" || item.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "All" || item.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -100,15 +109,19 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
 
   // 🟩 Send data to parent for Excel export
   useEffect(() => {
-    if (onDataUpdate) {
+    if (!onDataUpdate) return;
+
+    const timer = setTimeout(() => {
       onDataUpdate({
         cases: filteredData,
         summary,
       });
-    }
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [filteredData]);
 
- return (
+  return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md space-y-6">
       <h3 className="text-xl font-semibold text-gray-800">
         Moderator Activity & Complaints ({dateRange})
@@ -152,15 +165,21 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-green-50 p-4 rounded-lg text-center">
           <p className="text-green-700 font-medium">Resolved</p>
-          <p className="text-2xl font-bold text-green-800">{summary["Resolved"]}</p>
+          <p className="text-2xl font-bold text-green-800">
+            {summary["Resolved"]}
+          </p>
         </div>
         <div className="bg-yellow-50 p-4 rounded-lg text-center">
           <p className="text-yellow-700 font-medium">In Progress</p>
-          <p className="text-2xl font-bold text-yellow-800">{summary["In Progress"]}</p>
+          <p className="text-2xl font-bold text-yellow-800">
+            {summary["In Progress"]}
+          </p>
         </div>
         <div className="bg-red-50 p-4 rounded-lg text-center">
           <p className="text-red-700 font-medium">Pending</p>
-          <p className="text-2xl font-bold text-red-800">{summary["Pending"]}</p>
+          <p className="text-2xl font-bold text-red-800">
+            {summary["Pending"]}
+          </p>
         </div>
       </div>
 
@@ -240,7 +259,10 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
         </h4>
         <Bar
           data={chartData}
-          options={{ responsive: true, plugins: { legend: { position: "top" } } }}
+          options={{
+            responsive: true,
+            plugins: { legend: { position: "top" } },
+          }}
         />
       </div>
 
@@ -256,7 +278,8 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
             </button>
             <h4 className="text-lg font-semibold mb-2">Complaint Details</h4>
             <p>
-              <span className="font-medium">Moderator:</span> {selectedCase.name}
+              <span className="font-medium">Moderator:</span>{" "}
+              {selectedCase.name}
             </p>
             <p>
               <span className="font-medium">Complaint ID:</span>{" "}
