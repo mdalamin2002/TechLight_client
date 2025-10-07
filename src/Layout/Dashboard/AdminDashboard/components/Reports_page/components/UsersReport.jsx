@@ -263,14 +263,18 @@ export const UsersReport = ({ dateRange, onDataUpdate }) => {
   };
   // ============= bar end
 
-  // Send data to parent for Excel export
+  // Send data to parent for Excel export (with delay)
   useEffect(() => {
-    if (onDataUpdate) {
+    if (!onDataUpdate) return;
+
+    const timer = setTimeout(() => {
       onDataUpdate({
         topProducts: currentData, // or full analytics data, depending on export need
         summary: analyticsData || [],
       });
-    }
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [currentData, analyticsData, onDataUpdate]);
 
   return (

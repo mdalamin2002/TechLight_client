@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from "react";
 
 export const SalesReport = ({ dateRange, onDataUpdate }) => {
@@ -67,7 +65,9 @@ export const SalesReport = ({ dateRange, onDataUpdate }) => {
           Sales Performance
         </h3>
         {filteredSales.length === 0 ? (
-          <p className="text-gray-500 italic">No data available for {dateRange}</p>
+          <p className="text-gray-500 italic">
+            No data available for {dateRange}
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {filteredSales.map((item) => (
@@ -79,7 +79,9 @@ export const SalesReport = ({ dateRange, onDataUpdate }) => {
                 <p className="text-2xl font-bold text-gray-900 mt-2">
                   ${item.revenue.toLocaleString()}
                 </p>
-                <p className="text-gray-600 text-sm mt-1">{item.orders} orders</p>
+                <p className="text-gray-600 text-sm mt-1">
+                  {item.orders} orders
+                </p>
                 <p className="text-indigo-600 font-medium text-sm mt-1">
                   Avg: ${item.avg}
                 </p>
@@ -95,25 +97,40 @@ export const SalesReport = ({ dateRange, onDataUpdate }) => {
           Top Selling Products
         </h3>
         {filteredProducts.length === 0 ? (
-          <p className="text-gray-500 italic">No product data for {dateRange}</p>
+          <p className="text-gray-500 italic">
+            No product data for {dateRange}
+          </p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-              <thead className="bg-gray-50 border-b border-gray-200">
+          <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+            <table className="min-w-full overflow-hidden">
+              <thead className="bg-indigo-600 border-b border-gray-200">
                 <tr>
-                  <th className="text-left p-4 text-gray-600 font-medium">Product</th>
-                  <th className="text-left p-4 text-gray-600 font-medium">Sales</th>
-                  <th className="text-left p-4 text-gray-600 font-medium">Revenue</th>
+                  <th className="text-left p-4 text-white font-medium">
+                    Product
+                  </th>
+                  <th className="text-left p-4 text-white font-medium">
+                    Sales
+                  </th>
+                  <th className="text-left p-4 text-white font-medium">
+                    Revenue
+                  </th>
                 </tr>
               </thead>
-              <tbody>
-                {filteredProducts.map((p) => (
+              <tbody className="divide-y divide-gray-100">
+                {filteredProducts.map((p, index) => (
                   <tr
                     key={p.key}
-                    className="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150"
+                    className={`
+            cursor-pointer transition-colors
+            ${
+              index % 2 === 0
+                ? "bg-white hover:bg-indigo-100/70 transition-colors"
+                : "bg-indigo-50/40 hover:bg-indigo-100/70 transition-colors"
+            }
+          `}
                   >
                     <td className="p-4 text-gray-800 font-medium">{p.name}</td>
-                    <td className="p-4 text-gray-600">{p.sales}</td>
+                    <td className="p-4 text-gray-700">{p.sales}</td>
                     <td className="p-4 font-semibold text-indigo-600">
                       ${p.revenue.toLocaleString()}
                     </td>
