@@ -1,0 +1,114 @@
+[
+  {
+    "key": "1",
+    "month": "Sep 24, 2025",
+    "revenue": 6200,
+    "orders": 45,
+    "avg": 137.78,
+    "date": "2025-09-24"
+  },
+  {
+    "key": "2",
+    "month": "Sep 25, 2025",
+    "revenue": 7100,
+    "orders": 50,
+    "avg": 142.00,
+    "date": "2025-09-25"
+  },
+  {
+    "key": "3",
+    "month": "Sep 26, 2025",
+    "revenue": 6800,
+    "orders": 48,
+    "avg": 141.67,
+    "date": "2025-09-26"
+  },
+  {
+    "key": "4",
+    "month": "Sep 27, 2025",
+    "revenue": 7500,
+    "orders": 52,
+    "avg": 144.23,
+    "date": "2025-09-27"
+  },
+  {
+    "key": "5",
+    "month": "Sep 28, 2025",
+    "revenue": 8000,
+    "orders": 55,
+    "avg": 145.45,
+    "date": "2025-09-28"
+  },
+  {
+    "key": "6",
+    "month": "Sep 29, 2025",
+    "revenue": 7700,
+    "orders": 54,
+    "avg": 142.59,
+    "date": "2025-09-29"
+  },
+  {
+    "key": "7",
+    "month": "Sep 30, 2025",
+    "revenue": 8200,
+    "orders": 57,
+    "avg": 143.86,
+    "date": "2025-09-30"
+  },
+  {
+    "key": "8",
+    "month": "Jul 2025",
+    "revenue": 55000,
+    "orders": 380,
+    "avg": 144.74,
+    "date": "2025-07-31"
+  },
+  {
+    "key": "9",
+    "month": "Aug 2025",
+    "revenue": 59000,
+    "orders": 400,
+    "avg": 147.50,
+    "date": "2025-08-31"
+  },
+  {
+    "key": "10",
+    "month": "Sep 2025",
+    "revenue": 63000,
+    "orders": 420,
+    "avg": 150.00,
+    "date": "2025-09-30"
+  },
+  {
+    "key": "11",
+    "month": "Oct 2024",
+    "revenue": 53000,
+    "orders": 370,
+    "avg": 143.24,
+    "date": "2024-10-31"
+  },
+  {
+    "key": "12",
+    "month": "Nov 2024",
+    "revenue": 56000,
+    "orders": 390,
+    "avg": 143.59,
+    "date": "2024-11-30"
+  },
+  {
+    "key": "13",
+    "month": "Dec 2024",
+    "revenue": 60000,
+    "orders": 410,
+    "avg": 146.34,
+    "date": "2024-12-31"
+  },
+  {
+    "key": "14",
+    "month": "Sep 2025",
+    "revenue": 60000,
+    "orders": 410,
+    "avg": 146.34,
+    "date": "2025-09-20"
+  }
+]
