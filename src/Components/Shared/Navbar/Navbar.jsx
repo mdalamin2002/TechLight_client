@@ -26,9 +26,12 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
+import useAuth from "@/hooks/useAuth";
+import GlobalLoading from "../Loading/GlobalLoading";
 
 export default function Navbar() {
   const location = useLocation();
+  const { user,loading } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -74,14 +77,15 @@ export default function Navbar() {
     },
   ];
 
+  
   const handleLogout = () => {
     setProfileOpen(false);
   };
-
+  
   const toggleCategory = (index) => {
     setOpenCategoryIndex(openCategoryIndex === index ? null : index);
   };
-
+  
   // Smart scroll hide/show
   useEffect(() => {
     const handleScroll = () => {
@@ -95,7 +99,7 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
-
+  
   // Close profile dropdown on outside click (mobile)
   useEffect(() => {
     const handler = (e) => {
@@ -263,13 +267,15 @@ export default function Navbar() {
                     </AnimatePresence>
                   </div>
                 </>
-            
+              {
+                !user &&
                 <Button size="sm" asChild>
                   <Link to="/auth/register" className="gap-2">
                     <User size={18} />
                     <span className="hidden sm:inline">Sign In</span>
                   </Link>
                 </Button>
+            }
               
             </div>
           </div>
