@@ -1,19 +1,14 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import { RouterProvider } from 'react-router-dom';
-import MainRoute from './router/MainRoute.jsx';
-import store from './store/store';
-import AuthProvider from './context/AuthContext/AuthProvider';
-import { Provider } from 'react-redux';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import { RouterProvider } from "react-router-dom";
+import MainRoute from "./router/MainRoute.jsx";
+import { FirebaseContext } from "./context/AuthContext/FirebaseContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <Provider store={store}>
-        <RouterProvider router={MainRoute} />
-        </Provider>
-      </AuthProvider>
+    <FirebaseContext>
+      <RouterProvider router={MainRoute} />
+    </FirebaseContext>
   </StrictMode>
 );
-

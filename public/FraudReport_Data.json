@@ -1,0 +1,226 @@
+[
+  {
+    "id": "FRD001",
+    "type": "Payment Fraud",
+    "user": "Alice",
+    "status": "Investigating",
+    "date": "2025-09-20",
+    "details": "Suspicious payment detected from account ending 1234"
+  },
+  {
+    "id": "FRD002",
+    "type": "Account Takeover",
+    "user": "Bob",
+    "status": "Resolved",
+    "date": "2025-09-21",
+    "details": "User account recovered and secured"
+  },
+  {
+    "id": "FRD003",
+    "type": "Phishing",
+    "user": "Charlie",
+    "status": "Resolved",
+    "date": "2025-09-22",
+    "details": "Phishing attempt blocked and reported"
+  },
+  {
+    "id": "FRD004",
+    "type": "Payment Fraud",
+    "user": "David",
+    "status": "Pending",
+    "date": "2025-09-23",
+    "details": "Under investigation for suspicious transaction"
+  },
+  {
+    "id": "FRD005",
+    "type": "Spam",
+    "user": "Eve",
+    "status": "Investigating",
+    "date": "2025-09-24",
+    "details": "Spam messages detected on multiple posts"
+  },
+  {
+    "id": "FRD006",
+    "type": "Account Takeover",
+    "user": "Frank",
+    "status": "Resolved",
+    "date": "2025-09-25",
+    "details": "Account takeover prevented"
+  },
+  {
+    "id": "FRD007",
+    "type": "Phishing",
+    "user": "Grace",
+    "status": "Pending",
+    "date": "2025-09-25",
+    "details": "Under review for phishing report"
+  },
+  {
+    "id": "FRD001",
+    "type": "Payment Fraud",
+    "user": "Alice",
+    "status": "Investigating",
+    "date": "2025-09-20",
+    "details": "Suspicious payment detected from account ending 1234"
+  },
+  {
+    "id": "FRD002",
+    "type": "Account Takeover",
+    "user": "Bob",
+    "status": "Resolved",
+    "date": "2025-09-21",
+    "details": "User account recovered and secured"
+  },
+  {
+    "id": "FRD003",
+    "type": "Phishing",
+    "user": "Charlie",
+    "status": "Resolved",
+    "date": "2025-09-22",
+    "details": "Phishing attempt blocked and reported"
+  },
+  {
+    "id": "FRD004",
+    "type": "Payment Fraud",
+    "user": "David",
+    "status": "Pending",
+    "date": "2025-09-23",
+    "details": "Under investigation for suspicious transaction"
+  },
+  {
+    "id": "FRD005",
+    "type": "Spam",
+    "user": "Eve",
+    "status": "Investigating",
+    "date": "2025-09-24",
+    "details": "Spam messages detected on multiple posts"
+  },
+  {
+    "id": "FRD006",
+    "type": "Account Takeover",
+    "user": "Frank",
+    "status": "Resolved",
+    "date": "2025-09-25",
+    "details": "Account takeover prevented"
+  },
+  {
+    "id": "FRD007",
+    "type": "Phishing",
+    "user": "Grace",
+    "status": "Pending",
+    "date": "2025-09-25",
+    "details": "Under review for phishing report"
+  },
+  {
+    "id": "FRD008",
+    "type": "Payment Fraud",
+    "user": "Hannah",
+    "status": "Resolved",
+    "date": "2025-09-26",
+    "details": "Chargeback flagged and refunded"
+  },
+  {
+    "id": "FRD009",
+    "type": "Account Takeover",
+    "user": "Ian",
+    "status": "Investigating",
+    "date": "2025-09-28",
+    "details": "Unusual login activity from multiple countries"
+  },
+  {
+    "id": "FRD010",
+    "type": "Phishing",
+    "user": "Jack",
+    "status": "Resolved",
+    "date": "2025-09-29",
+    "details": "Fake login page removed"
+  },
+  {
+    "id": "FRD011",
+    "type": "Spam",
+    "user": "Karen",
+    "status": "Pending",
+    "date": "2025-09-30",
+    "details": "Bulk spam posts awaiting review"
+  },
+  {
+    "id": "FRD012",
+    "type": "Payment Fraud",
+    "user": "Leo",
+    "status": "Investigating",
+    "date": "2025-10-01",
+    "details": "Suspicious subscription activity detected"
+  },
+  {
+    "id": "FRD013",
+    "type": "Phishing",
+    "user": "Mona",
+    "status": "Resolved",
+    "date": "2025-09-10",
+    "details": "Email phishing campaign blocked"
+  },
+  {
+    "id": "FRD014",
+    "type": "Account Takeover",
+    "user": "Nathan",
+    "status": "Resolved",
+    "date": "2025-09-12",
+    "details": "Compromised account secured and password reset"
+  },
+  {
+    "id": "FRD015",
+    "type": "Spam",
+    "user": "Olivia",
+    "status": "Investigating",
+    "date": "2025-09-15",
+    "details": "Automated spam bot activity detected"
+  },
+  {
+    "id": "FRD016",
+    "type": "Payment Fraud",
+    "user": "Paul",
+    "status": "Resolved",
+    "date": "2025-07-20",
+    "details": "Fraudulent purchase reversed"
+  },
+  {
+    "id": "FRD017",
+    "type": "Phishing",
+    "user": "Quincy",
+    "status": "Investigating",
+    "date": "2025-06-05",
+    "details": "Suspicious links spread in group chats"
+  },
+  {
+    "id": "FRD018",
+    "type": "Account Takeover",
+    "user": "Rachel",
+    "status": "Pending",
+    "date": "2025-05-18",
+    "details": "Awaiting user verification documents"
+  },
+  {
+    "id": "FRD019",
+    "type": "Phishing",
+    "user": "Sam",
+    "status": "Resolved",
+    "date": "2025-03-01",
+    "details": "Phishing website blacklisted"
+  },
+  {
+    "id": "FRD020",
+    "type": "Payment Fraud",
+    "user": "Tina",
+    "status": "Resolved",
+    "date": "2024-12-22",
+    "details": "Unauthorized transaction refunded"
+  },
+  {
+    "id": "FRD021",
+    "type": "Spam",
+    "user": "Uma",
+    "status": "Investigating",
+    "date": "2024-11-15",
+    "details": "Mass unsolicited messages flagged"
+  }
+]

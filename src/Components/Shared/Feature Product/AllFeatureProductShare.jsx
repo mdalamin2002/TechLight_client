@@ -1,95 +1,99 @@
-import React from "react";
-import { FiHeart, FiEye, FiShoppingCart } from "react-icons/fi";
-import { Star, StarHalf, Star as StarOutline } from "lucide-react";
-import FilledButton from "../Buttots/FilledButton";
+import React, { useState } from "react";
+import { ShoppingCart, Heart, Eye } from "lucide-react";
+import { useNavigate } from "react-router";
+import StarRating from "@/pages/HomeLayoutPages/HomePage/components/Top Products/StarRating";
+import { motion } from "framer-motion";
 
-// Dynamic Rating Component using Lucide icons
-const Rating = ({ value }) => {
-  const stars = [];
-  const fullStars = Math.floor(value);
-  const hasHalfStar = value - fullStars >= 0.5;
+const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
+  const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
 
-  for (let i = 0; i < 5; i++) {
-    if (i < fullStars) {
-      stars.push(<Star key={i} className="text-yellow-400 fill-current" size={16} />);
-    } else if (i === fullStars && hasHalfStar) {
-      stars.push(<StarHalf key={i} className="text-yellow-400 fill-current" size={16} />);
-    } else {
-      stars.push(<StarOutline key={i} className="text-gray-300 fill-current" size={16} />);
-    }
-  }
+  const handleViewDetails = () => {
+    navigate(``);
+  };
 
-  return <div className="flex items-center gap-1">{stars}</div>;
-};
+  const handleFavoriteClick = () => {
+    const newState = !isFavorite;
+    setIsFavorite(newState);
+    onAddToFavorites(product, newState);
+  };
 
-const AllFeatureProductShare = ({
-  product,
-  handleWishlist,
-  handleQuickView,
-  handleAddToCart,
-}) => {
   return (
-    <article className="bg-backgroun text-foreground rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden group flex flex-col">
-      {/* Image */}
-      <div className="relative cursor-pointer w-full h-54 flex items-center justify-center">
+    <motion.div
+      whileHover={{ scale: 1.03 }}
+      transition={{ type: "spring", stiffness: 200, damping: 15 }}
+    className="group bg-card rounded-lg border border-border overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+      {/* Image with Hover Icons */}
+      <div className="relative overflow-hidden bg-muted h-48">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
 
-        {/* Hover Buttons */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition">
-          <button
-            onClick={() => handleWishlist(product.name)}
-            className="p-2 rounded-full bg-white shadow hover:bg-rose-500 hover:text-white transition"
-            aria-label="Wishlist"
+        {/* Hover Icons */}
+        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+          {/* Heart */}
+          <motion.button
+            onClick={handleFavoriteClick}
+            whileTap={{ scale: 0.8 }}
+            className={`p-2 rounded-full shadow-md transition-all duration-200
+      ${isFavorite ? "bg-red-100" : "bg-white/90 hover:bg-red-100"}
+    `}
+            aria-label="Add to favorites"
           >
-            <FiHeart size={18} />
-          </button>
-          <button
-            onClick={() => handleQuickView(product.name)}
-            className="p-2 rounded-full bg-white shadow hover:bg-green-500 hover:text-white transition"
-            aria-label="Quick View"
+            <Heart
+              className={`w-5 h-5 transition-colors
+        ${
+          isFavorite
+            ? "fill-red-500 text-red-500"
+            : "text-gray-700 hover:text-red-500"
+        }
+      `}
+            />
+          </motion.button>
+
+          {/* Eye */}
+          <motion.button
+            whileTap={{ scale: 0.8 }}
+            onClick={handleViewDetails}
+            className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 hover:bg-blue-100"
+            aria-label="View details"
           >
-            <FiEye size={18} />
-          </button>
+            <Eye className="w-5 h-5 text-gray-700 hover:text-blue-600 transition-colors" />
+          </motion.button>
         </div>
       </div>
 
-      {/* Product Info */}
-      <div className="p-4 flex flex-col flex-1 justify-between">
-        <div>
-          <h3 className="text-lg font-semibold text-dark">{product.name}</h3>
-          <p className="text-sm text-subtext mt-2 line-clamp-3">
-            {product.description}
-          </p>
-        </div>
+      {/* Details */}
+      <div className="p-5">
+        <h4 className="font-semibold text-foreground mb-2 line-clamp-1">
+          {product.name}
+        </h4>
+        <p className="text-sm text-muted-foreground mb-3 line-clamp-2 min-h-[40px]">
+          {product.description}
+        </p>
 
         {/* Rating */}
-        <div className="flex items-center mt-2 gap-2">
-          <Rating value={product.rating} />
-          {product.reviewCount && (
-            <span className="text-[11px] text-gray-500">
-              ({product.reviewCount})
-            </span>
-          )}
+        <div className="mb-3">
+          <StarRating rating={product.rating} />
         </div>
 
-        {/* Price + Button */}
-        <div className="mt-2 flex items-center justify-between">
-          <span className="text-xl font-bold text-dark">{product.price}</span>
-          <FilledButton
-            onClick={() => handleAddToCart(product.name)}
-            className="flex items-center gap-2 "
+        {/* Price + Add to Cart in one line */}
+        <div className="flex items-center justify-between mt-4">
+          <span className="text-xl font-bold text-primary/90">
+            ${product.price}
+          </span>
+          <button
+            onClick={() => onAddToCart(product)}
+            className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-all duration-200 hover:shadow-md"
           >
-            <FiShoppingCart size={16} />
-            Add
-          </FilledButton>
+            <ShoppingCart className="w-4 h-4" />
+            Add to Cart
+          </button>
         </div>
       </div>
-    </article>
+    </motion.div>
   );
 };
 

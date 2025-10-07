@@ -1,28 +1,91 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { Heart, ShoppingCart, Percent, User, Search } from "lucide-react";
-import { logoutUser } from "../../../store/authSlice";
+import { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  Heart,
+  ShoppingCart,
+  Percent,
+  User,
+  Search,
+  Menu,
+  X,
+  ChevronRight,
+  ChevronDown,
+  LogOut,
+  LayoutDashboard,
+  UserCircle,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import TechLightLogo from "../Logo/TechLightLogo";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/Components/ui/dropdown-menu";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
 
 export default function Navbar() {
-  const dispatch = useDispatch();
+  const location = useLocation();
   const [searchOpen, setSearchOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const { user } = useSelector((state) => state.auth);
-  const isLoggedIn = !!user;
+  const profileRef = useRef(null);
+
+
+
   const cartCount = 2;
 
+  const categories = [
+    {
+      title: "Mobiles & Tablets",
+      items: ["Smartphones", "Tablets", "Mobile Accessories"],
+    },
+    {
+      title: "Laptops & Computers",
+      items: ["Laptops", "Desktops", "Keyboards & Mouse"],
+    },
+    {
+      title: "Smart Watches",
+      items: ["Smart Watches", "Fitness Bands"],
+    },
+    {
+      title: "Audio Devices",
+      items: ["Headphones", "Earbuds", "Speakers"],
+    },
+    {
+      title: "Gaming Consoles",
+      items: ["PlayStation & Xbox", "VR Headsets", "Accessories"],
+    },
+    {
+      title: "Smart Home",
+      items: ["Smart Lights", "Security Cameras", "Voice Assistants"],
+    },
+    {
+      title: "Accessories",
+      items: ["Power Banks", "Cables & Chargers", "Storage Devices"],
+    },
+  ];
+
   const handleLogout = () => {
-    dispatch(logoutUser());
+    setProfileOpen(false);
+  };
+
+  const toggleCategory = (index) => {
+    setOpenCategoryIndex(openCategoryIndex === index ? null : index);
   };
 
   // Smart scroll hide/show
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > lastScrollY && window.scrollY > 50) {
+      if (window.scrollY > lastScrollY && window.scrollY > 80) {
         setShowNavbar(false);
       } else {
         setShowNavbar(true);
@@ -33,142 +96,400 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  // Close profile dropdown on outside click (mobile)
+  useEffect(() => {
+    const handler = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const isActiveRoute = (route) => location.pathname === route;
+
   return (
     <>
       {/* TOP NAVBAR */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300
-          ${showNavbar ? "translate-y-0" : "-translate-y-full"}
-          bg-background/70 backdrop-blur-md shadow-sm text-foreground
-        `}
+      <motion.header
+        initial={false}
+        animate={{ y: showNavbar ? 0 : -100 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border shadow-sm text-foreground"
       >
-        <div className="max-w-11/12 mx-auto md:px-0 px-4 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="text-xl font-bold">
-            <TechLightLogo />
-          </Link>
-
-          {/* Search Bar - Desktop */}
-          <div className="hidden md:flex flex-1 justify-center px-4">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full max-w-md border border-border rounded px-4 py-1 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          {/* Icons */}
-          <div className="flex items-center space-x-4">
-            {/* Mobile Search Icon */}
-            <button
-              className="md:hidden"
-              onClick={() => setSearchOpen(!searchOpen)}
-              aria-label="Toggle search"
-            >
-              <Search size={20} />
-            </button>
-
-            {/* Wishlist */}
-            <Link to="/wishlist" aria-label="Wishlist">
-              <Heart size={20} />
-            </Link>
-
-            {/* Cart */}
-            <Link to="/cart" className="relative" aria-label="Shopping Cart">
-              <ShoppingCart size={20} />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
-                  {cartCount}
+        {/* Main Top Bar */}
+        <div className="border-b border-border/50">
+          <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+            {/* LEFT: Menu + Logo */}
+            <div className="flex items-center gap-3">
+              {/* Categories Button - visible on <xl only */}
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+                className="flex xl:hidden items-center gap-2"
+              >
+                {isCategoriesOpen ? <X size={18} /> : <Menu size={18} />}
+                <span className="text-sm font-medium hidden sm:inline">
+                  Categories
                 </span>
-              )}
-            </Link>
+              </Button>
 
-            {/* Account/Profile */}
-            {isLoggedIn ? (
-              <div className="relative group">
-                <img
-                  src={user?.photoURL || "https://i.ibb.co/1tKbx3sx/avatar.jpg"}
-                  alt="User"
-                  className="w-8 h-8 rounded-full cursor-pointer"
-                />
-                <div className="absolute right-0 mt-2 w-40 bg-card text-card-foreground shadow-md rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 hover:bg-muted"
-                  >
-                    Profile
-                  </Link>
-                  <Link
-                    to="/dashboard"
-                    className="block px-4 py-2 hover:bg-muted"
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 hover:bg-muted"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <Link to="/auth/register" className="text-sm font-medium">
-                Account
+              {/* Logo */}
+              <Link to="/" className="flex items-center">
+                <TechLightLogo />
               </Link>
-            )}
+            </div>
+
+            {/* CENTER: Search Bar - Desktop/Tablet (md+) */}
+            <div className="hidden md:flex flex-1 justify-center max-w-2xl mx-4">
+              <div className="relative w-full group">
+                <Search
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors pointer-events-none"
+                  size={20}
+                />
+                <Input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for products, brands and more..."
+                  className="w-full pl-12 pr-10 h-11 rounded-xl bg-muted/50 border-border/50 focus-visible:ring-primary/20"
+                />
+                {searchQuery && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7"
+                  >
+                    <X size={16} />
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* RIGHT: Actions */}
+            <div className="flex items-center gap-2">
+              {/* Mobile Search Icon */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={() => setSearchOpen(!searchOpen)}
+              >
+                <Search size={20} />
+              </Button>
+
+              {/* Wishlist & Cart - Desktop */}
+              <div className="flex items-center gap-1">
+                <Button variant="ghost" size="sm" asChild className="gap-2">
+                  <Link to="/wishlist">
+                    <Heart size={20} />
+                    <span className="hidden lg:inline">Wishlist</span>
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="sm" asChild className="gap-2 relative">
+                  <Link to="/cart">
+                    <div className="relative">
+                      <ShoppingCart size={20} />
+                      {cartCount > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                          {cartCount}
+                        </span>
+                      )}
+                    </div>
+                    <span className="hidden lg:inline">Cart</span>
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Profile / Account */}
+             
+                <>
+                  {/* Desktop: hover dropdown */}
+                  <div className="block relative" ref={profileRef}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="gap-2 px-2"
+                      onMouseEnter={() => setProfileOpen(true)}
+                      onMouseLeave={() => setProfileOpen(false)}
+                    >
+                      <img
+                        src={ "https://i.ibb.co.com/3mWYSkKt/image.png"}
+                        alt="User"
+                        className="w-8 h-8 rounded-full object-cover ring-2 ring-border"
+                      />
+                      <ChevronDown size={16} className="hidden lg:block" />
+                    </Button>
+                    <AnimatePresence>
+                      {profileOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden"
+                          onMouseEnter={() => setProfileOpen(true)}
+                          onMouseLeave={() => setProfileOpen(false)}
+                        >
+                          <div className="p-2">
+                            <Link
+                              to="/profile"
+                              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+                            >
+                              <UserCircle size={18} />
+                              <span className="text-sm font-medium">Profile</span>
+                            </Link>
+                            <Link
+                              to="/dashboard"
+                              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+                            >
+                              <LayoutDashboard size={18} />
+                              <span className="text-sm font-medium">Dashboard</span>
+                            </Link>
+                            <div className="my-1 h-px bg-border" />
+                            <button
+                              onClick={handleLogout}
+                              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"
+                            >
+                              <LogOut size={18} />
+                              <span className="text-sm font-medium">Logout</span>
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </>
+            
+                <Button size="sm" asChild>
+                  <Link to="/auth/register" className="gap-2">
+                    <User size={18} />
+                    <span className="hidden sm:inline">Sign In</span>
+                  </Link>
+                </Button>
+              
+            </div>
           </div>
         </div>
 
         {/* Mobile Search (Dropdown style) */}
-        {searchOpen && (
-          <div className="md:hidden px-4 pb-2">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full border border-border rounded px-3 py-2 text-sm bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            />
+        <AnimatePresence>
+          {searchOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden border-b border-border overflow-hidden"
+            >
+              <div className="px-4 py-3">
+                <div className="relative">
+                  <Search
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                    size={18}
+                  />
+                  <Input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search products..."
+                    className="pl-11 pr-10 rounded-xl"
+                    autoFocus
+                  />
+                  {searchQuery && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7"
+                    >
+                      <X size={16} />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* XL+ Categories Bar */}
+        <div className="hidden xl:block border-b border-border/30">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center gap-1 py-2 relative">
+              {categories.map((category, idx) => (
+                <div
+                  key={idx}
+                  className="relative group"
+                  onMouseEnter={() => setOpenCategoryIndex(idx)}
+                  onMouseLeave={() => setOpenCategoryIndex(null)}
+                >
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <span>{category.title}</span>
+                    <ChevronDown size={14} />
+                  </Button>
+                  <AnimatePresence>
+                    {openCategoryIndex === idx && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full left-0 mt-1 w-56 bg-card border border-border rounded-xl shadow-lg z-50"
+                      >
+                        <DropdownMenuLabel className="text-xs text-muted-foreground uppercase px-3 py-2">
+                          {category.title}
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {category.items.map((item, i) => (
+                          <Link
+                            key={i}
+                            to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                            className={`block px-3 py-2 rounded-lg text-sm transition-colors hover:bg-muted ${
+                              isActiveRoute(`/${item.toLowerCase().replace(/\s+/g, "-")}`)
+                                ? "bg-primary/10 font-semibold"
+                                : ""
+                            }`}
+                          >
+                            {item}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
+      </motion.header>
+
+      {/* Mobile Categories Drawer - <XL */}
+      <AnimatePresence>
+        {isCategoriesOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 xl:hidden"
+              onClick={() => setIsCategoriesOpen(false)}
+            />
+            <motion.aside
+              initial={{ x: -300 }}
+              animate={{ x: 0 }}
+              exit={{ x: -300 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed left-0 top-16 w-80 max-w-[85vw] h-[calc(100vh-4rem)] bg-card border-r border-border shadow-2xl z-50 xl:hidden overflow-hidden"
+            >
+              <div className="h-full overflow-y-auto p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-bold text-foreground">All Categories</h2>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsCategoriesOpen(false)}
+                  >
+                    <X size={18} />
+                  </Button>
+                </div>
+                <div className="h-px bg-border mb-4" />
+                <nav className="space-y-1">
+                  {categories.map((category, idx) => {
+                    const isOpen = openCategoryIndex === idx;
+                    return (
+                      <div key={idx} className="border-b border-border/30 last:border-0">
+                        <button
+                          onClick={() => toggleCategory(idx)}
+                          className="flex items-center justify-between w-full text-left py-3 px-3 rounded-lg hover:bg-muted transition-all duration-200 group"
+                        >
+                          <span className="flex items-center gap-3 font-medium text-foreground">
+                            <span>{category.title}</span>
+                          </span>
+                          <ChevronRight
+                            className={`w-4 h-4 text-primary transform transition-transform duration-300 ${
+                              isOpen ? "rotate-90" : ""
+                            }`}
+                          />
+                        </button>
+                        <AnimatePresence initial={false}>
+                          {isOpen && (
+                            <motion.ul
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.25 }}
+                              className="pl-4 pb-2 space-y-1 overflow-hidden"
+                            >
+                              {category.items.map((item, i) => (
+                                <Link
+                                  key={i}
+                                  to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                                  className={`block w-full text-left text-sm py-2 px-3 rounded-lg hover:bg-muted transition-colors ${
+                                    isActiveRoute(
+                                      `/${item.toLowerCase().replace(/\s+/g, "-")}`
+                                    )
+                                      ? "bg-primary/10 font-semibold"
+                                      : ""
+                                  }`}
+                                  onClick={() => setIsCategoriesOpen(false)}
+                                >
+                                  {item}
+                                </Link>
+                              ))}
+                            </motion.ul>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+                </nav>
+              </div>
+            </motion.aside>
+          </>
         )}
-      </header>
+      </AnimatePresence>
 
       {/* Bottom Mobile Navbar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border shadow-inner flex justify-around py-2 z-50 text-card-foreground">
-        <Link
-          to="/offers"
-          className="flex flex-col items-center text-xs"
-          aria-label="Offers"
-        >
-          <Percent size={20} />
-          Offers
-        </Link>
-        <Link
-          to="/wishlist"
-          className="flex flex-col items-center text-xs"
-          aria-label="Wishlist"
-        >
-          <Heart size={20} />
-          Wishlist
-        </Link>
-        {isLoggedIn ? (
-          <Link
-            to="/profile"
-            className="flex flex-col items-center text-xs"
-            aria-label="Profile"
-          >
-            <User size={20} />
-            Profile
-          </Link>
-        ) : (
-          <Link
-            to="/auth/register"
-            className="flex flex-col items-center text-xs"
-            aria-label="Account"
-          >
-            <User size={20} />
-            Account
-          </Link>
-        )}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/90 backdrop-blur-xl border-t border-border shadow-lg z-40">
+        <div className="grid grid-cols-3 gap-1 px-2 py-2">
+          <Button variant="ghost" asChild className="flex-col h-auto py-2 gap-1">
+            <Link
+              to="/offers"
+              className={`flex flex-col items-center ${
+                isActiveRoute("/offers") ? "text-primary" : ""
+              }`}
+            >
+              <Percent size={20} />
+              <span className="text-xs">Offers</span>
+            </Link>
+          </Button>
+          <Button variant="ghost" asChild className="flex-col h-auto py-2 gap-1">
+            <Link
+              to="/wishlist"
+              className={`flex flex-col items-center ${
+                isActiveRoute("/wishlist") ? "text-primary" : ""
+              }`}
+            >
+              <Heart size={20} />
+              <span className="text-xs">Wishlist</span>
+            </Link>
+          </Button>
+          <Button variant="ghost" asChild className="flex-col h-auto py-2 gap-1">
+            <Link
+              to="/profile"
+              className={`flex flex-col items-center ${
+                isActiveRoute("/profile") ? "text-primary" : ""
+              }`}
+            >
+              <User size={20} />
+              <span className="text-xs">Profile</span>
+            </Link>
+          </Button>
+        </div>
       </nav>
     </>
   );

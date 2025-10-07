@@ -1,233 +1,225 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Plus, X, Edit, Trash2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Edit, Trash2, Plus, X } from "lucide-react";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
-const API_URL = "http://localhost:5000/api/coupons";
-
-const Coupons = () => {
-  const [coupons, setCoupons] = useState([]);
+const Announcements = () => {
+  const axiosSecure = useAxiosSecure();
+  const [announcements, setAnnouncements] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [editingCoupon, setEditingCoupon] = useState(null); // ✏️ Edit state
+  const [editingAnnouncement, setEditingAnnouncement] = useState(null);
 
-  // ✅ Fetch all coupons
-  const fetchCoupons = async () => {
+  // ✅ Fetch announcements
+  const fetchAnnouncements = async () => {
     setLoading(true);
-    setError(null);
     try {
-      const res = await axios.get(API_URL);
-      setCoupons(res.data);
+      const res = await axiosSecure.get("/announcements");
+      setAnnouncements(res.data);
     } catch (err) {
-      console.error("Error fetching coupons:", err);
-      setError("Failed to load coupons");
+      console.error("Error fetching announcements:", err);
+      setError("Failed to load announcements!");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCoupons();
+    fetchAnnouncements();
   }, []);
 
-  // ✅ Add or Update coupon
+  // ✅ Add or Update Announcement
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-
-    const couponData = {
-      code: e.target.code.value,
-      discount: e.target.discount.value,
-      expiry: e.target.expiry.value,
+    const data = {
+      title: e.target.title.value,
+      desc: e.target.desc.value,
+      date: e.target.date.value,
       status: e.target.status.value,
     };
 
     try {
-      if (editingCoupon) {
-        // ✏️ UPDATE REQUEST
-        await axios.put(`${API_URL}/${editingCoupon._id}`, couponData);
-        console.log("Coupon updated");
+      if (editingAnnouncement) {
+        await axiosSecure.put(`/announcements/${editingAnnouncement._id}`, data);
       } else {
-        // ➕ CREATE REQUEST
-        await axios.post(API_URL, couponData);
-        console.log("Coupon added");
+        await axiosSecure.post("/announcements", data);
       }
-
       setShowModal(false);
+      setEditingAnnouncement(null);
       e.target.reset();
-      setEditingCoupon(null);
-      fetchCoupons();
+      fetchAnnouncements();
     } catch (err) {
-      console.error("Error saving coupon:", err);
-      setError("Failed to save coupon");
+      console.error("Error saving announcement:", err);
+      setError("Failed to save announcement!");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✏️ EDIT CODE START
-  const handleEdit = (coupon) => {
-    setEditingCoupon(coupon);
+  // ✅ Edit
+  const handleEdit = (announcement) => {
+    setEditingAnnouncement(announcement);
     setShowModal(true);
   };
-  // ✏️ EDIT CODE END
 
-  // 🗑️ DELETE CODE START
+  // ✅ Delete
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this coupon?")) return;
+    if (!confirm("Are you sure you want to delete this announcement?")) return;
     try {
-      await axios.delete(`${API_URL}/${id}`);
-      setCoupons(coupons.filter((c) => c._id !== id)); // UI side remove
+      await axiosSecure.delete(`/announcements/${id}`);
+      setAnnouncements(announcements.filter((a) => a._id !== id));
     } catch (err) {
-      console.error("Error deleting coupon:", err);
-      setError("Failed to delete coupon");
+      console.error("Error deleting announcement:", err);
+      setError("Failed to delete announcement!");
     }
   };
-  // 🗑️ DELETE CODE END
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 font-inter max-w-4xl mx-auto my-10">
+    <div className="p-6 bg-white shadow-md rounded-2xl border border-gray-200">
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-2xl font-bold text-gray-900">Coupon Management</h3>
+        <h2 className="text-2xl font-bold text-gray-800">
+          Global Announcements
+        </h2>
         <button
           onClick={() => {
-            setEditingCoupon(null); // Reset editing
+            setEditingAnnouncement(null);
             setShowModal(true);
           }}
-          className="flex items-center gap-2 px-5 py-2 text-sm bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02]"
+          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full shadow-md transition"
         >
-          <Plus className="w-5 h-5" /> Add New Coupon
+          <Plus className="w-5 h-5" /> New Announcement
         </button>
       </div>
 
+      {/* Error */}
       {error && (
-        <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-6 text-sm">
-          <p className="font-bold">Error:</p>
-          <span>{error}</span>
+        <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4">
+          {error}
         </div>
       )}
 
-      {coupons.length > 0 ? (
-        <div className="overflow-x-auto shadow-xl rounded-xl border border-gray-100">
-          <table className="w-full text-sm border-collapse text-left">
-            <thead>
-              <tr className="bg-gray-50 text-gray-600 uppercase tracking-wider">
-                <th className="p-4 border-b border-gray-200">Code</th>
-                <th className="p-4 border-b border-gray-200">Discount</th>
-                <th className="p-4 border-b border-gray-200">Expiry</th>
-                <th className="p-4 border-b border-gray-200">Status</th>
-                <th className="p-4 border-b border-gray-200 text-center">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {coupons.map((coupon) => (
+      {/* List */}
+      <div className="overflow-x-auto rounded-xl border border-gray-200">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-indigo-600 text-white">
+            <tr>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Title</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Description</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Date</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
+              <th className="px-4 py-3 text-center text-sm font-semibold">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {announcements.length > 0 ? (
+              announcements.map((a, i) => (
                 <tr
-                  key={coupon._id}
-                  className="border-b border-gray-100 hover:bg-purple-50/50 transition-colors"
+                  key={i}
+                  className={`${
+                    i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
+                  } hover:bg-indigo-100/70 transition-colors`}
                 >
-                  <td className="p-4 font-mono text-purple-700 font-medium">
-                    {coupon.code}
+                  <td className="px-4 py-3 font-medium text-indigo-700">{a.title}</td>
+                  <td className="px-4 py-3 text-gray-600">{a.desc}</td>
+                  <td className="px-4 py-3 text-gray-500">{a.date}</td>
+                  <td
+                    className={`px-4 py-3 font-semibold ${
+                      a.status === "Active" ? "text-green-600" : "text-yellow-600"
+                    }`}
+                  >
+                    {a.status}
                   </td>
-                  <td className="p-4 text-green-600 font-semibold">
-                    {coupon.discount}
-                  </td>
-                  <td className="p-4 text-gray-500">{coupon.expiry}</td>
-                  <td className="p-4">
-                    <span
-                      className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        coupon.status === "Active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {coupon.status}
-                    </span>
-                  </td>
-                  <td className="p-4 flex justify-center gap-3">
+                  <td className="px-4 py-3 text-center flex justify-center gap-3">
                     <button
-                      onClick={() => handleEdit(coupon)}
-                      className="text-blue-600 hover:text-blue-800"
+                      onClick={() => handleEdit(a)}
+                      className="p-2 rounded-md hover:bg-blue-50 text-blue-600"
                     >
                       <Edit className="w-5 h-5" />
                     </button>
                     <button
-                      onClick={() => handleDelete(coupon._id)}
-                      className="text-red-600 hover:text-red-800"
+                      onClick={() => handleDelete(a._id)}
+                      className="p-2 rounded-md hover:bg-red-50 text-red-600"
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <p className="text-center py-10 text-gray-500 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-          No coupons available. Click "Add New Coupon" to get started!
-        </p>
-      )}
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="text-center py-8 text-gray-500 bg-gray-50 font-medium"
+                >
+                  No Announcements Found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
+      {/* ✅ Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
-          <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg relative">
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white w-full max-w-lg rounded-2xl p-8 relative shadow-2xl">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 p-2 text-gray-500 hover:text-red-600 bg-gray-100 rounded-full"
+              className="absolute top-4 right-4 bg-gray-100 hover:bg-red-100 p-2 rounded-full"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 text-gray-600" />
             </button>
-            <h2 className="text-xl font-bold mb-6 text-gray-900 border-b pb-2">
-              {editingCoupon ? "Edit Coupon" : "Add New Coupon"}
-            </h2>
+
+            <h3 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
+              {editingAnnouncement ? "Edit Announcement" : "Add New Announcement"}
+            </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="text"
-                name="code"
-                defaultValue={editingCoupon?.code || ""}
-                placeholder="Coupon Code"
+                name="title"
+                defaultValue={editingAnnouncement?.title || ""}
+                placeholder="Title"
                 required
-                className="w-full border p-3 rounded-lg"
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              <input
-                type="text"
-                name="discount"
-                defaultValue={editingCoupon?.discount || ""}
-                placeholder="Discount"
+              <textarea
+                name="desc"
+                defaultValue={editingAnnouncement?.desc || ""}
+                placeholder="Description"
                 required
-                className="w-full border p-3 rounded-lg"
-              />
+                rows="3"
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              ></textarea>
               <input
                 type="date"
-                name="expiry"
-                defaultValue={editingCoupon?.expiry || ""}
+                name="date"
+                defaultValue={editingAnnouncement?.date || ""}
                 required
-                className="w-full border p-3 rounded-lg"
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               <select
                 name="status"
-                defaultValue={editingCoupon?.status || "Active"}
-                className="w-full border p-3 rounded-lg"
+                defaultValue={editingAnnouncement?.status || "Active"}
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
+                <option value="Scheduled">Scheduled</option>
               </select>
+
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 mt-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg font-semibold"
+                className="w-full py-3 mt-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow-md transition"
               >
                 {loading
-                  ? editingCoupon
-                    ? "Updating..."
-                    : "Adding..."
-                  : editingCoupon
-                  ? "Update Coupon"
-                  : "Add Coupon"}
+                  ? "Processing..."
+                  : editingAnnouncement
+                  ? "Update Announcement"
+                  : "Add Announcement"}
               </button>
             </form>
           </div>
@@ -237,4 +229,4 @@ const Coupons = () => {
   );
 };
 
-export default Coupons;
+export default Announcements;

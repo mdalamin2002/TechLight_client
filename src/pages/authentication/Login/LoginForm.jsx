@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 
-const LoginForm = ({ onSubmit, error }) => {
+const LoginForm = ({ onSubmit, }) => {
   const {
     register,
     handleSubmit,
@@ -61,8 +61,6 @@ const LoginForm = ({ onSubmit, error }) => {
       >
         Login
       </button>
-
-      {error && <p className="text-red-600 mt-2">{error}</p>}
     </form>
   );
 };

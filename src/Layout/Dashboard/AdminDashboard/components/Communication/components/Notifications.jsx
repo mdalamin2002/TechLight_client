@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Bell, Send, Users, Store, Star, UserX, Mail } from "lucide-react";
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/admin/notifications";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const Notifications = () => {
+  const axiosSecure = useAxiosSecure();
   const [recipient, setRecipient] = useState("All Users");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
@@ -12,10 +11,9 @@ const Notifications = () => {
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState(null);
 
-  // ✅ Fetch notifications from backend
   const fetchNotifications = async () => {
     try {
-      const res = await axios.get(API_URL);
+      const res = await axiosSecure.get("/notifications");
       setNotifications(res.data);
     } catch (err) {
       console.error(err);
@@ -37,15 +35,13 @@ const Notifications = () => {
     setFeedback(null);
 
     try {
-      const res = await axios.post(`${API_URL}/send`, {
+      const res = await axiosSecure.post("/notifications/send", {
         recipient,
         subject,
         message,
       });
 
-      // Reload notifications after sending
       fetchNotifications();
-
       setSubject("");
       setMessage("");
       setFeedback({ type: "success", text: res.data.message });
@@ -66,7 +62,6 @@ const Notifications = () => {
         </h3>
       </div>
 
-      {/* Feedback */}
       {feedback && (
         <div
           className={`mb-4 p-3 rounded-lg text-sm ${
@@ -81,7 +76,6 @@ const Notifications = () => {
 
       {/* Form */}
       <div className="mb-6 bg-gray-50 p-5 rounded-lg space-y-4 border border-gray-200">
-        {/* Recipient */}
         <div>
           <label className="block text-sm mb-2 text-gray-700">Recipient Type</label>
           <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-6">
@@ -106,7 +100,6 @@ const Notifications = () => {
           </div>
         </div>
 
-        {/* Subject */}
         <div>
           <label className="text-sm mb-2 text-gray-700 flex items-center gap-2">
             <Mail className="w-4 h-4 text-gray-500" />
@@ -117,23 +110,21 @@ const Notifications = () => {
             placeholder="Enter notification subject..."
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-300 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="w-full p-3 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
           />
         </div>
 
-        {/* Message */}
         <div>
           <label className="block text-sm mb-2 text-gray-700">Message</label>
           <textarea
             placeholder="Enter your message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-300 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="w-full p-3 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
             rows={4}
           />
         </div>
 
-        {/* Send Button */}
         <div className="flex justify-end">
           <button
             onClick={handleSend}
@@ -157,7 +148,9 @@ const Notifications = () => {
             <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-200 hover:bg-gray-100 transition">
               <h4 className="text-gray-800 font-medium text-sm">{n.subject}</h4>
               <p className="text-gray-600 text-sm mt-1">{n.message}</p>
-              <p className="text-xs text-gray-500 mt-2">{new Date(n.date).toLocaleString()} • {n.recipient}</p>
+              <p className="text-xs text-gray-500 mt-2">
+                {new Date(n.createdAt).toLocaleString()} • {n.recipient}
+              </p>
             </div>
           ))
         )}

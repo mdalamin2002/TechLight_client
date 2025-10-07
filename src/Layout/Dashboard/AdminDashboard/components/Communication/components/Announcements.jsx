@@ -1,29 +1,24 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Edit, Trash2, Plus, X } from "lucide-react";
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/admin/announcements";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const Announcements = () => {
+  const axiosSecure = useAxiosSecure();
   const [announcements, setAnnouncements] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [editing, setEditing] = useState(null);
-
-  const titleRef = useRef();
-  const descRef = useRef();
-  const statusRef = useRef();
-  const dateRef = useRef();
+  const [editingAnnouncement, setEditingAnnouncement] = useState(null);
 
   // Fetch announcements
   const fetchAnnouncements = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(API_URL);
+      const res = await axiosSecure.get("/announcements");
       setAnnouncements(res.data);
     } catch (err) {
-      setError("Failed to load announcements");
+      console.error("Error fetching announcements:", err);
+      setError("Failed to load announcements!");
     } finally {
       setLoading(false);
     }
@@ -33,168 +28,191 @@ const Announcements = () => {
     fetchAnnouncements();
   }, []);
 
-  // Open modal for add/edit
-  const openModal = (announcement = null) => {
-    setEditing(announcement);
-    setShowModal(true);
-    setTimeout(() => {
-      titleRef.current?.focus();
-    }, 100);
-  };
-
-  // Submit form
+  // Add or Update Announcement
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const data = {
-      title: titleRef.current.value,
-      desc: descRef.current.value,
-      status: statusRef.current.value,
-      date: dateRef.current.value,
+      title: e.target.title.value,
+      desc: e.target.desc.value,
+      date: e.target.date.value,
+      status: e.target.status.value,
     };
 
     try {
-      if (editing) {
-        // update
-        const res = await axios.put(`${API_URL}/${editing._id}`, data);
-        setAnnouncements((prev) =>
-          prev.map((a) => (a._id === editing._id ? res.data : a))
-        );
+      if (editingAnnouncement) {
+        await axiosSecure.put(`/announcements/${editingAnnouncement._id}`, data);
       } else {
-        // create
-        const res = await axios.post(API_URL, data);
-        setAnnouncements((prev) => [res.data, ...prev]);
+        await axiosSecure.post("/announcements", data);
       }
       setShowModal(false);
-      setEditing(null);
+      setEditingAnnouncement(null);
+      e.target.reset();
+      fetchAnnouncements();
     } catch (err) {
-      console.error(err);
-      setError("Failed to save announcement");
+      console.error("Error saving announcement:", err);
+      setError("Failed to save announcement!");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // Edit
+  const handleEdit = (announcement) => {
+    setEditingAnnouncement(announcement);
+    setShowModal(true);
   };
 
   // Delete
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure?")) return;
+    if (!confirm("Are you sure you want to delete this announcement?")) return;
     try {
-      await axios.delete(`${API_URL}/${id}`);
-      setAnnouncements((prev) => prev.filter((a) => a._id !== id));
+      await axiosSecure.delete(`/announcements/${id}`);
+      setAnnouncements(announcements.filter((a) => a._id !== id));
     } catch (err) {
-      console.error(err);
-      setError("Failed to delete announcement");
+      console.error("Error deleting announcement:", err);
+      setError("Failed to delete announcement!");
     }
   };
 
   return (
-    <div className="bg-gray-50 p-6 rounded-xl shadow-md">
+    <div className="p-6 bg-white shadow-md rounded-2xl border border-gray-200">
       {/* Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
-        <h3 className="text-xl font-semibold text-gray-800">Global Announcements</h3>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">Global Announcements</h2>
         <button
-          onClick={() => openModal()}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition-shadow shadow-sm hover:shadow-md"
+          onClick={() => {
+            setEditingAnnouncement(null);
+            setShowModal(true);
+          }}
+          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full shadow-md transition"
         >
-          <Plus className="w-4 h-4" /> New Announcement
+          <Plus className="w-5 h-5" /> New Announcement
         </button>
       </div>
 
       {/* Error */}
-      {error && <p className="text-red-600 mb-3">{error}</p>}
+      {error && (
+        <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4">
+          {error}
+        </div>
+      )}
 
       {/* Announcements List */}
-      <div className="space-y-4">
-        {announcements.map((a) => (
-          <div
-            key={a._id}
-            className="bg-white border border-gray-200 rounded-lg p-5 flex flex-col md:flex-row justify-between items-start md:items-center shadow-sm hover:shadow-md transition"
-          >
-            <div className="flex-1">
-              <h4 className="text-gray-800 font-medium text-lg">{a.title}</h4>
-              <p className="text-gray-500 mt-1">{a.desc}</p>
-              <div className="flex items-center gap-4 mt-3 text-sm text-gray-400">
-                <span>{a.date}</span>
-                <span
-                  className={`flex items-center gap-2 font-medium ${
-                    a.status === "Active" ? "text-green-600" : "text-yellow-600"
-                  }`}
-                >
-                  <span
-                    className={`w-3 h-3 rounded-full ${
-                      a.status === "Active" ? "bg-green-600" : "bg-yellow-600"
-                    }`}
-                  ></span>
-                  {a.status}
-                </span>
-              </div>
-            </div>
+      <div className="overflow-x-auto rounded-xl border border-gray-200">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-indigo-600 text-white">
+            <tr>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Title</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Description</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Date</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
+              <th className="px-4 py-3 text-center text-sm font-semibold">Actions</th>
+            </tr>
+          </thead>
 
-            <div className="flex gap-2 mt-4 md:mt-0">
-              <button
-                onClick={() => openModal(a)}
-                className="p-2 bg-gray-100 rounded hover:bg-gray-200 transition shadow-sm hover:shadow-md"
-              >
-                <Edit className="w-4 h-4 text-blue-500" />
-              </button>
-              <button
-                onClick={() => handleDelete(a._id)}
-                className="p-2 bg-gray-100 rounded hover:bg-gray-200 transition shadow-sm hover:shadow-md"
-              >
-                <Trash2 className="w-4 h-4 text-red-500" />
-              </button>
-            </div>
-          </div>
-        ))}
+          <tbody>
+            {announcements.length > 0 ? (
+              announcements.map((a, i) => (
+                <tr
+                  key={i}
+                  className={`${i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"} hover:bg-indigo-100/70 transition-colors`}
+                >
+                  <td className="px-4 py-3 font-medium text-indigo-700">{a.title}</td>
+                  <td className="px-4 py-3 text-gray-600">{a.desc}</td>
+                  <td className="px-4 py-3 text-gray-500">{a.date}</td>
+                  <td
+                    className={`px-4 py-3 font-semibold ${
+                      a.status === "Active" ? "text-green-600" : "text-yellow-600"
+                    }`}
+                  >
+                    {a.status}
+                  </td>
+                  <td className="px-4 py-3 text-center flex justify-center gap-3">
+                    <button
+                      onClick={() => handleEdit(a)}
+                      className="p-2 rounded-md hover:bg-blue-50 text-blue-600"
+                    >
+                      <Edit className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(a._id)}
+                      className="p-2 rounded-md hover:bg-red-50 text-red-600"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center py-8 text-gray-500 bg-gray-50 font-medium">
+                  No Announcements Found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
-          <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg relative">
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white w-full max-w-lg rounded-2xl p-8 relative shadow-2xl">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 p-2 text-gray-500 hover:text-red-600 bg-gray-100 rounded-full"
+              className="absolute top-4 right-4 bg-gray-100 hover:bg-red-100 p-2 rounded-full"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 text-gray-600" />
             </button>
-            <h2 className="text-xl font-bold mb-6 text-gray-900 border-b pb-2">
-              {editing ? "Edit Announcement" : "New Announcement"}
-            </h2>
+
+            <h3 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
+              {editingAnnouncement ? "Edit Announcement" : "Add New Announcement"}
+            </h3>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
-                ref={titleRef}
                 type="text"
-                defaultValue={editing?.title || ""}
+                name="title"
+                defaultValue={editingAnnouncement?.title || ""}
                 placeholder="Title"
                 required
-                className="w-full border p-3 rounded-lg"
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               <textarea
-                ref={descRef}
-                defaultValue={editing?.desc || ""}
+                name="desc"
+                defaultValue={editingAnnouncement?.desc || ""}
                 placeholder="Description"
+                rows="3"
                 required
-                className="w-full border p-3 rounded-lg"
-                rows={3}
-              />
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              ></textarea>
               <input
-                ref={dateRef}
                 type="date"
-                defaultValue={editing?.date || ""}
+                name="date"
+                defaultValue={editingAnnouncement?.date || ""}
                 required
-                className="w-full border p-3 rounded-lg"
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               <select
-                ref={statusRef}
-                defaultValue={editing?.status || "Active"}
-                className="w-full border p-3 rounded-lg"
+                name="status"
+                defaultValue={editingAnnouncement?.status || "Active"}
+                className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="Active">Active</option>
                 <option value="Scheduled">Scheduled</option>
               </select>
+
               <button
                 type="submit"
-                className="w-full py-3 mt-4 bg-gray-800 text-white rounded-lg font-semibold"
+                disabled={loading}
+                className="w-full py-3 mt-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow-md transition"
               >
-                {editing ? "Update" : "Add"} Announcement
+                {loading
+                  ? "Processing..."
+                  : editingAnnouncement
+                  ? "Update Announcement"
+                  : "Add Announcement"}
               </button>
             </form>
           </div>
