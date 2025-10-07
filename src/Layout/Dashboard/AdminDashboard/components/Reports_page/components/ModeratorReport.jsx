@@ -154,7 +154,7 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
           <CSVLink
             data={filteredData}
             filename={"moderator-report.csv"}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm font-medium"
+            className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg hover:bg-blue-800  transition text-sm font-medium"
           >
             Export CSV
           </CSVLink>
