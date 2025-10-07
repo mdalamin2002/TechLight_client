@@ -188,7 +188,8 @@ export const FraudReport = ({ dateRange, onDataUpdate }) => {
           </p>
         </div>
         <div className="bg-red-50 p-4 rounded-lg text-center">
-          
+          <p className="text-red-700 font-medium">Pending %</p>
+          <p className="text-2xl font-bold text-red-800">{pendingPercent}%</p>
         </div>
       </div>
 
