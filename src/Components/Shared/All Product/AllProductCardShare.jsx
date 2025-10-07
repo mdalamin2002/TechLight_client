@@ -1,79 +1,155 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
+import React, { useState } from "react";
+import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
+import { priceLabel, toNumber } from "@/pages/HomeLayoutPages/AllProduct/All Product page/product";
+import { Link } from "react-router-dom"; // <-- এটা ঠিক করো
 
 const AllProductCardShare = ({
   id,
-  title,
+  name,
   image,
   brand,
-  category,
-  rating,
-  price,
-  badge,
-  onAddToCart = () => {}
+  subcategory,
+  rating = 0,
+  price = 0,
+  regularPrice = 0,
+  status = "In Stock",
+  keyFeatures = [],
+  buttonText = "Add to Cart",
+  buttonAction = () => {},
+  variant = "grid", // grid | list  <-- নতুন
 }) => {
+  const [isWishlisted, setIsWishlisted] = useState(false);
+
+  const priceNum = toNumber(price);
+  const regularPriceNum = toNumber(regularPrice);
+  const discount =
+    regularPriceNum > 0
+      ? Math.round(((regularPriceNum - priceNum) / regularPriceNum) * 100)
+      : 0;
+
   return (
-    <div className="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group">
-      {/* Badge */}
-      {badge && (
-        <span
-          className={`absolute top-3 left-3 px-2 py-1 text-xs font-medium rounded-lg text-white ${
-            badge === "Hot"
-              ? "bg-purple-600"
-              : badge === "Trending"
-              ? "bg-rose-500"
-              : "bg-blue-500"
-          }`}
-        >
-          {badge}
-        </span>
+    <div
+      className={[
+        "group relative bg-card rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl border border-border/50 hover:border-primary/30",
+        variant === "list" ? "md:flex md:items-stretch" : "",
+      ].join(" ")}
+    >
+      {discount > 0 && (
+        <div className="absolute top-3 left-3 z-10 bg-destructive text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+          -{discount}%
+        </div>
       )}
 
-      {/* Image */}
-      <Link to={`/products/${id}`} className="block overflow-hidden rounded-t-2xl">
-        <img
-          src={image}
-          alt={title}
-          className="w-full h-56 object-cover transform group-hover:scale-105 transition duration-300"
+      <div className="absolute top-3 right-3 z-10 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full font-medium">
+        {status}
+      </div>
+
+      <button
+        onClick={() => setIsWishlisted(!isWishlisted)}
+        className={`absolute cursor-pointer top-14 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 ${
+          isWishlisted ? "bg-red-100" : "hover:bg-red-100"
+        }`}
+      >
+        <Heart
+          size={18}
+          className={`transition-colors ${
+            isWishlisted
+              ? "fill-red-500 text-red-500"
+              : "text-gray-700 hover:text-red-500"
+          }`}
         />
+      </button>
+
+      <Link
+        to={id}
+        className="absolute cursor-pointer top-28 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 delay-75 hover:bg-blue-100"
+      >
+        <Eye className="w-5 h-5 text-gray-700 hover:text-blue-600 transition-colors" />
       </Link>
 
-      {/* Content */}
-      <div className="p-4 flex flex-col">
-        {/* Title */}
-        <Link
-          to={`/products/${id}`}
-          className="font-semibold text-gray-800 text-[16px] group-hover:text-blue-600 transition line-clamp-1"
+      <Link to={id}>
+        <div
+          className={
+            variant === "list"
+              ? "relative cursor-pointer bg-muted/30 overflow-hidden md:w-56 md:h-56 flex-shrink-0"
+              : "relative cursor-pointer bg-muted/30 overflow-hidden aspect-square"
+          }
         >
-          {title}
+          <img
+            src={image}
+            alt={name}
+            className={
+              variant === "list"
+                ? "w-full h-full object-cover"
+                : "w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+            }
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </div>
+      </Link>
+
+      <div className="p-5 space-y-3 flex-1">
+        <div className="flex items-center justify-between gap-2 text-xs">
+          <span className="text-muted-foreground">{subcategory}</span>
+          <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full font-medium w-fit">
+            {brand}
+          </span>
+        </div>
+
+        <Link to={id}>
+          <h4 className="font-semibold cursor-pointer text-foreground text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary/90 transition-colors">
+            {name}
+          </h4>
         </Link>
 
-        {/* Brand & Category */}
-        <p className="text-gray-500 text-sm mt-1">
-          {brand} • {category}
-        </p>
-
-        {/* Rating */}
-        {rating && (
-          <div className="flex items-center gap-1 mt-2 text-yellow-500 text-sm">
-            {"★".repeat(Math.floor(rating))}
-            {"☆".repeat(5 - Math.floor(rating))}
-            <span className="text-gray-600 text-xs ml-1">({rating})</span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                size={14}
+                fill={i < Math.floor(rating) ? "#FFA500" : "none"}
+                stroke={i < Math.floor(rating) ? "#FFA500" : "#CBD5E1"}
+                strokeWidth={1.5}
+              />
+            ))}
           </div>
-        )}
+          <span className="text-xs text-muted-foreground font-medium">
+            {rating}
+          </span>
+        </div>
 
-        {/* Price */}
-        <p className="text-lg font-bold text-rose-600 mt-3">{price}৳</p>
+        <div className="space-y-1.5 pt-2 border-t border-border/50">
+          {keyFeatures.slice(0, 2).map((feature, index) => (
+            <div key={index} className="flex items-start gap-2">
+              <div className="w-1 h-1 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">
+                {feature}
+              </p>
+            </div>
+          ))}
+        </div>
 
-        {/* Add to Cart Button */}
-        <button
-          onClick={onAddToCart}
-          className="mt-3 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-xl transition-all"
-        >
-          <ShoppingCart size={18} />
-          Add to Cart
-        </button>
+        <div className="pt-3 space-y-2">
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-primary">
+              {priceLabel(price)}
+            </span>
+            {discount > 0 && (
+              <span className="text-sm text-muted-foreground line-through">
+                {priceLabel(regularPrice)}
+              </span>
+            )}
+          </div>
+
+          <button
+            onClick={buttonAction}
+            className="w-full cursor-pointer bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"
+          >
+            <ShoppingCart size={18} />
+            <span>{buttonText}</span>
+          </button>
+        </div>
       </div>
     </div>
   );
