@@ -29,11 +29,11 @@ const ProductGallery = ({ product, selectedImage, setSelectedImage }) => {
       </div>
 
       <div className="flex-1 relative bg-card rounded-xl overflow-hidden border border-border group">
-        <div className="aspect-square flex items-center justify-center p-4 md:p-8">
+        <div className="aspect-square flex items-center justify-center ">
           <img
             src={product.images.gallery[selectedImage]}
             alt={product.name}
-            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
         {discount > 0 && (
