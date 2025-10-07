@@ -1,13 +1,26 @@
-
-
 import React, { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
 import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-export const FraudReport = ({ dateRange ,onDataUpdate }) => {
+export const FraudReport = ({ dateRange, onDataUpdate }) => {
   const [fraudData, setFraudData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -54,7 +67,8 @@ export const FraudReport = ({ dateRange ,onDataUpdate }) => {
       item.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.type.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "All" || item.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "All" || item.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -65,7 +79,6 @@ export const FraudReport = ({ dateRange ,onDataUpdate }) => {
     currentPage * itemsPerPage
   );
 
-  
   // Chart Data
   const statusCounts = { Resolved: 0, Investigating: 0, Pending: 0 };
   filteredData.forEach((item) => {
@@ -85,20 +98,46 @@ export const FraudReport = ({ dateRange ,onDataUpdate }) => {
 
   // Summary Metrics
   const totalCases = filteredData.length;
-  const resolvedPercent = ((statusCounts["Resolved"] / totalCases) * 100 || 0).toFixed(1);
-  const investigatingPercent = ((statusCounts["Investigating"] / totalCases) * 100 || 0).toFixed(1);
-  const pendingPercent = ((statusCounts["Pending"] / totalCases) * 100 || 0).toFixed(1);
+  const resolvedPercent = (
+    (statusCounts["Resolved"] / totalCases) * 100 || 0
+  ).toFixed(1);
+  const investigatingPercent = (
+    (statusCounts["Investigating"] / totalCases) * 100 || 0
+  ).toFixed(1);
+  const pendingPercent = (
+    (statusCounts["Pending"] / totalCases) * 100 || 0
+  ).toFixed(1);
 
-  // Send real data to parent for export
+  // 🟩 Send real data to parent for export (with delay)
   useEffect(() => {
-    if (onDataUpdate) {
-      onDataUpdate({ cases: filteredData, summary: { totalCases, resolvedPercent, investigatingPercent, pendingPercent } });
-    }
-  }, [filteredData, totalCases, resolvedPercent, investigatingPercent, pendingPercent, onDataUpdate]);
+    if (!onDataUpdate) return;
 
+    const timer = setTimeout(() => {
+      onDataUpdate({
+        cases: filteredData,
+        summary: {
+          totalCases,
+          resolvedPercent,
+          investigatingPercent,
+          pendingPercent,
+        },
+      });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [
+    filteredData,
+    totalCases,
+    resolvedPercent,
+    investigatingPercent,
+    pendingPercent,
+    onDataUpdate,
+  ]);
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md space-y-6">
-      <h3 className="text-xl font-semibold text-gray-800">Fraud & Suspicious Users Report</h3>
+      <h3 className="text-xl font-semibold text-gray-800">
+        Fraud & Suspicious Users Report
+      </h3>
 
       {/* Search + Filter + Export */}
       <div className="flex flex-col md:flex-row justify-between gap-3 mb-4">
@@ -123,7 +162,7 @@ export const FraudReport = ({ dateRange ,onDataUpdate }) => {
           <CSVLink
             data={filteredData}
             filename="fraud-report.csv"
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm font-medium"
+            className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg hover:bg-blue-800 transition text-sm font-medium"
           >
             Export CSV
           </CSVLink>
@@ -138,11 +177,15 @@ export const FraudReport = ({ dateRange ,onDataUpdate }) => {
         </div>
         <div className="bg-green-50 p-4 rounded-lg text-center">
           <p className="text-green-700 font-medium">Resolved %</p>
-          <p className="text-2xl font-bold text-green-800">{resolvedPercent}%</p>
+          <p className="text-2xl font-bold text-green-800">
+            {resolvedPercent}%
+          </p>
         </div>
         <div className="bg-yellow-50 p-4 rounded-lg text-center">
           <p className="text-yellow-700 font-medium">Investigating %</p>
-          <p className="text-2xl font-bold text-yellow-800">{investigatingPercent}%</p>
+          <p className="text-2xl font-bold text-yellow-800">
+            {investigatingPercent}%
+          </p>
         </div>
         <div className="bg-red-50 p-4 rounded-lg text-center">
           <p className="text-red-700 font-medium">Pending %</p>
@@ -151,15 +194,15 @@ export const FraudReport = ({ dateRange ,onDataUpdate }) => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left border-collapse">
-          <thead className="bg-gray-50 border-b border-gray-200">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <table className="min-w-full overflow-hidden">
+          <thead className="bg-indigo-600 border-b border-gray-200">
             <tr>
-              <th className="p-4 text-gray-600 font-medium">Case ID</th>
-              <th className="p-4 text-gray-600 font-medium">User</th>
-              <th className="p-4 text-gray-600 font-medium">Type</th>
-              <th className="p-4 text-gray-600 font-medium">Status</th>
-              <th className="p-4 text-gray-600 font-medium">Date</th>
+              <th className="p-4 text-white font-medium">Case ID</th>
+              <th className="p-4 text-white font-medium">User</th>
+              <th className="p-4 text-white font-medium">Type</th>
+              <th className="p-4 text-white font-medium">Status</th>
+              <th className="p-4 text-white font-medium">Date</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -173,7 +216,14 @@ export const FraudReport = ({ dateRange ,onDataUpdate }) => {
               paginatedData.map((item, index) => (
                 <tr
                   key={index}
-                  className="hover:bg-gray-50 transition-colors cursor-pointer"
+                  className={`
+              cursor-pointer transition-colors
+              ${
+                index % 2 === 0
+                  ? "bg-white hover:bg-indigo-100/70"
+                  : "bg-indigo-50/40 hover:bg-indigo-100/70"
+              }
+            `}
                   onClick={() => setSelectedCase(item)}
                 >
                   <td className="p-4 text-gray-800 font-medium">{item.id}</td>
@@ -208,7 +258,9 @@ export const FraudReport = ({ dateRange ,onDataUpdate }) => {
         >
           Prev
         </button>
-        <span className="text-gray-700">{currentPage} / {totalPages}</span>
+        <span className="text-gray-700">
+          {currentPage} / {totalPages}
+        </span>
         <button
           onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
           className="px-3 py-1 border rounded-lg hover:bg-gray-100"
@@ -219,8 +271,16 @@ export const FraudReport = ({ dateRange ,onDataUpdate }) => {
 
       {/* Chart */}
       <div className="bg-gray-50 p-4 rounded-lg mt-6">
-        <h4 className="text-gray-700 font-semibold mb-2">Cases Distribution by Status</h4>
-        <Bar data={chartData} options={{ responsive: true, plugins: { legend: { position: "top" } } }} />
+        <h4 className="text-gray-700 font-semibold mb-2">
+          Cases Distribution by Status
+        </h4>
+        <Bar
+          data={chartData}
+          options={{
+            responsive: true,
+            plugins: { legend: { position: "top" } },
+          }}
+        />
       </div>
 
       {/* Modal for Case Details */}
@@ -234,22 +294,31 @@ export const FraudReport = ({ dateRange ,onDataUpdate }) => {
               ✕
             </button>
             <h4 className="text-lg font-semibold mb-2">Case Details</h4>
-            <p><span className="font-medium">Case ID:</span> {selectedCase.id}</p>
-            <p><span className="font-medium">User:</span> {selectedCase.user}</p>
-            <p><span className="font-medium">Type:</span> {selectedCase.type}</p>
-            <p><span className="font-medium">Status:</span> {selectedCase.status}</p>
-            <p><span className="font-medium">Date:</span> {selectedCase.date}</p>
-            <p className="mt-2"><span className="font-medium">Details:</span> {selectedCase.details}</p>
+            <p>
+              <span className="font-medium">Case ID:</span> {selectedCase.id}
+            </p>
+            <p>
+              <span className="font-medium">User:</span> {selectedCase.user}
+            </p>
+            <p>
+              <span className="font-medium">Type:</span> {selectedCase.type}
+            </p>
+            <p>
+              <span className="font-medium">Status:</span> {selectedCase.status}
+            </p>
+            <p>
+              <span className="font-medium">Date:</span> {selectedCase.date}
+            </p>
+            <p className="mt-2">
+              <span className="font-medium">Details:</span>{" "}
+              {selectedCase.details}
+            </p>
           </div>
         </div>
       )}
     </div>
   );
 };
-
-
-
-
 
 // import React, { useState, useEffect } from "react";
 
