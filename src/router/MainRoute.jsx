@@ -7,11 +7,8 @@ import DashboardLayout from "@/Layout/Dashboard/DashboardLayout";
 import MainDashboard from "@/Layout/Dashboard/MainDashboard";
 import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
 import Register from "@/pages/authentication/register/Register";
-import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers";
 import Sellers from "@/Layout/Dashboard/AdminDashboard/components/Sellers";
 import Products from "@/Layout/Dashboard/AdminDashboard/components/Products";
-import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders";
-import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
 import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication/Communication";
 import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings/Settings";
 import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced/Advanced";
@@ -21,10 +18,14 @@ import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/R
 import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
 import Login from "@/pages/authentication/Login/Login";
 import Warranty from "@/pages/PolicyPages/Warranty/Warranty";
+// import FAQ from "@/pages/PolicyPages/FAQ/FAQ";
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
 import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
 import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/ProductDetails/ProductDetails";
+import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
+import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
+import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
 
 const MainRoute = createBrowserRouter([
   {
@@ -64,10 +65,10 @@ const MainRoute = createBrowserRouter([
         path: "/warranty",
         Component: Warranty,
       },
-      {
-        path: "faq",
-        Component: FAQ,
-      },
+      // {
+      //   path: "faq",
+      //   Component: FAQ,
+      // },
       {
         path: "terms-service",
         Component: TermsOfService,

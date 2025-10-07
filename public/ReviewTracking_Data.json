@@ -1,0 +1,186 @@
+[
+  {
+    "id": "REV001",
+    "user": "Alice",
+    "product": "Laptop X1",
+    "rating": 5,
+    "comment": "Amazing performance and sleek design!",
+    "date": "2025-09-25"
+  },
+  {
+    "id": "REV002",
+    "user": "Bob",
+    "product": "Headphones Y2",
+    "rating": 4,
+    "comment": "Great sound quality, but a bit tight on ears.",
+    "date": "2025-09-20"
+  },
+  {
+    "id": "REV003",
+    "user": "Charlie",
+    "product": "Smartphone Z5",
+    "rating": 2,
+    "comment": "Battery drains too fast, disappointed.",
+    "date": "2025-09-10"
+  },
+  {
+    "id": "REV004",
+    "user": "Daisy",
+    "product": "Tablet A10",
+    "rating": 3,
+    "comment": "Decent for the price but could be faster.",
+    "date": "2025-08-15"
+  },
+  {
+    "id": "REV005",
+    "user": "Eve",
+    "product": "Smartwatch B3",
+    "rating": 5,
+    "comment": "Stylish and feature-packed, highly recommend!",
+    "date": "2025-07-28"
+  },
+  {
+    "id": "REV001",
+    "user": "Alice",
+    "product": "Laptop X1",
+    "rating": 5,
+    "comment": "Amazing performance and sleek design!",
+    "date": "2025-09-25"
+  },
+  {
+    "id": "REV002",
+    "user": "Bob",
+    "product": "Headphones Y2",
+    "rating": 4,
+    "comment": "Great sound quality, but a bit tight on ears.",
+    "date": "2025-09-20"
+  },
+  {
+    "id": "REV003",
+    "user": "Charlie",
+    "product": "Smartphone Z5",
+    "rating": 2,
+    "comment": "Battery drains too fast, disappointed.",
+    "date": "2025-09-10"
+  },
+  {
+    "id": "REV004",
+    "user": "Daisy",
+    "product": "Tablet A10",
+    "rating": 3,
+    "comment": "Decent for the price but could be faster.",
+    "date": "2025-08-15"
+  },
+  {
+    "id": "REV005",
+    "user": "Eve",
+    "product": "Smartwatch B3",
+    "rating": 5,
+    "comment": "Stylish and feature-packed, highly recommend!",
+    "date": "2025-07-28"
+  },
+  {
+    "id": "REV006",
+    "user": "Frank",
+    "product": "Gaming Mouse C7",
+    "rating": 4,
+    "comment": "Responsive and comfortable, good value.",
+    "date": "2025-09-27"
+  },
+  {
+    "id": "REV007",
+    "user": "Grace",
+    "product": "Bluetooth Speaker D5",
+    "rating": 5,
+    "comment": "Loud and clear sound, perfect for parties!",
+    "date": "2025-09-29"
+  },
+  {
+    "id": "REV008",
+    "user": "Hannah",
+    "product": "Monitor E24",
+    "rating": 3,
+    "comment": "Colors are good but brightness is limited.",
+    "date": "2025-09-30"
+  },
+  {
+    "id": "REV009",
+    "user": "Ian",
+    "product": "Keyboard F12",
+    "rating": 4,
+    "comment": "Smooth keys, but a bit noisy when typing.",
+    "date": "2025-10-01"
+  },
+  {
+    "id": "REV010",
+    "user": "Jack",
+    "product": "Router G9",
+    "rating": 5,
+    "comment": "Super stable connection, excellent for gaming.",
+    "date": "2025-09-12"
+  },
+  {
+    "id": "REV011",
+    "user": "Karen",
+    "product": "Fitness Band H6",
+    "rating": 2,
+    "comment": "Tracking is inaccurate, not happy.",
+    "date": "2025-09-18"
+  },
+  {
+    "id": "REV012",
+    "user": "Leo",
+    "product": "External SSD I2",
+    "rating": 5,
+    "comment": "Lightning-fast transfer speed, great buy!",
+    "date": "2025-09-08"
+  },
+  {
+    "id": "REV013",
+    "user": "Mona",
+    "product": "Projector J10",
+    "rating": 4,
+    "comment": "Good picture quality, fan is a little loud.",
+    "date": "2025-07-10"
+  },
+  {
+    "id": "REV014",
+    "user": "Nathan",
+    "product": "Drone K3",
+    "rating": 5,
+    "comment": "Flies smoothly, amazing camera quality!",
+    "date": "2025-06-02"
+  },
+  {
+    "id": "REV015",
+    "user": "Olivia",
+    "product": "Power Bank L15",
+    "rating": 3,
+    "comment": "Charges phone twice only, expected more.",
+    "date": "2025-05-22"
+  },
+  {
+    "id": "REV016",
+    "user": "Paul",
+    "product": "Smart TV M50",
+    "rating": 5,
+    "comment": "Crystal-clear 4K quality, totally worth it.",
+    "date": "2025-03-03"
+  },
+  {
+    "id": "REV017",
+    "user": "Quincy",
+    "product": "Camera N200",
+    "rating": 4,
+    "comment": "Excellent photos, lens a bit heavy.",
+    "date": "2024-12-18"
+  },
+  {
+    "id": "REV018",
+    "user": "Rachel",
+    "product": "VR Headset O8",
+    "rating": 5,
+    "comment": "Immersive experience, feels next-gen.",
+    "date": "2024-11-20"
+  }
+]

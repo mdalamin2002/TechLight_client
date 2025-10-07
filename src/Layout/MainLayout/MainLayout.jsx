@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
+
 import { Outlet } from "react-router";
 import Navbar from "../../Components/Shared/Navbar/Navbar";
 import Footer from "../../Components/Shared/Footer/Footer";
-import { useDispatch } from "react-redux";
-import { checkAuthState } from "../../store/authSlice";
+import useAuth from "@/hooks/useAuth";
+import GlobalLoading from "@/Components/Shared/Loading/GlobalLoading";
+
+
 
 const MainLayout = () => {
-  const dispatch = useDispatch();
+  const { loading } = useAuth();
 
-  useEffect(() => {
-    dispatch(checkAuthState());
-  }, [dispatch]);
+    if(loading) return <GlobalLoading></GlobalLoading>
 
   return (
     <div className="bg-background">

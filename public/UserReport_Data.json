@@ -1,0 +1,762 @@
+[
+  {
+    "key": 1,
+    "date": "2025-10-01",
+    "newRegistrations": 833,
+    "activeUsers": 876,
+    "userRetention": 68,
+    "averageSession": "10m 39s"
+  },
+  {
+    "key": 2,
+    "date": "2025-09-23",
+    "newRegistrations": 131,
+    "activeUsers": 868,
+    "userRetention": 61,
+    "averageSession": "12m 19s"
+  },
+  {
+    "key": 3,
+    "date": "2025-09-18",
+    "newRegistrations": 102,
+    "activeUsers": 878,
+    "userRetention": 68,
+    "averageSession": "10m 10s"
+  },
+  {
+    "key": 4,
+    "date": "2025-09-11",
+    "newRegistrations": 106,
+    "activeUsers": 890,
+    "userRetention": 72,
+    "averageSession": "11m 51s"
+  },
+  {
+    "key": 5,
+    "date": "2025-09-03",
+    "newRegistrations": 147,
+    "activeUsers": 866,
+    "userRetention": 60,
+    "averageSession": "12m 18s"
+  },
+  {
+    "key": 6,
+    "date": "2025-08-24",
+    "newRegistrations": 156,
+    "activeUsers": 840,
+    "userRetention": 70,
+    "averageSession": "12m 1s"
+  },
+  {
+    "key": 7,
+    "date": "2025-08-17",
+    "newRegistrations": 113,
+    "activeUsers": 700,
+    "userRetention": 58,
+    "averageSession": "10m 35s"
+  },
+  {
+    "key": 8,
+    "date": "2025-08-11",
+    "newRegistrations": 143,
+    "activeUsers": 785,
+    "userRetention": 59,
+    "averageSession": "11m 23s"
+  },
+  {
+    "key": 9,
+    "date": "2025-08-06",
+    "newRegistrations": 129,
+    "activeUsers": 840,
+    "userRetention": 64,
+    "averageSession": "12m 41s"
+  },
+  {
+    "key": 10,
+    "date": "2025-07-29",
+    "newRegistrations": 95,
+    "activeUsers": 738,
+    "userRetention": 68,
+    "averageSession": "11m 21s"
+  },
+  {
+    "key": 11,
+    "date": "2025-07-20",
+    "newRegistrations": 113,
+    "activeUsers": 703,
+    "userRetention": 60,
+    "averageSession": "11m 36s"
+  },
+  {
+    "key": 12,
+    "date": "2025-07-11",
+    "newRegistrations": 150,
+    "activeUsers": 783,
+    "userRetention": 71,
+    "averageSession": "10m 53s"
+  },
+  {
+    "key": 13,
+    "date": "2025-07-02",
+    "newRegistrations": 128,
+    "activeUsers": 743,
+    "userRetention": 64,
+    "averageSession": "12m 14s"
+  },
+  {
+    "key": 14,
+    "date": "2025-06-27",
+    "newRegistrations": 156,
+    "activeUsers": 732,
+    "userRetention": 66,
+    "averageSession": "11m 37s"
+  },
+  {
+    "key": 15,
+    "date": "2025-06-21",
+    "newRegistrations": 137,
+    "activeUsers": 915,
+    "userRetention": 65,
+    "averageSession": "10m 10s"
+  },
+  {
+    "key": 16,
+    "date": "2025-06-14",
+    "newRegistrations": 115,
+    "activeUsers": 795,
+    "userRetention": 63,
+    "averageSession": "11m 33s"
+  },
+  {
+    "key": 17,
+    "date": "2025-06-06",
+    "newRegistrations": 117,
+    "activeUsers": 697,
+    "userRetention": 62,
+    "averageSession": "12m 42s"
+  },
+  {
+    "key": 18,
+    "date": "2025-05-28",
+    "newRegistrations": 109,
+    "activeUsers": 721,
+    "userRetention": 72,
+    "averageSession": "12m 16s"
+  },
+  {
+    "key": 19,
+    "date": "2025-05-23",
+    "newRegistrations": 104,
+    "activeUsers": 866,
+    "userRetention": 61,
+    "averageSession": "10m 26s"
+  },
+  {
+    "key": 20,
+    "date": "2025-05-14",
+    "newRegistrations": 144,
+    "activeUsers": 744,
+    "userRetention": 63,
+    "averageSession": "10m 2s"
+  },
+  {
+    "key": 21,
+    "date": "2025-05-06",
+    "newRegistrations": 148,
+    "activeUsers": 812,
+    "userRetention": 71,
+    "averageSession": "11m 29s"
+  },
+  {
+    "key": 22,
+    "date": "2025-04-29",
+    "newRegistrations": 155,
+    "activeUsers": 809,
+    "userRetention": 72,
+    "averageSession": "12m 52s"
+  },
+  {
+    "key": 23,
+    "date": "2025-04-21",
+    "newRegistrations": 153,
+    "activeUsers": 730,
+    "userRetention": 69,
+    "averageSession": "12m 33s"
+  },
+  {
+    "key": 24,
+    "date": "2025-04-12",
+    "newRegistrations": 127,
+    "activeUsers": 758,
+    "userRetention": 71,
+    "averageSession": "12m 0s"
+  },
+  {
+    "key": 25,
+    "date": "2025-04-03",
+    "newRegistrations": 118,
+    "activeUsers": 783,
+    "userRetention": 72,
+    "averageSession": "10m 23s"
+  },
+  {
+    "key": 26,
+    "date": "2025-03-28",
+    "newRegistrations": 155,
+    "activeUsers": 841,
+    "userRetention": 60,
+    "averageSession": "11m 59s"
+  },
+  {
+    "key": 27,
+    "date": "2025-03-20",
+    "newRegistrations": 158,
+    "activeUsers": 759,
+    "userRetention": 58,
+    "averageSession": "10m 52s"
+  },
+  {
+    "key": 28,
+    "date": "2025-03-11",
+    "newRegistrations": 96,
+    "activeUsers": 873,
+    "userRetention": 70,
+    "averageSession": "11m 47s"
+  },
+  {
+    "key": 29,
+    "date": "2025-03-05",
+    "newRegistrations": 159,
+    "activeUsers": 836,
+    "userRetention": 68,
+    "averageSession": "12m 7s"
+  },
+  {
+    "key": 30,
+    "date": "2025-02-26",
+    "newRegistrations": 160,
+    "activeUsers": 826,
+    "userRetention": 69,
+    "averageSession": "10m 59s"
+  },
+  {
+    "key": 31,
+    "date": "2025-02-21",
+    "newRegistrations": 100,
+    "activeUsers": 713,
+    "userRetention": 65,
+    "averageSession": "12m 29s"
+  },
+  {
+    "key": 32,
+    "date": "2025-02-12",
+    "newRegistrations": 145,
+    "activeUsers": 724,
+    "userRetention": 59,
+    "averageSession": "12m 49s"
+  },
+  {
+    "key": 33,
+    "date": "2025-02-03",
+    "newRegistrations": 111,
+    "activeUsers": 786,
+    "userRetention": 58,
+    "averageSession": "11m 28s"
+  },
+  {
+    "key": 34,
+    "date": "2025-01-27",
+    "newRegistrations": 155,
+    "activeUsers": 837,
+    "userRetention": 66,
+    "averageSession": "12m 58s"
+  },
+  {
+    "key": 35,
+    "date": "2025-01-18",
+    "newRegistrations": 160,
+    "activeUsers": 710,
+    "userRetention": 70,
+    "averageSession": "11m 31s"
+  },
+  {
+    "key": 36,
+    "date": "2025-01-13",
+    "newRegistrations": 94,
+    "activeUsers": 827,
+    "userRetention": 66,
+    "averageSession": "10m 13s"
+  },
+  {
+    "key": 37,
+    "date": "2025-01-06",
+    "newRegistrations": 114,
+    "activeUsers": 827,
+    "userRetention": 60,
+    "averageSession": "11m 6s"
+  },
+  {
+    "key": 38,
+    "date": "2025-01-01",
+    "newRegistrations": 106,
+    "activeUsers": 814,
+    "userRetention": 70,
+    "averageSession": "10m 35s"
+  },
+  {
+    "key": 39,
+    "date": "2024-12-27",
+    "newRegistrations": 107,
+    "activeUsers": 875,
+    "userRetention": 63,
+    "averageSession": "11m 48s"
+  },
+  {
+    "key": 40,
+    "date": "2024-12-19",
+    "newRegistrations": 119,
+    "activeUsers": 728,
+    "userRetention": 62,
+    "averageSession": "12m 23s"
+  },
+  {
+    "key": 41,
+    "date": "2024-12-10",
+    "newRegistrations": 148,
+    "activeUsers": 741,
+    "userRetention": 62,
+    "averageSession": "11m 35s"
+  },
+  {
+    "key": 42,
+    "date": "2024-11-30",
+    "newRegistrations": 156,
+    "activeUsers": 712,
+    "userRetention": 60,
+    "averageSession": "12m 10s"
+  },
+  {
+    "key": 43,
+    "date": "2024-11-22",
+    "newRegistrations": 104,
+    "activeUsers": 697,
+    "userRetention": 60,
+    "averageSession": "12m 56s"
+  },
+  {
+    "key": 44,
+    "date": "2024-11-15",
+    "newRegistrations": 152,
+    "activeUsers": 779,
+    "userRetention": 58,
+    "averageSession": "12m 34s"
+  },
+  {
+    "key": 45,
+    "date": "2024-11-09",
+    "newRegistrations": 91,
+    "activeUsers": 869,
+    "userRetention": 59,
+    "averageSession": "10m 15s"
+  },
+  {
+    "key": 46,
+    "date": "2024-11-02",
+    "newRegistrations": 135,
+    "activeUsers": 810,
+    "userRetention": 69,
+    "averageSession": "11m 33s"
+  },
+  {
+    "key": 47,
+    "date": "2024-10-26",
+    "newRegistrations": 139,
+    "activeUsers": 818,
+    "userRetention": 71,
+    "averageSession": "10m 42s"
+  },
+  {
+    "key": 48,
+    "date": "2024-10-21",
+    "newRegistrations": 121,
+    "activeUsers": 859,
+    "userRetention": 61,
+    "averageSession": "11m 5s"
+  },
+  {
+    "key": 49,
+    "date": "2024-10-14",
+    "newRegistrations": 106,
+    "activeUsers": 850,
+    "userRetention": 68,
+    "averageSession": "12m 0s"
+  },
+  {
+    "key": 50,
+    "date": "2024-10-08",
+    "newRegistrations": 90,
+    "activeUsers": 690,
+    "userRetention": 59,
+    "averageSession": "12m 25s"
+  },
+  {
+    "key": 51,
+    "date": "2024-09-30",
+    "newRegistrations": 127,
+    "activeUsers": 754,
+    "userRetention": 72,
+    "averageSession": "10m 53s"
+  },
+  {
+    "key": 52,
+    "date": "2024-09-25",
+    "newRegistrations": 143,
+    "activeUsers": 698,
+    "userRetention": 62,
+    "averageSession": "11m 16s"
+  },
+  {
+    "key": 53,
+    "date": "2024-09-16",
+    "newRegistrations": 146,
+    "activeUsers": 800,
+    "userRetention": 67,
+    "averageSession": "11m 33s"
+  },
+  {
+    "key": 54,
+    "date": "2024-09-10",
+    "newRegistrations": 122,
+    "activeUsers": 750,
+    "userRetention": 64,
+    "averageSession": "10m 50s"
+  },
+  {
+    "key": 55,
+    "date": "2024-08-31",
+    "newRegistrations": 121,
+    "activeUsers": 776,
+    "userRetention": 69,
+    "averageSession": "12m 27s"
+  },
+  {
+    "key": 56,
+    "date": "2024-08-25",
+    "newRegistrations": 103,
+    "activeUsers": 832,
+    "userRetention": 59,
+    "averageSession": "12m 8s"
+  },
+  {
+    "key": 57,
+    "date": "2024-08-19",
+    "newRegistrations": 138,
+    "activeUsers": 769,
+    "userRetention": 65,
+    "averageSession": "10m 46s"
+  },
+  {
+    "key": 58,
+    "date": "2024-08-10",
+    "newRegistrations": 141,
+    "activeUsers": 754,
+    "userRetention": 64,
+    "averageSession": "11m 38s"
+  },
+  {
+    "key": 59,
+    "date": "2024-08-03",
+    "newRegistrations": 112,
+    "activeUsers": 855,
+    "userRetention": 62,
+    "averageSession": "11m 43s"
+  },
+  {
+    "key": 60,
+    "date": "2024-07-25",
+    "newRegistrations": 132,
+    "activeUsers": 917,
+    "userRetention": 59,
+    "averageSession": "11m 27s"
+  },
+  {
+    "key": 61,
+    "date": "2024-07-20",
+    "newRegistrations": 115,
+    "activeUsers": 917,
+    "userRetention": 65,
+    "averageSession": "10m 55s"
+  },
+  {
+    "key": 62,
+    "date": "2024-07-15",
+    "newRegistrations": 119,
+    "activeUsers": 683,
+    "userRetention": 60,
+    "averageSession": "11m 43s"
+  },
+  {
+    "key": 63,
+    "date": "2024-07-07",
+    "newRegistrations": 115,
+    "activeUsers": 777,
+    "userRetention": 66,
+    "averageSession": "12m 4s"
+  },
+  {
+    "key": 64,
+    "date": "2024-06-27",
+    "newRegistrations": 139,
+    "activeUsers": 789,
+    "userRetention": 61,
+    "averageSession": "12m 31s"
+  },
+  {
+    "key": 65,
+    "date": "2024-06-20",
+    "newRegistrations": 135,
+    "activeUsers": 848,
+    "userRetention": 72,
+    "averageSession": "11m 23s"
+  },
+  {
+    "key": 66,
+    "date": "2024-06-13",
+    "newRegistrations": 129,
+    "activeUsers": 847,
+    "userRetention": 69,
+    "averageSession": "11m 45s"
+  },
+  {
+    "key": 67,
+    "date": "2024-06-04",
+    "newRegistrations": 152,
+    "activeUsers": 703,
+    "userRetention": 63,
+    "averageSession": "12m 43s"
+  },
+  {
+    "key": 68,
+    "date": "2024-05-27",
+    "newRegistrations": 121,
+    "activeUsers": 710,
+    "userRetention": 59,
+    "averageSession": "11m 11s"
+  },
+  {
+    "key": 69,
+    "date": "2024-05-18",
+    "newRegistrations": 146,
+    "activeUsers": 847,
+    "userRetention": 61,
+    "averageSession": "12m 1s"
+  },
+  {
+    "key": 70,
+    "date": "2024-05-13",
+    "newRegistrations": 99,
+    "activeUsers": 736,
+    "userRetention": 59,
+    "averageSession": "11m 58s"
+  },
+  {
+    "key": 71,
+    "date": "2024-05-04",
+    "newRegistrations": 124,
+    "activeUsers": 717,
+    "userRetention": 63,
+    "averageSession": "10m 17s"
+  },
+  {
+    "key": 72,
+    "date": "2024-04-28",
+    "newRegistrations": 101,
+    "activeUsers": 744,
+    "userRetention": 60,
+    "averageSession": "12m 25s"
+  },
+  {
+    "key": 73,
+    "date": "2024-04-23",
+    "newRegistrations": 160,
+    "activeUsers": 904,
+    "userRetention": 71,
+    "averageSession": "12m 41s"
+  },
+  {
+    "key": 74,
+    "date": "2024-04-15",
+    "newRegistrations": 113,
+    "activeUsers": 742,
+    "userRetention": 68,
+    "averageSession": "12m 17s"
+  },
+  {
+    "key": 75,
+    "date": "2024-04-10",
+    "newRegistrations": 102,
+    "activeUsers": 808,
+    "userRetention": 63,
+    "averageSession": "10m 16s"
+  },
+  {
+    "key": 76,
+    "date": "2024-04-05",
+    "newRegistrations": 149,
+    "activeUsers": 752,
+    "userRetention": 63,
+    "averageSession": "11m 35s"
+  },
+  {
+    "key": 77,
+    "date": "2024-03-28",
+    "newRegistrations": 119,
+    "activeUsers": 794,
+    "userRetention": 72,
+    "averageSession": "11m 17s"
+  },
+  {
+    "key": 78,
+    "date": "2024-03-21",
+    "newRegistrations": 156,
+    "activeUsers": 862,
+    "userRetention": 69,
+    "averageSession": "12m 17s"
+  },
+  {
+    "key": 79,
+    "date": "2024-03-15",
+    "newRegistrations": 113,
+    "activeUsers": 695,
+    "userRetention": 69,
+    "averageSession": "11m 11s"
+  },
+  {
+    "key": 80,
+    "date": "2024-03-09",
+    "newRegistrations": 108,
+    "activeUsers": 880,
+    "userRetention": 63,
+    "averageSession": "10m 3s"
+  },
+  {
+    "key": 81,
+    "date": "2024-03-04",
+    "newRegistrations": 118,
+    "activeUsers": 799,
+    "userRetention": 59,
+    "averageSession": "11m 9s"
+  },
+  {
+    "key": 82,
+    "date": "2024-02-28",
+    "newRegistrations": 137,
+    "activeUsers": 725,
+    "userRetention": 65,
+    "averageSession": "12m 57s"
+  },
+  {
+    "key": 83,
+    "date": "2024-02-18",
+    "newRegistrations": 99,
+    "activeUsers": 842,
+    "userRetention": 59,
+    "averageSession": "10m 5s"
+  },
+  {
+    "key": 84,
+    "date": "2024-02-13",
+    "newRegistrations": 131,
+    "activeUsers": 700,
+    "userRetention": 58,
+    "averageSession": "10m 21s"
+  },
+  {
+    "key": 85,
+    "date": "2024-02-06",
+    "newRegistrations": 95,
+    "activeUsers": 784,
+    "userRetention": 60,
+    "averageSession": "12m 8s"
+  },
+  {
+    "key": 86,
+    "date": "2024-02-01",
+    "newRegistrations": 132,
+    "activeUsers": 715,
+    "userRetention": 72,
+    "averageSession": "12m 35s"
+  },
+  {
+    "key": 87,
+    "date": "2024-01-24",
+    "newRegistrations": 130,
+    "activeUsers": 891,
+    "userRetention": 62,
+    "averageSession": "11m 2s"
+  },
+  {
+    "key": 88,
+    "date": "2024-01-19",
+    "newRegistrations": 94,
+    "activeUsers": 700,
+    "userRetention": 66,
+    "averageSession": "11m 14s"
+  },
+  {
+    "key": 89,
+    "date": "2024-01-10",
+    "newRegistrations": 115,
+    "activeUsers": 821,
+    "userRetention": 72,
+    "averageSession": "12m 51s"
+  },
+  {
+    "key": 90,
+    "date": "2024-01-02",
+    "newRegistrations": 105,
+    "activeUsers": 869,
+    "userRetention": 67,
+    "averageSession": "10m 36s"
+  },
+  {
+    "key": 91,
+    "date": "2023-12-25",
+    "newRegistrations": 117,
+    "activeUsers": 918,
+    "userRetention": 61,
+    "averageSession": "11m 2s"
+  },
+  {
+    "key": 92,
+    "date": "2023-12-15",
+    "newRegistrations": 98,
+    "activeUsers": 865,
+    "userRetention": 59,
+    "averageSession": "12m 26s"
+  },
+  {
+    "key": 93,
+    "date": "2023-12-07",
+    "newRegistrations": 90,
+    "activeUsers": 765,
+    "userRetention": 60,
+    "averageSession": "11m 12s"
+  },
+  {
+    "key": 94,
+    "date": "2023-12-01",
+    "newRegistrations": 140,
+    "activeUsers": 908,
+    "userRetention": 70,
+    "averageSession": "11m 53s"
+  },
+  {
+    "key": 94,
+    "date": "2023-07-01",
+    "newRegistrations": 140,
+    "activeUsers": 908,
+    "userRetention": 70,
+    "averageSession": "11m 53s"
+  }
+]
