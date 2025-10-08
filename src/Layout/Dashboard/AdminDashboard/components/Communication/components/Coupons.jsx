@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Edit, Trash2, Plus, X } from "lucide-react";
+import { Edit, Trash2, Plus, X, MoreVertical } from "lucide-react";
 import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const Announcements = () => {
@@ -9,6 +9,7 @@ const Announcements = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [editingAnnouncement, setEditingAnnouncement] = useState(null);
+  const [openMenuId, setOpenMenuId] = useState(null);
 
   // ✅ Fetch announcements
   const fetchAnnouncements = async () => {
@@ -61,6 +62,7 @@ const Announcements = () => {
   const handleEdit = (announcement) => {
     setEditingAnnouncement(announcement);
     setShowModal(true);
+    setOpenMenuId(null);
   };
 
   // ✅ Delete
@@ -101,15 +103,19 @@ const Announcements = () => {
       )}
 
       {/* List */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
         <table className="min-w-full border-collapse">
-          <thead className="bg-indigo-600 text-white">
+          <thead className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
             <tr>
               <th className="px-4 py-3 text-left text-sm font-semibold">Title</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Description</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold">
+                Description
+              </th>
               <th className="px-4 py-3 text-left text-sm font-semibold">Date</th>
               <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
-              <th className="px-4 py-3 text-center text-sm font-semibold">Actions</th>
+              <th className="px-4 py-3 text-center text-sm font-semibold">
+                Actions
+              </th>
             </tr>
           </thead>
 
@@ -122,29 +128,46 @@ const Announcements = () => {
                     i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
                   } hover:bg-indigo-100/70 transition-colors`}
                 >
-                  <td className="px-4 py-3 font-medium text-indigo-700">{a.title}</td>
-                  <td className="px-4 py-3 text-gray-600">{a.desc}</td>
-                  <td className="px-4 py-3 text-gray-500">{a.date}</td>
+                  <td className="px-4 py-3 font-medium ">
+                    {a.title}
+                  </td>
+                  <td className="px-4 py-3 ">{a.desc}</td>
+                  <td className="px-4 py-3 ">{a.date}</td>
                   <td
                     className={`px-4 py-3 font-semibold ${
-                      a.status === "Active" ? "text-green-600" : "text-yellow-600"
+                      a.status === "Active"
+                        ? "text-green-600"
+                        : "text-yellow-600"
                     }`}
                   >
                     {a.status}
                   </td>
-                  <td className="px-4 py-3 text-center flex justify-center gap-3">
+                  <td className="px-4 py-3 text-center relative">
                     <button
-                      onClick={() => handleEdit(a)}
-                      className="p-2 rounded-md hover:bg-blue-50 text-blue-600"
+                      onClick={() =>
+                        setOpenMenuId(openMenuId === a._id ? null : a._id)
+                      }
+                      className="p-2 rounded-md hover:bg-indigo-50 text-indigo-700"
                     >
-                      <Edit className="w-5 h-5" />
+                      <MoreVertical className="w-5 h-5" />
                     </button>
-                    <button
-                      onClick={() => handleDelete(a._id)}
-                      className="p-2 rounded-md hover:bg-red-50 text-red-600"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+
+                    {openMenuId === a._id && (
+                      <div className="absolute right-10 top-8 bg-white border shadow-lg rounded-lg z-10 w-36">
+                        <button
+                          onClick={() => handleEdit(a)}
+                          className="flex items-center gap-2 w-full px-3 py-2 hover:bg-indigo-50 text-left text-sm text-blue-600"
+                        >
+                          <Edit className="w-4 h-4" /> Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(a._id)}
+                          className="flex items-center gap-2 w-full px-3 py-2 hover:bg-red-50 text-left text-sm text-red-600"
+                        >
+                          <Trash2 className="w-4 h-4" /> Delete
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))
@@ -174,7 +197,9 @@ const Announcements = () => {
             </button>
 
             <h3 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
-              {editingAnnouncement ? "Edit Announcement" : "Add New Announcement"}
+              {editingAnnouncement
+                ? "Edit Announcement"
+                : "Add New Announcement"}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
