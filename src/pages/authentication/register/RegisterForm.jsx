@@ -61,7 +61,7 @@ const RegisterForm = ({ onSubmit }) => {
         {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
       </div>
     
-      <FilledButton type="submit" className="w-full py-3 b rounded font-semibold text-white">
+      <FilledButton type="submit" className="w-full py-3 font-semibold text-white">
         Register
       </FilledButton>
 
