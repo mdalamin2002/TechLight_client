@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Edit, Trash2, Plus, X, MoreVertical } from "lucide-react";
+import { Edit, Trash2, Plus, X, MoreVertical, Settings } from "lucide-react";
 import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const Announcements = () => {
@@ -147,24 +147,24 @@ const Announcements = () => {
                       onClick={() =>
                         setOpenMenuId(openMenuId === a._id ? null : a._id)
                       }
-                      className="p-2 rounded-md hover:bg-indigo-50 text-indigo-700"
+                      className="p-2 rounded-md hover:bg-indigo-50 "
                     >
-                      <MoreVertical className="w-5 h-5" />
+                      <Settings className="w-5 h-5" />
                     </button>
 
                     {openMenuId === a._id && (
                       <div className="absolute right-10 top-8 bg-white border shadow-lg rounded-lg z-10 w-36">
                         <button
                           onClick={() => handleEdit(a)}
-                          className="flex items-center gap-2 w-full px-3 py-2 hover:bg-indigo-50 text-left text-sm text-blue-600"
+                          className="flex items-center gap-2 w-full px-3 py-2 hover:bg-indigo-50 text-left text-sm "
                         >
-                          <Edit className="w-4 h-4" /> Edit
+                          Edit
                         </button>
                         <button
                           onClick={() => handleDelete(a._id)}
-                          className="flex items-center gap-2 w-full px-3 py-2 hover:bg-red-50 text-left text-sm text-red-600"
+                          className="flex items-center gap-2 w-full px-3 py-2 hover:bg-indigo-50 text-left text-sm "
                         >
-                          <Trash2 className="w-4 h-4" /> Delete
+                           Delete
                         </button>
                       </div>
                     )}
