@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 
 export const OrdersReport = ({ dateRange, onDataUpdate }) => {
@@ -69,30 +68,37 @@ export const OrdersReport = ({ dateRange, onDataUpdate }) => {
     }
   }, [filteredOrders]);
 
-    return (
+  return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md">
       <h3 className="text-xl font-semibold text-gray-800 mb-6">
         Order Report ({dateRange})
       </h3>
 
       {/* Orders Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
         <table className="w-full text-sm text-left border-collapse">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-indigo-600 border-b border-gray-200">
             <tr>
-              <th className="p-4 text-gray-600 font-medium">Order ID</th>
-              <th className="p-4 text-gray-600 font-medium">Customer</th>
-              <th className="p-4 text-gray-600 font-medium">Amount</th>
-              <th className="p-4 text-gray-600 font-medium">Status</th>
-              <th className="p-4 text-gray-600 font-medium">Date</th>
+              <th className="p-4 text-white font-medium">Order ID</th>
+              <th className="p-4 text-white font-medium">Customer</th>
+              <th className="p-4 text-white font-medium">Amount</th>
+              <th className="p-4 text-white font-medium">Status</th>
+              <th className="p-4 text-white font-medium">Date</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {filteredOrders.length > 0 ? (
-              filteredOrders.map((order) => (
+              filteredOrders.map((order, index) => (
                 <tr
                   key={order.id}
-                  className="hover:bg-gray-50 transition-colors cursor-pointer"
+                  className={`
+          cursor-pointer transition-colors
+          ${
+            index % 2 === 0
+              ? "bg-white hover:bg-indigo-100/70 transition-colors"
+              : "bg-indigo-50/40 hover:bg-indigo-100/70 transition-colors"
+          }
+        `}
                 >
                   <td className="p-4 text-gray-800 font-medium">{order.id}</td>
                   <td className="p-4 text-gray-700">{order.customer}</td>

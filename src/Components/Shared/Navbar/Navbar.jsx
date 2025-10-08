@@ -28,10 +28,12 @@ import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import useAuth from "@/hooks/useAuth";
 import GlobalLoading from "../Loading/GlobalLoading";
+import { toast } from "react-toastify";
+import { auth } from "@/firebase/firebase.init";
 
 export default function Navbar() {
   const location = useLocation();
-  const { user,loading } = useAuth();
+  const { user,loading,logOutUser } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -77,15 +79,24 @@ export default function Navbar() {
     },
   ];
 
-  
+
   const handleLogout = () => {
+    logOutUser(auth)
+      .then(() => {
+        toast.success("Logged out successfully!");
+      })
+      .catch((error) => {
+        console.error("Logout error:", error);
+        toast.error("Failed to logout. Please try again.");
+      });
     setProfileOpen(false);
+
   };
-  
+
   const toggleCategory = (index) => {
     setOpenCategoryIndex(openCategoryIndex === index ? null : index);
   };
-  
+
   // Smart scroll hide/show
   useEffect(() => {
     const handleScroll = () => {
@@ -99,7 +110,7 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
-  
+
   // Close profile dropdown on outside click (mobile)
   useEffect(() => {
     const handler = (e) => {
@@ -209,7 +220,7 @@ export default function Navbar() {
               </div>
 
               {/* Profile / Account */}
-             
+
                 <>
                   {/* Desktop: hover dropdown */}
                   <div className="block relative" ref={profileRef}>
@@ -276,7 +287,7 @@ export default function Navbar() {
                   </Link>
                 </Button>
             }
-              
+
             </div>
           </div>
         </div>
