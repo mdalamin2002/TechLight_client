@@ -28,6 +28,7 @@ const useWishlist = () => {
   // Remove from wishlist
   const { mutate: removeFromWishlist, isPending: removing } = useMutation({
     mutationFn: async (id) => {
+      console.log("Deleting wishlist item:", id);
       const res = await axiosSecure.delete(`/api/wishlist/${id}`);
       return res.data;
     },

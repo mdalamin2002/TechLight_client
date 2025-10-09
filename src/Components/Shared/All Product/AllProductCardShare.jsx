@@ -43,47 +43,51 @@ const AllProductCardShare = ({
 
   //  Wishlist button handler
   const handleWishlist = () => {
-    const wishlistData = {
-      productId: id,
-      name,
-      image,
-      brand,
-      subcategory,
-      price,
-      regularPrice,
-      status,
-      userEmail: userEmail || "guest@example.com",
-      createdAt: new Date().toISOString(),
-    };
-
-    if (!isWishlisted) {
-      addToWishlist(wishlistData, {
-        onSuccess: () => {
-          Swal.fire({
-            icon: "success",
-            title: "Added to Wishlist!",
-            text: `${name} has been added.`,
-            timer: 1500,
-            showConfirmButton: false,
-          });
-          setIsWishlisted(true);
-        },
-      });
-    } else {
-      removeFromWishlist(id, {
-        onSuccess: () => {
-          Swal.fire({
-            icon: "info",
-            title: "Removed from Wishlist",
-            text: `${name} removed.`,
-            timer: 1200,
-            showConfirmButton: false,
-          });
-          setIsWishlisted(false);
-        },
-      });
-    }
+  const wishlistData = {
+    productId: id,
+    name,
+    image,
+    brand,
+    subcategory,
+    price,
+    regularPrice,
+    status,
+    userEmail: userEmail || "guest@example.com",
+    createdAt: new Date().toISOString(),
   };
+
+  const wishlistItem = wishlist?.find(item => item.productId === id);
+  const wishlistId = wishlistItem?._id;
+
+  if (!isWishlisted) {
+    addToWishlist(wishlistData, {
+      onSuccess: () => {
+        Swal.fire({
+          icon: "success",
+          title: "Added to Wishlist!",
+          text: `${name} has been added.`,
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        setIsWishlisted(true);
+      },
+    });
+  } else if (wishlistId) {
+    removeFromWishlist(wishlistId, {
+      onSuccess: () => {
+        Swal.fire({
+          icon: "info",
+          title: "Removed from Wishlist",
+          text: `${name} removed.`,
+          timer: 1200,
+          showConfirmButton: false,
+        });
+        setIsWishlisted(false);
+      },
+    });
+  }
+};
+
 
   return (
     <div
