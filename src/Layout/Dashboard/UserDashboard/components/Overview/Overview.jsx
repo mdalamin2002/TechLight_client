@@ -2,7 +2,6 @@ import CouponsSection from "./components/CouponsSection";
 import RecentOrdersSection from "./components/RecentOrdersSection";
 import StatsSection from "./components/StatsSection";
 
-
 const Overview = () => {
   const stats = {
     totalOrders: 12,
@@ -18,13 +17,24 @@ const Overview = () => {
   ];
 
   return (
-    <div className="space-y-4">
-      <StatsSection stats={stats} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-        <RecentOrdersSection orders={recentOrders} />
-        <CouponsSection coupons={stats.coupons} />
+    <section className="">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+        {/* Full width Stats */}
+        <div className="col-span-1 md:col-span-6">
+          <StatsSection stats={stats} />
+        </div>
+
+        {/* Orders take 4 columns */}
+        <div className="col-span-1 md:col-span-4">
+          <RecentOrdersSection orders={recentOrders} />
+        </div>
+
+        {/* Coupons take 2 columns */}
+        <div className="col-span-1 md:col-span-2">
+          <CouponsSection coupons={stats.coupons} />
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

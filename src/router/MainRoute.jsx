@@ -32,6 +32,7 @@ import PaymentMethods from "../Layout/Dashboard/UserDashboard/components/Payment
 import Overview from "../Layout/Dashboard/UserDashboard/components/Overview/Overview";
 import AllUsers from "../Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
 import Orders from "../Layout/Dashboard/AdminDashboard/components/Orders/Orders";
+import Support from "@/Layout/Dashboard/UserDashboard/components/Support/Support";
 
 const MainRoute = createBrowserRouter([
   {
@@ -156,6 +157,10 @@ const MainRoute = createBrowserRouter([
     {
       path: "Usersettings",
       element: <UserSettings></UserSettings>
+    },
+    {
+      path: "support",
+      element: <Support></Support>
     },
     ]
   }

@@ -1,17 +1,30 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-const OrderCard = ({ order }) => (
-  <Card className="p-4 flex flex-row justify-between items-center">
-    <div>
-      <p className="font-medium">{order.id}</p>
-      <p className="text-sm text-muted-foreground">{order.date}</p>
+const OrderCard = ({ order }) => {
+  return (
+    <div className="border rounded-lg p-4 bg-muted hover:shadow transition">
+      <div className="flex justify-between items-center mb-2">
+        <span className="font-semibold">{order.id}</span>
+        <span className="text-sm text-muted-foreground">{order.date}</span>
+      </div>
+      <div className="flex justify-between items-center">
+        <span className="text-lg font-bold">{order.total}</span>
+        <span
+          className={`text-sm px-2 py-1 rounded-full ${
+            order.status === "Delivered"
+              ? "bg-green-100 text-green-700"
+              : "bg-yellow-100 text-yellow-700"
+          }`}
+        >
+          {order.status}
+        </span>
+      </div>
     </div>
-    <div className="text-right">
-      <p className="font-semibold">{order.total}</p>
-      <Badge variant="outline">{order.status}</Badge>
-    </div>
-  </Card>
-);
+  );
+};
 
 export default OrderCard;
+
+
+

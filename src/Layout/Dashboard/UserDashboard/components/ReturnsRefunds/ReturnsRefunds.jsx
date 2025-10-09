@@ -2,7 +2,7 @@ import React from "react";
 
 const ReturnsRefunds = () => {
   return (
-    <section className="section container">
+    <section className="">
       <div className="bg-card shadow-md rounded-lg p-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-4">Returns & Refunds</h1>
         <p className="text-muted-foreground mb-6">
