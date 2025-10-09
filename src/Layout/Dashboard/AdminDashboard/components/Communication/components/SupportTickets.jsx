@@ -19,7 +19,7 @@ const SupportTickets = () => {
   // ✅ Fetch Tickets
   const fetchTickets = async () => {
     try {
-      const res = await axiosSecure.get("/api/support");
+      const res = await axiosSecure.get("/support");
       setTickets(res.data);
     } catch (error) {
       console.error("Failed to fetch tickets:", error);

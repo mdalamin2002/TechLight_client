@@ -4,6 +4,7 @@ import Announcements from "./components/Announcements";
 import SupportTickets from "./components/SupportTickets";
 import Notifications from "./components/Notifications";
 import Coupons from "./components/Coupons";
+import AddBannerOffer from "./components/AddBannerOffer";
 
 const CommunicationCenter = () => {
   const [activeTab, setActiveTab] = useState("Announcements");
@@ -50,6 +51,7 @@ const CommunicationCenter = () => {
         {activeTab === "Support Tickets" && <SupportTickets />}
         {activeTab === "Notifications" && <Notifications />}
         {activeTab === "Coupons" && <Coupons />}
+        {activeTab === "Banner offer" && <AddBannerOffer />}
       </div>
     </div>
   );
