@@ -26,6 +26,12 @@ import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/
 import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+import { ModeratorOverview } from "@/Layout/Dashboard/ModeratorDashboard/components/ModeratorOverview/ModeratorOverview";
+import { OrdersProducts } from "@/Layout/Dashboard/ModeratorDashboard/components/OrdersProducts/OrdersProducts";
+import { UsersReviews } from "@/Layout/Dashboard/ModeratorDashboard/components/UsersReviews/UsersReviews";
+import { SupportCommunication } from "@/Layout/Dashboard/ModeratorDashboard/components/SupportCommunication/SupportCommunication";
+import ReportsAnalytics from "@/Layout/Dashboard/ModeratorDashboard/components/ReportsAnalytics/ReportsAnalytics";
+import DeveloperNotes from "@/Layout/Dashboard/ModeratorDashboard/components/DeveloperNotes/DeveloperNotes";
 
 const MainRoute = createBrowserRouter([
   {
@@ -130,6 +136,30 @@ const MainRoute = createBrowserRouter([
       {
         path: "advanced",
         element: <Advanced></Advanced>,
+      },
+      {
+        path: "moderator-overview",
+        element: <ModeratorOverview></ModeratorOverview>
+      },
+      {
+        path: "orders-products",
+        element: <OrdersProducts></OrdersProducts>
+      },
+      {
+        path: "users-reviews",
+        element: <UsersReviews></UsersReviews>
+      },
+      {
+        path: "support-communication",
+        element: <SupportCommunication></SupportCommunication>
+      },
+      {
+        path: "reports-analytics",
+        element: <ReportsAnalytics></ReportsAnalytics>
+      },
+      {
+        path: "developer-notes",
+        element: <DeveloperNotes></DeveloperNotes>
       },
     ],
   },
