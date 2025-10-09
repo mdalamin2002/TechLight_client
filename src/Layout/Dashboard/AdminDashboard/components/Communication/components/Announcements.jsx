@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Edit, Trash2, Plus, X } from "lucide-react";
+import { Edit, Trash2, Plus, X, Settings } from "lucide-react";
 import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const Announcements = () => {
@@ -9,6 +9,7 @@ const Announcements = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [editingAnnouncement, setEditingAnnouncement] = useState(null);
+  const [openMenuId, setOpenMenuId] = useState(null);
 
   // Fetch announcements
   const fetchAnnouncements = async () => {
@@ -61,6 +62,7 @@ const Announcements = () => {
   const handleEdit = (announcement) => {
     setEditingAnnouncement(announcement);
     setShowModal(true);
+    setOpenMenuId(null);
   };
 
   // Delete
@@ -76,10 +78,10 @@ const Announcements = () => {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-2xl border border-gray-200">
+    <div className="p-6 bg-white shadow-lg rounded-2xl border border-gray-200">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Global Announcements</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Announcements</h2>
         <button
           onClick={() => {
             setEditingAnnouncement(null);
@@ -87,7 +89,7 @@ const Announcements = () => {
           }}
           className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full shadow-md transition"
         >
-          <Plus className="w-5 h-5" /> New Announcement
+          <Plus className="w-5 h-5" /> New
         </button>
       </div>
 
@@ -98,16 +100,16 @@ const Announcements = () => {
         </div>
       )}
 
-      {/* Announcements List */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200">
-        <table className="min-w-full border-collapse">
-          <thead className="bg-indigo-600 text-white">
+      {/* Table */}
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <table className="min-w-full text-sm border-collapse">
+          <thead className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-t-xl">
             <tr>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Title</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Description</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Date</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
-              <th className="px-4 py-3 text-center text-sm font-semibold">Actions</th>
+              <th className="px-5 py-3 text-left font-semibold">Title</th>
+              <th className="px-5 py-3 text-left font-semibold">Description</th>
+              <th className="px-5 py-3 text-left font-semibold">Date</th>
+              <th className="px-5 py-3 text-left font-semibold">Status</th>
+              <th className="px-5 py-3 text-center font-semibold">Actions</th>
             </tr>
           </thead>
 
@@ -116,37 +118,56 @@ const Announcements = () => {
               announcements.map((a, i) => (
                 <tr
                   key={i}
-                  className={`${i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"} hover:bg-indigo-100/70 transition-colors`}
+                  className={`transition-all duration-200 ${
+                    i % 2 === 0 ? "bg-white" : "bg-indigo-50/30"
+                  } hover:bg-indigo-100/50`}
                 >
-                  <td className="px-4 py-3 font-medium text-indigo-700">{a.title}</td>
-                  <td className="px-4 py-3 text-gray-600">{a.desc}</td>
-                  <td className="px-4 py-3 text-gray-500">{a.date}</td>
+                  <td className="px-5 py-3 font-medium text-gray-800">{a.title}</td>
+                  <td className="px-5 py-3 text-gray-600">{a.desc}</td>
+                  <td className="px-5 py-3 text-gray-500">{a.date}</td>
                   <td
-                    className={`px-4 py-3 font-semibold ${
+                    className={`px-5 py-3 font-semibold ${
                       a.status === "Active" ? "text-green-600" : "text-yellow-600"
                     }`}
                   >
                     {a.status}
                   </td>
-                  <td className="px-4 py-3 text-center flex justify-center gap-3">
+                  <td className="relative px-5 py-3 text-center">
                     <button
-                      onClick={() => handleEdit(a)}
-                      className="p-2 rounded-md hover:bg-blue-50 text-blue-600"
+                      onClick={() =>
+                        setOpenMenuId(openMenuId === a._id ? null : a._id)
+                      }
+                      className="p-2 rounded-md hover:bg-indigo-50 transition"
                     >
-                      <Edit className="w-5 h-5" />
+                      <Settings className="w-5 h-5 text-gray-700" />
                     </button>
-                    <button
-                      onClick={() => handleDelete(a._id)}
-                      className="p-2 rounded-md hover:bg-red-50 text-red-600"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+
+                    {/* Dropdown Menu */}
+                    {openMenuId === a._id && (
+                      <div className="absolute right-8 top-10 bg-white border border-gray-200 rounded-lg shadow-lg w-36 z-10">
+                        <button
+                          onClick={() => handleEdit(a)}
+                          className="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-indigo-50"
+                        >
+                           Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(a._id)}
+                          className="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-indigo-50"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-center py-8 text-gray-500 bg-gray-50 font-medium">
+                <td
+                  colSpan="5"
+                  className="text-center py-8 text-gray-500 bg-gray-50 font-medium rounded-b-xl"
+                >
                   No Announcements Found
                 </td>
               </tr>
