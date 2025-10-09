@@ -1,8 +1,10 @@
 import FilledButton from "@/Components/Shared/Buttots/FilledButton";
-import React from "react";
+import { Eye, EyeOff } from "lucide-react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const RegisterForm = ({ onSubmit }) => {
+  const [showPass, setShowPass] = useState(false);
   const {
     register,
     handleSubmit,
@@ -40,7 +42,7 @@ const RegisterForm = ({ onSubmit }) => {
 
       <div className="mb-6">
         <input
-          type="password"
+          type={showPass?"text":"password"}
           placeholder="Password"
           {...register("password", { required: "Password is required" })}
           className={`w-full px-4 py-3 rounded border ${errors.password ? "border-red-500" : "border-gray-300"}`}
@@ -48,9 +50,20 @@ const RegisterForm = ({ onSubmit }) => {
         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
       </div>
 
-      <div className="mb-6">
+      <div className="mb-6 relative">
+        {showPass ? (
+          <Eye
+            onClick={() => setShowPass(false)}
+            className="absolute text-gray-500 right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+          />
+        ) : (
+          <EyeOff
+            onClick={() => setShowPass(true)}
+            className="absolute text-gray-500 right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+          />
+        )}
         <input
-          type="password"
+          type={showPass?"text":"password"}
           placeholder="Confirm Password"
           {...register("confirmPassword", {
             required: "Please confirm your password",

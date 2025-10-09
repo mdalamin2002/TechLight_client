@@ -72,7 +72,7 @@ const Login = () => {
         <p className="text-gray-600">Please enter your credentials to login</p>
       </div>
 
-      <LoginForm onSubmit={onSubmit} />
+      <LoginForm onSubmit={onSubmit} loading={ loading} />
 
       <div className="my-6 flex items-center">
         <hr className="flex-grow border-gray-300" />
