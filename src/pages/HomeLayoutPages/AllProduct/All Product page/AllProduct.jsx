@@ -323,6 +323,7 @@ const AllProduct = () => {
                   }
                 >
                   {currentProducts.map((product) => (
+
                     <AllProductCardShare
                       key={product._id}
                       id={product._id}
@@ -333,6 +334,7 @@ const AllProduct = () => {
                         alert(`Added ${product.name} to cart`)
                       }
                     />
+
                   ))}
                 </div>
 

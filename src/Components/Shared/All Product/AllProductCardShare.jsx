@@ -6,7 +6,7 @@ import useWishlist from "@/hooks/useWishlist";
 import Swal from "sweetalert2";
 
 const AllProductCardShare = ({
-  _id,
+  id,
   name,
   image,
   brand,
@@ -19,11 +19,12 @@ const AllProductCardShare = ({
   buttonText = "Add to Cart",
   buttonAction = () => {},
   variant = "grid",
-  userEmail, // optional: user email if available from AuthContext
+  userEmail,
 }) => {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { wishlist, addToWishlist, removeFromWishlist, adding, removing, isLoading } =
+    useWishlist();
 
-  const { addToWishlist, removeFromWishlist, adding, removing } = useWishlist();
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const priceNum = toNumber(price);
   const regularPriceNum = toNumber(regularPrice);
@@ -32,10 +33,18 @@ const AllProductCardShare = ({
       ? Math.round(((regularPriceNum - priceNum) / regularPriceNum) * 100)
       : 0;
 
-  // Wishlist button handler
+  // Check if already in wishlist on mount or wishlist update
+  useEffect(() => {
+    if (!isLoading && wishlist?.length > 0) {
+      const exists = wishlist.some((item) => item.productId === id);
+      setIsWishlisted(exists);
+    }
+  }, [wishlist, id, isLoading]);
+
+  //  Wishlist button handler
   const handleWishlist = () => {
     const wishlistData = {
-      productId: _id,
+      productId: id,
       name,
       image,
       brand,
@@ -59,17 +68,9 @@ const AllProductCardShare = ({
           });
           setIsWishlisted(true);
         },
-        onError: (err) => {
-          console.error(err);
-          Swal.fire({
-            icon: "error",
-            title: "Something went wrong!",
-            text: "Couldn't add to wishlist.",
-          });
-        },
       });
     } else {
-      removeFromWishlist(_id, {
+      removeFromWishlist(id, {
         onSuccess: () => {
           Swal.fire({
             icon: "info",
@@ -79,14 +80,6 @@ const AllProductCardShare = ({
             showConfirmButton: false,
           });
           setIsWishlisted(false);
-        },
-        onError: (err) => {
-          console.error(err);
-          Swal.fire({
-            icon: "error",
-            title: "Something went wrong!",
-            text: "Couldn't remove from wishlist.",
-          });
         },
       });
     }
@@ -129,14 +122,14 @@ const AllProductCardShare = ({
 
       {/* View Button */}
       <Link
-        to={_id}
+        to={id}
         className="absolute cursor-pointer top-28 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 delay-75 hover:bg-blue-100"
       >
         <Eye className="w-5 h-5 text-gray-700 hover:text-blue-600 transition-colors" />
       </Link>
 
       {/* Product Image */}
-      <Link to={_id}>
+      <Link to={id}>
         <div
           className={
             variant === "list"
@@ -153,11 +146,10 @@ const AllProductCardShare = ({
                 : "w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
             }
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
       </Link>
 
-      {/* Product Info */}
+      {/* Info */}
       <div className="p-5 space-y-3 flex-1">
         <div className="flex items-center justify-between gap-2 text-xs">
           <span className="text-muted-foreground">{subcategory}</span>
@@ -166,7 +158,7 @@ const AllProductCardShare = ({
           </span>
         </div>
 
-        <Link to={_id}>
+        <Link to={id}>
           <h4 className="font-semibold cursor-pointer text-foreground text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary/90 transition-colors">
             {name}
           </h4>
@@ -187,15 +179,6 @@ const AllProductCardShare = ({
           <span className="text-xs text-muted-foreground font-medium">{rating}</span>
         </div>
 
-        <div className="space-y-1.5 pt-2 border-t border-border/50">
-          {keyFeatures.slice(0, 2).map((feature, index) => (
-            <div key={index} className="flex items-start gap-2">
-              <div className="w-1 h-1 rounded-full bg-primary mt-2 flex-shrink-0" />
-              <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">{feature}</p>
-            </div>
-          ))}
-        </div>
-
         <div className="pt-3 space-y-2">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold text-primary">{priceLabel(price)}</span>
@@ -206,7 +189,7 @@ const AllProductCardShare = ({
 
           <button
             onClick={buttonAction}
-            className="w-full cursor-pointer bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
           >
             <ShoppingCart size={18} />
             <span>{buttonText}</span>
