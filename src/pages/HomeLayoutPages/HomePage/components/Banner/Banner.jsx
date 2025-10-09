@@ -83,7 +83,7 @@ const Banner = () => {
                       alt={slide.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-start px-10">
+                    <div className="absolute text-center inset-0 bg-black/40 flex flex-col justify-center items-center px-10">
                       <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
                         {slide.title}
                       </h2>
