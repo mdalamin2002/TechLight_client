@@ -1,35 +1,50 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser, forgotPassword } from "../../../store/authSlice";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import LoginForm from "./LoginForm";
 import SocialLogin from "../SocialLogin/SocialLogin";
+import useAuth from "@/hooks/useAuth";
+import { SaveUserInDb } from "@/utils/ShareUtils";
+import Swal from "sweetalert2";
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const { loginWithEmailPass } = useAuth();
   const navigate = useNavigate();
-  const { error } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
     const { email, password } = data;
-    const resultAction = await dispatch(loginUser({ email, password }));
-
-    if (loginUser.fulfilled.match(resultAction)) {
-      navigate("/");
-    } else {
-      console.error("Login error:", resultAction.payload);
+    setLoading(true)
+    try {
+      const credential = await loginWithEmailPass(email, password);
+      const updateUser = {
+        name: credential?.user?.displayName,
+        email: credential?.user?.email,
+        image: credential?.user?.photoURL,
+      }
+      // save user Data
+      await SaveUserInDb(updateUser);
+      navigate(location.state || "/");
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: `Welcome back, ${credential.user?.displayName}!`,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: "Incorrect email or password.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } finally {
+      setLoading(false)
     }
+
   };
 
-  const handleForgotPassword = async (email) => {
-    const result = await dispatch(forgotPassword(email));
-
-    if (forgotPassword.fulfilled.match(result)) {
-      alert("Check your email for the reset link.");
-    } else {
-      alert("Error: " + result.payload);
-    }
-  };
 
   return (
     <div className="bg-white shadow-xl rounded-xl px-10 py-12 w-full">
@@ -40,8 +55,6 @@ const Login = () => {
 
       <LoginForm
         onSubmit={onSubmit}
-        error={error}
-        forgotPassword={handleForgotPassword}
       />
 
       <div className="my-6 flex items-center">

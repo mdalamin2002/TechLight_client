@@ -1,11 +1,8 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { Gavel } from "lucide-react";
-import { selectTerms } from "../../../store/terms/termsSlice";
 
 export default function TermsOfService() {
-  const terms = useSelector(selectTerms);
 
   return (
     <motion.div
