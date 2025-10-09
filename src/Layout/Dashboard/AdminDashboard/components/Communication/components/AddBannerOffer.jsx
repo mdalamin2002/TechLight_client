@@ -10,6 +10,10 @@ const AddBannerOffer = () => {
   const [error, setError] = useState(null);
   const [editingBanner, setEditingBanner] = useState(null);
   const [openMenuId, setOpenMenuId] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+
+  
+    const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY; // এখানে তোমার API key দাও
 
   // Fetch banners
   const fetchBanners = async () => {
@@ -29,25 +33,46 @@ const AddBannerOffer = () => {
     fetchBanners();
   }, []);
 
+  // Upload Image to ImageBB
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+      method: "POST",
+      body: formData,
+    });
+    const data = await res.json();
+    if (data.success) return data.data.url;
+    else throw new Error("Image upload failed");
+  };
+
   // Add or Update Banner
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const data = {
-      title: e.target.title.value,
-      subtitle: e.target.subtitle.value,
-      image: e.target.image.value,
-      status: e.target.status.value,
-    };
-
     try {
+      let imageUrl = editingBanner?.image || null;
+
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
+      }
+
+      const data = {
+        title: e.target.title.value,
+        subtitle: e.target.subtitle.value,
+        image: imageUrl,
+        status: e.target.status.value,
+      };
+
       if (editingBanner) {
         await axiosSecure.put(`/banners/${editingBanner._id}`, data);
       } else {
         await axiosSecure.post("/banners", data);
       }
+
       setShowModal(false);
       setEditingBanner(null);
+      setImageFile(null);
       e.target.reset();
       fetchBanners();
     } catch (err) {
@@ -58,14 +83,14 @@ const AddBannerOffer = () => {
     }
   };
 
-  //  Edit Handler
+  // Edit Handler
   const handleEdit = (banner) => {
     setEditingBanner(banner);
     setShowModal(true);
     setOpenMenuId(null);
   };
 
-  //  Delete Handler
+  // Delete Handler
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this banner?")) return;
     try {
@@ -86,6 +111,7 @@ const AddBannerOffer = () => {
           onClick={() => {
             setEditingBanner(null);
             setShowModal(true);
+            setImageFile(null);
           }}
           className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full shadow-md transition"
         >
@@ -118,9 +144,7 @@ const AddBannerOffer = () => {
               banners.map((b, i) => (
                 <tr
                   key={i}
-                  className={`${
-                    i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
-                  } hover:bg-indigo-100/70 transition-colors`}
+                  className={`${i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"} hover:bg-indigo-100/70 transition-colors`}
                 >
                   <td className="px-4 py-3 font-medium">{b.title}</td>
                   <td className="px-4 py-3">{b.subtitle}</td>
@@ -131,11 +155,7 @@ const AddBannerOffer = () => {
                       className="w-20 h-12 object-cover rounded-md border"
                     />
                   </td>
-                  <td
-                    className={`px-4 py-3 font-semibold ${
-                      b.status === "Active" ? "text-green-600" : "text-yellow-600"
-                    }`}
-                  >
+                  <td className={`px-4 py-3 font-semibold ${b.status === "Active" ? "text-green-600" : "text-yellow-600"}`}>
                     {b.status}
                   </td>
                   <td className="px-4 py-3 text-center relative">
@@ -166,10 +186,7 @@ const AddBannerOffer = () => {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="5"
-                  className="text-center py-8 text-gray-500 bg-gray-50 font-medium"
-                >
+                <td colSpan="5" className="text-center py-8 text-gray-500 bg-gray-50 font-medium">
                   No Banners Found
                 </td>
               </tr>
@@ -210,14 +227,15 @@ const AddBannerOffer = () => {
                 required
                 className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
+              
+              {/* Image Upload */}
               <input
-                type="text"
-                name="image"
-                defaultValue={editingBanner?.image || ""}
-                placeholder="Image URL"
-                required
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files[0])}
                 className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
+
               <select
                 name="status"
                 defaultValue={editingBanner?.status || "Active"}
@@ -232,11 +250,7 @@ const AddBannerOffer = () => {
                 disabled={loading}
                 className="w-full py-3 mt-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow-md transition"
               >
-                {loading
-                  ? "Processing..."
-                  : editingBanner
-                  ? "Update Banner"
-                  : "Add Banner"}
+                {loading ? "Processing..." : editingBanner ? "Update Banner" : "Add Banner"}
               </button>
             </form>
           </div>
