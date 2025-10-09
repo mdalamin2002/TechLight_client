@@ -17,6 +17,7 @@ import {
   MapPin,
   CreditCard,
   RotateCcw,
+  MessageCircle,
 } from "lucide-react";
 import TechLightLogo from "@/Components/Shared/Logo/TechLightLogo";
 
@@ -69,6 +70,7 @@ export default function DashboardSidebar() {
       { to: "/dashboard/payment-methods", label: "Payment Methods", icon: CreditCard },
       { to: "/dashboard/returns", label: "Returns", icon: RotateCcw },
       { to: "/dashboard/usersettings", label: "Settings", icon: Settings }
+      { to: "/dashboard/support", label: "support", icon: MessageCircle }
     ],
   };
 
