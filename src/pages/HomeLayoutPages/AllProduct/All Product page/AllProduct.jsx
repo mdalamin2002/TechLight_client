@@ -324,7 +324,8 @@ const AllProduct = () => {
                 >
                   {currentProducts.map((product) => (
                     <AllProductCardShare
-                      key={product.id}
+                      key={product._id}
+                      id={product._id}
                       {...product}
                       variant={viewMode}
                       buttonText="Add to Cart"

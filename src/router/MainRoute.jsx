@@ -26,6 +26,8 @@ import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/
 import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+import Wishlist from "@/pages/Wishlist page/Wishlist";
+import AddToCart from "@/pages/AddToCart page/AddToCart";
 
 const MainRoute = createBrowserRouter([
   {
@@ -51,7 +53,16 @@ const MainRoute = createBrowserRouter([
       {
         path: "/allProduct/:id",
         Component: ProductDetails,
-        loader: ({params}) => fetch(`http://localhost:5000/api/products/${params.id}`)
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/api/products/details/${params.id}`),
+      },
+      {
+        path: "wishlist",
+        Component: Wishlist,
+      },
+      {
+        path: "addToCart",
+        Component: AddToCart,
       },
       {
         path: "/returns-refunds",

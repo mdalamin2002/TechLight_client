@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
 import { priceLabel, toNumber } from "@/pages/HomeLayoutPages/AllProduct/All Product page/product";
-import { Link } from "react-router-dom"; // <-- এটা ঠিক করো
+import { Link } from "react-router-dom";
+import useWishlist from "@/hooks/useWishlist";
+import Swal from "sweetalert2";
 
 const AllProductCardShare = ({
-  id,
+  _id,
   name,
   image,
   brand,
@@ -16,9 +18,12 @@ const AllProductCardShare = ({
   keyFeatures = [],
   buttonText = "Add to Cart",
   buttonAction = () => {},
-  variant = "grid", // grid | list  <-- নতুন
+  variant = "grid",
+  userEmail, // optional: user email if available from AuthContext
 }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  const { addToWishlist, removeFromWishlist, adding, removing } = useWishlist();
 
   const priceNum = toNumber(price);
   const regularPriceNum = toNumber(regularPrice);
@@ -26,6 +31,66 @@ const AllProductCardShare = ({
     regularPriceNum > 0
       ? Math.round(((regularPriceNum - priceNum) / regularPriceNum) * 100)
       : 0;
+
+  // Wishlist button handler
+  const handleWishlist = () => {
+    const wishlistData = {
+      productId: _id,
+      name,
+      image,
+      brand,
+      subcategory,
+      price,
+      regularPrice,
+      status,
+      userEmail: userEmail || "guest@example.com",
+      createdAt: new Date().toISOString(),
+    };
+
+    if (!isWishlisted) {
+      addToWishlist(wishlistData, {
+        onSuccess: () => {
+          Swal.fire({
+            icon: "success",
+            title: "Added to Wishlist!",
+            text: `${name} has been added.`,
+            timer: 1500,
+            showConfirmButton: false,
+          });
+          setIsWishlisted(true);
+        },
+        onError: (err) => {
+          console.error(err);
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: "Couldn't add to wishlist.",
+          });
+        },
+      });
+    } else {
+      removeFromWishlist(_id, {
+        onSuccess: () => {
+          Swal.fire({
+            icon: "info",
+            title: "Removed from Wishlist",
+            text: `${name} removed.`,
+            timer: 1200,
+            showConfirmButton: false,
+          });
+          setIsWishlisted(false);
+        },
+        onError: (err) => {
+          console.error(err);
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong!",
+            text: "Couldn't remove from wishlist.",
+          });
+        },
+      });
+    }
+  };
 
   return (
     <div
@@ -44,8 +109,10 @@ const AllProductCardShare = ({
         {status}
       </div>
 
+      {/* Wishlist Button */}
       <button
-        onClick={() => setIsWishlisted(!isWishlisted)}
+        onClick={handleWishlist}
+        disabled={adding || removing}
         className={`absolute cursor-pointer top-14 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 ${
           isWishlisted ? "bg-red-100" : "hover:bg-red-100"
         }`}
@@ -60,14 +127,16 @@ const AllProductCardShare = ({
         />
       </button>
 
+      {/* View Button */}
       <Link
-        to={id}
+        to={_id}
         className="absolute cursor-pointer top-28 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 delay-75 hover:bg-blue-100"
       >
         <Eye className="w-5 h-5 text-gray-700 hover:text-blue-600 transition-colors" />
       </Link>
 
-      <Link to={id}>
+      {/* Product Image */}
+      <Link to={_id}>
         <div
           className={
             variant === "list"
@@ -88,6 +157,7 @@ const AllProductCardShare = ({
         </div>
       </Link>
 
+      {/* Product Info */}
       <div className="p-5 space-y-3 flex-1">
         <div className="flex items-center justify-between gap-2 text-xs">
           <span className="text-muted-foreground">{subcategory}</span>
@@ -96,7 +166,7 @@ const AllProductCardShare = ({
           </span>
         </div>
 
-        <Link to={id}>
+        <Link to={_id}>
           <h4 className="font-semibold cursor-pointer text-foreground text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary/90 transition-colors">
             {name}
           </h4>
@@ -114,31 +184,23 @@ const AllProductCardShare = ({
               />
             ))}
           </div>
-          <span className="text-xs text-muted-foreground font-medium">
-            {rating}
-          </span>
+          <span className="text-xs text-muted-foreground font-medium">{rating}</span>
         </div>
 
         <div className="space-y-1.5 pt-2 border-t border-border/50">
           {keyFeatures.slice(0, 2).map((feature, index) => (
             <div key={index} className="flex items-start gap-2">
               <div className="w-1 h-1 rounded-full bg-primary mt-2 flex-shrink-0" />
-              <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">
-                {feature}
-              </p>
+              <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">{feature}</p>
             </div>
           ))}
         </div>
 
         <div className="pt-3 space-y-2">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-primary">
-              {priceLabel(price)}
-            </span>
+            <span className="text-2xl font-bold text-primary">{priceLabel(price)}</span>
             {discount > 0 && (
-              <span className="text-sm text-muted-foreground line-through">
-                {priceLabel(regularPrice)}
-              </span>
+              <span className="text-sm text-muted-foreground line-through">{priceLabel(regularPrice)}</span>
             )}
           </div>
 
