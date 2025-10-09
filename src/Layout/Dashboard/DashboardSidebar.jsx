@@ -69,7 +69,7 @@ export default function DashboardSidebar() {
       { to: "/dashboard/addresses", label: "Addresses", icon: MapPin },
       { to: "/dashboard/payment-methods", label: "Payment Methods", icon: CreditCard },
       { to: "/dashboard/returns", label: "Returns", icon: RotateCcw },
-      { to: "/dashboard/usersettings", label: "Settings", icon: Settings }
+      { to: "/dashboard/usersettings", label: "Settings", icon: Settings },
       { to: "/dashboard/support", label: "support", icon: MessageCircle }
     ],
   };
