@@ -3,16 +3,12 @@ import Home from "../pages/HomeLayoutPages/HomePage/Home";
 import MainLayout from "../Layout/MainLayout/MainLayout";
 import PrivacyPolicy from "../pages/HomeLayoutPages/PrivacyPolicyPage/PrivacyPolicy";
 import Mobile from "../pages/HomeLayoutPages/AllProduct/Categories/Mobile/Mobile";
-import Laptop from "../pages/HomeLayoutPages/AllProduct/Categories/Laptop/Laptop";
 import DashboardLayout from "@/Layout/Dashboard/DashboardLayout";
 import MainDashboard from "@/Layout/Dashboard/MainDashboard";
 import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
 import Register from "@/pages/authentication/register/Register";
-import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers";
 import Sellers from "@/Layout/Dashboard/AdminDashboard/components/Sellers";
 import Products from "@/Layout/Dashboard/AdminDashboard/components/Products";
-import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders";
-import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
 import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication/Communication";
 import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings/Settings";
 import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced/Advanced";
@@ -21,10 +17,22 @@ import { Reports } from "@/Layout/Dashboard/AdminDashboard/components/Reports_pa
 import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/ReturnsRefundsPolicy";
 import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
 import Login from "@/pages/authentication/Login/Login";
-
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
-
+import Profile from "@/Layout/Dashboard/UserDashboard/components/Profile/Profile";
+import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
+import Cart from "@/Layout/Dashboard/UserDashboard/components/Cart/Cart";
+import Addresses from "@/Layout/Dashboard/UserDashboard/components/Addresses/Addresses";
+import ReturnsRefunds from "@/Layout/Dashboard/UserDashboard/components/ReturnsRefunds/ReturnsRefunds";
+import Coupons from "@/Layout/Dashboard/AdminDashboard/components/Communication/components/Coupons";
+import UserSettings from "@/Layout/Dashboard/UserDashboard/components/Settings/UserSettings";
+import AllUsers from "../Layout/Dashboard/AdminDashboard/components/AllUsers";
+import Orders from "../Layout/Dashboard/AdminDashboard/components/Orders";
+import Finance from "../Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+import PaymentMethods from "../Layout/Dashboard/UserDashboard/components/PaymentMethods/PaymentMethods";
+import Reviews from "../pages/HomeLayoutPages/HomePage/components/Reviews";
+import Overview from "../Layout/Dashboard/UserDashboard/components/Overview/Overview";
 
 const MainRoute = createBrowserRouter([
   {
@@ -42,10 +50,6 @@ const MainRoute = createBrowserRouter([
       {
         path: "/mobile",
         Component: Mobile,
-      },
-      {
-        path: "/laptop",
-        Component: Laptop,
       },
       {
         path: "/returns-refunds",
@@ -120,8 +124,52 @@ const MainRoute = createBrowserRouter([
       {
         path: "advanced",
         element: <Advanced></Advanced>
-      }
-
+      },
+      // User Route
+ {
+      path: "overview",
+      element: <Overview></Overview>
+    },
+ {
+      path: "profile",
+      element: <Profile></Profile>
+    },
+    {
+      path: "Myorders",
+      element: <MyOrders></MyOrders>
+    },
+    {
+      path: "wishlist",
+      element: <Wishlist></Wishlist>
+    },
+    {
+      path: "cart",
+      element: <Cart></Cart>
+    },
+    {
+      path: "addresses",
+      element: <Addresses></Addresses>
+    },
+    {
+      path: "payment-methods",
+      element: <PaymentMethods></PaymentMethods>
+    },
+    {
+      path: "returns",
+      element: <ReturnsRefunds></ReturnsRefunds>
+    },
+    {
+      path: "reviews",
+      element: <Reviews></Reviews>
+    },
+    {
+      path: "coupons",
+      element: <Coupons></Coupons>
+    },
+    {
+      path: "Usersettings",
+      element: <UserSettings></UserSettings>
+    },
     ]
   }
 ]);
