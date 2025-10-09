@@ -28,8 +28,8 @@ export default function DashboardSidebar() {
       to={to}
       className={({ isActive }) =>
         `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${isActive
-          ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 border border-purple-500/30'
-          : 'text-primary-foreground hover:text-purple-300 hover:bg-purple-500/10'
+          ? 'bg-sidebar text-primary border'
+          : 'text-foreground hover:text-primary'
         }`
       }
     >
@@ -77,7 +77,7 @@ export default function DashboardSidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <nav className="hidden md:flex flex-col gap-6 p-4 min-h-screen w-64 bg-gradient-to-b bg-primary">
+      <nav className="hidden md:flex flex-col gap-6 p-4 min-h-screen w-64 border-r bg-sidebar">
         {/* Logo */}
         <Link to="/" className="text-xl font-bold text-textPrimary">
           <TechLightLogo />

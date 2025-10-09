@@ -27,12 +27,11 @@ import Addresses from "@/Layout/Dashboard/UserDashboard/components/Addresses/Add
 import ReturnsRefunds from "@/Layout/Dashboard/UserDashboard/components/ReturnsRefunds/ReturnsRefunds";
 import Coupons from "@/Layout/Dashboard/AdminDashboard/components/Communication/components/Coupons";
 import UserSettings from "@/Layout/Dashboard/UserDashboard/components/Settings/UserSettings";
-import AllUsers from "../Layout/Dashboard/AdminDashboard/components/AllUsers";
-import Orders from "../Layout/Dashboard/AdminDashboard/components/Orders";
 import Finance from "../Layout/Dashboard/AdminDashboard/components/Finance/Finance";
 import PaymentMethods from "../Layout/Dashboard/UserDashboard/components/PaymentMethods/PaymentMethods";
-import Reviews from "../pages/HomeLayoutPages/HomePage/components/Reviews";
 import Overview from "../Layout/Dashboard/UserDashboard/components/Overview/Overview";
+import AllUsers from "../Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
+import Orders from "../Layout/Dashboard/AdminDashboard/components/Orders/Orders";
 
 const MainRoute = createBrowserRouter([
   {
@@ -59,14 +58,6 @@ const MainRoute = createBrowserRouter([
         path: "/order-tracking",
         Component: OrderTrackingPolicy,
       },
-      {
-        path: "/warranty",
-        Component: Warranty,
-      },
-      // {
-      //   path: "faq",
-      //   Component: FAQ,
-      // },
       {
         path: "terms-service",
         Component: TermsOfService,
@@ -161,14 +152,6 @@ const MainRoute = createBrowserRouter([
     {
       path: "returns",
       element: <ReturnsRefunds></ReturnsRefunds>
-    },
-    {
-      path: "reviews",
-      element: <Reviews></Reviews>
-    },
-    {
-      path: "coupons",
-      element: <Coupons></Coupons>
     },
     {
       path: "Usersettings",
