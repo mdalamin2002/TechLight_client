@@ -60,9 +60,13 @@ const MainRoute = createBrowserRouter([
         Component: OrderTrackingPolicy,
       },
       {
-        path: "faq",
-        Component: FAQ,
+        path: "/warranty",
+        Component: Warranty,
       },
+      // {
+      //   path: "faq",
+      //   Component: FAQ,
+      // },
       {
         path: "terms-service",
         Component: TermsOfService,
@@ -83,23 +87,23 @@ const MainRoute = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <MainDashboard></MainDashboard>
+        element: <MainDashboard></MainDashboard>,
       },
       {
         path: "home",
-        element: <Admin_Home></Admin_Home>
+        element: <Admin_Home></Admin_Home>,
       },
       {
         path: "users",
-        element: <AllUsers></AllUsers>
+        element: <AllUsers></AllUsers>,
       },
       {
         path: "sellers",
-        element: <Sellers></Sellers>
+        element: <Sellers></Sellers>,
       },
       {
         path: "products",
-        element: <Products></Products>
+        element: <Products></Products>,
       },
       {
         path: "orders",
@@ -107,19 +111,19 @@ const MainRoute = createBrowserRouter([
       },
       {
         path: "finance",
-        element: <Finance></Finance>
+        element: <Finance></Finance>,
       },
       {
         path: "communication",
-        element: <Communication></Communication>
+        element: <Communication></Communication>,
       },
       {
         path: "reports",
-        element: <Reports></Reports>
+        element: <Reports></Reports>,
       },
       {
         path: "settings",
-        element: <Settings></Settings>
+        element: <Settings></Settings>,
       },
       {
         path: "advanced",

@@ -1,0 +1,186 @@
+[
+  {
+    "name": "ModAlice",
+    "complaintId": "CPL001",
+    "action": "Resolved spam complaint",
+    "date": "2025-09-20",
+    "status": "Resolved",
+    "details": "Marked spam post and warned user"
+  },
+  {
+    "name": "ModBob",
+    "complaintId": "CPL002",
+    "action": "Investigating abuse report",
+    "date": "2025-09-22",
+    "status": "In Progress",
+    "details": "Checking reports submitted by multiple users"
+  },
+  {
+    "name": "ModCharlie",
+    "complaintId": "CPL003",
+    "action": "Resolved harassment report",
+    "date": "2025-09-23",
+    "status": "Resolved",
+    "details": "User banned and warning sent"
+  },
+  {
+    "name": "ModAlice",
+    "complaintId": "CPL004",
+    "action": "Pending review",
+    "date": "2025-09-24",
+    "status": "Pending",
+    "details": "Waiting for more evidence from reporters"
+  },
+  {
+    "name": "ModBob",
+    "complaintId": "CPL005",
+    "action": "Reviewed phishing report",
+    "date": "2025-09-25",
+    "status": "Resolved",
+    "details": "Phishing link blocked and reported"
+  },
+  {
+    "name": "ModAlice",
+    "complaintId": "CPL001",
+    "action": "Resolved spam complaint",
+    "date": "2025-09-20",
+    "status": "Resolved",
+    "details": "Marked spam post and warned user"
+  },
+  {
+    "name": "ModBob",
+    "complaintId": "CPL002",
+    "action": "Investigating abuse report",
+    "date": "2025-09-22",
+    "status": "In Progress",
+    "details": "Checking reports submitted by multiple users"
+  },
+  {
+    "name": "ModCharlie",
+    "complaintId": "CPL003",
+    "action": "Resolved harassment report",
+    "date": "2025-09-23",
+    "status": "Resolved",
+    "details": "User banned and warning sent"
+  },
+  {
+    "name": "ModAlice",
+    "complaintId": "CPL004",
+    "action": "Pending review",
+    "date": "2025-09-24",
+    "status": "Pending",
+    "details": "Waiting for more evidence from reporters"
+  },
+  {
+    "name": "ModBob",
+    "complaintId": "CPL005",
+    "action": "Reviewed phishing report",
+    "date": "2025-09-25",
+    "status": "Resolved",
+    "details": "Phishing link blocked and reported"
+  },
+  {
+    "name": "ModCharlie",
+    "complaintId": "CPL006",
+    "action": "Resolved hate speech report",
+    "date": "2025-09-26",
+    "status": "Resolved",
+    "details": "Content removed and user suspended for 7 days"
+  },
+  {
+    "name": "ModAlice",
+    "complaintId": "CPL007",
+    "action": "Investigating scam complaint",
+    "date": "2025-09-28",
+    "status": "In Progress",
+    "details": "Verifying financial fraud claims"
+  },
+  {
+    "name": "ModBob",
+    "complaintId": "CPL008",
+    "action": "Pending review",
+    "date": "2025-09-29",
+    "status": "Pending",
+    "details": "Awaiting additional screenshots from reporter"
+  },
+  {
+    "name": "ModCharlie",
+    "complaintId": "CPL009",
+    "action": "Resolved account takeover complaint",
+    "date": "2025-09-30",
+    "status": "Resolved",
+    "details": "Account recovered and security updated"
+  },
+  {
+    "name": "ModAlice",
+    "complaintId": "CPL010",
+    "action": "Investigating multiple spam reports",
+    "date": "2025-10-01",
+    "status": "In Progress",
+    "details": "Bulk checking flagged accounts"
+  },
+  {
+    "name": "ModBob",
+    "complaintId": "CPL011",
+    "action": "Resolved impersonation report",
+    "date": "2025-09-10",
+    "status": "Resolved",
+    "details": "Fake profile removed"
+  },
+  {
+    "name": "ModAlice",
+    "complaintId": "CPL013",
+    "action": "Resolved graphic content complaint",
+    "date": "2025-09-15",
+    "status": "Resolved",
+    "details": "Content removed for policy violation"
+  },
+  {
+    "name": "ModBob",
+    "complaintId": "CPL014",
+    "action": "Investigated harassment complaint",
+    "date": "2025-07-22",
+    "status": "Resolved",
+    "details": "Warning issued to offender"
+  },
+  {
+    "name": "ModCharlie",
+    "complaintId": "CPL015",
+    "action": "Reviewed coordinated spam campaign",
+    "date": "2025-06-10",
+    "status": "Resolved",
+    "details": "200+ spam accounts banned"
+  },
+  {
+    "name": "ModAlice",
+    "complaintId": "CPL016",
+    "action": "Pending review",
+    "date": "2025-05-05",
+    "status": "Pending",
+    "details": "Waiting for user appeal"
+  },
+  {
+    "name": "ModBob",
+    "complaintId": "CPL017",
+    "action": "Resolved phishing campaign",
+    "date": "2025-03-01",
+    "status": "Resolved",
+    "details": "Phishing domain blocked system-wide"
+  },
+  {
+    "name": "ModCharlie",
+    "complaintId": "CPL018",
+    "action": "Reviewed fraud complaint",
+    "date": "2024-12-15",
+    "status": "In Progress",
+    "details": "Coordinating with payment gateway for evidence"
+  },
+  {
+    "name": "ModAlice",
+    "complaintId": "CPL019",
+    "action": "Resolved misinformation report",
+    "date": "2024-11-20",
+    "status": "Resolved",
+    "details": "False information removed from trending list"
+  }
+]
