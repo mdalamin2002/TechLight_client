@@ -7,6 +7,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import useWishlist from "@/hooks/useWishlist";
 import useCart from "@/hooks/useCart";
+import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 
 const AllProductCardShare = ({
@@ -15,14 +16,15 @@ const AllProductCardShare = ({
   image,
   brand,
   subcategory,
+  category,
+  model,
+  productCode,
   rating = 0,
   price = 0,
   regularPrice = 0,
   status = "In Stock",
-  keyFeatures = [],
   buttonText = "Add to Cart",
   variant = "grid",
-  userEmail,
 }) => {
   const {
     wishlist,
@@ -33,7 +35,7 @@ const AllProductCardShare = ({
     isLoading,
   } = useWishlist();
   const { cart, addToCart } = useCart();
-
+  const { user } = useAuth();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const navigate = useNavigate();
 
@@ -44,7 +46,7 @@ const AllProductCardShare = ({
       ? Math.round(((regularPriceNum - priceNum) / regularPriceNum) * 100)
       : 0;
 
-  // Check if already in wishlist on mount or wishlist update
+  // Check wishlist state
   useEffect(() => {
     if (!isLoading && wishlist?.length > 0) {
       const exists = wishlist.some((item) => item.productId === id);
@@ -52,8 +54,13 @@ const AllProductCardShare = ({
     }
   }, [wishlist, id, isLoading]);
 
-  //  Wishlist button handler
+  // Wishlist handler
   const handleWishlist = () => {
+    if (!user) {
+      navigate("/auth/login");
+      return;
+    }
+
     const wishlistData = {
       productId: id,
       name,
@@ -63,7 +70,10 @@ const AllProductCardShare = ({
       price,
       regularPrice,
       status,
-      userEmail: userEmail || "guest@example.com",
+      category,
+      model,
+      productCode,
+      userEmail: user.email, // no guest fallback
       createdAt: new Date().toISOString(),
     };
 
@@ -87,20 +97,28 @@ const AllProductCardShare = ({
     }
   };
 
-
   // Cart handler
   const handleAddToCart = () => {
+    if (!user) {
+      navigate("/auth/login");
+      return;
+    }
+
     const cartData = {
       productId: id,
-      name,
-      image,
-      brand,
+      category,
       subcategory,
+      name,
+      brand,
+      model,
+      productCode,
+      image,
+      rating,
       price,
       regularPrice,
       quantity: 1,
       status,
-      userEmail: userEmail || "guest@example.com",
+      userEmail: user.email,
       createdAt: new Date().toISOString(),
     };
 
@@ -128,12 +146,14 @@ const AllProductCardShare = ({
         variant === "list" ? "md:flex md:items-stretch" : "",
       ].join(" ")}
     >
+      {/* Discount */}
       {discount > 0 && (
         <div className="absolute top-3 left-3 z-10 bg-destructive text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
           -{discount}%
         </div>
       )}
 
+      {/* Status */}
       <div className="absolute top-3 right-3 z-10 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full font-medium">
         {status}
       </div>
@@ -185,7 +205,7 @@ const AllProductCardShare = ({
         </div>
       </Link>
 
-      {/* Info */}
+      {/* Product Info */}
       <div className="p-5 space-y-3 flex-1">
         <div className="flex items-center justify-between gap-2 text-xs">
           <span className="text-muted-foreground">{subcategory}</span>
@@ -200,6 +220,7 @@ const AllProductCardShare = ({
           </h4>
         </Link>
 
+        {/* Rating */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
@@ -217,6 +238,7 @@ const AllProductCardShare = ({
           </span>
         </div>
 
+        {/* Price & Button */}
         <div className="pt-3 space-y-2">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold text-primary">
