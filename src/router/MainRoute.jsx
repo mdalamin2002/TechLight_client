@@ -80,21 +80,26 @@ const MainRoute = createBrowserRouter([
       {
         index: true,
         element: <MainDashboard></MainDashboard>,
+        element: <MainDashboard></MainDashboard>,
       },
       {
         path: "home",
+        element: <Admin_Home></Admin_Home>,
         element: <Admin_Home></Admin_Home>,
       },
       {
         path: "users",
         element: <AllUsers></AllUsers>,
+        element: <AllUsers></AllUsers>,
       },
       {
         path: "sellers",
         element: <Sellers></Sellers>,
+        element: <Sellers></Sellers>,
       },
       {
         path: "products",
+        element: <Products></Products>,
         element: <Products></Products>,
       },
       {
@@ -104,17 +109,21 @@ const MainRoute = createBrowserRouter([
       {
         path: "finance",
         element: <Finance></Finance>,
+        element: <Finance></Finance>,
       },
       {
         path: "communication",
+        element: <Communication></Communication>,
         element: <Communication></Communication>,
       },
       {
         path: "reports",
         element: <Reports></Reports>,
+        element: <Reports></Reports>,
       },
       {
         path: "settings",
+        element: <Settings></Settings>,
         element: <Settings></Settings>,
       },
       {
