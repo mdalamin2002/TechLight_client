@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Megaphone, Mail, Bell, Tag } from "lucide-react";
+import { Megaphone, Mail, Bell, Tag, Users, Gift } from "lucide-react";
 import Announcements from "./components/Announcements";
 import SupportTickets from "./components/SupportTickets";
 import Notifications from "./components/Notifications";
 import Coupons from "./components/Coupons";
+import AddBannerOffer from "./components/AddBannerOffer";
 
 const CommunicationCenter = () => {
   const [activeTab, setActiveTab] = useState("Announcements");
@@ -13,6 +14,7 @@ const CommunicationCenter = () => {
     { name: "Support Tickets", icon: <Mail className="w-4 h-4" /> },
     { name: "Notifications", icon: <Bell className="w-4 h-4" /> },
     { name: "Coupons", icon: <Tag className="w-4 h-4" /> },
+    { name: "Banner offer", icon: <Gift className="w-4 h-4" /> },
   ];
 
   return (
@@ -49,6 +51,7 @@ const CommunicationCenter = () => {
         {activeTab === "Support Tickets" && <SupportTickets />}
         {activeTab === "Notifications" && <Notifications />}
         {activeTab === "Coupons" && <Coupons />}
+        {activeTab === "Banner offer" && <AddBannerOffer />}
       </div>
     </div>
   );

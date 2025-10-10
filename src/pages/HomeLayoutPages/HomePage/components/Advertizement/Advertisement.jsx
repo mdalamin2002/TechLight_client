@@ -17,7 +17,7 @@ const dummyAds = [
     discount: "25%",
     originalPrice: 12000,
     bannerImage:
-      "https://i.ibb.co.com/kgT2kDNG/image.png",
+      "https://i.ibb.co.com/Jj6PBPps/image-3-1.png",
     shopName: "Tech World",
     createdAt: "2025-09-01",
     isHot: true,
@@ -29,7 +29,7 @@ const dummyAds = [
     discount: "15%",
     originalPrice: 30000,
     bannerImage:
-      "https://i.ibb.co.com/m5wBzpxz/image.png",
+      "https://i.ibb.co.com/Txwmq308/image-4-1.png",
     shopName: "Gadget Hub",
     createdAt: "2025-08-28",
     isHot: true,
@@ -41,7 +41,7 @@ const dummyAds = [
     discount: "30%",
     originalPrice: 10000,
     bannerImage:
-      "https://i.ibb.co.com/4ZKjmcqj/image.png",
+      "https://i.ibb.co.com/TD6w6kb2/image-5-1.png",
     shopName: "ElectroMart",
     createdAt: "2025-08-20",
     isHot: true,

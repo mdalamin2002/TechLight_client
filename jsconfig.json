@@ -1,8 +1,18 @@
 {
+  "files": [],
+  "references": [
+    {
+      
+    },
+    {
+      
+    }
+  ],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"]
     }
-  }
+  },
+  "include": ["src"]
 }

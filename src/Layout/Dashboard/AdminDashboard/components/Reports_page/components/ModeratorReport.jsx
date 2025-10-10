@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { CSVLink } from "react-csv";
@@ -13,7 +12,14 @@ import {
   Legend,
 } from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
   const [data, setData] = useState([]);
@@ -29,7 +35,9 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
     fetch("/ModeratorReport_Data.json")
       .then((res) => res.json())
       .then((json) => setData(json))
-      .catch((err) => console.error("Error loading ModeratorReport data:", err));
+      .catch((err) =>
+        console.error("Error loading ModeratorReport data:", err)
+      );
   }, []);
 
   // Date filter logic
@@ -69,7 +77,8 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
     const matchesSearch =
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.complaintId.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "All" || item.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "All" || item.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -100,15 +109,19 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
 
   // 🟩 Send data to parent for Excel export
   useEffect(() => {
-    if (onDataUpdate) {
+    if (!onDataUpdate) return;
+
+    const timer = setTimeout(() => {
       onDataUpdate({
         cases: filteredData,
         summary,
       });
-    }
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [filteredData]);
 
- return (
+  return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md space-y-6">
       <h3 className="text-xl font-semibold text-gray-800">
         Moderator Activity & Complaints ({dateRange})
@@ -141,7 +154,7 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
           <CSVLink
             data={filteredData}
             filename={"moderator-report.csv"}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm font-medium"
+            className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg hover:bg-blue-800  transition text-sm font-medium"
           >
             Export CSV
           </CSVLink>
@@ -152,28 +165,34 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-green-50 p-4 rounded-lg text-center">
           <p className="text-green-700 font-medium">Resolved</p>
-          <p className="text-2xl font-bold text-green-800">{summary["Resolved"]}</p>
+          <p className="text-2xl font-bold text-green-800">
+            {summary["Resolved"]}
+          </p>
         </div>
         <div className="bg-yellow-50 p-4 rounded-lg text-center">
           <p className="text-yellow-700 font-medium">In Progress</p>
-          <p className="text-2xl font-bold text-yellow-800">{summary["In Progress"]}</p>
+          <p className="text-2xl font-bold text-yellow-800">
+            {summary["In Progress"]}
+          </p>
         </div>
         <div className="bg-red-50 p-4 rounded-lg text-center">
           <p className="text-red-700 font-medium">Pending</p>
-          <p className="text-2xl font-bold text-red-800">{summary["Pending"]}</p>
+          <p className="text-2xl font-bold text-red-800">
+            {summary["Pending"]}
+          </p>
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left border-collapse">
-          <thead className="bg-gray-50 border-b border-gray-200">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <table className="min-w-full overflow-hidden">
+          <thead className="bg-indigo-600 border-b border-gray-200">
             <tr>
-              <th className="p-4 text-gray-600 font-medium">Moderator</th>
-              <th className="p-4 text-gray-600 font-medium">Complaint ID</th>
-              <th className="p-4 text-gray-600 font-medium">Action</th>
-              <th className="p-4 text-gray-600 font-medium">Status</th>
-              <th className="p-4 text-gray-600 font-medium">Date</th>
+              <th className="p-4 text-white font-medium">Moderator</th>
+              <th className="p-4 text-white font-medium">Complaint ID</th>
+              <th className="p-4 text-white font-medium">Action</th>
+              <th className="p-4 text-white font-medium">Status</th>
+              <th className="p-4 text-white font-medium">Date</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -187,7 +206,14 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
               paginatedData.map((item, index) => (
                 <tr
                   key={index}
-                  className="hover:bg-gray-50 transition-colors cursor-pointer"
+                  className={`
+              cursor-pointer transition-colors
+              ${
+                index % 2 === 0
+                  ? "bg-white hover:bg-indigo-100/70"
+                  : "bg-indigo-50/40 hover:bg-indigo-100/70"
+              }
+            `}
                   onClick={() => setSelectedCase(item)}
                 >
                   <td className="p-4 text-gray-800 font-medium">{item.name}</td>
@@ -240,7 +266,10 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
         </h4>
         <Bar
           data={chartData}
-          options={{ responsive: true, plugins: { legend: { position: "top" } } }}
+          options={{
+            responsive: true,
+            plugins: { legend: { position: "top" } },
+          }}
         />
       </div>
 
@@ -256,7 +285,8 @@ export const ModeratorReport = ({ dateRange, onDataUpdate }) => {
             </button>
             <h4 className="text-lg font-semibold mb-2">Complaint Details</h4>
             <p>
-              <span className="font-medium">Moderator:</span> {selectedCase.name}
+              <span className="font-medium">Moderator:</span>{" "}
+              {selectedCase.name}
             </p>
             <p>
               <span className="font-medium">Complaint ID:</span>{" "}
