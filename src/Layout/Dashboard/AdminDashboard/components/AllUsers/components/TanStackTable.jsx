@@ -182,7 +182,7 @@ const TanStackTable = () => {
   });
 
   return (
-    <div className=' max-w-6xl mx-auto  rounded-2xl'>
+    <div className='rounded-2xl'>
 
       {/* 🔍 Search + ⬇ Download */}
       <div className='flex flex-col md:flex-row justify-between mb-6 gap-3 items-center'>
