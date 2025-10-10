@@ -16,7 +16,7 @@ const Banner = () => {
       try {
         const res = await axios.get(`${API_URL}/banners`);
         setSlides(res.data);
-        console.log(res.data);
+        
       } catch (error) {
         console.error("Failed to load banners:", error);
       }
