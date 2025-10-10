@@ -23,11 +23,14 @@ import {
   RotateCcw,
   MessageCircle,
   PackageOpen,
+  SettingsIcon,
+  CreditCardIcon,
+  Bell,
 } from "lucide-react";
 import TechLightLogo from "@/Components/Shared/Logo/TechLightLogo";
 
 export default function DashboardSidebar() {
-  const role = "admin"; // "admin", "moderator", or "user"
+  const role = "moderator"; // "admin", "moderator", or "user"
 
   const NavItem = ({ to, label, icon: Icon }) => (
     <NavLink
@@ -81,6 +84,21 @@ export default function DashboardSidebar() {
         to: "/dashboard/developer-notes",
         label: "Developer Notes",
         icon: FileText,
+      },
+      {
+        to: "/dashboard/moderator-settings",
+        label: "Settings",
+        icon: SettingsIcon,
+      },
+      {
+        to: "/dashboard/payments",
+        label: "Payments",
+        icon: CreditCardIcon,
+      },
+      {
+        to: "/dashboard/notifications",
+        label: "Notifications",
+        icon: Bell,
       },
     ],
 
