@@ -49,6 +49,12 @@ import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/R
 import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
+import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
+import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
+import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
+import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+import AddProduct from "@/Layout/Dashboard/AdminDashboard/components/Products/AddProduct";
+import AddProductForm from "@/Layout/Dashboard/AdminDashboard/components/Products/Forms/AddProductForm";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
 
 const MainRoute = createBrowserRouter([

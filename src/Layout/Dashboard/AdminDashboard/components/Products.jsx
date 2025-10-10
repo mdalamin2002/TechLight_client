@@ -8,9 +8,10 @@ import AddProduct from "./Products/AddProduct";
 import ProductActions from "./Products/ProductActions";
 import useAxiosSecure from "@/utils/useAxiosSecure";
 import DashboardTableLoading from "@/Components/Shared/Loading/DashboardTableLoading";
+import { useNavigate } from "react-router";
 
 const Products = () => {
-  const [addProduct, setAddProduct] = useState(false);
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
@@ -27,8 +28,6 @@ const Products = () => {
       .finally(() => setLoading(false));
   }, [selectCategory, axiosSecure]);
 
-  console.log(loading);
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -44,9 +43,6 @@ const Products = () => {
   return (
     <>
       <div>
-        {addProduct ? (
-          <AddProduct></AddProduct>
-        ) : (
           <div className="min-h-screen text-foreground p-6 transition-colors duration-300">
             <div className="">
               <h2 className="text-3xl font-bold text-foreground">Product Management</h2>
@@ -57,7 +53,7 @@ const Products = () => {
             <div className="flex gap-4 justify-between mb-3">
               <Searching></Searching>
               <div className="flex justify-center items-center gap-7">
-                <FilledButton onClick={() => setAddProduct(true)}>Add Product</FilledButton>
+                <FilledButton onClick={() =>navigate("/dashboard/products/addProduct") }>Add Product</FilledButton>
                 <FilledButton>
                   <CSVLink data={products} filename={"products-report.csv"} className="flex items-center gap-2">
                     <Download size={16} /> Export
@@ -108,7 +104,6 @@ const Products = () => {
               </div>
             )}
           </div>
-        )}
       </div>
     </>
   );
