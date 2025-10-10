@@ -60,7 +60,7 @@ export default function DashboardSidebar() {
     // ],
     // UserNavigation
     user: [
-      { to: "/dashboard/overview", label: "Overview", icon: User },
+      { to: "/dashboard/overview", label: "Overview", icon: LayoutDashboard },
       { to: "/dashboard/profile", label: "Profile", icon: User },
       { to: "/dashboard/myorders", label: "My Orders", icon: PackageOpen },
       { to: "/dashboard/wishlist", label: "Wishlist", icon: Heart },
@@ -68,7 +68,8 @@ export default function DashboardSidebar() {
       { to: "/dashboard/addresses", label: "Addresses", icon: MapPin },
       { to: "/dashboard/payment-methods", label: "Payment Methods", icon: CreditCard },
       { to: "/dashboard/returns", label: "Returns", icon: RotateCcw },
-      { to: "/dashboard/usersettings", label: "Settings", icon: Settings }
+      { to: "/dashboard/usersettings", label: "Settings", icon: Settings },
+      { to: "/dashboard/support", label: "support", icon: MessageCircle }
     ],
   };
 

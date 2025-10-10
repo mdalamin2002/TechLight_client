@@ -17,15 +17,22 @@ import { Reports } from "@/Layout/Dashboard/AdminDashboard/components/Reports_pa
 import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/ReturnsRefundsPolicy";
 import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
 import Login from "@/pages/authentication/Login/Login";
-import Warranty from "@/pages/PolicyPages/Warranty/Warranty";
-// import FAQ from "@/pages/PolicyPages/FAQ/FAQ";
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
-import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
-import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/ProductDetails/ProductDetails";
-import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
-import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
-import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+import Profile from "@/Layout/Dashboard/UserDashboard/components/Profile/Profile";
+import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
+import Cart from "@/Layout/Dashboard/UserDashboard/components/Cart/Cart";
+import Addresses from "@/Layout/Dashboard/UserDashboard/components/Addresses/Addresses";
+import ReturnsRefunds from "@/Layout/Dashboard/UserDashboard/components/ReturnsRefunds/ReturnsRefunds";
+import Coupons from "@/Layout/Dashboard/AdminDashboard/components/Communication/components/Coupons";
+import UserSettings from "@/Layout/Dashboard/UserDashboard/components/Settings/UserSettings";
+import Finance from "../Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+import PaymentMethods from "../Layout/Dashboard/UserDashboard/components/PaymentMethods/PaymentMethods";
+import Overview from "../Layout/Dashboard/UserDashboard/components/Overview/Overview";
+import AllUsers from "../Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
+import Orders from "../Layout/Dashboard/AdminDashboard/components/Orders/Orders";
+import Support from "@/Layout/Dashboard/UserDashboard/components/Support/Support";
 
 const MainRoute = createBrowserRouter([
   {
@@ -45,15 +52,6 @@ const MainRoute = createBrowserRouter([
         Component: Mobile,
       },
       {
-        path: "/allProduct",
-        Component: AllProduct,
-      },
-      {
-        path: "/allProduct/:id",
-        Component: ProductDetails,
-        loader: ({params}) => fetch(`http://localhost:5000/api/products/${params.id}`)
-      },
-      {
         path: "/returns-refunds",
         Component: ReturnsRefundsPolicy,
       },
@@ -61,14 +59,6 @@ const MainRoute = createBrowserRouter([
         path: "/order-tracking",
         Component: OrderTrackingPolicy,
       },
-      {
-        path: "/warranty",
-        Component: Warranty,
-      },
-      // {
-      //   path: "faq",
-      //   Component: FAQ,
-      // },
       {
         path: "terms-service",
         Component: TermsOfService,
@@ -90,21 +80,26 @@ const MainRoute = createBrowserRouter([
       {
         index: true,
         element: <MainDashboard></MainDashboard>,
+        element: <MainDashboard></MainDashboard>,
       },
       {
         path: "home",
+        element: <Admin_Home></Admin_Home>,
         element: <Admin_Home></Admin_Home>,
       },
       {
         path: "users",
         element: <AllUsers></AllUsers>,
+        element: <AllUsers></AllUsers>,
       },
       {
         path: "sellers",
         element: <Sellers></Sellers>,
+        element: <Sellers></Sellers>,
       },
       {
         path: "products",
+        element: <Products></Products>,
         element: <Products></Products>,
       },
       {
@@ -114,25 +109,70 @@ const MainRoute = createBrowserRouter([
       {
         path: "finance",
         element: <Finance></Finance>,
+        element: <Finance></Finance>,
       },
       {
         path: "communication",
+        element: <Communication></Communication>,
         element: <Communication></Communication>,
       },
       {
         path: "reports",
         element: <Reports></Reports>,
+        element: <Reports></Reports>,
       },
       {
         path: "settings",
         element: <Settings></Settings>,
+        element: <Settings></Settings>,
       },
       {
         path: "advanced",
-        element: <Advanced></Advanced>,
+        element: <Advanced></Advanced>
       },
-    ],
-  },
+      // User Route
+ {
+      path: "overview",
+      element: <Overview></Overview>
+    },
+ {
+      path: "profile",
+      element: <Profile></Profile>
+    },
+    {
+      path: "Myorders",
+      element: <MyOrders></MyOrders>
+    },
+    {
+      path: "wishlist",
+      element: <Wishlist></Wishlist>
+    },
+    {
+      path: "cart",
+      element: <Cart></Cart>
+    },
+    {
+      path: "addresses",
+      element: <Addresses></Addresses>
+    },
+    {
+      path: "payment-methods",
+      element: <PaymentMethods></PaymentMethods>
+    },
+    {
+      path: "returns",
+      element: <ReturnsRefunds></ReturnsRefunds>
+    },
+    {
+      path: "Usersettings",
+      element: <UserSettings></UserSettings>
+    },
+    {
+      path: "support",
+      element: <Support></Support>
+    },
+    ]
+  }
 ]);
 
 export default MainRoute;
