@@ -5,23 +5,29 @@ import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Textarea } from "@/Components/ui/textarea";
 import { Card } from "@/Components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/Components/ui/select";
 import { Button } from "@/Components/ui/button";
 import { X, Upload } from "lucide-react";
 import FormHeading from "./FormHeading";
 
 const AddProductForm = ({ onSubmitProduct }) => {
-  const [images, setImages] = useState([]);
+  const [mainImage, setMainImage] = useState("");
+  const [galleryImages, setGalleryImages] = useState([]);
   const [specs, setSpecs] = useState([{ name: "", value: "" }]);
   const [uploading, setUploading] = useState(false);
 
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, reset, setValue, } = useForm();
 
-  //Upload to Cloudinary
+  // Upload to Cloudinary
   const uploadToCloudinary = async (files) => {
     const uploadedURLs = [];
     setUploading(true);
-
     for (const file of files) {
       const formData = new FormData();
       formData.append("file", file);
@@ -29,7 +35,9 @@ const AddProductForm = ({ onSubmitProduct }) => {
       formData.append("cloud_name", import.meta.env.VITE_Cloud_name);
 
       const res = await axios.post(
-        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_Cloud_name}/image/upload`,
+        `https://api.cloudinary.com/v1_1/${
+          import.meta.env.VITE_Cloud_name
+        }/image/upload`,
         formData
       );
       uploadedURLs.push(res.data.secure_url);
@@ -39,19 +47,26 @@ const AddProductForm = ({ onSubmitProduct }) => {
     return uploadedURLs;
   };
 
-  //Handle image select
-  const handleImageUpload = async (e) => {
+  // Handle main image upload (single)
+  const handleMainImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const [url] = await uploadToCloudinary([file]);
+    setMainImage(url);
+  };
+
+  // Handle gallery upload (multiple)
+  const handleGalleryUpload = async (e) => {
     const files = Array.from(e.target.files);
     const urls = await uploadToCloudinary(files);
-    setImages((prev) => [...prev, ...urls]);
+    setGalleryImages((prev) => [...prev, ...urls]);
   };
 
-  // Remove uploaded image
-  const removeImage = (url) => {
-    setImages(images.filter((img) => img !== url));
+  const removeGalleryImage = (url) => {
+    setGalleryImages(galleryImages.filter((img) => img !== url));
   };
 
-  //Specification logic
+  // Specification logic
   const addSpec = () => setSpecs([...specs, { name: "", value: "" }]);
   const removeSpec = (i) => setSpecs(specs.filter((_, index) => index !== i));
   const handleSpecChange = (i, field, value) => {
@@ -60,22 +75,45 @@ const AddProductForm = ({ onSubmitProduct }) => {
     setSpecs(updated);
   };
 
-  //Final Submit Handler
+  // Final Submit
   const onSubmit = (data) => {
+    if (!mainImage) {
+      alert("Main image is required!");
+      return;
+    }
+
+    if (galleryImages.length === 0) {
+      alert("At least one gallery image is required!");
+      return;
+    }
+
+    // Convert specs array to object
+    const specsObject = specs.reduce((acc, curr) => {
+      if (curr.name.trim() && curr.value.trim()) {
+        acc[curr.name] = curr.value;
+      }
+      return acc;
+    }, {});
+
     const productData = {
       ...data,
-      specifications: specs,
-      images,
+      currency: data.currency || "BDT",
+      specifications: specsObject,
+      mainImage,
+      galleryImages,
     };
+
     onSubmitProduct(productData);
     reset();
-    setImages([]);
+    setSpecs([{ name: "", value: "" }]);
+    setMainImage("");
+    setGalleryImages([]);
   };
 
   return (
     <div className="space-y-6">
       <form id="addProductForm" onSubmit={handleSubmit(onSubmit)}>
-        <FormHeading></FormHeading>
+        <FormHeading />
         <div className="flex gap-6 mt-10">
           {/* LEFT SIDE */}
           <div className="w-7/12">
@@ -86,6 +124,7 @@ const AddProductForm = ({ onSubmitProduct }) => {
                   <Label>Product Name *</Label>
                   <Input {...register("name", { required: true })} placeholder="Enter product name" />
                 </div>
+
                 <div>
                   <Label>Brand *</Label>
                   <Input {...register("brand", { required: true })} placeholder="Enter brand name" />
@@ -120,8 +159,28 @@ const AddProductForm = ({ onSubmitProduct }) => {
                 </div>
 
                 <div>
-                  <Label>Price ($)</Label>
+                  <Label>Currency *</Label>
+                  <Select onValueChange={(v) => setValue("currency", v)}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select currency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="BDT">BDT</SelectItem>
+                      <SelectItem value="USD">USD</SelectItem>
+                      <SelectItem value="EUR">EURO</SelectItem>
+                      <SelectItem value="SAR">REAL</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label>Price *</Label>
                   <Input type="number" step="0.01" {...register("price", { required: true })} />
+                </div>
+
+                <div>
+                  <Label>Discount Price *</Label>
+                  <Input type="number" step="0.01" {...register("discount_price", { required: true })} />
                 </div>
 
                 <div>
@@ -140,7 +199,7 @@ const AddProductForm = ({ onSubmitProduct }) => {
             <Card className="p-6 mt-6 shadow-sm border">
               <div className="flex justify-between items-center mb-4">
                 <h4 className="text-lg font-semibold">Specifications</h4>
-                <Button className="cursor-pointer" type="button" onClick={addSpec}>
+                <Button type="button" onClick={addSpec}>
                   + Add Spec
                 </Button>
               </div>
@@ -148,17 +207,22 @@ const AddProductForm = ({ onSubmitProduct }) => {
                 {specs.map((spec, index) => (
                   <div key={index} className="grid grid-cols-[1fr_1fr_auto] gap-2 items-center">
                     <Input
-                      placeholder="Specification name"
+                      placeholder="Key (e.g. Processor)"
                       value={spec.name}
                       onChange={(e) => handleSpecChange(index, "name", e.target.value)}
                     />
                     <Input
-                      placeholder="Value"
+                      placeholder="Value (e.g. Intel i5)"
                       value={spec.value}
                       onChange={(e) => handleSpecChange(index, "value", e.target.value)}
                     />
-                    <Button className="cursor-pointer" type="button" variant="ghost" size="icon" onClick={() => removeSpec(index)}>
-                      <X className="w-4 h-4 cursor-pointer" />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeSpec(index)}
+                    >
+                      <X className="w-4 h-4" />
                     </Button>
                   </div>
                 ))}
@@ -167,35 +231,73 @@ const AddProductForm = ({ onSubmitProduct }) => {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="w-5/12">
+          <div className="w-5/12 space-y-6">
+            {/* Main Image */}
             <Card className="p-6 shadow-sm border space-y-4">
-              <h4 className="text-xl font-semibold">Product Images</h4>
+              <h4 className="text-xl font-semibold">Main Image</h4>
               <label
-                htmlFor="imageUpload"
-                className="w-full flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer hover:bg-muted/40 transition">
+                htmlFor="mainImageUpload"
+                className="w-full flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer hover:bg-muted/40 transition"
+              >
                 <Upload className="w-6 h-6 mb-2 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">
-                  {uploading ? "Uploading..." : "Click to upload images"}
+                  {uploading ? "Uploading..." : "Click to upload main image"}
                 </span>
                 <input
-                  id="imageUpload"
+                  id="mainImageUpload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleMainImageUpload}
+                  required
+                />
+              </label>
+
+              {mainImage && (
+                <div className="relative group rounded-lg overflow-hidden">
+                  <img src={mainImage} alt="Main" className="w-full h-40 object-cover rounded-md border" />
+                  <button
+                    type="button"
+                    onClick={() => setMainImage("")}
+                    className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                  >
+                    <X className="text-white w-6 h-6" />
+                  </button>
+                </div>
+              )}
+            </Card>
+
+            {/* Gallery Images */}
+            <Card className="p-6 shadow-sm border space-y-4">
+              <h4 className="text-xl font-semibold">Gallery Images</h4>
+              <label
+                htmlFor="galleryUpload"
+                className="w-full flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer hover:bg-muted/40 transition"
+              >
+                <Upload className="w-6 h-6 mb-2 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">
+                  {uploading ? "Uploading..." : "Click to upload gallery images"}
+                </span>
+                <input
+                  id="galleryUpload"
                   type="file"
                   accept="image/*"
                   multiple
                   className="hidden"
-                  onChange={handleImageUpload}
+                  onChange={handleGalleryUpload}
+                  required
                 />
               </label>
 
-              {/* Image previews */}
               <div className="grid grid-cols-2 gap-3">
-                {images.map((url, idx) => (
+                {galleryImages.map((url, idx) => (
                   <div key={idx} className="relative group rounded-lg overflow-hidden">
-                    <img src={url} alt="Uploaded" className="w-full h-28 object-cover rounded-md border" />
+                    <img src={url} alt="Gallery" className="w-full h-28 object-cover rounded-md border" />
                     <button
                       type="button"
-                      onClick={() => removeImage(url)}
-                      className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                      onClick={() => removeGalleryImage(url)}
+                      className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                    >
                       <X className="text-white w-6 h-6" />
                     </button>
                   </div>

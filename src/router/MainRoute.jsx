@@ -24,6 +24,8 @@ import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllP
 import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+import AddProduct from "@/Layout/Dashboard/AdminDashboard/components/Products/AddProduct";
+import AddProductForm from "@/Layout/Dashboard/AdminDashboard/components/Products/Forms/AddProductForm";
 
 const MainRoute = createBrowserRouter([
   {
@@ -99,6 +101,10 @@ const MainRoute = createBrowserRouter([
       {
         path: "products",
         element: <Products></Products>
+      },
+      {
+        path: "products/addProduct",
+        element: <AddProduct></AddProduct>
       },
       {
         path: "orders",
