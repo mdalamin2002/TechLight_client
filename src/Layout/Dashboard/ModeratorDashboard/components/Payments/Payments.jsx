@@ -5,7 +5,6 @@ import Settings from "./components/Settings";
 import Analytics from "./components/Analytics";
 import Disputes from "./components/Disputes/Disputes";
 import Refunds from "./components/Refunds";
-import Verification_log from "./components/Verification_log";
 
 export const Payments = () => {
   const [activeTab, setActiveTab] = useState("transactions");
@@ -14,7 +13,6 @@ export const Payments = () => {
     { key: "transactions", label: "Transactions" },
     { key: "refunds", label: "Refunds" },
     { key: "disputes", label: "Disputes" },
-    { key: "verificationLogs", label: "Verification Logs" },
     { key: "analytics", label: "Analytics" },
     { key: "settings", label: "Settings" },
     { key: "reports", label: "Reports" },
@@ -28,8 +26,6 @@ export const Payments = () => {
         return <Refunds />;
       case "disputes":
         return <Disputes />;
-      case "verificationLogs":
-        return <Verification_log />;
       case "analytics":
         return <Analytics />;
       case "settings":
