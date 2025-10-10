@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 
-const WishlistSummary = ({ totalItems, totalValue, totalSavings }) => (
+const WishlistSummary = ({ totalItems, totalValue, totalSavings, handleAddAllToCart }) => (
   <div className="sticky top-28 space-y-4">
     <Card className="shadow-md bg-card">
       <CardContent className="p-5 sm:p-6">
@@ -20,7 +20,7 @@ const WishlistSummary = ({ totalItems, totalValue, totalSavings }) => (
             <span>৳{totalSavings.toLocaleString()}</span>
           </div>
         </div>
-        <button className="w-full mt-5 bg-primary text-primary-foreground py-2.5 rounded-lg font-semibold hover:opacity-90 transition">
+        <button onClick={handleAddAllToCart} className="w-full mt-5 bg-primary text-primary-foreground py-2.5 rounded-lg font-semibold hover:opacity-90 transition">
           Add All to Cart
         </button>
       </CardContent>
