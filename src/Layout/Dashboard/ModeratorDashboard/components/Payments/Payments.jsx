@@ -3,7 +3,7 @@ import Transactions from "./components/Transactions";
 import Reports from "./components/Reports";
 import Settings from "./components/Settings";
 import Analytics from "./components/Analytics";
-import Disputes from "./components/Disputes";
+import Disputes from "./components/Disputes/Disputes";
 import Refunds from "./components/Refunds";
 import Verification_log from "./components/Verification_log";
 
