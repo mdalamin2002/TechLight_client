@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
-import { priceLabel, toNumber } from "@/pages/HomeLayoutPages/AllProduct/All Product page/product";
-import { Link } from "react-router-dom";
+import {
+  priceLabel,
+  toNumber,
+} from "@/pages/HomeLayoutPages/AllProduct/All Product page/product";
+import { Link, useNavigate } from "react-router-dom";
 import useWishlist from "@/hooks/useWishlist";
-import Swal from "sweetalert2";
+import useCart from "@/hooks/useCart";
+import { toast } from "react-toastify";
 
 const AllProductCardShare = ({
   id,
@@ -17,14 +21,21 @@ const AllProductCardShare = ({
   status = "In Stock",
   keyFeatures = [],
   buttonText = "Add to Cart",
-  buttonAction = () => {},
   variant = "grid",
   userEmail,
 }) => {
-  const { wishlist, addToWishlist, removeFromWishlist, adding, removing, isLoading } =
-    useWishlist();
+  const {
+    wishlist,
+    addToWishlist,
+    removeFromWishlist,
+    adding,
+    removing,
+    isLoading,
+  } = useWishlist();
+  const { cart, addToCart } = useCart();
 
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const navigate = useNavigate();
 
   const priceNum = toNumber(price);
   const regularPriceNum = toNumber(regularPrice);
@@ -43,51 +54,72 @@ const AllProductCardShare = ({
 
   //  Wishlist button handler
   const handleWishlist = () => {
-  const wishlistData = {
-    productId: id,
-    name,
-    image,
-    brand,
-    subcategory,
-    price,
-    regularPrice,
-    status,
-    userEmail: userEmail || "guest@example.com",
-    createdAt: new Date().toISOString(),
+    const wishlistData = {
+      productId: id,
+      name,
+      image,
+      brand,
+      subcategory,
+      price,
+      regularPrice,
+      status,
+      userEmail: userEmail || "guest@example.com",
+      createdAt: new Date().toISOString(),
+    };
+
+    const wishlistItem = wishlist?.find((item) => item.productId === id);
+    const wishlistId = wishlistItem?._id;
+
+    if (!isWishlisted) {
+      addToWishlist(wishlistData, {
+        onSuccess: () => {
+          toast.success(`${name} added to Wishlist!`);
+          setIsWishlisted(true);
+        },
+      });
+    } else if (wishlistId) {
+      removeFromWishlist(wishlistId, {
+        onSuccess: () => {
+          toast.info(`${name} removed from Wishlist.`);
+          setIsWishlisted(false);
+        },
+      });
+    }
   };
 
-  const wishlistItem = wishlist?.find(item => item.productId === id);
-  const wishlistId = wishlistItem?._id;
 
-  if (!isWishlisted) {
-    addToWishlist(wishlistData, {
-      onSuccess: () => {
-        Swal.fire({
-          icon: "success",
-          title: "Added to Wishlist!",
-          text: `${name} has been added.`,
-          timer: 1500,
-          showConfirmButton: false,
-        });
-        setIsWishlisted(true);
-      },
-    });
-  } else if (wishlistId) {
-    removeFromWishlist(wishlistId, {
-      onSuccess: () => {
-        Swal.fire({
-          icon: "info",
-          title: "Removed from Wishlist",
-          text: `${name} removed.`,
-          timer: 1200,
-          showConfirmButton: false,
-        });
-        setIsWishlisted(false);
-      },
-    });
-  }
-};
+  // Cart handler
+  const handleAddToCart = () => {
+    const cartData = {
+      productId: id,
+      name,
+      image,
+      brand,
+      subcategory,
+      price,
+      regularPrice,
+      quantity: 1,
+      status,
+      userEmail: userEmail || "guest@example.com",
+      createdAt: new Date().toISOString(),
+    };
 
+    const exists = cart?.some((item) => item.productId === id);
+
+    if (exists) {
+      toast.info(`${name} is already in your cart.`);
+    } else {
+      addToCart(cartData, {
+        onSuccess: () => {
+          toast.success(`${name} added to your cart!`);
+          navigate("/addToCart");
+        },
+        onError: () => {
+          toast.error("Failed to add item to cart.");
+        },
+      });
+    }
+  };
 
   return (
     <div
@@ -180,19 +212,25 @@ const AllProductCardShare = ({
               />
             ))}
           </div>
-          <span className="text-xs text-muted-foreground font-medium">{rating}</span>
+          <span className="text-xs text-muted-foreground font-medium">
+            {rating}
+          </span>
         </div>
 
         <div className="pt-3 space-y-2">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-primary">{priceLabel(price)}</span>
+            <span className="text-2xl font-bold text-primary">
+              {priceLabel(price)}
+            </span>
             {discount > 0 && (
-              <span className="text-sm text-muted-foreground line-through">{priceLabel(regularPrice)}</span>
+              <span className="text-sm text-muted-foreground line-through">
+                {priceLabel(regularPrice)}
+              </span>
             )}
           </div>
 
           <button
-            onClick={buttonAction}
+            onClick={handleAddToCart}
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
           >
             <ShoppingCart size={18} />
