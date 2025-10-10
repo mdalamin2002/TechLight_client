@@ -30,6 +30,8 @@ import useAuth from "@/hooks/useAuth";
 import GlobalLoading from "../Loading/GlobalLoading";
 import { toast } from "react-toastify";
 import { auth } from "@/firebase/firebase.init";
+import useCart from "@/hooks/useCart";
+import useWishlist from "@/hooks/useWishlist";
 
 export default function Navbar() {
   const location = useLocation();
@@ -41,11 +43,13 @@ export default function Navbar() {
   const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { cart } = useCart();
+  const { wishlist } = useWishlist();
 
   const profileRef = useRef(null);
 
-  const cartCount = 2;
-  const wishlistCount = 3;
+  const cartCount = cart.length;
+  const wishlistCount = wishlist.length;
 
   const categories = [
     {
@@ -196,11 +200,11 @@ export default function Navbar() {
               {/* Wishlist & Cart - Desktop */}
               <div className="flex items-center gap-1">
                 <Button variant="ghost" size="sm" asChild className="gap-2">
-                  <Link to="/wishlist">
+                  <Link to="/wishlist" className="flex items-center">
                     <div className="relative">
-                      <Heart size={20} />
+                      <Heart size={22} className="text-foreground" />
                       {wishlistCount > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                        <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                           {wishlistCount}
                         </span>
                       )}
@@ -208,17 +212,13 @@ export default function Navbar() {
                     <span className="hidden lg:inline">Wishlist</span>
                   </Link>
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  asChild
-                  className="gap-2 relative"
-                >
-                  <Link to="/addToCart">
+
+                <Button variant="ghost" size="sm" asChild className="gap-2">
+                  <Link to="/addToCart" className="flex items-center">
                     <div className="relative">
-                      <ShoppingCart size={20} />
+                      <ShoppingCart size={22} className="text-foreground" />
                       {cartCount > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                        <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                           {cartCount}
                         </span>
                       )}

@@ -98,7 +98,7 @@ const CartItem = ({
                 onClick={() => moveToWishlist(item)}
                 className={`flex items-center gap-1 text-sm transition-colors ${
                   isInWishlist
-                    ? "text-green-600 cursor-not-allowed"
+                    ? "text-rose-500 cursor-not-allowed"
                     : "text-muted-foreground hover:text-rose-500"
                 }`}
                 disabled={addingToWishlist || isInWishlist}
