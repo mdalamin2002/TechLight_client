@@ -13,7 +13,7 @@ const AddBannerOffer = () => {
   const [imageFile, setImageFile] = useState(null);
 
   
-    const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY; // এখানে তোমার API key দাও
+    const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY; // Replace with your ImageBB API key
 
   // Fetch banners
   const fetchBanners = async () => {
