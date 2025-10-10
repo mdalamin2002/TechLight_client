@@ -154,7 +154,6 @@ const ReportsAnalytics = () => {
           onClick={() => handleExport("problematic")}
           className="mt-2 bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
         >
-          Export Problematic
         </button>
       </div>
     </div>
