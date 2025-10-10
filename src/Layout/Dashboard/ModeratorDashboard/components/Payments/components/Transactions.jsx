@@ -11,18 +11,18 @@ const samplePayments = [
   { id: "TRX006", user: "Lucy Gray", method: "Card", amount: 1700, status: "success", date: "2025-10-05" },
 ];
 
-const statusColors = {
-  pending: "#FBBF24",
-  success: "#22C55E",
-  failed: "#EF4444",
-  refunded: "#EF4444",
+const statusStyles = {
+  pending: "text-yellow-600 bg-yellow-50",
+  success: "text-green-600 bg-green-50",
+  failed: "text-red-500 bg-red-50",
+  refunded: "text-blue-600 bg-blue-50",
 };
 
 const statusIcons = {
   pending: Clock,
   success: CheckCircle,
   failed: XCircle,
-  refunded: XCircle,
+  refunded: CheckCircle,
 };
 
 const Transactions = () => {
@@ -42,26 +42,46 @@ const Transactions = () => {
   );
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800">Transactions</h1>
+    <div className="p-6 md:p-8 bg-gray-50 min-h-screen">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Transaction Overview</h1>
+        <CSVLink
+          data={samplePayments}
+          filename={"transactions-report.csv"}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+        >
+          <Download size={18} /> Export CSV
+        </CSVLink>
+      </div>
 
-      {/* Status Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      {/* Status Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {Object.keys(statusCounts).map((status) => {
           const Icon = statusIcons[status];
+          const isActive = filter === status;
           return (
             <div
               key={status}
-              className="flex items-center justify-between p-4 rounded-xl bg-white cursor-pointer hover:bg-gray-50 transition"
               onClick={() => setFilter(status)}
+              className={`p-4 rounded-xl bg-white flex justify-between items-center cursor-pointer transition border ${
+                isActive ? "border-blue-500 shadow-md" : "hover:shadow-sm border-gray-200"
+              }`}
             >
               <div>
-                <p className="text-gray-500 text-sm sm:text-base">{status.charAt(0).toUpperCase() + status.slice(1)}</p>
-                <p className="text-xl sm:text-2xl font-bold">{statusCounts[status]}</p>
+                <p className="text-gray-500 text-sm capitalize">{status}</p>
+                <p className="text-xl font-semibold">{statusCounts[status]}</p>
               </div>
               <div
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white"
-                style={{ backgroundColor: statusColors[status] }}
+                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${
+                  status === "pending"
+                    ? "bg-yellow-400"
+                    : status === "success"
+                    ? "bg-green-500"
+                    : status === "failed"
+                    ? "bg-red-500"
+                    : "bg-blue-500"
+                }`}
               >
                 <Icon size={20} />
               </div>
@@ -70,62 +90,66 @@ const Transactions = () => {
         })}
       </div>
 
-      {/* Filter & Export */}
-      <div className="flex flex-col sm:flex-row sm:justify-end sm:items-center gap-2 mb-4">
-        <select
-          className="border border-gray-300 rounded-lg p-2 sm:p-3 w-full sm:w-64 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option value="all">All</option>
-          <option value="pending">Pending</option>
-          <option value="success">Success</option>
-          <option value="failed">Failed</option>
-          <option value="refunded">Refunded</option>
-        </select>
-
-        <CSVLink
-          data={samplePayments}
-          filename={"transactions-report.csv"}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition text-sm sm:text-sm"
-        >
-          <Download size={16} /> Export
-        </CSVLink>
+      {/* Filter Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-4">
+        <div className="flex items-center gap-2">
+          <select
+            className="border border-gray-300 rounded-lg p-2 w-44 text-gray-700 focus:ring-2 focus:ring-blue-500"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="success">Success</option>
+            <option value="failed">Failed</option>
+            <option value="refunded">Refunded</option>
+          </select>
+        </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm sm:text-base border border-gray-200">
-          <thead className="bg-gray-100">
+      {/* Table Section */}
+      <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200">
+        <table className="min-w-full text-sm md:text-base">
+          <thead className="bg-gray-100 sticky top-0 z-10">
             <tr>
               {["Transaction ID", "User", "Method", "Amount", "Status", "Date", "Actions"].map((head) => (
-                <th key={head} className="px-4 sm:px-6 py-2 text-left font-semibold text-gray-700 border-b border-gray-200">{head}</th>
+                <th
+                  key={head}
+                  className="px-4 py-3 text-left font-semibold text-gray-700 border-b border-gray-200"
+                >
+                  {head}
+                </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {filteredPayments.map((p) => (
-              <tr key={p.id} className="hover:bg-gray-50 transition">
-                <td className="px-4 sm:px-6 py-2 whitespace-nowrap border-b border-gray-200">{p.id}</td>
-                <td className="px-4 sm:px-6 py-2 whitespace-nowrap border-b border-gray-200">{p.user}</td>
-                <td className="px-4 sm:px-6 py-2 whitespace-nowrap border-b border-gray-200">{p.method}</td>
-                <td className="px-4 sm:px-6 py-2 whitespace-nowrap border-b border-gray-200">{p.amount} BDT</td>
-                <td className={`px-4 sm:px-6 py-2 whitespace-nowrap font-semibold border-b border-gray-200 ${
-                  p.status === "pending" ? "text-yellow-500" :
-                  p.status === "success" ? "text-green-500" :
-                  "text-red-500"
-                }`}>
-                  {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
-                </td>
-                <td className="px-4 sm:px-6 py-2 whitespace-nowrap border-b border-gray-200">{p.date}</td>
-                <td className="px-4 sm:px-6 py-2 whitespace-nowrap text-center border-b border-gray-200">
-                  <button className="flex items-center justify-center gap-1 sm:gap-2 px-3 py-2 rounded-md text-sm hover:bg-blue-100 transition">
-                    <Eye size={16} /> View
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {filteredPayments.length === 0 && (
+            {filteredPayments.length ? (
+              filteredPayments.map((p) => {
+                const Icon = statusIcons[p.status];
+                return (
+                  <tr key={p.id} className="hover:bg-gray-50 transition">
+                    <td className="px-4 py-3 border-b">{p.id}</td>
+                    <td className="px-4 py-3 border-b">{p.user}</td>
+                    <td className="px-4 py-3 border-b">{p.method}</td>
+                    <td className="px-4 py-3 border-b">{p.amount} BDT</td>
+                    <td className="px-4 py-3 border-b">
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${statusStyles[p.status]}`}
+                      >
+                        <Icon size={14} />
+                        {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 border-b">{p.date}</td>
+                    <td className="px-4 py-3 border-b">
+                      <button className="flex items-center gap-1 text-blue-600 hover:underline">
+                        <Eye size={15} /> View
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
               <tr>
                 <td colSpan="7" className="text-center py-6 text-gray-500">
                   No transactions found.
