@@ -7,6 +7,9 @@ import DashboardLayout from "@/Layout/Dashboard/DashboardLayout";
 import MainDashboard from "@/Layout/Dashboard/MainDashboard";
 import AuthLayout from "@/Layout/MainLayout/authLayout/authLayout";
 import Register from "@/pages/authentication/register/Register";
+import Login from "@/pages/authentication/Login/Login";
+
+// Admin Dashboard
 import Sellers from "@/Layout/Dashboard/AdminDashboard/components/Sellers";
 import Products from "@/Layout/Dashboard/AdminDashboard/components/Products";
 import Communication from "@/Layout/Dashboard/AdminDashboard/components/Communication/Communication";
@@ -14,59 +17,52 @@ import Settings from "@/Layout/Dashboard/AdminDashboard/components/Settings/Sett
 import Advanced from "@/Layout/Dashboard/AdminDashboard/components/Advanced/Advanced";
 import Admin_Home from "@/Layout/Dashboard/AdminDashboard/components/Admin_Home/Admin_Home";
 import { Reports } from "@/Layout/Dashboard/AdminDashboard/components/Reports_page/Reports";
-import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/ReturnsRefundsPolicy";
-import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
-import Login from "@/pages/authentication/Login/Login";
-import Warranty from "@/pages/PolicyPages/Warranty/Warranty";
-// import FAQ from "@/pages/PolicyPages/FAQ/FAQ";
-import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
-import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
-import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
 import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+
+// Moderator Dashboard
+import { ModeratorOverview } from "@/Layout/Dashboard/ModeratorDashboard/components/ModeratorOverview/ModeratorOverview";
+import { OrdersProducts } from "@/Layout/Dashboard/ModeratorDashboard/components/OrdersProducts/OrdersProducts";
+import { UsersReviews } from "@/Layout/Dashboard/ModeratorDashboard/components/UsersReviews/UsersReviews";
+import { SupportCommunication } from "@/Layout/Dashboard/ModeratorDashboard/components/SupportCommunication/SupportCommunication";
+import ReportsAnalytics from "@/Layout/Dashboard/ModeratorDashboard/components/ReportsAnalytics/ReportsAnalytics";
+import DeveloperNotes from "@/Layout/Dashboard/ModeratorDashboard/components/DeveloperNotes/DeveloperNotes";
+import ModeratorSettings from "@/Layout/Dashboard/ModeratorDashboard/components/ModeratorSettings/ModeratorSettings";
+import Payments from "@/Layout/Dashboard/ModeratorDashboard/components/Payments/Payments";
+import Notifications from "@/Layout/Dashboard/ModeratorDashboard/components/Notifications/Notifications";
+
+// User Dashboard
+import Profile from "@/Layout/Dashboard/UserDashboard/components/Profile/Profile";
+// import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
+import Cart from "@/Layout/Dashboard/UserDashboard/components/Cart/Cart";
+import Addresses from "@/Layout/Dashboard/UserDashboard/components/Addresses/Addresses";
+import ReturnsRefunds from "@/Layout/Dashboard/UserDashboard/components/ReturnsRefunds/ReturnsRefunds";
+import UserSettings from "@/Layout/Dashboard/UserDashboard/components/Settings/UserSettings";
+import PaymentMethods from "@/Layout/Dashboard/UserDashboard/components/PaymentMethods/PaymentMethods";
+import Overview from "@/Layout/Dashboard/UserDashboard/components/Overview/Overview";
+import Support from "@/Layout/Dashboard/UserDashboard/components/Support/Support";
+
+// Policies
+import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/ReturnsRefundsPolicy";
+import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
+import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
+import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
+import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
 
 const MainRoute = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout></MainLayout>,
     children: [
-      {
-        index: true,
-        Component: Home,
-      },
-      {
-        path: "/privacy_policy",
-        Component: PrivacyPolicy,
-      },
-      {
-        path: "/mobile",
-        Component: Mobile,
-      },
-      {
-        path: "/allProduct",
-        Component: AllProduct,
-      },
-      {
-        path: "/returns-refunds",
-        Component: ReturnsRefundsPolicy,
-      },
-      {
-        path: "/order-tracking",
-        Component: OrderTrackingPolicy,
-      },
-      {
-        path: "/warranty",
-        Component: Warranty,
-      },
-      // {
-      //   path: "faq",
-      //   Component: FAQ,
-      // },
-      {
-        path: "terms-service",
-        Component: TermsOfService,
-      },
+      { index: true, Component: Home },
+      { path: "/privacy_policy", Component: PrivacyPolicy },
+      { path: "/mobile", Component: Mobile },
+      { path: "/returns-refunds", Component: ReturnsRefundsPolicy },
+      { path: "/order-tracking", Component: OrderTrackingPolicy },
+      { path: "/terms-service", Component: TermsOfService },
+      { path: "/faq", Component: FAQ },
     ],
   },
   {
@@ -81,52 +77,42 @@ const MainRoute = createBrowserRouter([
     path: "/dashboard",
     element: <DashboardLayout></DashboardLayout>,
     children: [
-      {
-        index: true,
-        element: <MainDashboard></MainDashboard>
-      },
-      {
-        path: "home",
-        element: <Admin_Home></Admin_Home>
-      },
-      {
-        path: "users",
-        element: <AllUsers></AllUsers>
-      },
-      {
-        path: "sellers",
-        element: <Sellers></Sellers>
-      },
-      {
-        path: "products",
-        element: <Products></Products>
-      },
-      {
-        path: "orders",
-        element: <Orders></Orders>,
-      },
-      {
-        path: "finance",
-        element: <Finance></Finance>
-      },
-      {
-        path: "communication",
-        element: <Communication></Communication>
-      },
-      {
-        path: "reports",
-        element: <Reports></Reports>
-      },
-      {
-        path: "settings",
-        element: <Settings></Settings>
-      },
-      {
-        path: "advanced",
-        element: <Advanced></Advanced>
-      }
-    ]
-  }
+      { index: true, element: <MainDashboard></MainDashboard> },
+      { path: "home", element: <Admin_Home></Admin_Home> },
+      { path: "users", element: <AllUsers></AllUsers> },
+      { path: "sellers", element: <Sellers></Sellers> },
+      { path: "products", element: <Products></Products> },
+      { path: "orders", element: <Orders></Orders> },
+      { path: "finance", element: <Finance></Finance> },
+      { path: "communication", element: <Communication></Communication> },
+      { path: "reports", element: <Reports></Reports> },
+      { path: "settings", element: <Settings></Settings> },
+      { path: "advanced", element: <Advanced></Advanced> },
+
+      // Moderator Routes
+      { path: "moderator-overview", element: <ModeratorOverview></ModeratorOverview> },
+      { path: "orders-products", element: <OrdersProducts></OrdersProducts> },
+      { path: "users-reviews", element: <UsersReviews></UsersReviews> },
+      { path: "support-communication", element: <SupportCommunication></SupportCommunication> },
+      { path: "reports-analytics", element: <ReportsAnalytics></ReportsAnalytics> },
+      { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
+      { path: "moderator-settings", element: <ModeratorSettings></ModeratorSettings> },
+      { path: "payments", element: <Payments></Payments>},
+      { path: "notifications", element: <Notifications></Notifications>},
+
+      // User Routes
+      { path: "my-overview", element: <Overview></Overview> },
+      { path: "my-profile", element: <Profile></Profile> },
+      { path: "my-orders", element: <MyOrders></MyOrders> },
+      { path: "my-wishlist", element: <Wishlist></Wishlist> },
+      { path: "my-cart", element: <Cart></Cart> },
+      { path: "my-addresses", element: <Addresses></Addresses> },
+      { path: "my-payment-methods", element: <PaymentMethods></PaymentMethods> },
+      { path: "my-returns", element: <ReturnsRefunds></ReturnsRefunds> },
+      { path: "my-settings", element: <UserSettings></UserSettings> },
+      { path: "my-support", element: <Support></Support> },
+    ],
+  },
 ]);
 
 export default MainRoute;
