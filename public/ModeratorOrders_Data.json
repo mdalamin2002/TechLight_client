@@ -1,0 +1,142 @@
+[
+  {
+    "_id": "ORD-1001",
+    "user": "Sabrina Akter",
+    "products": ["iPhone 15 Pro", "AirPods Pro 2"],
+    "status": "Pending",
+    "date": "2025-10-05"
+  },
+  {
+    "_id": "ORD-1002",
+    "user": "Md. Alamin",
+    "products": ["MacBook Air M2"],
+    "status": "Shipped",
+    "date": "2025-10-06"
+  },
+  {
+    "_id": "ORD-1003",
+    "user": "Tamzid Rahman",
+    "products": ["Samsung Galaxy S24 Ultra", "Smart Watch 6"],
+    "status": "Delivered",
+    "date": "2025-10-07"
+  },
+  {
+    "_id": "ORD-1004",
+    "user": "Nusrat Jahan",
+    "products": ["Sony WH-1000XM5"],
+    "status": "Pending",
+    "date": "2025-10-08"
+  },
+  {
+    "_id": "ORD-1005",
+    "user": "Hasan Mahmud",
+    "products": ["Asus ROG Strix Laptop", "Logitech MX Master 3S"],
+    "status": "Shipped",
+    "date": "2025-10-09"
+  },
+  {
+    "_id": "ORD-1006",
+    "user": "Farhana Akter",
+    "products": ["iPad Pro 12.9", "Apple Pencil 2"],
+    "status": "Pending",
+    "date": "2025-10-05"
+  },
+  {
+    "_id": "ORD-1007",
+    "user": "Rashed Khan",
+    "products": ["Dell XPS 15", "Dell Docking Station"],
+    "status": "Shipped",
+    "date": "2025-10-06"
+  },
+  {
+    "_id": "ORD-1008",
+    "user": "Tania Rahman",
+    "products": ["Google Pixel 8", "Pixel Buds Pro"],
+    "status": "Delivered",
+    "date": "2025-10-07"
+  },
+  {
+    "_id": "ORD-1009",
+    "user": "Arif Hossain",
+    "products": ["OnePlus 12", "OnePlus Watch"],
+    "status": "Pending",
+    "date": "2025-10-08"
+  },
+  {
+    "_id": "ORD-1010",
+    "user": "Shamim Ahmed",
+    "products": ["HP Spectre x360"],
+    "status": "Shipped",
+    "date": "2025-10-09"
+  },
+  {
+    "_id": "ORD-1011",
+    "user": "Lamia Chowdhury",
+    "products": ["MacBook Pro 16 M2 Max", "Magic Mouse 2"],
+    "status": "Pending",
+    "date": "2025-10-05"
+  },
+  {
+    "_id": "ORD-1012",
+    "user": "Rakibul Hasan",
+    "products": ["Samsung Galaxy Tab S9", "Samsung Buds 3"],
+    "status": "Shipped",
+    "date": "2025-10-06"
+  },
+  {
+    "_id": "ORD-1013",
+    "user": "Meherun Nesa",
+    "products": ["iPhone 15", "AirTag 4 Pack"],
+    "status": "Delivered",
+    "date": "2025-10-07"
+  },
+  {
+    "_id": "ORD-1014",
+    "user": "Sakib Hossain",
+    "products": ["Lenovo ThinkPad X1 Carbon", "ThinkPad Dock"],
+    "status": "Pending",
+    "date": "2025-10-08"
+  },
+  {
+    "_id": "ORD-1015",
+    "user": "Nabila Akter",
+    "products": ["Sony Alpha a7 IV Camera", "Sony 24-70mm Lens"],
+    "status": "Shipped",
+    "date": "2025-10-09"
+  },
+  {
+    "_id": "ORD-1016",
+    "user": "Imran Sarker",
+    "products": ["Apple Watch Series 9", "AirPods Pro 2"],
+    "status": "Pending",
+    "date": "2025-10-05"
+  },
+  {
+    "_id": "ORD-1017",
+    "user": "Tahmina Jahan",
+    "products": ["iMac 24-inch M2", "Magic Keyboard"],
+    "status": "Shipped",
+    "date": "2025-10-06"
+  },
+  {
+    "_id": "ORD-1018",
+    "user": "Anik Rahman",
+    "products": ["Google Pixel 8 Pro", "Pixel Stand"],
+    "status": "Delivered",
+    "date": "2025-10-07"
+  },
+  {
+    "_id": "ORD-1019",
+    "user": "Rumana Akter",
+    "products": ["Asus Zenbook 14 OLED"],
+    "status": "Pending",
+    "date": "2025-10-08"
+  },
+  {
+    "_id": "ORD-1020",
+    "user": "Fahim Ahmed",
+    "products": ["HP Envy 13", "Logitech MX Keys"],
+    "status": "Shipped",
+    "date": "2025-10-09"
+  }
+]

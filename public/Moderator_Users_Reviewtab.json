@@ -1,0 +1,162 @@
+[
+  {
+    "reviewId": "REV-1001",
+    "user": "Rahmat Hossain",
+    "product": "iPhone 15 Pro",
+    "rating": 5,
+    "comment": "Excellent product, very satisfied!",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1002",
+    "user": "Sabrina Akter",
+    "product": "MacBook Air M2",
+    "rating": 4,
+    "comment": "Good performance but a bit pricey.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1003",
+    "user": "Md. Alamin",
+    "product": "AirPods Pro 2",
+    "rating": 3,
+    "comment": "Average sound quality.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1004",
+    "user": "Taqvir Ahmed",
+    "product": "Samsung Galaxy S23",
+    "rating": 5,
+    "comment": "Amazing camera and battery life!",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1005",
+    "user": "Syed Shariful Alam",
+    "product": "Logitech Mouse",
+    "rating": 4,
+    "comment": "Works well, ergonomic design.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1006",
+    "user": "Md. Abu Bakar",
+    "product": "Dell XPS 13",
+    "rating": 5,
+    "comment": "Highly recommend for work and study.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1007",
+    "user": "Fazlay Rabbi",
+    "product": "Apple Watch Series 9",
+    "rating": 3,
+    "comment": "Good but battery drains fast.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1008",
+    "user": "Md. Maruf Hasan",
+    "product": "Sony WH-1000XM5",
+    "rating": 5,
+    "comment": "Best noise-canceling headphones.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1009",
+    "user": "Pradip Rhd",
+    "product": "iPad Pro 12.9",
+    "rating": 4,
+    "comment": "Fast and smooth, perfect for drawing.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1010",
+    "user": "Tawsif Khan",
+    "product": "Samsung Galaxy Tab S9",
+    "rating": 3,
+    "comment": "Decent tablet, but a bit heavy.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1011",
+    "user": "Shamim Ahmed",
+    "product": "HP Spectre x360",
+    "rating": 5,
+    "comment": "Excellent build quality and performance.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1012",
+    "user": "Arafat Hossen",
+    "product": "Mac Mini M2",
+    "rating": 4,
+    "comment": "Compact and powerful, perfect for office.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1013",
+    "user": "Jahidul Islam",
+    "product": "Bose SoundLink Speaker",
+    "rating": 5,
+    "comment": "Great sound for the size.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1014",
+    "user": "Rashed Khan",
+    "product": "Canon EOS R6",
+    "rating": 5,
+    "comment": "Excellent camera for photography.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1015",
+    "user": "Samiul Islam",
+    "product": "Nikon Z6 II",
+    "rating": 4,
+    "comment": "Very good camera, slight learning curve.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1016",
+    "user": "Nayeem Hossen",
+    "product": "DJI Mini 3 Pro",
+    "rating": 5,
+    "comment": "Amazing drone for beginners and pros.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1017",
+    "user": "Kalam Mia",
+    "product": "Samsung Galaxy Buds 2",
+    "rating": 3,
+    "comment": "Comfortable but sound could be better.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1018",
+    "user": "Rana Das",
+    "product": "Google Pixel 8 Pro",
+    "rating": 5,
+    "comment": "Fantastic camera and clean Android experience.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1019",
+    "user": "Alif Rahman",
+    "product": "Lenovo Legion 7",
+    "rating": 4,
+    "comment": "Great gaming laptop, slightly heavy.",
+    "status": "Pending"
+  },
+  {
+    "reviewId": "REV-1020",
+    "user": "Fahim Khan",
+    "product": "Razer Blade 16",
+    "rating": 5,
+    "comment": "Top-notch gaming experience.",
+    "status": "Pending"
+  }
+]

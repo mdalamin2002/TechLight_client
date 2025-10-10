@@ -11,25 +11,35 @@ import {
   BarChart3,
   Settings,
   Zap,
+  Star,
+  PhoneCall,
+  BarChart3Icon,
+  FileText,
+  LayoutDashboard,
   User,
-  PackageOpen,
   Heart,
   MapPin,
   CreditCard,
   RotateCcw,
+  MessageCircle,
+  PackageOpen,
+  SettingsIcon,
+  CreditCardIcon,
+  Bell,
 } from "lucide-react";
 import TechLightLogo from "@/Components/Shared/Logo/TechLightLogo";
 
 export default function DashboardSidebar() {
-  const role = "Moderateor"; // "moderator" or "user"
+  const role = "moderator"; // "admin", "moderator", or "user"
 
   const NavItem = ({ to, label, icon: Icon }) => (
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${isActive
-          ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 border border-purple-500/30'
-          : 'text-primary-foreground hover:text-purple-300 hover:bg-purple-500/10'
+        `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
+          isActive
+            ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 border border-purple-500/30"
+            : "text-primary-foreground hover:text-purple-300 hover:bg-purple-500/10"
         }`
       }
     >
@@ -46,30 +56,63 @@ export default function DashboardSidebar() {
       { to: "/dashboard/products", label: "Products", icon: Box },
       { to: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
       { to: "/dashboard/finance", label: "Finance", icon: DollarSign },
-      { to: "/dashboard/communication", label: "Communication", icon: MessageSquare },
+      {
+        to: "/dashboard/communication",
+        label: "Communication",
+        icon: MessageSquare,
+      },
       { to: "/dashboard/reports", label: "Reports", icon: BarChart3 },
       { to: "/dashboard/settings", label: "Settings", icon: Settings },
       { to: "/dashboard/advanced", label: "Advanced", icon: Zap },
     ],
-    // moderator: [
-    //   { to: "/dashboard", label: "Dashboard", icon: Home },
-    //   { to: "/dashboard/AllDonationRequests", label: "Requests", icon: FileText },
-    //   { to: "/dashboard/ContentManagementPage", label: "Content", icon: FileText },
-    //   { to: "/dashboard/funding-money", label: "Funding", icon: DollarSign },
-    //   { to: "/dashboard/profile", label: "Profile", icon: User },
-    // ],
-    // UserNavigation
+
+    moderator: [
+      { to: "/dashboard/moderator-overview", label: "Dashboard", icon: Home },
+      { to: "/dashboard/orders-products", label: "Orders Products", icon: Box },
+      { to: "/dashboard/users-reviews", label: "Users Reviews", icon: Star },
+      {
+        to: "/dashboard/support-communication",
+        label: "Support",
+        icon: PhoneCall,
+      },
+      {
+        to: "/dashboard/reports-analytics",
+        label: "Reports Analytics",
+        icon: BarChart3Icon,
+      },
+      {
+        to: "/dashboard/developer-notes",
+        label: "Developer Notes",
+        icon: FileText,
+      },
+      {
+        to: "/dashboard/moderator-settings",
+        label: "Settings",
+        icon: SettingsIcon,
+      },
+      {
+        to: "/dashboard/payments",
+        label: "Payments",
+        icon: CreditCardIcon,
+      },
+      {
+        to: "/dashboard/notifications",
+        label: "Notifications",
+        icon: Bell,
+      },
+    ],
+
     user: [
-      { to: "/dashboard/overview", label: "Overview", icon: LayoutDashboard },
-      { to: "/dashboard/profile", label: "Profile", icon: User },
-      { to: "/dashboard/myorders", label: "My Orders", icon: PackageOpen },
-      { to: "/dashboard/wishlist", label: "Wishlist", icon: Heart },
-      { to: "/dashboard/cart", label: "Cart", icon: ShoppingCart },
-      { to: "/dashboard/addresses", label: "Addresses", icon: MapPin },
-      { to: "/dashboard/payment-methods", label: "Payment Methods", icon: CreditCard },
-      { to: "/dashboard/returns", label: "Returns", icon: RotateCcw },
-      { to: "/dashboard/usersettings", label: "Settings", icon: Settings },
-      { to: "/dashboard/support", label: "support", icon: MessageCircle }
+      { to: "/dashboard/my-overview", label: "Overview", icon: LayoutDashboard },
+      { to: "/dashboard/my-profile", label: "Profile", icon: User },
+      { to: "/dashboard/my-orders", label: "My Orders", icon: PackageOpen },
+      { to: "/dashboard/my-wishlist", label: "Wishlist", icon: Heart },
+      { to: "/dashboard/my-cart", label: "Cart", icon: ShoppingCart },
+      { to: "/dashboard/my-addresses", label: "Addresses", icon: MapPin },
+      { to: "/dashboard/my-payment-methods", label: "Payment Methods", icon: CreditCard },
+      { to: "/dashboard/my-returns", label: "Returns", icon: RotateCcw },
+      { to: "/dashboard/my-settings", label: "Settings", icon: Settings },
+      { to: "/dashboard/my-support", label: "support", icon: MessageCircle }
     ],
   };
 
@@ -85,7 +128,12 @@ export default function DashboardSidebar() {
         </Link>
         <ul className="flex flex-col gap-2">
           {items.map((item) => (
-            <NavItem key={item.to} to={item.to} label={item.label} icon={item.icon} />
+            <NavItem
+              key={item.to}
+              to={item.to}
+              label={item.label}
+              icon={item.icon}
+            />
           ))}
         </ul>
       </nav>
@@ -94,7 +142,12 @@ export default function DashboardSidebar() {
       <nav className="flex md:hidden gap-2 overflow-x-auto shadow p-2">
         <ul className="flex gap-2">
           {items.map((item) => (
-            <NavItem key={item.to} to={item.to} label={item.label} icon={item.icon} />
+            <NavItem
+              key={item.to}
+              to={item.to}
+              label={item.label}
+              icon={item.icon}
+            />
           ))}
         </ul>
       </nav>
