@@ -6,11 +6,11 @@ const CartItem = ({
   item,
   updateQuantity,
   removeFromCart,
-  moveToWishlist,
+  // moveToWishlist,
   updating = false,
   removing = false,
-  addingToWishlist = false,
-  isInWishlist = false,
+  // addingToWishlist = false,
+  // isInWishlist = false,
 }) => {
   const discount = Math.round(
     ((item.regularPrice - item.price) / item.regularPrice) * 100
@@ -94,7 +94,7 @@ const CartItem = ({
             </div>
 
             <div className="flex flex-wrap justify-center sm:justify-start items-center gap-3 mt-3 pt-3 border-t border-border">
-              <button
+              {/* <button
                 onClick={() => moveToWishlist(item)}
                 className={`flex items-center gap-1 text-sm transition-colors ${
                   isInWishlist
@@ -105,7 +105,7 @@ const CartItem = ({
               >
                 <Heart className="w-4 h-4" />{" "}
                 {isInWishlist ? "In Wishlist" : "Wishlist"}
-              </button>
+              </button> */}
 
               <button
                 onClick={() => removeFromCart(item)}

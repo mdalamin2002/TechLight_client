@@ -51,7 +51,11 @@ const Wishlist = () => {
     addToCart(cartData, {
       onSuccess: () => {
         toast.success(`${item.name} added to your cart!`);
-        navigate('/addToCart')
+
+        const wishlistItem = wishlist.find((w) => w.productId === item._id);
+        if (wishlistItem) removeFromWishlist(wishlistItem._id);
+
+        navigate("/addToCart");
       },
       onError: () => {
         toast.error("Failed to add item to cart.");
@@ -125,7 +129,7 @@ const Wishlist = () => {
         });
 
         toast.success("All wishlist items added to cart!");
-        navigate('/addToCart')
+        navigate("/addToCart");
       } catch (error) {
         console.error(error);
         toast.error("Some items could not be added.");

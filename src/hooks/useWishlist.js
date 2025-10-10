@@ -1,18 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosPublic from "./useAxiosPublic";
+import useAuth from "./useAuth";
 
 const useWishlist = () => {
   const axiosSecure = useAxiosPublic();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   // Get all wishlist items
   const { data: wishlist = [], isLoading } = useQuery({
-    queryKey: ["wishlist"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/api/wishlist");
-      return res.data;
-    },
-  });
+  queryKey: ["wishlist", user?.email],
+  queryFn: async () => {
+    const res = await axiosSecure.get(`/api/wishlist?userEmail=${user?.email}`);
+    return res.data;
+  },
+});
 
   // Add to wishlist
   const { mutate: addToWishlist, isPending: adding } = useMutation({

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Heart,
   ShoppingCart,
@@ -45,6 +45,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const { cart } = useCart();
   const { wishlist } = useWishlist();
+  const navigate = useNavigate();
 
   const profileRef = useRef(null);
 
@@ -81,6 +82,14 @@ export default function Navbar() {
       items: ["Power Banks", "Cables & Chargers", "Storage Devices"],
     },
   ];
+
+  const handleRedirect = (path) => {
+    if (!user) {
+      navigate("/auth/login");
+    } else {
+      navigate(path);
+    }
+  };
 
   const handleLogout = () => {
     logOutUser(auth)
@@ -199,7 +208,17 @@ export default function Navbar() {
 
               {/* Wishlist & Cart - Desktop */}
               <div className="flex items-center gap-1">
-                <Button variant="ghost" size="sm" asChild className="gap-2">
+                {/* Wishlist */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="gap-2"
+                  onClick={(e) => {
+                    e.preventDefault(); // Link er default behavior stop
+                    handleRedirect("/wishlist");
+                  }}
+                >
                   <Link to="/wishlist" className="flex items-center">
                     <div className="relative">
                       <Heart size={22} className="text-foreground" />
@@ -213,7 +232,17 @@ export default function Navbar() {
                   </Link>
                 </Button>
 
-                <Button variant="ghost" size="sm" asChild className="gap-2">
+                {/* Cart */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="gap-2"
+                  onClick={(e) => {
+                    e.preventDefault(); // Link er default behavior stop
+                    handleRedirect("/addToCart");
+                  }}
+                >
                   <Link to="/addToCart" className="flex items-center">
                     <div className="relative">
                       <ShoppingCart size={22} className="text-foreground" />
@@ -509,19 +538,12 @@ export default function Navbar() {
             </Link>
           </Button>
           <Button
+            onClick={() => handleRedirect("/wishlist")}
             variant="ghost"
-            asChild
             className="flex-col h-auto py-2 gap-1"
           >
-            <Link
-              to="/wishlist"
-              className={`flex flex-col items-center ${
-                isActiveRoute("/wishlist") ? "text-primary" : ""
-              }`}
-            >
-              <Heart size={20} />
-              <span className="text-xs">Wishlist</span>
-            </Link>
+            <Heart size={20} />
+            <span className="text-xs">Wishlist</span>
           </Button>
           <Button
             variant="ghost"

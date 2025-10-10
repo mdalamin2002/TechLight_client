@@ -14,6 +14,7 @@ import useCart from "@/hooks/useCart";
 import useAuth from "@/hooks/useAuth";
 import useWishlist from "@/hooks/useWishlist";
 import Swal from "sweetalert2";
+import { Link } from "react-router";
 
 const AddToCart = () => {
   const { user } = useAuth();
@@ -143,9 +144,9 @@ const AddToCart = () => {
             <p className="text-muted-foreground mb-6 text-sm sm:text-base">
               Add some products to get started!
             </p>
-            <button className="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-all duration-200 text-sm sm:text-base">
+            <Link to={"/allProduct"} className="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-all duration-200 text-sm sm:text-base">
               Start Shopping
-            </button>
+            </Link>
           </Card>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-6">

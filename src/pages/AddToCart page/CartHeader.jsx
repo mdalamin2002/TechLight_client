@@ -1,5 +1,6 @@
 import React from "react";
 import { ShoppingCart } from "lucide-react";
+import { Link } from "react-router";
 
 const CartHeader = ({ itemCount }) => {
   return (
@@ -15,9 +16,9 @@ const CartHeader = ({ itemCount }) => {
               {itemCount} items in your cart
             </p>
           </div>
-          <button className="flex items-center justify-center gap-2 px-4 py-2 bg-primary/90 text-primary-foreground rounded-lg hover:opacity-90 transition w-full sm:w-auto text-sm sm:text-base">
+          <Link to={"/allProduct"} className="flex items-center justify-center gap-2 px-4 py-2 bg-primary/90 text-primary-foreground rounded-lg hover:opacity-90 transition w-full sm:w-auto text-sm sm:text-base">
             Continue Shopping
-          </button>
+          </Link>
         </div>
       </div>
     </div>
