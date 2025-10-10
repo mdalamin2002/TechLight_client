@@ -15,11 +15,19 @@ import {
   PhoneCall,
   BarChart3Icon,
   FileText,
+  LayoutDashboard,
+  User,
+  Heart,
+  MapPin,
+  CreditCard,
+  RotateCcw,
+  MessageCircle,
+  PackageOpen,
 } from "lucide-react";
 import TechLightLogo from "@/Components/Shared/Logo/TechLightLogo";
 
 export default function DashboardSidebar() {
-  const role = "moderator"; // "admin", "moderator", or "user"
+  const role = "admin"; // "admin", "moderator", or "user"
 
   const NavItem = ({ to, label, icon: Icon }) => (
     <NavLink
@@ -77,12 +85,16 @@ export default function DashboardSidebar() {
     ],
 
     user: [
-      { to: "/dashboard/overview", label: "Overview", icon: Home },
-      { to: "/dashboard/profile", label: "Profile", icon: Users },
-      { to: "/dashboard/myorders", label: "My Orders", icon: ShoppingCart },
-      { to: "/dashboard/wishlist", label: "Wishlist", icon: Star },
-      { to: "/dashboard/cart", label: "Cart", icon: Box },
-      { to: "/dashboard/settings", label: "Settings", icon: Settings },
+      { to: "/dashboard/my-overview", label: "Overview", icon: LayoutDashboard },
+      { to: "/dashboard/my-profile", label: "Profile", icon: User },
+      { to: "/dashboard/my-orders", label: "My Orders", icon: PackageOpen },
+      { to: "/dashboard/my-wishlist", label: "Wishlist", icon: Heart },
+      { to: "/dashboard/my-cart", label: "Cart", icon: ShoppingCart },
+      { to: "/dashboard/my-addresses", label: "Addresses", icon: MapPin },
+      { to: "/dashboard/my-payment-methods", label: "Payment Methods", icon: CreditCard },
+      { to: "/dashboard/my-returns", label: "Returns", icon: RotateCcw },
+      { to: "/dashboard/my-settings", label: "Settings", icon: Settings },
+      { to: "/dashboard/my-support", label: "support", icon: MessageCircle }
     ],
   };
 
