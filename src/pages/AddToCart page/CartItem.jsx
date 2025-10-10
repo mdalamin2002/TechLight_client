@@ -9,6 +9,8 @@ const CartItem = ({
   moveToWishlist,
   updating = false,
   removing = false,
+  addingToWishlist = false,
+  isInWishlist = false,
 }) => {
   const discount = Math.round(
     ((item.regularPrice - item.price) / item.regularPrice) * 100
@@ -94,9 +96,15 @@ const CartItem = ({
             <div className="flex flex-wrap justify-center sm:justify-start items-center gap-3 mt-3 pt-3 border-t border-border">
               <button
                 onClick={() => moveToWishlist(item)}
-                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-rose-500 transition-colors"
+                className={`flex items-center gap-1 text-sm transition-colors ${
+                  isInWishlist
+                    ? "text-green-600 cursor-not-allowed"
+                    : "text-muted-foreground hover:text-rose-500"
+                }`}
+                disabled={addingToWishlist || isInWishlist}
               >
-                <Heart className="w-4 h-4" /> Wishlist
+                <Heart className="w-4 h-4" />{" "}
+                {isInWishlist ? "In Wishlist" : "Wishlist"}
               </button>
 
               <button

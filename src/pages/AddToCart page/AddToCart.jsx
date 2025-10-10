@@ -12,6 +12,8 @@ import { Card } from "@/Components/ui/card";
 
 import useCart from "@/hooks/useCart";
 import useAuth from "@/hooks/useAuth";
+import useWishlist from "@/hooks/useWishlist";
+import Swal from "sweetalert2";
 
 const AddToCart = () => {
   const { user } = useAuth();
@@ -28,6 +30,13 @@ const AddToCart = () => {
     removing,
   } = useCart();
 
+  const {
+    wishlist,
+    addToWishlist,
+    removing: removingWishlist,
+    adding: addingWishlist,
+  } = useWishlist();
+
   // Local functions to wrap the mutations with toast notifications
   const handleUpdateQuantity = (id, action) => {
     if (action < 1) return;
@@ -35,15 +44,51 @@ const AddToCart = () => {
   };
 
   const handleRemove = (item) => {
-    removeFromCartMutation(item._id, {
-      onSuccess: () =>
-        toast.info(`${item.name} removed from cart`, { position: "top-right" }),
+    Swal.fire({
+      title: "Are you sure?",
+      text: `Do you want to remove "${item.name}" from the cart?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, remove it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        removeFromCartMutation(item._id, {
+          onSuccess: () => {
+            toast.info(`${item.name} removed from cart`, {
+              position: "top-right",
+            });
+          },
+          onError: (err) => {
+            console.log(err);
+            toast.error(`Failed to remove "${item.name}"`, {
+              position: "top-right",
+            });
+          },
+        });
+      }
     });
   };
 
+  // Handle moving to wishlist
   const handleMoveToWishlist = (item) => {
-    handleRemove(item);
-    toast.success(`${item.name} moved to wishlist`, { position: "top-right" });
+    const isInWishlist = wishlist.some((w) => w.productId === item.productId);
+    if (isInWishlist) {
+      toast.info(`${item.name} is already in your wishlist`, {
+        position: "top-right",
+      });
+      return;
+    }
+
+    addToWishlist(item, {
+      onSuccess: () => {
+        toast.success(`${item.name} added to wishlist`, {
+          position: "top-right",
+        });
+        removeFromCartMutation(item._id);
+      },
+    });
   };
 
   const handleAddressSubmit = (data) => {
@@ -54,7 +99,10 @@ const AddToCart = () => {
   };
 
   // Calculations
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
   const totalSavings = cart.reduce(
     (sum, item) => sum + (item.regularPrice - item.price) * item.quantity,
     0
@@ -102,17 +150,24 @@ const AddToCart = () => {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-6">
             <div className="lg:col-span-2 space-y-4">
-              {cart.map((item) => (
-                <CartItem
-                  key={item._id}
-                  item={item}
-                  updateQuantity={handleUpdateQuantity}
-                  removeFromCart={() => handleRemove(item)}
-                  moveToWishlist={() => handleMoveToWishlist(item)}
-                  updating={updating}
-                  removing={removing}
-                />
-              ))}
+              {cart.map((item) => {
+                const isInWishlist = wishlist.some(
+                  (w) => w.productId === item.productId
+                );
+                return (
+                  <CartItem
+                    key={item._id}
+                    item={item}
+                    updateQuantity={handleUpdateQuantity}
+                    removeFromCart={() => handleRemove(item)}
+                    moveToWishlist={() => handleMoveToWishlist(item)}
+                    updating={updating}
+                    removing={removing}
+                    addingToWishlist={addingWishlist}
+                    isInWishlist={isInWishlist}
+                  />
+                );
+              })}
             </div>
             <div className="lg:col-span-1 space-y-4">
               <div className="sticky top-24 space-y-4">
