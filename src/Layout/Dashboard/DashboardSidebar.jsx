@@ -15,11 +15,11 @@ import {
   PhoneCall,
   BarChart3Icon,
   FileText,
-} from "lucide-react"; // icons
+} from "lucide-react";
 import TechLightLogo from "@/Components/Shared/Logo/TechLightLogo";
 
 export default function DashboardSidebar() {
-  const role = "moderator"; // "moderator" or "user"
+  const role = "moderator"; // "admin", "moderator", or "user"
 
   const NavItem = ({ to, label, icon: Icon }) => (
     <NavLink
@@ -54,6 +54,7 @@ export default function DashboardSidebar() {
       { to: "/dashboard/settings", label: "Settings", icon: Settings },
       { to: "/dashboard/advanced", label: "Advanced", icon: Zap },
     ],
+
     moderator: [
       { to: "/dashboard/moderator-overview", label: "Dashboard", icon: Home },
       { to: "/dashboard/orders-products", label: "Orders Products", icon: Box },
@@ -74,12 +75,15 @@ export default function DashboardSidebar() {
         icon: FileText,
       },
     ],
-    // user: [
-    //   { to: "/dashboard", label: "Dashboard", icon: Home },
-    //   { to: "/dashboard/MyDonationRequests", label: "My Requests", icon: FileText },
-    //   { to: "/dashboard/create-donation-request", label: "Create Donation", icon: FileText },
-    //   { to: "/dashboard/profile", label: "Profile", icon: User },
-    // ],
+
+    user: [
+      { to: "/dashboard/overview", label: "Overview", icon: Home },
+      { to: "/dashboard/profile", label: "Profile", icon: Users },
+      { to: "/dashboard/myorders", label: "My Orders", icon: ShoppingCart },
+      { to: "/dashboard/wishlist", label: "Wishlist", icon: Star },
+      { to: "/dashboard/cart", label: "Cart", icon: Box },
+      { to: "/dashboard/settings", label: "Settings", icon: Settings },
+    ],
   };
 
   const items = navConfig[role] || navConfig["user"];
