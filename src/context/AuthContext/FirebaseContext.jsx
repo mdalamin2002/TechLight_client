@@ -1,8 +1,10 @@
 import { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
+  GithubAuthProvider,
   GoogleAuthProvider,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -38,10 +40,21 @@ export const FirebaseContext = ({ children }) => {
     return signInWithPopup(auth, provider);
   };
 
+  //Login with Github
+  const githubProvider = new GithubAuthProvider();
+  const githubLogin = () => {
+    return signInWithPopup(auth, githubProvider);
+  };
+
   //Update user
   const updateUser = (updatedData) => {
     return updateProfile(auth.currentUser, updatedData);
   };
+
+  //Reset password 
+  const forgotPassword = (email) => {
+    return sendPasswordResetEmail(auth, email);
+  }
 
   //Log out user
   const logOutUser = () => {
@@ -70,6 +83,8 @@ export const FirebaseContext = ({ children }) => {
     updateUser,
     logOutUser,
     googleLogin,
+    forgotPassword,
+    githubLogin
   };
 
   return <AuthContext value={userInfo}>{children}</AuthContext>;

@@ -5,6 +5,9 @@ import SocialLogin from "../SocialLogin/SocialLogin";
 import useAuth from "@/hooks/useAuth";
 import { SaveUserInDb } from "@/utils/ShareUtils";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { lockCheck, trackLogin } from "@/utils/userBlock";
+import GithubLogin from "../SocialLogin/GithubLogin";
 
 const Login = () => {
   const { loginWithEmailPass } = useAuth();
@@ -13,25 +16,43 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     const { email, password } = data;
-    setLoading(true)
+    setLoading(true);
+
+    //checking user account lock or not
+    const checkUserAccount = await lockCheck(email);
+
     try {
+      //login email and password
       const credential = await loginWithEmailPass(email, password);
+
+      //Update User
       const updateUser = {
         name: credential?.user?.displayName,
         email: credential?.user?.email,
         image: credential?.user?.photoURL,
+      };
+
+      //Lock user
+      const tracking = await trackLogin(email, true);
+
+      if (trackLogin?.message !== "Failed attempt updated") {
+        // save user Data
+        await SaveUserInDb(updateUser);
+        navigate(location.state || "/");
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: `Welcome back, ${credential.user?.displayName}!`,
+          timer: 2000,
+          showConfirmButton: false,
+        });
       }
-      // save user Data
-      await SaveUserInDb(updateUser);
-      navigate(location.state || "/");
-      Swal.fire({
-        icon: "success",
-        title: "Login Successful",
-        text: `Welcome back, ${credential.user?.displayName}!`,
-        timer: 2000,
-        showConfirmButton: false,
-      });
     } catch (error) {
+
+      //Lock user
+      await trackLogin(email, false);
+
+      if(!checkUserAccount?.allowed) return
       Swal.fire({
         icon: "error",
         title: "Login Failed",
@@ -40,11 +61,9 @@ const Login = () => {
         showConfirmButton: false,
       });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-
   };
-
 
   return (
     <div className="bg-white shadow-xl rounded-xl px-10 py-12 w-full">
@@ -53,9 +72,7 @@ const Login = () => {
         <p className="text-gray-600">Please enter your credentials to login</p>
       </div>
 
-      <LoginForm
-        onSubmit={onSubmit}
-      />
+      <LoginForm onSubmit={onSubmit} loading={ loading} />
 
       <div className="my-6 flex items-center">
         <hr className="flex-grow border-gray-300" />
@@ -64,6 +81,8 @@ const Login = () => {
       </div>
 
       <SocialLogin />
+      <br />
+      <GithubLogin></GithubLogin>
 
       <p className="text-center mt-6">
         Don’t have an account?{" "}

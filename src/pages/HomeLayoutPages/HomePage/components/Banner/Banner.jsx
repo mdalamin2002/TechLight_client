@@ -1,29 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CategorySidebar from "./CategorySidebar";
 import Slider from "./Slider";
 import { motion } from "framer-motion";
+import axios from "axios";
+
+
 
 const Banner = () => {
-  const slides = [
-    {
-      id: 1,
-      title: "iPhone 14 Series",
-      subtitle: "Up to 10% off Voucher",
-      image: "https://i.ibb.co.com/tMQc170R/slider3.jpg",
-    },
-    {
-      id: 2,
-      title: "Smart TVs",
-      subtitle: "Flat 15% Discount",
-      image: "https://i.ibb.co.com/ynF19j8j/a-bold-e-commerce-banner-displaying-a-tablet-with.webp",
-    },
-    {
-      id: 3,
-      title: "Headphones",
-      subtitle: "Grab Now – 20% Off",
-      image: "https://i.ibb.co.com/5XB5C0CG/slide3.webp",
-    },
-  ];
+  const [slides, setSlides] = useState([]);
+  const API_URL = import.meta.env.VITE_baseURL;
+
+  //  Fetch banners from backend
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/banners`);
+        setSlides(res.data);
+        
+      } catch (error) {
+        console.error("Failed to load banners:", error);
+      }
+    };
+    fetchBanners();
+  }, [API_URL]);
 
   const shopMegaMenu = [
     { title: "Mobiles & Tablets", items: ["Smartphones", "Tablets", "Mobile Accessories"] },
