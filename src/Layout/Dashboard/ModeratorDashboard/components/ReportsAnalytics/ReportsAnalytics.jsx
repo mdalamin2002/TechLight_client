@@ -1,164 +1,198 @@
-import React, { useState } from "react";
-import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+import { SalesReport } from "./components/SalesReport";
+import { UsersReport } from "./components/UsersReport";
+import { ReviewTraking } from "./components/ReviewTraking";
+import { OrdersReport } from "./components/OrdersReport";
+import { FraudReport } from "./components/FraudReport";
+import { tabs } from "./components/tabs";
+import { ExportButton } from "./components/ExportButton";
 
 const ReportsAnalytics = () => {
-  // Fake data
-  const fakeOrdersData = {
-    labels: ["Pending", "Shipped", "Delivered"],
-    datasets: [
-      {
-        label: "Orders",
-        data: [12, 34, 78],
-        backgroundColor: ["#7c3aed", "#3b82f6", "#10b981"],
-      },
-    ],
+  const [activeTab, setActiveTab] = useState("sales");
+  const [dateRange, setDateRange] = useState("Last 7 Days");
+
+  // Data for export
+  const [salesData, setSalesData] = useState({
+    salesPerformance: [],
+    topProducts: [],
+  });
+  const [usersData, setUsersData] = useState({ topProducts: [], summary: [] });
+  const [reviewData, setReviewData] = useState({ reviews: [], summary: {} });
+  const [ordersData, setOrdersData] = useState({ orders: [] });
+  const [fraudData, setFraudData] = useState({ cases: [], summary: {} });
+
+  // Wrapper to update child data safely
+  const safeSetData = (setter, data) => {
+    setter((prev) =>
+      JSON.stringify(prev) !== JSON.stringify(data) ? data : prev
+    );
   };
 
-  const fakeReturnsData = {
-    labels: ["Returns"],
-    datasets: [
-      {
-        label: "Returns",
-        data: [5],
-        backgroundColor: ["#f59e0b"],
-      },
-    ],
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "sales":
+        return (
+          <SalesReport
+            dateRange={dateRange}
+            onDataUpdate={(data) => safeSetData(setSalesData, data)}
+          />
+        );
+      case "users":
+        return (
+          <UsersReport
+            dateRange={dateRange}
+            onDataUpdate={(data) => safeSetData(setUsersData, data)}
+          />
+        );
+      case "review":
+        return (
+          <ReviewTraking
+            dateRange={dateRange}
+            onDataUpdate={(data) => safeSetData(setReviewData, data)}
+          />
+        );
+      case "orders":
+        return (
+          <OrdersReport
+            dateRange={dateRange}
+            onDataUpdate={(data) => safeSetData(setOrdersData, data)}
+          />
+        );
+      case "fraud":
+        return (
+          <FraudReport
+            dateRange={dateRange}
+            onDataUpdate={(data) => safeSetData(setFraudData, data)}
+          />
+        );
+      default:
+        return <div>Coming Soon 🚀</div>;
+    }
   };
 
-  const fakeUserReportsData = {
-    labels: ["User Reports"],
-    datasets: [
-      {
-        label: "Reports",
-        data: [7],
-        backgroundColor: ["#ef4444"],
-      },
-    ],
-  };
+  const handleExport = () => {
+    let dataToExport = [];
 
-  const fakeProblematic = [
-    { name: "Seller A", complaints: 4 },
-    { name: "Product B", complaints: 3 },
-    { name: "Seller C", complaints: 2 },
-  ];
-
-  // Date filter state
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-
-  // Export function
-  const handleExport = (type) => {
-    const wb = XLSX.utils.book_new();
-
-    if (type === "orders") {
-      const ws = XLSX.utils.json_to_sheet([
-        { Status: "Pending", Count: 12 },
-        { Status: "Shipped", Count: 34 },
-        { Status: "Delivered", Count: 78 },
-      ]);
-      XLSX.utils.book_append_sheet(wb, ws, "Orders");
-    } else if (type === "problematic") {
-      const ws = XLSX.utils.json_to_sheet(fakeProblematic);
-      XLSX.utils.book_append_sheet(wb, ws, "Problematic");
+    switch (activeTab) {
+      case "sales": {
+        const { salesPerformance, topProducts } = salesData;
+        dataToExport = [
+          { Section: "Sales Performance" },
+          ...salesPerformance,
+          {},
+          { Section: "Top Products" },
+          ...topProducts,
+        ];
+        break;
+      }
+      case "users": {
+        const { summary, topProducts } = usersData;
+        dataToExport = [
+          { Section: "User Summary" },
+          ...summary,
+          {},
+          { Section: "User Analytics" },
+          ...topProducts,
+        ];
+        break;
+      }
+      case "review": {
+        const { summary, reviews } = reviewData;
+        dataToExport = [
+          { Section: "Review Summary" },
+          summary,
+          {},
+          { Section: "Reviews" },
+          ...reviews,
+        ];
+        break;
+      }
+      case "orders": {
+        const { orders } = ordersData;
+        dataToExport = [{ Section: "Orders" }, ...orders];
+        break;
+      }
+      case "fraud": {
+        const { summary, cases } = fraudData;
+        dataToExport = [
+          { Section: "Summary" },
+          summary,
+          {},
+          { Section: "Fraud Cases" },
+          ...cases,
+        ];
+        break;
+      }
     }
 
-    XLSX.writeFile(wb, `${type}-report.xlsx`);
-  };
+    if (!dataToExport.length) {
+      alert("No data available to export!");
+      return;
+    }
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: { position: "top" },
-      title: { display: false },
-    },
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
+
+    const fileName = `${activeTab.toUpperCase()}_Report_${dateRange.replace(
+      /\s+/g,
+      "_"
+    )}.xlsx`;
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, fileName);
   };
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800">Reports & Analytics</h1>
-
-      {/* Date Filter */}
-      <div className="flex gap-4 flex-wrap items-end">
+      <div className="flex justify-between items-center">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Start Date</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="border border-black rounded p-2"
-          />
+          <h1 className="text-3xl font-bold text-[var(--primary)]">
+            Reports & Analytics
+          </h1>
+          <p className="text-gray-600">
+            Analyze performance and generate detailed reports.
+          </p>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">End Date</label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="border border-black rounded p-2"
-          />
-        </div>
-        <button className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600">
-          Filter
-        </button>
+        <ExportButton onExport={handleExport} />
       </div>
 
-      {/* Orders Chart */}
-      <div className="bg-white rounded-xl shadow p-6 hover:shadow-xl transition-shadow duration-300">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Orders</h2>
-        <Bar options={options} data={fakeOrdersData} />
-        <button
-          onClick={() => handleExport("orders")}
-          className="mt-2 bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
+      <div className="flex space-x-2 bg-white shadow p-2 rounded-lg overflow-x-auto items-center">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${
+              activeTab === tab.id
+                ? "bg-[var(--primary)] text-white"
+                : "text-gray-600 hover:text-[var(--primary)] hover:bg-gray-100"
+            }`}
+          >
+            <tab.icon size={16} /> {tab.label}
+          </button>
+        ))}
+        <select
+          value={dateRange}
+          onChange={(e) => setDateRange(e.target.value)}
+          className="ml-auto bg-gray-100 text-gray-700 px-3 py-2 rounded-lg focus:outline-none"
         >
-          Export Orders
-        </button>
+          <option>Last 7 Days</option>
+          <option>Last 30 Days</option>
+          <option>Last 6 Months</option>
+          <option>Last 1 Year</option>
+        </select>
       </div>
 
-      {/* Returns & User Reports Charts */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow p-6 hover:shadow-xl transition-shadow duration-300">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Returns</h2>
-          <Bar options={options} data={fakeReturnsData} />
-        </div>
-
-        <div className="bg-white rounded-xl shadow p-6 hover:shadow-xl transition-shadow duration-300">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">User Reports</h2>
-          <Bar options={options} data={fakeUserReportsData} />
-        </div>
-      </div>
-
-      {/* Problematic Sellers/Products */}
-      <div className="bg-white rounded-xl shadow p-6 hover:shadow-xl transition-shadow duration-300">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Problematic Sellers / Products</h2>
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border-b border-gray-300 p-2">Name</th>
-              <th className="border-b border-gray-300 p-2">Complaints</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fakeProblematic.map((item, idx) => (
-              <tr key={idx} className="hover:bg-gray-50">
-                <td className="border-b border-gray-200 p-2">{item.name}</td>
-                <td className="border-b border-gray-200 p-2">{item.complaints}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <button
-          onClick={() => handleExport("problematic")}
-          className="mt-2 bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
-        >
-          Export Problematic
-        </button>
-      </div>
+      {renderTabContent()}
     </div>
   );
 };
 
-export default ReportsAnalytics;
+export default ReportsAnalytics
+
