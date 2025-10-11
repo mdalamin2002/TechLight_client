@@ -11,7 +11,7 @@ import { Heart } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "react-router";
 
-const Wishlist = () => {
+const Wishlists = () => {
   const { wishlist, isLoading, removeFromWishlist } = useWishlist();
   const { addToCart, cart } = useCart();
   const { user } = useAuth();
@@ -224,4 +224,4 @@ const Wishlist = () => {
   );
 };
 
-export default Wishlist;
+export default Wishlists;
