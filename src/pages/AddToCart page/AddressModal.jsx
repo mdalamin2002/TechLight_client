@@ -1,118 +1,133 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { MapPin } from "lucide-react";
+import { MapPin, Plus } from "lucide-react";
+import { toast } from "react-toastify";
 
-const AddressModal = ({ open, onOpenChange, onSave, defaultValues }) => {
-  const { register, handleSubmit, reset } = useForm({
-    defaultValues: defaultValues || {},
-  });
+const AddressModal = ({
+  open,
+  onOpenChange,
+  onSave,
+  editingAddress = null,
+  addresses = [],
+  // addAddress,
+  updateAddress,
+  deleteAddress,
+  refetch,
+  refetchDefault,
+}) => {
+  const { register, handleSubmit, reset } = useForm({ defaultValues: editingAddress || {} });
 
-  const handleFormSubmit = data => {
-    onSave(data);
-    reset();
+  useEffect(() => {
+    reset(editingAddress || {});
+  }, [editingAddress, reset]);
+
+  const handleFormSubmit = (data) => onSave(data);
+
+  const handleSetDefault = async (addr) => {
+    try {
+      await updateAddress.mutateAsync({ id: addr._id, updatedData: { default: true } });
+      toast.success("Default address updated!");
+      refetch();
+      refetchDefault();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to set default");
+    }
+  };
+
+  const handleDelete = async (addrId) => {
+    if (!window.confirm("Delete this address?")) return;
+    try {
+      await deleteAddress.mutateAsync(addrId);
+      toast.success("Address deleted!");
+      if (editingAddress?._id === addrId) reset();
+      refetch();
+      refetchDefault();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete address");
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg rounded-2xl border border-border/60 bg-card shadow-2xl backdrop-blur-md transition-all duration-300">
+      <DialogContent className="max-w-md rounded-2xl border border-border/60 bg-card shadow-2xl backdrop-blur-md">
         <DialogHeader>
           <div className="flex items-center gap-2 mb-1">
             <MapPin className="w-5 h-5 text-primary" />
-            <DialogTitle className="text-lg font-semibold">
-              Set Delivery Address
-            </DialogTitle>
+            <DialogTitle className="text-lg font-semibold">Delivery Address</DialogTitle>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Please provide your accurate delivery details below.
-          </p>
+          <p className="text-sm text-muted-foreground mb-4">Saved addresses and add/edit below</p>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 pt-3">
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="Full Name"
-              {...register("fullName", { required: true })}
-              className="w-full border border-border/70 rounded-lg px-3 py-2 text-sm bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/50 outline-none transition"
-            />
-            <input
-              type="text"
-              placeholder="Phone Number"
-              {...register("phone", { required: true })}
-              className="w-full border border-border/70 rounded-lg px-3 py-2 text-sm bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/50 outline-none transition"
-            />
+        {/* Saved Addresses */}
+        {addresses.length > 0 && (
+          <div className="space-y-2 mb-4 max-h-52 overflow-y-auto">
+            {addresses.map((addr) => (
+              <div
+                key={addr._id}
+                className={`border p-3 rounded-lg cursor-pointer flex justify-between items-start ${
+                  addr.default ? "border-primary bg-primary/10" : "border-border"
+                }`}
+              >
+                <div onClick={() => handleSetDefault(addr)} className="flex-1">
+                  <p><span className="font-semibold">{addr.fullName}</span> ({addr.type})</p>
+                  <p>{addr.phone}</p>
+                  {addr.altPhone && <p>Alt: {addr.altPhone}</p>}
+                  <p>{addr.street}, {addr.city}, {addr.postal}</p>
+                  {addr.landmark && <p>Landmark: {addr.landmark}</p>}
+                  {addr.instructions && <p>Note: {addr.instructions}</p>}
+                  {addr.default && <p className="text-green-600 font-medium">Default</p>}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <button
+                    className="text-sm text-blue-600"
+                    onClick={() => reset(addr)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="text-sm text-red-500"
+                    onClick={() => handleDelete(addr._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
+        )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="Alternate Phone (optional)"
-              {...register("altPhone")}
-              className="w-full border border-border/70 rounded-lg px-3 py-2 text-sm bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/50 outline-none transition"
-            />
-            <select
-              {...register("type", { required: true })}
-              className="w-full border border-border/70 rounded-lg px-3 py-2 text-sm bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/50 outline-none transition"
-            >
-              <option value="">Address Type</option>
+        {/* Add/Edit Form */}
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-3">
+          <div className="grid grid-cols-2 gap-2">
+            <input {...register("fullName", { required: true })} placeholder="Full Name" className="input-field" />
+            <input {...register("phone", { required: true })} placeholder="Phone" className="input-field" />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <input {...register("altPhone")} placeholder="Alt Phone" className="input-field" />
+            <select {...register("type", { required: true })} className="input-field">
+              <option value="">Type</option>
               <option value="home">Home</option>
               <option value="office">Office</option>
               <option value="other">Other</option>
             </select>
           </div>
-
-          <input
-            type="text"
-            placeholder="Street Address (House, Road, etc.)"
-            {...register("street", { required: true })}
-            className="w-full border border-border/70 rounded-lg px-3 py-2 text-sm bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/50 outline-none transition"
-          />
-
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="City / District"
-              {...register("city", { required: true })}
-              className="w-full border border-border/70 rounded-lg px-3 py-2 text-sm bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/50 outline-none transition"
-            />
-            <input
-              type="text"
-              placeholder="Postal Code"
-              {...register("postal", { required: true })}
-              className="w-full border border-border/70 rounded-lg px-3 py-2 text-sm bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/50 outline-none transition"
-            />
+          <input {...register("street", { required: true })} placeholder="Street Address" className="input-field" />
+          <div className="grid grid-cols-2 gap-2">
+            <input {...register("city", { required: true })} placeholder="City / District" className="input-field" />
+            <input {...register("postal", { required: true })} placeholder="Postal Code" className="input-field" />
           </div>
-
-          <input
-            type="text"
-            placeholder="Landmark (e.g., Near City Mall)"
-            {...register("landmark")}
-            className="w-full border border-border/70 rounded-lg px-3 py-2 text-sm bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/50 outline-none transition"
-          />
-
-          <textarea
-            placeholder="Delivery Instructions (optional)"
-            rows="2"
-            {...register("instructions")}
-            className="w-full border border-border/70 rounded-lg px-3 py-2 text-sm bg-background/50 backdrop-blur-sm focus:ring-2 focus:ring-primary/50 outline-none transition resize-none"
-          ></textarea>
-
-          <div className="flex items-center justify-between pt-2">
+          <input {...register("landmark")} placeholder="Landmark" className="input-field" />
+          <textarea {...register("instructions")} placeholder="Delivery Instructions" rows={2} className="input-field resize-none" />
+          <div className="flex items-center justify-between">
             <label className="flex items-center gap-2 text-sm text-muted-foreground">
-              <input
-                type="checkbox"
-                {...register("default")}
-                className="accent-primary w-4 h-4"
-              />
-              Set as Default Address
+              <input type="checkbox" {...register("default")} className="accent-primary w-4 h-4" />
+              Set as default
             </label>
-            <button
-              type="submit"
-              className="px-5 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 font-medium transition flex items-center gap-2"
-            >
-              <MapPin className="w-4 h-4" />
-              Save Address
+            <button type="submit" className="btn-primary flex items-center gap-2">
+              <Plus className="w-4 h-4" /> Save
             </button>
           </div>
         </form>

@@ -11,7 +11,7 @@ const AddressCard = ({ savedAddress, onEdit }) => {
           <h4 className="font-semibold text-foreground text-sm sm:text-base">Delivery Address</h4>
         </div>
 
-        {savedAddress ? (
+        {savedAddress && savedAddress._id ? (
           <div className="border p-3 rounded-lg bg-background/50 text-sm space-y-1">
             <p><span className="font-semibold">{savedAddress.fullName}</span> ({savedAddress.type})</p>
             <p>{savedAddress.phone}</p>

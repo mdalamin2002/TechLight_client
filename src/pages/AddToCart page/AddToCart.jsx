@@ -1,26 +1,35 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { ShoppingCart } from "lucide-react";
-
+import { Link } from "react-router-dom";
 import CartHeader from "./CartHeader";
 import CartItem from "./CartItem";
 import AddressCard from "./AddressCard";
 import OrderSummary from "./OrderSummary";
 import AddressModal from "./AddressModal";
 import { Card } from "@/Components/ui/card";
-
 import useCart from "@/hooks/useCart";
-import useAuth from "@/hooks/useAuth";
 import useWishlist from "@/hooks/useWishlist";
+import useAuth from "@/hooks/useAuth";
+import useAddress from "@/hooks/useAddress";
+import GlobalLoading from "@/Components/Shared/Loading/GlobalLoading";
 import Swal from "sweetalert2";
-import { Link } from "react-router";
 
 const AddToCart = () => {
   const { user } = useAuth();
   const [addressModal, setAddressModal] = useState(false);
-  const [savedAddress, setSavedAddress] = useState(null);
-  const { register, handleSubmit, reset } = useForm();
+  const [editingAddress, setEditingAddress] = useState(null);
+
+  const {
+    addresses,
+    defaultAddress,
+    isLoading: loadingAddresses,
+    refetch,
+    refetchDefault,
+    addAddress,
+    updateAddress,
+    deleteAddress,
+  } = useAddress();
 
   const {
     cart,
@@ -38,16 +47,17 @@ const AddToCart = () => {
     adding: addingWishlist,
   } = useWishlist();
 
-  // Local functions to wrap the mutations with toast notifications
+  // Quantity update
   const handleUpdateQuantity = (id, action) => {
     if (action < 1) return;
     updateQuantityMutation({ id, action: action });
   };
 
+  // Remove item
   const handleRemove = (item) => {
     Swal.fire({
       title: "Are you sure?",
-      text: `Do you want to remove "${item.name}" from the cart?`,
+      text: `Remove "${item.name}" from cart?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -56,50 +66,52 @@ const AddToCart = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         removeFromCartMutation(item._id, {
-          onSuccess: () => {
-            toast.info(`${item.name} removed from cart`, {
-              position: "top-right",
-            });
-          },
-          onError: (err) => {
-            console.log(err);
-            toast.error(`Failed to remove "${item.name}"`, {
-              position: "top-right",
-            });
-          },
+          onSuccess: () => toast.info(`${item.name} removed`),
+          onError: () => toast.error(`Failed to remove "${item.name}"`),
         });
       }
     });
   };
 
-  // Handle moving to wishlist
+  // Move to wishlist
   const handleMoveToWishlist = (item) => {
     const isInWishlist = wishlist.some((w) => w.productId === item.productId);
     if (isInWishlist) {
-      toast.info(`${item.name} is already in your wishlist`, {
-        position: "top-right",
-      });
+      toast.info(`${item.name} already in wishlist`);
       return;
     }
 
     addToWishlist(item, {
       onSuccess: () => {
-        toast.success(`${item.name} added to wishlist`, {
-          position: "top-right",
-        });
+        toast.success(`${item.name} added to wishlist`);
         removeFromCartMutation(item._id);
       },
     });
   };
 
-  const handleAddressSubmit = (data) => {
-    setSavedAddress(data);
-    setAddressModal(false);
-    toast.success("Address saved successfully!", { position: "top-right" });
-    reset();
+  // Handle Address Save
+  const handleAddressSubmit = async (data) => {
+    try {
+      if (editingAddress?._id) {
+        await updateAddress.mutateAsync({
+          id: editingAddress._id,
+          updatedData: data,
+        });
+      } else {
+        await addAddress.mutateAsync(data);
+      }
+      toast.success("Address saved successfully!");
+      setAddressModal(false);
+      setEditingAddress(null);
+      await refetch();
+      await refetchDefault();
+    } catch (err) {
+      toast.error("Failed to save address");
+      console.error(err);
+    }
   };
 
-  // Calculations
+  // Cart calculations
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -122,13 +134,7 @@ const AddToCart = () => {
     );
   }
 
-  if (isLoading) {
-    return (
-      <div className="text-center py-20">
-        <p className="text-muted-foreground">Loading cart items...</p>
-      </div>
-    );
-  }
+  if (isLoading) return <GlobalLoading />;
 
   return (
     <div className="min-h-screen bg-background -mt-7">
@@ -144,7 +150,10 @@ const AddToCart = () => {
             <p className="text-muted-foreground mb-6 text-sm sm:text-base">
               Add some products to get started!
             </p>
-            <Link to={"/allProduct"} className="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-all duration-200 text-sm sm:text-base">
+            <Link
+              to={"/allProduct"}
+              className="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-all duration-200 text-sm sm:text-base"
+            >
               Start Shopping
             </Link>
           </Card>
@@ -170,12 +179,19 @@ const AddToCart = () => {
                 );
               })}
             </div>
+
             <div className="lg:col-span-1 space-y-4">
               <div className="sticky top-24 space-y-4">
                 <AddressCard
-                  savedAddress={savedAddress}
-                  onEdit={() => setAddressModal(true)}
+                  savedAddress={defaultAddress}
+                  onEdit={() => {
+                    setEditingAddress(defaultAddress);
+                    setAddressModal(true);
+                  }}
                 />
+
+                {loadingAddresses && <GlobalLoading />}
+
                 <OrderSummary
                   cartItems={cart}
                   subtotal={subtotal}
@@ -194,7 +210,13 @@ const AddToCart = () => {
         open={addressModal}
         onOpenChange={setAddressModal}
         onSave={handleAddressSubmit}
-        defaultValues={savedAddress}
+        editingAddress={editingAddress}
+        addresses={addresses}
+        addAddress={addAddress}
+        updateAddress={updateAddress}
+        deleteAddress={deleteAddress}
+        refetch={refetch}
+        refetchDefault={refetchDefault}
       />
     </div>
   );
