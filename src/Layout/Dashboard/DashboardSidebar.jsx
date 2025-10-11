@@ -30,7 +30,7 @@ import {
 import TechLightLogo from "@/Components/Shared/Logo/TechLightLogo";
 
 export default function DashboardSidebar() {
-  const role = "admin"; // "admin", "moderator", or "user"
+  const role = "moderator"; // "admin", "moderator", or "user"
 
   const NavItem = ({ to, label, icon: Icon }) => (
     <NavLink
