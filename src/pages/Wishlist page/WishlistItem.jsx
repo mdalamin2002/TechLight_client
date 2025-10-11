@@ -1,6 +1,7 @@
 import React from "react";
 import { Trash2, ShoppingCart, Star, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router";
 
 const WishlistItem = ({ item, handleRemove, addToCart }) => {
   const discount = Math.round(((item.regularPrice - item.price) / item.regularPrice) * 100);
@@ -10,7 +11,7 @@ const WishlistItem = ({ item, handleRemove, addToCart }) => {
     <Card className="overflow-hidden hover:shadow-lg transition border-border bg-card">
       <CardContent className="p-4 flex flex-col sm:flex-row gap-4">
         {/* Image */}
-        <div className="relative w-full sm:w-40 md:w-48 h-48 bg-muted rounded-lg overflow-hidden flex-shrink-0">
+        <Link to={`/allProduct/${item.productId}`} className="relative w-full sm:w-40 md:w-48 h-48 bg-muted rounded-lg overflow-hidden flex-shrink-0">
           <img
             src={item.image}
             alt={item.name}
@@ -29,20 +30,20 @@ const WishlistItem = ({ item, handleRemove, addToCart }) => {
               </span>
             </div>
           )}
-        </div>
+        </Link>
 
         {/* Info */}
         <div className="flex flex-col justify-between flex-1">
           <div>
             <div className="flex justify-between items-start">
-              <div>
+              <Link to={`/allProduct/${item.productId}`}>
                 <p className="text-xs font-semibold text-primary uppercase tracking-wide">
                   {item.subcategory}
                 </p>
                 <h3 className="text-base sm:text-lg font-semibold line-clamp-2 mt-1">
                   {item.name}
                 </h3>
-              </div>
+              </Link>
 
               {/* Delete */}
               <button
@@ -54,7 +55,7 @@ const WishlistItem = ({ item, handleRemove, addToCart }) => {
             </div>
 
             {/* Rating */}
-            <div className="flex items-center gap-2 mt-2">
+            <Link to={`/allProduct/${item.productId}`} className="flex items-center gap-2 mt-2">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
@@ -68,12 +69,12 @@ const WishlistItem = ({ item, handleRemove, addToCart }) => {
               <span className="text-sm text-muted-foreground font-medium">
                 {item.rating || 4}
               </span>
-            </div>
+            </Link>
           </div>
 
           {/* Price and Button */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3">
-            <div>
+            <Link to={`/allProduct/${item.productId}`}>
               <div className="flex items-baseline gap-2">
                 <span className="text-lg sm:text-2xl font-bold">
                   ৳{item.price.toLocaleString()}
@@ -85,7 +86,7 @@ const WishlistItem = ({ item, handleRemove, addToCart }) => {
               <p className="text-sm text-green-600 font-medium">
                 Save ৳{(item.regularPrice - item.price).toLocaleString()}
               </p>
-            </div>
+            </Link>
 
             <button
               onClick={() => addToCart(item)}

@@ -239,7 +239,7 @@ export default function Navbar() {
                   asChild
                   className="gap-2"
                   onClick={(e) => {
-                    e.preventDefault(); // Link er default behavior stop
+                    e.preventDefault();
                     handleRedirect("/addToCart");
                   }}
                 >

@@ -1,6 +1,7 @@
 import React from "react";
 import { Trash2, Plus, Minus, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router";
 
 const CartItem = ({
   item,
@@ -20,7 +21,7 @@ const CartItem = ({
     <Card className="overflow-hidden hover:shadow-md transition-all duration-300 border-border bg-card">
       <CardContent className="p-0">
         <div className="flex flex-col sm:flex-row gap-4 p-4">
-          <div className="relative w-full sm:w-32 h-32 bg-muted rounded-lg overflow-hidden flex-shrink-0 mx-auto sm:mx-0">
+          <Link to={`/allProduct/${item.productId}`} className="relative w-full sm:w-32 h-32 bg-muted rounded-lg overflow-hidden flex-shrink-0 mx-auto sm:mx-0">
             <img
               src={item.images?.main || item.image}
               alt={item.name}
@@ -31,10 +32,10 @@ const CartItem = ({
                 {discount}% OFF
               </div>
             )}
-          </div>
+          </Link>
 
           <div className="flex-1 flex flex-col justify-between text-center sm:text-left">
-            <div>
+            <Link to={`/allProduct/${item.productId}`}>
               <span className="text-xs font-semibold text-primary uppercase tracking-wide">
                 {item.subcategory}
               </span>
@@ -44,10 +45,10 @@ const CartItem = ({
               <p className="text-xs text-muted-foreground mt-1">
                 Code: {item.productCode}
               </p>
-            </div>
+            </Link>
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-3">
-              <div>
+              <Link to={`/allProduct/${item.productId}`}>
                 <div className="flex items-baseline gap-2 justify-center sm:justify-start">
                   <span className="text-lg sm:text-xl font-bold text-foreground">
                     ৳{item.price.toLocaleString()}
@@ -65,7 +66,7 @@ const CartItem = ({
                     item.quantity
                   ).toLocaleString()}
                 </p>
-              </div>
+              </Link>
 
               <div className="flex items-center gap-2">
                 <div className="flex items-center border border-border rounded-lg">
