@@ -20,6 +20,7 @@ import { Reports } from "@/Layout/Dashboard/AdminDashboard/components/Reports_pa
 import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+import AddToCart from "@/pages/AddToCart page/AddToCart";
 
 // Moderator Dashboard
 import { ModeratorOverview } from "@/Layout/Dashboard/ModeratorDashboard/components/ModeratorOverview/ModeratorOverview";
@@ -35,7 +36,6 @@ import Notifications from "@/Layout/Dashboard/ModeratorDashboard/components/Noti
 // User Dashboard
 import Profile from "@/Layout/Dashboard/UserDashboard/components/Profile/Profile";
 // import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
-import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
 import Cart from "@/Layout/Dashboard/UserDashboard/components/Cart/Cart";
 import Addresses from "@/Layout/Dashboard/UserDashboard/components/Addresses/Addresses";
 import ReturnsRefunds from "@/Layout/Dashboard/UserDashboard/components/ReturnsRefunds/ReturnsRefunds";
@@ -51,12 +51,67 @@ import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
 import AddProduct from "@/Layout/Dashboard/AdminDashboard/components/Products/AddProduct";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
+import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/ProductDetails/ProductDetails";
+import Wishlists from "@/pages/Wishlist page/Wishlists";
+import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
+import WarrantyPolicy from "@/pages/PolicyPages/Warranty/Warranty";
 
 const MainRoute = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout></MainLayout>,
     children: [
+      {
+        index: true,
+        Component: Home,
+      },
+      {
+        path: "/privacy_policy",
+        Component: PrivacyPolicy,
+      },
+      {
+        path: "/mobile",
+        Component: Mobile,
+      },
+      {
+        path: "/allProduct",
+        Component: AllProduct,
+      },
+      {
+        path: "/allProduct/:id",
+        Component: ProductDetails,
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/api/products/details/${params.id}`),
+      },
+      {
+        path: "wishlist",
+        Component: Wishlists,
+      },
+      {
+        path: "addToCart",
+        Component: AddToCart,
+      },
+      {
+        path: "/returns-refunds",
+        Component: ReturnsRefundsPolicy,
+      },
+      {
+        path: "/order-tracking",
+        Component: OrderTrackingPolicy,
+      },
+      {
+        path: "/warranty",
+        Component: WarrantyPolicy,
+      },
+      // {
+      //   path: "faq",
+      //   Component: FAQ,
+      // },
+      {
+        path: "terms-service",
+        Component: TermsOfService,
+      },
       { index: true, Component: Home },
       { path: "/privacy_policy", Component: PrivacyPolicy },
       { path: "/mobile", Component: Mobile },
