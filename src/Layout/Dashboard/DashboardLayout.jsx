@@ -1,26 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet } from "react-router";
-import DashboardSidebar from "./DashboardSidebar"; 
-
+import DashboardSidebar from "./DashboardSidebar";
 import DashboardNavbar from "./DashboardNavbar";
 import useAuth from "@/hooks/useAuth";
 import GlobalLoading from "@/Components/Shared/Loading/GlobalLoading";
 
 const DashboardLayout = () => {
   const { loading } = useAuth();
-    if(loading) return <GlobalLoading></GlobalLoading>
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  if (loading) return <GlobalLoading />;
+
   return (
-    <div className="flex min-h-screen  bg-background">
+    <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
-      <DashboardSidebar />
+      <DashboardSidebar
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Topbar */}
-       <DashboardNavbar />
+        <DashboardNavbar
+          isMobileMenuOpen={isMobileMenuOpen}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
+        />
 
         {/* Main Outlet */}
-        <main className="flex-1 p-2 overflow-y-auto">
+        <main className="flex-1 p-1 sm:p-6 overflow-y-auto">
           <Outlet />
         </main>
       </div>
@@ -29,4 +37,3 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
-
