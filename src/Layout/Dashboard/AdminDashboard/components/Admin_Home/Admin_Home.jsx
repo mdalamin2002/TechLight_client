@@ -15,7 +15,7 @@ import ActivityItem from "./components/ActivityItem";
 
 const Admin_Home = () => {
   return (
-    <div className="min-h-screen p-4 sm:p-6">
+    <div className="min-h-screen p-2 lg:p-6">
       {/* Header */}
       <header className="mb-8">
         <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
