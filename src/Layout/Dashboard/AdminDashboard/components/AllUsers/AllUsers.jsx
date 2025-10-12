@@ -2,7 +2,7 @@ import React from 'react';
 import TanStackTable from './components/TanStackTable';
 
 const AllUsers = () => {
- 
+
   return (
     <div className="min-h-screen p-6">
       {/* Header */}
