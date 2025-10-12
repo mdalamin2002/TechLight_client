@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import {
   ChevronDown,
   ChevronUp,
-  Edit,
-  Plus,
+
   Settings,
-  Trash2,
+  
 } from "lucide-react";
 import useAxiosSecure from "@/utils/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const Returns = () => {
   const axiosSecure = useAxiosSecure();
@@ -77,6 +77,16 @@ const Returns = () => {
       if (sectionType === "returns") setReturns([...returns, newItem]);
       else setComplaints([...complaints, newItem]);
       setNewReason("");
+
+      Swal.fire({
+      icon: "success",
+      title: "Success!",
+      text: "Reason added successfully ",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+
+
     } catch (err) {
       console.error("Error adding reason:", err);
     }
@@ -94,11 +104,11 @@ const Returns = () => {
     }
   };
 
-  // ✅ Filter by search
+  //  Filter by search
   const filterData = (data) =>
     data.filter((r) => r.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  // ✅ Close dropdown when clicking outside
+  //  Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest(".dropdown-menu") && !e.target.closest(".settings-btn")) {
@@ -113,7 +123,7 @@ const Returns = () => {
     <div className="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 mt-10">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-          <Edit size={18} /> {t.title}
+            {t.title}
         </h2>
         <select
           className="border rounded-md px-3 py-1 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500"
@@ -148,7 +158,7 @@ const Returns = () => {
           onClick={handleAddReason}
           className="bg-blue-500 text-white text-sm px-3 py-2 rounded-md flex items-center gap-1 hover:bg-blue-600"
         >
-          <Plus size={16} /> {t.addButton}
+           {t.addButton}
         </button>
       </div>
 
@@ -236,9 +246,9 @@ const Section = ({
                     <div className="dropdown-menu absolute right-4 mt-2 bg-white border rounded-lg shadow-md z-50 w-40">
                       <button
                         onClick={() => onDelete(r.id, type)}
-                        className="flex w-full text-left px-3 py-2 text-sm hover:bg-red-50 text-red-600"
+                        className="flex w-full text-left px-3 py-2 text-sm hover:bg-indigo-50  "
                       >
-                        <Trash2 size={14} className="mr-2" /> {t.delete}
+                         {t.delete}
                       </button>
                     </div>
                   )}
