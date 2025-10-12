@@ -64,24 +64,22 @@ const Transactions = () => {
             <div
               key={status}
               onClick={() => setFilter(status)}
-              className={`p-4 rounded-xl bg-white flex justify-between items-center cursor-pointer transition border ${
-                isActive ? "border-blue-500 shadow-md" : "hover:shadow-sm border-gray-200"
-              }`}
+              className={`p-4 rounded-xl bg-white flex justify-between items-center cursor-pointer transition border ${isActive ? "border-blue-500 shadow-md" : "hover:shadow-sm border-gray-200"
+                }`}
             >
               <div>
                 <p className="text-gray-500 text-sm capitalize">{status}</p>
                 <p className="text-xl font-semibold">{statusCounts[status]}</p>
               </div>
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${
-                  status === "pending"
+                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${status === "pending"
                     ? "bg-yellow-400"
                     : status === "success"
-                    ? "bg-green-500"
-                    : status === "failed"
-                    ? "bg-red-500"
-                    : "bg-blue-500"
-                }`}
+                      ? "bg-green-500"
+                      : status === "failed"
+                        ? "bg-red-500"
+                        : "bg-blue-500"
+                  }`}
               >
                 <Icon size={20} />
               </div>
@@ -108,41 +106,52 @@ const Transactions = () => {
       </div>
 
       {/* Table Section */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200">
-        <table className="min-w-full text-sm md:text-base">
-          <thead className="bg-gray-100 sticky top-0 z-10">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <table className="min-w-full border-collapse">
+          {/* ===== Table Head ===== */}
+          <thead className="bg-indigo-600 text-white">
             <tr>
               {["Transaction ID", "User", "Method", "Amount", "Status", "Date", "Actions"].map((head) => (
                 <th
                   key={head}
-                  className="px-4 py-3 text-left font-semibold text-gray-700 border-b border-gray-200"
+                  className="px-4 py-3 text-sm font-semibold text-left"
                 >
                   {head}
                 </th>
               ))}
             </tr>
           </thead>
+
+          {/* ===== Table Body ===== */}
           <tbody>
             {filteredPayments.length ? (
-              filteredPayments.map((p) => {
+              filteredPayments.map((p, i) => {
                 const Icon = statusIcons[p.status];
                 return (
-                  <tr key={p.id} className="hover:bg-gray-50 transition">
-                    <td className="px-4 py-3 border-b">{p.id}</td>
-                    <td className="px-4 py-3 border-b">{p.user}</td>
-                    <td className="px-4 py-3 border-b">{p.method}</td>
-                    <td className="px-4 py-3 border-b">{p.amount} BDT</td>
-                    <td className="px-4 py-3 border-b">
+                  <tr
+                    key={p.id}
+                    className={`${i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
+                      } hover:bg-indigo-100/70 text-left transition-colors`}
+                  >
+                    <td className="px-4 py-3 text-purple-500 font-medium">{p.id}</td>
+                    <td className="px-4 py-3 font-medium text-gray-700">{p.user}</td>
+                    <td className="px-4 py-3 font-medium text-gray-700">{p.method}</td>
+                    <td className="px-4 py-3 font-medium text-gray-700">{p.amount} BDT</td>
+
+                    {/* Status badge */}
+                    <td className="px-4 py-3 ">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${statusStyles[p.status]}`}
                       >
-                        <Icon size={14} />
                         {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
                       </span>
                     </td>
-                    <td className="px-4 py-3 border-b">{p.date}</td>
-                    <td className="px-4 py-3 border-b">
-                      <button className="flex items-center gap-1 text-blue-600 hover:underline">
+
+                    <td className="px-4 py-3 text-gray-700 text-sm">{p.date}</td>
+
+                    {/* Actions */}
+                    <td className="px-4 py-3 ">
+                      <button className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition">
                         <Eye size={15} /> View
                       </button>
                     </td>
@@ -151,7 +160,10 @@ const Transactions = () => {
               })
             ) : (
               <tr>
-                <td colSpan="7" className="text-center py-6 text-gray-500">
+                <td
+                  colSpan="7"
+                  className="text-center py-6 text-gray-500 text-sm font-medium"
+                >
                   No transactions found.
                 </td>
               </tr>

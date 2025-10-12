@@ -85,7 +85,7 @@ const Reports = () => {
       (r.revenue / r.totalTransactions).toFixed(2)
     ]);
 
-    let csvContent = "data:text/csv;charset=utf-8," 
+    let csvContent = "data:text/csv;charset=utf-8,"
       + [headers, ...rows].map(e => e.join(",")).join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -142,36 +142,51 @@ const Reports = () => {
       </div>
 
       {/* Reports Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-100">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <table className="min-w-full border-collapse text-sm md:text-base">
+          <thead className="bg-indigo-600 text-white">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Label</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Total Transactions</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-green-600">Success</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-red-600">Failed</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-blue-600">Refunded</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Revenue (BDT)</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Success Rate (%)</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Avg Revenue/Tx</th>
+              {[
+                "Label",
+                "Total Transactions",
+                "Success",
+                "Failed",
+                "Refunded",
+                "Revenue (BDT)",
+                "Success Rate (%)",
+                "Avg Revenue/Tx",
+              ].map((head) => (
+                <th
+                  key={head}
+                  className="px-4 py-3 text-center text-sm font-semibold border-b border-indigo-500"
+                >
+                  {head}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+
+          <tbody>
             {reports.map((r, idx) => (
-              <tr key={idx} className="hover:bg-gray-50 transition">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{r.label}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{r.totalTransactions}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">{r.success}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">{r.failed}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{r.refunded}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{r.revenue.toLocaleString()}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{((r.success / r.totalTransactions) * 100).toFixed(2)}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{(r.revenue / r.totalTransactions).toFixed(2)}</td>
+              <tr
+                key={idx}
+                className={`${idx % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
+                  } hover:bg-indigo-100/70 text-center transition-colors`}
+              >
+                <td className="px-4 py-3 font-medium">{r.label}</td>
+                <td className="px-4 py-3">{r.totalTransactions}</td>
+                <td className="px-4 py-3 text-green-600 font-medium">{r.success}</td>
+                <td className="px-4 py-3 text-red-600 font-medium">{r.failed}</td>
+                <td className="px-4 py-3 text-blue-600 font-medium">{r.refunded}</td>
+                <td className="px-4 py-3">{r.revenue.toLocaleString()}</td>
+                <td className="px-4 py-3">{((r.success / r.totalTransactions) * 100).toFixed(2)}</td>
+                <td className="px-4 py-3">{(r.revenue / r.totalTransactions).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
     </div>
   );
 };

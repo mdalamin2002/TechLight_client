@@ -1,11 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Eye,
-  CheckCircle,
-  XCircle,
-  Settings,
-} from "lucide-react";
+import { Eye, CheckCircle, XCircle, Settings } from "lucide-react";
 
 const statusColors = {
   pending: "text-yellow-600 bg-yellow-50 border-yellow-200",
@@ -23,11 +18,12 @@ const DisputeTable = ({
   updateStatus,
 }) => {
   return (
-    <div className="overflow-x-auto bg-white rounded-xl shadow border border-gray-200 mb-8">
-      <table className="min-w-full text-sm md:text-base">
-        <thead className="bg-gray-100">
+    <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+      <table className="min-w-full border-collapse text-sm md:text-base">
+        {/* Table Header */}
+        <thead className="bg-indigo-600 text-white">
           <tr>
-            <th className="px-4 py-3 border-b text-center">
+            <th className="px-4 py-3 text-center text-sm font-semibold border-b border-indigo-500">
               <input
                 type="checkbox"
                 onChange={selectAll}
@@ -48,29 +44,40 @@ const DisputeTable = ({
             ].map((head) => (
               <th
                 key={head}
-                className="px-4 py-3 text-left font-semibold text-gray-700 border-b"
+                className="px-4 py-3 text-left text-sm font-semibold border-b border-indigo-500"
               >
                 {head}
               </th>
             ))}
           </tr>
         </thead>
+
+        {/* Table Body */}
         <tbody>
           {filteredDisputes.length ? (
-            filteredDisputes.map((d, index) => (
-              <tr key={d.id} className="hover:bg-blue-50 transition relative">
-                <td className="px-4 py-3 border-b text-center">
+            filteredDisputes.map((d, i) => (
+              <tr
+                key={d.id}
+                className={`${
+                  i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
+                } hover:bg-indigo-100/70 transition-colors`}
+              >
+                <td className="px-4 py-3 text-center border-b">
                   <input
                     type="checkbox"
                     checked={selectedIds.includes(d.id)}
                     onChange={() => toggleSelect(d.id)}
                   />
                 </td>
-                <td className="px-4 py-3 border-b">{d.id}</td>
-                <td className="px-4 py-3 border-b">{d.transactionId}</td>
+                <td className="px-4 py-3 border-b text-indigo-600 font-medium">
+                  {d.id}
+                </td>
+                <td className="px-4 py-3 border-b text-indigo-500 font-medium">
+                  {d.transactionId}
+                </td>
                 <td className="px-4 py-3 border-b">{d.user.name}</td>
                 <td className="px-4 py-3 border-b">{d.issue}</td>
-                <td className="px-4 py-3 border-b font-medium">
+                <td className="px-4 py-3 border-b">
                   <span
                     className={`inline-flex items-center gap-1 px-3 py-1 rounded-full border text-xs font-semibold ${statusColors[d.status]}`}
                   >
@@ -78,18 +85,20 @@ const DisputeTable = ({
                   </span>
                 </td>
                 <td className="px-4 py-3 border-b">{d.reportedOn}</td>
-                <td className="px-4 py-3 border-b relative">
+
+                {/* Actions */}
+                <td className="px-4 py-3 border-b text-center relative">
                   <button
                     onClick={() =>
-                      setOpenMenu(openMenu === index ? null : index)
+                      setOpenMenu(openMenu === i ? null : i)
                     }
-                    className="text-gray-600 hover:text-blue-600 transition"
+                    className="text-gray-600 hover:text-indigo-600 transition"
                   >
                     <Settings size={18} />
                   </button>
 
                   <AnimatePresence>
-                    {openMenu === index && (
+                    {openMenu === i && (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -99,20 +108,17 @@ const DisputeTable = ({
                         <button className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2">
                           <Eye size={15} /> View Details
                         </button>
+
                         {d.status === "pending" && (
                           <>
                             <button
-                              onClick={() =>
-                                updateStatus([d.id], "resolved")
-                              }
+                              onClick={() => updateStatus([d.id], "resolved")}
                               className="w-full text-left px-4 py-2 hover:bg-gray-100 text-green-600 flex items-center gap-2"
                             >
                               <CheckCircle size={15} /> Resolve
                             </button>
                             <button
-                              onClick={() =>
-                                updateStatus([d.id], "rejected")
-                              }
+                              onClick={() => updateStatus([d.id], "rejected")}
                               className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 flex items-center gap-2"
                             >
                               <XCircle size={15} /> Reject
@@ -127,7 +133,10 @@ const DisputeTable = ({
             ))
           ) : (
             <tr>
-              <td colSpan="8" className="text-center py-6 text-gray-500">
+              <td
+                colSpan="8"
+                className="text-center py-6 text-gray-500 bg-white"
+              >
                 No disputes found.
               </td>
             </tr>

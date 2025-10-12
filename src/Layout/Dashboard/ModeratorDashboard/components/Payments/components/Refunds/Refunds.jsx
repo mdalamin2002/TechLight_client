@@ -78,15 +78,14 @@ const Refunds = () => {
                 <p className="text-xl font-semibold">{statusCounts[status]}</p>
               </div>
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${
-                  status === "pending"
+                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${status === "pending"
                     ? "bg-yellow-400"
                     : status === "approved"
-                    ? "bg-green-500"
-                    : status === "rejected"
-                    ? "bg-red-500"
-                    : "bg-blue-500"
-                }`}
+                      ? "bg-green-500"
+                      : status === "rejected"
+                        ? "bg-red-500"
+                        : "bg-blue-500"
+                  }`}
               >
                 <Icon size={20} />
               </div>
@@ -113,41 +112,62 @@ const Refunds = () => {
       </div>
 
       {/* Refund Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200">
-        <table className="min-w-full text-sm md:text-base">
-          <thead className="bg-gray-100 sticky top-0 z-10">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-indigo-600 text-white">
             <tr>
-              {["Refund ID", "Transaction ID", "User", "Amount", "Status", "Requested On", "Actions"].map((head) => (
-                <th key={head} className="px-4 py-3 text-left font-semibold text-gray-700 border-b border-gray-200">
+              {[
+                "Refund ID",
+                "Transaction ID",
+                "User",
+                "Amount",
+                "Status",
+                "Requested On",
+                "Actions",
+              ].map((head) => (
+                <th
+                  key={head}
+                  className="px-4 py-3 text-sm font-semibold text-left"
+                >
                   {head}
                 </th>
               ))}
             </tr>
           </thead>
+
           <tbody>
             {filteredRefunds.length ? (
               filteredRefunds.map((r, index) => {
                 const Icon = statusIcons[r.status];
                 return (
-                  <tr key={r.id} className="hover:bg-gray-50 transition relative">
-                    <td className="px-4 py-3 border-b">{r.id}</td>
-                    <td className="px-4 py-3 border-b">{r.transactionId}</td>
-                    <td className="px-4 py-3 border-b">{r.user.name}</td>
-                    <td className="px-4 py-3 border-b">{r.amount} BDT</td>
-                    <td className="px-4 py-3 border-b font-medium">
+                  <tr
+                    key={r.id}
+                    className={`${index % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
+                      } hover:bg-indigo-100/70 text-left transition-colors`}
+                  >
+                    <td className="px-4 py-3 text-purple-500 font-medium">{r.id}</td>
+                    <td className="px-4 py-3 font-medium text-gray-700">{r.transactionId}</td>
+                    <td className="px-4 py-3 font-medium text-gray-700">{r.user.name}</td>
+                    <td className="px-4 py-3 font-medium text-gray-700">{r.amount} BDT</td>
+
+                    {/* Status badge */}
+                    <td className="px-4 py-3">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${statusColors[r.status]}`}
                       >
-                        <Icon size={14} /> {r.status.charAt(0).toUpperCase() + r.status.slice(1)}
+                        {r.status.charAt(0).toUpperCase() + r.status.slice(1)}
                       </span>
                     </td>
-                    <td className="px-4 py-3 border-b">{r.requestedOn}</td>
 
-                    {/* Actions with gear menu */}
-                    <td className="px-4 py-3 border-b relative">
+                    <td className="px-4 py-3 text-gray-700 text-sm">{r.requestedOn}</td>
+
+                    {/* Actions */}
+                    <td className="px-4 py-3 relative">
                       <button
-                        onClick={() => setOpenMenu(openMenu === index ? null : index)}
-                        className="text-gray-600 hover:text-blue-600 transition"
+                        onClick={() =>
+                          setOpenMenu(openMenu === index ? null : index)
+                        }
+                        className="text-gray-600 hover:text-indigo-600 transition"
                       >
                         <Settings size={18} />
                       </button>
@@ -160,6 +180,7 @@ const Refunds = () => {
                           >
                             <Eye size={15} /> View
                           </button>
+
                           {r.status === "pending" && (
                             <>
                               <button
@@ -184,7 +205,10 @@ const Refunds = () => {
               })
             ) : (
               <tr>
-                <td colSpan="7" className="text-center py-6 text-gray-500">
+                <td
+                  colSpan="7"
+                  className="text-center py-6 text-gray-500 text-sm font-medium"
+                >
                   No refunds found.
                 </td>
               </tr>
@@ -192,6 +216,7 @@ const Refunds = () => {
           </tbody>
         </table>
       </div>
+
     </div>
   );
 };

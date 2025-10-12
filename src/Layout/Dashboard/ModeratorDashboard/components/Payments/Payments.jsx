@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Transactions from "./components/Transactions";
-import Reports from "./components/Reports";
-import Settings from "./components/Settings";
-import Analytics from "./components/Analytics";
+import Transactions from "./components/Transactions/Transactions";
+import Reports from "./components/Payments_Reports/Reports";
+import Settings from "./components/Settings/Settings";
+import Analytics from "./components/Analytics/Analytics";
 import Disputes from "./components/Disputes/Disputes";
-import Refunds from "./components/Refunds";
+import Refunds from "./components/Refunds/Refunds";
 
 export const Payments = () => {
   const [activeTab, setActiveTab] = useState("transactions");
