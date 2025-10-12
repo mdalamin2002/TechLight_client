@@ -22,7 +22,7 @@ const AddProductForm = ({ onSubmitProduct }) => {
   const [specs, setSpecs] = useState([{ name: "", value: "" }]);
   const [uploading, setUploading] = useState(false);
 
-  const { register, handleSubmit, reset, setValue, } = useForm();
+  const { register, handleSubmit, reset, setValue } = useForm();
 
   // Upload to Cloudinary
   const uploadToCloudinary = async (files) => {
@@ -122,12 +122,18 @@ const AddProductForm = ({ onSubmitProduct }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label>Product Name *</Label>
-                  <Input {...register("name", { required: true })} placeholder="Enter product name" />
+                  <Input
+                    {...register("name", { required: true })}
+                    placeholder="Enter product name"
+                  />
                 </div>
 
                 <div>
                   <Label>Brand *</Label>
-                  <Input {...register("brand", { required: true })} placeholder="Enter brand name" />
+                  <Input
+                    {...register("brand", { required: true })}
+                    placeholder="Enter brand name"
+                  />
                 </div>
 
                 <div>
@@ -175,23 +181,37 @@ const AddProductForm = ({ onSubmitProduct }) => {
 
                 <div>
                   <Label>Price *</Label>
-                  <Input type="number" step="0.01" {...register("price", { required: true })} />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    {...register("price", { required: true })}
+                  />
                 </div>
 
                 <div>
                   <Label>Discount Price *</Label>
-                  <Input type="number" step="0.01" {...register("discount_price", { required: true })} />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    {...register("discount_price", { required: true })}
+                  />
                 </div>
 
                 <div>
                   <Label>Stock Quantity *</Label>
-                  <Input type="number" {...register("stock", { required: true })} />
+                  <Input
+                    type="number"
+                    {...register("stock", { required: true })}
+                  />
                 </div>
               </div>
 
               <div>
                 <Label>Description</Label>
-                <Textarea {...register("description")} placeholder="Enter detailed product description" />
+                <Textarea
+                  {...register("description")}
+                  placeholder="Enter detailed product description"
+                />
               </div>
             </Card>
 
@@ -205,16 +225,23 @@ const AddProductForm = ({ onSubmitProduct }) => {
               </div>
               <div className="space-y-3">
                 {specs.map((spec, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_1fr_auto] gap-2 items-center">
+                  <div
+                    key={index}
+                    className="grid grid-cols-[1fr_1fr_auto] gap-2 items-center"
+                  >
                     <Input
                       placeholder="Key (e.g. Processor)"
                       value={spec.name}
-                      onChange={(e) => handleSpecChange(index, "name", e.target.value)}
+                      onChange={(e) =>
+                        handleSpecChange(index, "name", e.target.value)
+                      }
                     />
                     <Input
                       placeholder="Value (e.g. Intel i5)"
                       value={spec.value}
-                      onChange={(e) => handleSpecChange(index, "value", e.target.value)}
+                      onChange={(e) =>
+                        handleSpecChange(index, "value", e.target.value)
+                      }
                     />
                     <Button
                       type="button"
@@ -255,7 +282,11 @@ const AddProductForm = ({ onSubmitProduct }) => {
 
               {mainImage && (
                 <div className="relative group rounded-lg overflow-hidden">
-                  <img src={mainImage} alt="Main" className="w-full h-40 object-cover rounded-md border" />
+                  <img
+                    src={mainImage}
+                    alt="Main"
+                    className="w-full h-40 object-cover rounded-md border"
+                  />
                   <button
                     type="button"
                     onClick={() => setMainImage("")}
@@ -276,7 +307,9 @@ const AddProductForm = ({ onSubmitProduct }) => {
               >
                 <Upload className="w-6 h-6 mb-2 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">
-                  {uploading ? "Uploading..." : "Click to upload gallery images"}
+                  {uploading
+                    ? "Uploading..."
+                    : "Click to upload gallery images"}
                 </span>
                 <input
                   id="galleryUpload"
@@ -291,8 +324,15 @@ const AddProductForm = ({ onSubmitProduct }) => {
 
               <div className="grid grid-cols-2 gap-3">
                 {galleryImages.map((url, idx) => (
-                  <div key={idx} className="relative group rounded-lg overflow-hidden">
-                    <img src={url} alt="Gallery" className="w-full h-28 object-cover rounded-md border" />
+                  <div
+                    key={idx}
+                    className="relative group rounded-lg overflow-hidden"
+                  >
+                    <img
+                      src={url}
+                      alt="Gallery"
+                      className="w-full h-28 object-cover rounded-md border"
+                    />
                     <button
                       type="button"
                       onClick={() => removeGalleryImage(url)}

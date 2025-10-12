@@ -2,7 +2,6 @@ import useAxiosSecure from "@/utils/useAxiosSecure";
 import AddProductForm from "./Forms/AddProductForm";
 import { toast } from "react-toastify";
 
-
 const AddProduct = () => {
   const axiosSecure = useAxiosSecure();
 

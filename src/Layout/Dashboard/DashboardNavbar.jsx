@@ -1,4 +1,3 @@
-// DashboardNavbar.jsx
 import React, { useState } from "react";
 import { Bell, User, Search, Menu, X } from "lucide-react";
 
