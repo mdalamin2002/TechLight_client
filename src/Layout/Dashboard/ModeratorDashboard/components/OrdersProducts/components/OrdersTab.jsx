@@ -19,6 +19,7 @@ import {
   ChevronRight,
   Search,
 } from "lucide-react";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const OrdersTab = () => {
   const columnHelper = createColumnHelper();
@@ -26,28 +27,50 @@ const OrdersTab = () => {
   const [data, setData] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [openMenu, setOpenMenu] = useState(null);
+  const axiosSecure = useAxiosSecure();
 
   // ===== Load orders data =====
   useEffect(() => {
-    axios
-      .get("/ModeratorOrders_Data.json")
+    axiosSecure
+      .get("/moderator/orders-products/orders")
       .then((res) => setData(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error fetching orders:", err));
   }, []);
 
   // ===== Update Order Status =====
-  const handleUpdateStatus = (orderId, newStatus) => {
-    setData((prevData) =>
-      prevData.map((order) =>
-        order._id === orderId ? { ...order, status: newStatus } : order
-      )
-    );
-    setOpenMenu(null); // close dropdown
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    try {
+      // Update UI immediately (optimistic update)
+      setData((prevData) =>
+        prevData.map((order) =>
+          order._id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
+
+      // Call backend API to update in database
+      await axiosSecure.patch(
+        `/moderator/orders-products/orders/${orderId}/status`,
+        { status: newStatus }
+      );
+
+      console.log("Order status updated successfully");
+    } catch (error) {
+      console.error("Failed to update order status:", error);
+
+      // Rollback UI if API fails
+      setData((prevData) =>
+        prevData.map((order) =>
+          order._id === orderId ? { ...order, status: order.status } : order
+        )
+      );
+    } finally {
+      setOpenMenu(null); // close dropdown
+    }
   };
 
   // ===== Columns =====
   const columns = [
-    columnHelper.accessor("_id", {
+    columnHelper.accessor("id", {
       id: "S.No",
       header: () => (
         <div className="flex items-center gap-1">
@@ -66,8 +89,14 @@ const OrdersTab = () => {
     }),
     columnHelper.accessor("products", {
       header: "Product(s)",
-      cell: (info) => <span>{info.getValue().join(", ")}</span>,
+      cell: (info) => {
+        const products = info.getValue();
+        return (
+          <span>{Array.isArray(products) ? products.join(", ") : "—"}</span>
+        );
+      },
     }),
+
     columnHelper.accessor("status", {
       header: "Status",
       cell: (info) => {

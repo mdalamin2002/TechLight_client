@@ -11,28 +11,50 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DebouncedInput from "../../../../AdminDashboard/components/AllUsers/components/DebouncedInput";
 import { Hash, User, Calendar, Search } from "lucide-react";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const UserReportsTab = () => {
   const columnHelper = createColumnHelper();
-
   const [data, setData] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
-    axios
-      .get("/Moderator_Users_UsersReport.json")
+    axiosSecure
+      .get("/moderator/users-reviews/reports")
       .then((res) => setData(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error fetching reports:", err));
   }, []);
 
   // ===== Action Handlers =====
-  const handleStatusChange = (reportId, newStatus) => {
-    setData((prevData) =>
-      prevData.map((item) =>
-        item.reportId === reportId ? { ...item, status: newStatus } : item
+  const handleStatusChange = async (id, newStatus) => {
+  try {
+    let endpoint = "";
+    let payload = {};
+
+    if (newStatus === "Verified") {
+      endpoint = `/moderator/users-reviews/reports/${id}`;
+      payload = { status: "Verified" };
+    } else if (newStatus === "Warned") {
+      endpoint = `/moderator/users-reviews/users/${id}/warn`;
+    } else if (newStatus === "Banned") {
+      endpoint = `/moderator/users-reviews/users/${id}/temp-ban`;
+      payload = { banUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) };
+    }
+
+    await axiosSecure.patch(endpoint, payload);
+
+    // update frontend instantly
+    setData((prev) =>
+      prev.map((r) =>
+        r._id === id ? { ...r, status: newStatus } : r
       )
     );
-  };
+  } catch (error) {
+    console.error("Action failed:", error);
+  }
+};
+
 
   // ===== Columns =====
   const columns = [
@@ -157,7 +179,10 @@ const UserReportsTab = () => {
                 <td className="py-3 px-4 flex gap-2">
                   <button
                     onClick={() =>
-                      handleStatusChange(row.original.reportId, "Verified")
+                      handleStatusChange(
+                        row.original._id,
+                        "Verified",
+                      )
                     }
                     className="px-3 py-1.5 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600"
                   >
@@ -165,7 +190,10 @@ const UserReportsTab = () => {
                   </button>
                   <button
                     onClick={() =>
-                      handleStatusChange(row.original.reportId, "Warned")
+                      handleStatusChange(
+                        row.original._id, 
+                        "Warned"
+                      )
                     }
                     className="px-3 py-1.5 bg-yellow-500 text-white rounded-lg text-sm hover:bg-yellow-600"
                   >
@@ -173,7 +201,10 @@ const UserReportsTab = () => {
                   </button>
                   <button
                     onClick={() =>
-                      handleStatusChange(row.original.reportId, "Banned")
+                      handleStatusChange(
+                        row.original._id,
+                        "Banned",
+                      )
                     }
                     className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600"
                   >
