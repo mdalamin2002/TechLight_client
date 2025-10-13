@@ -6,7 +6,6 @@ import { SalesReport } from "./components/SalesReport";
 import { UsersReport } from "./components/UsersReport";
 import { ReviewTraking } from "./components/ReviewTraking";
 import { OrdersReport } from "./components/OrdersReport";
-import { ModeratorReport } from "./components/ModeratorReport";
 import { FraudReport } from "./components/FraudReport";
 import { tabs } from "./components/tabs";
 import { ExportButton } from "./components/ExportButton";
@@ -20,7 +19,6 @@ export const Reports = () => {
   const [usersData, setUsersData] = useState({ topProducts: [], summary: [] });
   const [reviewData, setReviewData] = useState({ reviews: [], summary: {} });
   const [ordersData, setOrdersData] = useState({ orders: [] });
-  const [moderatorData, setModeratorData] = useState({ cases: [], summary: {} });
   const [fraudData, setFraudData] = useState({ cases: [], summary: {} });
 
   // Wrapper to update child data safely
@@ -38,8 +36,6 @@ export const Reports = () => {
         return <ReviewTraking dateRange={dateRange} onDataUpdate={data => safeSetData(setReviewData, data)} />;
       case "orders":
         return <OrdersReport dateRange={dateRange} onDataUpdate={data => safeSetData(setOrdersData, data)} />;
-      case "moderator":
-        return <ModeratorReport dateRange={dateRange} onDataUpdate={data => safeSetData(setModeratorData, data)} />;
       case "fraud":
         return <FraudReport dateRange={dateRange} onDataUpdate={data => safeSetData(setFraudData, data)} />;
       default:
@@ -87,17 +83,6 @@ export const Reports = () => {
       case "orders": {
         const { orders } = ordersData;
         dataToExport = [{ Section: "Orders" }, ...orders];
-        break;
-      }
-      case "moderator": {
-        const { summary, cases } = moderatorData;
-        dataToExport = [
-          { Section: "Summary" },
-          summary,
-          {},
-          { Section: "Moderator Cases" },
-          ...cases,
-        ];
         break;
       }
       case "fraud": {

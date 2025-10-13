@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
-import { priceLabel, toNumber } from "@/pages/HomeLayoutPages/AllProduct/All Product page/product";
-import { Link } from "react-router-dom"; // <-- এটা ঠিক করো
+import {
+  priceLabel,
+  toNumber,
+} from "@/pages/HomeLayoutPages/AllProduct/All Product page/product";
+import { Link, useNavigate } from "react-router-dom";
+import useWishlist from "@/hooks/useWishlist";
+import useCart from "@/hooks/useCart";
+import useAuth from "@/hooks/useAuth";
+import { toast } from "react-toastify";
 
 const AllProductCardShare = ({
   id,
@@ -9,16 +16,28 @@ const AllProductCardShare = ({
   image,
   brand,
   subcategory,
+  category,
+  model,
+  productCode,
   rating = 0,
   price = 0,
   regularPrice = 0,
   status = "In Stock",
-  keyFeatures = [],
   buttonText = "Add to Cart",
-  buttonAction = () => {},
-  variant = "grid", // grid | list  <-- নতুন
+  variant = "grid",
 }) => {
+  const {
+    wishlist,
+    addToWishlist,
+    removeFromWishlist,
+    adding,
+    removing,
+    isLoading,
+  } = useWishlist();
+  const { cart, addToCart } = useCart();
+  const { user } = useAuth();
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const navigate = useNavigate();
 
   const priceNum = toNumber(price);
   const regularPriceNum = toNumber(regularPrice);
@@ -27,6 +46,99 @@ const AllProductCardShare = ({
       ? Math.round(((regularPriceNum - priceNum) / regularPriceNum) * 100)
       : 0;
 
+  // Check wishlist state
+  useEffect(() => {
+    if (!isLoading && wishlist?.length > 0) {
+      const exists = wishlist.some((item) => item.productId === id);
+      setIsWishlisted(exists);
+    }
+  }, [wishlist, id, isLoading]);
+
+  // Wishlist handler
+  const handleWishlist = () => {
+    if (!user) {
+      navigate("/auth/login");
+      return;
+    }
+
+    const wishlistData = {
+      productId: id,
+      name,
+      image,
+      brand,
+      subcategory,
+      price,
+      regularPrice,
+      status,
+      category,
+      model,
+      productCode,
+      userEmail: user.email, // no guest fallback
+      createdAt: new Date().toISOString(),
+    };
+
+    const wishlistItem = wishlist?.find((item) => item.productId === id);
+    const wishlistId = wishlistItem?._id;
+
+    if (!isWishlisted) {
+      addToWishlist(wishlistData, {
+        onSuccess: () => {
+          toast.success(`${name} added to Wishlist!`);
+          setIsWishlisted(true);
+        },
+      });
+    } else if (wishlistId) {
+      removeFromWishlist(wishlistId, {
+        onSuccess: () => {
+          toast.info(`${name} removed from Wishlist.`);
+          setIsWishlisted(false);
+        },
+      });
+    }
+  };
+
+  // Cart handler
+  const handleAddToCart = () => {
+    if (!user) {
+      navigate("/auth/login");
+      return;
+    }
+
+    const cartData = {
+      productId: id,
+      category,
+      subcategory,
+      name,
+      brand,
+      model,
+      productCode,
+      image,
+      rating,
+      price,
+      regularPrice,
+      quantity: 1,
+      status,
+      userEmail: user.email,
+      createdAt: new Date().toISOString(),
+    };
+
+    const exists = cart?.some((item) => item.productId === id);
+
+    if (exists) {
+      toast.info(`${name} is already in your cart.`);
+    } else {
+      addToCart(cartData, {
+        onSuccess: () => {
+          toast.success(`${name} added to your cart!`);
+          navigate("/addToCart");
+        },
+        onError: () => {
+          toast.error("Failed to add item to cart.");
+        },
+      });
+    }
+  };
+
   return (
     <div
       className={[
@@ -34,18 +146,22 @@ const AllProductCardShare = ({
         variant === "list" ? "md:flex md:items-stretch" : "",
       ].join(" ")}
     >
+      {/* Discount */}
       {discount > 0 && (
         <div className="absolute top-3 left-3 z-10 bg-destructive text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
           -{discount}%
         </div>
       )}
 
+      {/* Status */}
       <div className="absolute top-3 right-3 z-10 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full font-medium">
         {status}
       </div>
 
+      {/* Wishlist Button */}
       <button
-        onClick={() => setIsWishlisted(!isWishlisted)}
+        onClick={handleWishlist}
+        disabled={adding || removing}
         className={`absolute cursor-pointer top-14 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 ${
           isWishlisted ? "bg-red-100" : "hover:bg-red-100"
         }`}
@@ -60,6 +176,7 @@ const AllProductCardShare = ({
         />
       </button>
 
+      {/* View Button */}
       <Link
         to={id}
         className="absolute cursor-pointer top-28 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 delay-75 hover:bg-blue-100"
@@ -67,6 +184,7 @@ const AllProductCardShare = ({
         <Eye className="w-5 h-5 text-gray-700 hover:text-blue-600 transition-colors" />
       </Link>
 
+      {/* Product Image */}
       <Link to={id}>
         <div
           className={
@@ -84,10 +202,10 @@ const AllProductCardShare = ({
                 : "w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
             }
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
       </Link>
 
+      {/* Product Info */}
       <div className="p-5 space-y-3 flex-1">
         <div className="flex items-center justify-between gap-2 text-xs">
           <span className="text-muted-foreground">{subcategory}</span>
@@ -102,6 +220,7 @@ const AllProductCardShare = ({
           </h4>
         </Link>
 
+        {/* Rating */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
@@ -119,17 +238,7 @@ const AllProductCardShare = ({
           </span>
         </div>
 
-        <div className="space-y-1.5 pt-2 border-t border-border/50">
-          {keyFeatures.slice(0, 2).map((feature, index) => (
-            <div key={index} className="flex items-start gap-2">
-              <div className="w-1 h-1 rounded-full bg-primary mt-2 flex-shrink-0" />
-              <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">
-                {feature}
-              </p>
-            </div>
-          ))}
-        </div>
-
+        {/* Price & Button */}
         <div className="pt-3 space-y-2">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold text-primary">
@@ -143,8 +252,8 @@ const AllProductCardShare = ({
           </div>
 
           <button
-            onClick={buttonAction}
-            className="w-full cursor-pointer bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"
+            onClick={handleAddToCart}
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
           >
             <ShoppingCart size={18} />
             <span>{buttonText}</span>

@@ -6,6 +6,7 @@ import useAuth from "@/hooks/useAuth";
 import { SaveUserInDb, validPass } from "@/utils/ShareUtils";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import GithubLogin from "../SocialLogin/GithubLogin";
 
 const Register = () => {
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ const Register = () => {
       Swal.fire({
         icon: "error",
         title: "Registration Failed",
-        text: error.message || "An unexpected error occurred. Please try again.",
+        text: `This email already use`,
       });
     } finally {
       setLoading(false);
@@ -65,6 +66,8 @@ const Register = () => {
       </div>
 
       <SocialLogin />
+      <br />
+      <GithubLogin></GithubLogin>
 
       <p className="text-center mt-6">
         Already have an account?{" "}

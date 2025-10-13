@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Heart,
   ShoppingCart,
@@ -30,10 +30,12 @@ import useAuth from "@/hooks/useAuth";
 import GlobalLoading from "../Loading/GlobalLoading";
 import { toast } from "react-toastify";
 import { auth } from "@/firebase/firebase.init";
+import useCart from "@/hooks/useCart";
+import useWishlist from "@/hooks/useWishlist";
 
 export default function Navbar() {
   const location = useLocation();
-  const { user,loading,logOutUser } = useAuth();
+  const { user, loading, logOutUser } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -41,12 +43,14 @@ export default function Navbar() {
   const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { cart } = useCart();
+  const { wishlist } = useWishlist();
+  const navigate = useNavigate();
 
   const profileRef = useRef(null);
 
-
-
-  const cartCount = 2;
+  const cartCount = cart.length;
+  const wishlistCount = wishlist.length;
 
   const categories = [
     {
@@ -79,6 +83,13 @@ export default function Navbar() {
     },
   ];
 
+  const handleRedirect = (path) => {
+    if (!user) {
+      navigate("/auth/login");
+    } else {
+      navigate(path);
+    }
+  };
 
   const handleLogout = () => {
     logOutUser(auth)
@@ -90,7 +101,6 @@ export default function Navbar() {
         toast.error("Failed to logout. Please try again.");
       });
     setProfileOpen(false);
-
   };
 
   const toggleCategory = (index) => {
@@ -198,18 +208,46 @@ export default function Navbar() {
 
               {/* Wishlist & Cart - Desktop */}
               <div className="flex items-center gap-1">
-                <Button variant="ghost" size="sm" asChild className="gap-2">
-                  <Link to="/wishlist">
-                    <Heart size={20} />
+                {/* Wishlist */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="gap-2"
+                  onClick={(e) => {
+                    e.preventDefault(); // Link er default behavior stop
+                    handleRedirect("/wishlist");
+                  }}
+                >
+                  <Link to="/wishlist" className="flex items-center">
+                    <div className="relative">
+                      <Heart size={22} className="text-foreground" />
+                      {wishlistCount > 0 && (
+                        <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                          {wishlistCount}
+                        </span>
+                      )}
+                    </div>
                     <span className="hidden lg:inline">Wishlist</span>
                   </Link>
                 </Button>
-                <Button variant="ghost" size="sm" asChild className="gap-2 relative">
-                  <Link to="/cart">
+
+                {/* Cart */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="gap-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleRedirect("/addToCart");
+                  }}
+                >
+                  <Link to="/addToCart" className="flex items-center">
                     <div className="relative">
-                      <ShoppingCart size={20} />
+                      <ShoppingCart size={22} className="text-foreground" />
                       {cartCount > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                        <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                           {cartCount}
                         </span>
                       )}
@@ -221,73 +259,73 @@ export default function Navbar() {
 
               {/* Profile / Account */}
 
-                <>
-                  {/* Desktop: hover dropdown */}
-                  <div className="block relative" ref={profileRef}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="gap-2 px-2"
-                      onMouseEnter={() => setProfileOpen(true)}
-                      onMouseLeave={() => setProfileOpen(false)}
-                    >
-                      <img
-                        src={ "https://i.ibb.co.com/3mWYSkKt/image.png"}
-                        alt="User"
-                        className="w-8 h-8 rounded-full object-cover ring-2 ring-border"
-                      />
-                      <ChevronDown size={16} className="hidden lg:block" />
-                    </Button>
-                    <AnimatePresence>
-                      {profileOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.15 }}
-                          className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden"
-                          onMouseEnter={() => setProfileOpen(true)}
-                          onMouseLeave={() => setProfileOpen(false)}
-                        >
-                          <div className="p-2">
-                            <Link
-                              to="/profile"
-                              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <UserCircle size={18} />
-                              <span className="text-sm font-medium">Profile</span>
-                            </Link>
-                            <Link
-                              to="/dashboard"
-                              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <LayoutDashboard size={18} />
-                              <span className="text-sm font-medium">Dashboard</span>
-                            </Link>
-                            <div className="my-1 h-px bg-border" />
-                            <button
-                              onClick={handleLogout}
-                              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"
-                            >
-                              <LogOut size={18} />
-                              <span className="text-sm font-medium">Logout</span>
-                            </button>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </>
-              {
-                !user &&
+              <>
+                {/* Desktop: hover dropdown */}
+                <div className="block relative" ref={profileRef}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="gap-2 px-2"
+                    onMouseEnter={() => setProfileOpen(true)}
+                    onMouseLeave={() => setProfileOpen(false)}
+                  >
+                    <img
+                      src={"https://i.ibb.co.com/3mWYSkKt/image.png"}
+                      alt="User"
+                      className="w-8 h-8 rounded-full object-cover ring-2 ring-border"
+                    />
+                    <ChevronDown size={16} className="hidden lg:block" />
+                  </Button>
+                  <AnimatePresence>
+                    {profileOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden"
+                        onMouseEnter={() => setProfileOpen(true)}
+                        onMouseLeave={() => setProfileOpen(false)}
+                      >
+                        <div className="p-2">
+                          <Link
+                            to="/profile"
+                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+                          >
+                            <UserCircle size={18} />
+                            <span className="text-sm font-medium">Profile</span>
+                          </Link>
+                          <Link
+                            to="/dashboard"
+                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+                          >
+                            <LayoutDashboard size={18} />
+                            <span className="text-sm font-medium">
+                              Dashboard
+                            </span>
+                          </Link>
+                          <div className="my-1 h-px bg-border" />
+                          <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"
+                          >
+                            <LogOut size={18} />
+                            <span className="text-sm font-medium">Logout</span>
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </>
+              {!user && (
                 <Button size="sm" asChild>
                   <Link to="/auth/register" className="gap-2">
                     <User size={18} />
                     <span className="hidden sm:inline">Sign In</span>
                   </Link>
                 </Button>
-            }
-
+              )}
             </div>
           </div>
         </div>
@@ -365,7 +403,9 @@ export default function Navbar() {
                             key={i}
                             to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
                             className={`block px-3 py-2 rounded-lg text-sm transition-colors hover:bg-muted ${
-                              isActiveRoute(`/${item.toLowerCase().replace(/\s+/g, "-")}`)
+                              isActiveRoute(
+                                `/${item.toLowerCase().replace(/\s+/g, "-")}`
+                              )
                                 ? "bg-primary/10 font-semibold"
                                 : ""
                             }`}
@@ -404,7 +444,9 @@ export default function Navbar() {
             >
               <div className="h-full overflow-y-auto p-4">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-bold text-foreground">All Categories</h2>
+                  <h2 className="text-lg font-bold text-foreground">
+                    All Categories
+                  </h2>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -418,7 +460,10 @@ export default function Navbar() {
                   {categories.map((category, idx) => {
                     const isOpen = openCategoryIndex === idx;
                     return (
-                      <div key={idx} className="border-b border-border/30 last:border-0">
+                      <div
+                        key={idx}
+                        className="border-b border-border/30 last:border-0"
+                      >
                         <button
                           onClick={() => toggleCategory(idx)}
                           className="flex items-center justify-between w-full text-left py-3 px-3 rounded-lg hover:bg-muted transition-all duration-200 group"
@@ -444,10 +489,14 @@ export default function Navbar() {
                               {category.items.map((item, i) => (
                                 <Link
                                   key={i}
-                                  to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                                  to={`/${item
+                                    .toLowerCase()
+                                    .replace(/\s+/g, "-")}`}
                                   className={`block w-full text-left text-sm py-2 px-3 rounded-lg hover:bg-muted transition-colors ${
                                     isActiveRoute(
-                                      `/${item.toLowerCase().replace(/\s+/g, "-")}`
+                                      `/${item
+                                        .toLowerCase()
+                                        .replace(/\s+/g, "-")}`
                                     )
                                       ? "bg-primary/10 font-semibold"
                                       : ""
@@ -473,7 +522,11 @@ export default function Navbar() {
       {/* Bottom Mobile Navbar */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/90 backdrop-blur-xl border-t border-border shadow-lg z-40">
         <div className="grid grid-cols-3 gap-1 px-2 py-2">
-          <Button variant="ghost" asChild className="flex-col h-auto py-2 gap-1">
+          <Button
+            variant="ghost"
+            asChild
+            className="flex-col h-auto py-2 gap-1"
+          >
             <Link
               to="/offers"
               className={`flex flex-col items-center ${
@@ -484,18 +537,19 @@ export default function Navbar() {
               <span className="text-xs">Offers</span>
             </Link>
           </Button>
-          <Button variant="ghost" asChild className="flex-col h-auto py-2 gap-1">
-            <Link
-              to="/wishlist"
-              className={`flex flex-col items-center ${
-                isActiveRoute("/wishlist") ? "text-primary" : ""
-              }`}
-            >
-              <Heart size={20} />
-              <span className="text-xs">Wishlist</span>
-            </Link>
+          <Button
+            onClick={() => handleRedirect("/wishlist")}
+            variant="ghost"
+            className="flex-col h-auto py-2 gap-1"
+          >
+            <Heart size={20} />
+            <span className="text-xs">Wishlist</span>
           </Button>
-          <Button variant="ghost" asChild className="flex-col h-auto py-2 gap-1">
+          <Button
+            variant="ghost"
+            asChild
+            className="flex-col h-auto py-2 gap-1"
+          >
             <Link
               to="/profile"
               className={`flex flex-col items-center ${
