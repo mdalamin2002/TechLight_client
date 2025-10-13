@@ -11,18 +11,28 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "@/firebase/firebase.init";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 export const AuthContext = createContext();
 
 export const FirebaseContext = ({ children }) => {
   //Login User state
   const [user, setUser] = useState(null);
-  
-
   //Loading state
   const [loading, setLoading] = useState(true);
 
-    
+
+  //Getting user role
+  const { data: userRole = {}, } = useQuery({
+    queryKey: ["dbUser", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_baseURL}/users/role/${user?.email}`);
+      return res.data;
+    },
+  });
+
   //Register user with email and password
   const registerWithEmailPass = (email, password) => {
     setLoading(true);
@@ -51,10 +61,10 @@ export const FirebaseContext = ({ children }) => {
     return updateProfile(auth.currentUser, updatedData);
   };
 
-  //Reset password 
+  //Reset password
   const forgotPassword = (email) => {
     return sendPasswordResetEmail(auth, email);
-  }
+  };
 
   //Log out user
   const logOutUser = () => {
@@ -84,7 +94,8 @@ export const FirebaseContext = ({ children }) => {
     logOutUser,
     googleLogin,
     forgotPassword,
-    githubLogin
+    githubLogin,
+    role:userRole?.role,
   };
 
   return <AuthContext value={userInfo}>{children}</AuthContext>;
