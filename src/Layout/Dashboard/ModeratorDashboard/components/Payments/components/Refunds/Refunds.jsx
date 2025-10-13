@@ -12,10 +12,10 @@ const sampleRefunds = [
 ];
 
 const statusColors = {
-  pending: "text-yellow-500 bg-yellow-50",
-  approved: "text-green-600 bg-green-50",
-  rejected: "text-red-500 bg-red-50",
-  refunded: "text-blue-600 bg-blue-50",
+  pending: "text-yellow-500 ",
+  approved: "text-green-600 ",
+  rejected: "text-red-500 ",
+  refunded: "text-blue-600 ",
 };
 
 const statusIcons = {
@@ -145,21 +145,21 @@ const Refunds = () => {
                     className={`${index % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
                       } hover:bg-indigo-100/70 text-left transition-colors`}
                   >
-                    <td className="px-4 py-3 text-purple-500 font-medium">{r.id}</td>
-                    <td className="px-4 py-3 font-medium text-gray-700">{r.transactionId}</td>
-                    <td className="px-4 py-3 font-medium text-gray-700">{r.user.name}</td>
-                    <td className="px-4 py-3 font-medium text-gray-700">{r.amount} BDT</td>
+                    <td className="px-4 py-3 text-purple-600 font-medium">{r.id}</td>
+                    <td className="px-4 py-3  font-medium">{r.transactionId}</td>
+                    <td className="px-4 py-3 font-medium ">{r.user.name}</td>
+                    <td className="px-4 py-3 font-medium ">{r.amount} BDT</td>
 
                     {/* Status badge */}
                     <td className="px-4 py-3">
                       <span
-                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${statusColors[r.status]}`}
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full font-medium ${statusColors[r.status]}`}
                       >
                         {r.status.charAt(0).toUpperCase() + r.status.slice(1)}
                       </span>
                     </td>
 
-                    <td className="px-4 py-3 text-gray-700 text-sm">{r.requestedOn}</td>
+                    <td className="px-4 py-3 ">{r.requestedOn}</td>
 
                     {/* Actions */}
                     <td className="px-4 py-3 relative">
