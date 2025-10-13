@@ -144,6 +144,7 @@ const MainRoute = createBrowserRouter([
       { path: "communication", element: <Communication></Communication> },
       { path: "reports", element: <Reports></Reports> },
       { path: "settings", element: <Settings></Settings> },
+      
       { path: "advanced", element: <Advanced></Advanced> },
 
       // Moderator Routes
@@ -154,7 +155,9 @@ const MainRoute = createBrowserRouter([
       { path: "reports-analytics", element: <ReportsAnalytics></ReportsAnalytics> },
       { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
       { path: "moderator-settings", element: <ModeratorSettings></ModeratorSettings> },
+      // Moderator Payment routes
       { path: "payments", element: <Payments></Payments>},
+
       { path: "notifications", element: <Notifications></Notifications>},
 
       // User Routes
