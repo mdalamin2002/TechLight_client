@@ -12,10 +12,10 @@ const samplePayments = [
 ];
 
 const statusStyles = {
-  pending: "text-yellow-600 bg-yellow-50",
-  success: "text-green-600 bg-green-50",
-  failed: "text-red-500 bg-red-50",
-  refunded: "text-blue-600 bg-blue-50",
+  pending: "text-yellow-600 ",
+  success: "text-green-600 ",
+  failed: "text-red-500 ",
+  refunded: "text-blue-600 ",
 };
 
 const statusIcons = {
@@ -134,20 +134,20 @@ const Transactions = () => {
                       } hover:bg-indigo-100/70 text-left transition-colors`}
                   >
                     <td className="px-4 py-3 text-purple-500 font-medium">{p.id}</td>
-                    <td className="px-4 py-3 font-medium text-gray-700">{p.user}</td>
-                    <td className="px-4 py-3 font-medium text-gray-700">{p.method}</td>
-                    <td className="px-4 py-3 font-medium text-gray-700">{p.amount} BDT</td>
+                    <td className="px-4 py-3 font-medium ">{p.user}</td>
+                    <td className="px-4 py-3 font-medium ">{p.method}</td>
+                    <td className="px-4 py-3 font-medium ">{p.amount} BDT</td>
 
                     {/* Status badge */}
                     <td className="px-4 py-3 ">
                       <span
-                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${statusStyles[p.status]}`}
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full font-medium ${statusStyles[p.status]}`}
                       >
                         {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
                       </span>
                     </td>
 
-                    <td className="px-4 py-3 text-gray-700 text-sm">{p.date}</td>
+                    <td className="px-4 py-3 ">{p.date}</td>
 
                     {/* Actions */}
                     <td className="px-4 py-3 ">
