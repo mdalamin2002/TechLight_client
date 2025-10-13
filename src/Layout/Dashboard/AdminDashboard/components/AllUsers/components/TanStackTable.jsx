@@ -221,7 +221,7 @@ const TanStackTable = () => {
   });
 
   return (
-    <div className="bg-card rounded-2xl shadow-lg border border-border/50 py-6 md:px-6 px-3 backdrop-blur-sm">
+    <div className="bg-card rounded-2xl shadow-lg border border-border/50  py-6 md:px-6 px-3 backdrop-blur-sm">
       {/* Search + ⬇ Download */}
       <div className="flex flex-col sm:flex-row justify-between mb-6 gap-4">
         <div className="relative flex-1 max-w-md">

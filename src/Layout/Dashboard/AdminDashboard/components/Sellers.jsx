@@ -306,7 +306,7 @@ const Sellers = () => {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {/* Total Sellers */}
-          <div className="bg-card border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
             <div className="flex items-center justify-between mb-3">
               <div className="p-2 bg-primary/10 rounded-lg">
                 <Users className="w-5 h-5 text-primary" />
@@ -320,7 +320,7 @@ const Sellers = () => {
           </div>
 
           {/* Pending */}
-          <div className="bg-card border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
             <div className="flex items-center justify-between mb-3">
               <div className="p-2 bg-amber-500/10 rounded-lg">
                 <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-500" />
@@ -336,7 +336,7 @@ const Sellers = () => {
           </div>
 
           {/* Approved */}
-          <div className="bg-card border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
             <div className="flex items-center justify-between mb-3">
               <div className="p-2 bg-green-500/10 rounded-lg">
                 <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-500" />
@@ -352,7 +352,7 @@ const Sellers = () => {
           </div>
 
           {/* Total Sales */}
-          <div className="bg-card border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
             <div className="flex items-center justify-between mb-3">
               <div className="p-2 bg-blue-500/10 rounded-lg">
                 <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-500" />
@@ -383,7 +383,7 @@ const Sellers = () => {
         </div>
 
         {/* Table Card */}
-        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-card rounded-2xl shadow-lg border border-border/50 backdrop-blur-sm">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
