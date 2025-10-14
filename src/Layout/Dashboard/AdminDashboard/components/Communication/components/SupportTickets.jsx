@@ -1,30 +1,22 @@
 import React, { useEffect, useState } from "react";
-import {
-  Eye,
-  CheckCircle,
-  Trash2,
-  BarChart3,
-  Filter,
-  MessageSquare,
-  Bell,
-} from "lucide-react";
+import { Settings, X, Trash2, BarChart3, CheckCircle, MessageSquare } from "lucide-react";
 import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const SupportTickets = () => {
-  const [tickets, setTickets] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filterStatus, setFilterStatus] = useState("All");
   const axiosSecure = useAxiosSecure();
+  const [tickets, setTickets] = useState([]);
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const [detailsModal, setDetailsModal] = useState(null);
+  const [error, setError] = useState(null);
 
-  // ✅ Fetch Tickets
+  // Fetch tickets
   const fetchTickets = async () => {
     try {
       const res = await axiosSecure.get("/support");
       setTickets(res.data);
-    } catch (error) {
-      console.error("Failed to fetch tickets:", error);
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching tickets:", err);
+      setError("Failed to load tickets!");
     }
   };
 
@@ -32,189 +24,184 @@ const SupportTickets = () => {
     fetchTickets();
   }, []);
 
-  // ✅ Status Update Flow
-  const handleStatusUpdate = async (id, nextStatus) => {
-    try {
-      await axiosSecure.patch(`/api/support/${id}`, { status: nextStatus });
-      setTickets((prev) =>
-        prev.map((t) => (t._id === id ? { ...t, status: nextStatus } : t))
-      );
-      alert(`Status updated to "${nextStatus}"`);
-    } catch (error) {
-      console.error("Failed to update ticket:", error);
-    }
-  };
-
-  // ✅ Delete
+  // Delete ticket
   const handleDelete = async (id) => {
+    if (!confirm("Are you sure you want to delete this ticket?")) return;
     try {
-      await axiosSecure.delete(`/api/support/${id}`);
-      setTickets((prev) => prev.filter((t) => t._id !== id));
-    } catch (error) {
-      console.error("Failed to delete ticket:", error);
+      await axiosSecure.delete(`/support/${id}`);
+      setTickets(tickets.filter((t) => t._id !== id));
+    } catch (err) {
+      console.error("Error deleting ticket:", err);
+      setError("Failed to delete ticket!");
     }
   };
 
-  // ✅ Filter
-  const filteredTickets =
-    filterStatus === "All"
-      ? tickets
-      : tickets.filter((t) => t.status === filterStatus);
+  // Change status
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await axiosSecure.patch(`/support/${id}`, { status: newStatus });
+      fetchTickets();
+    } catch (err) {
+      console.error("Status update failed:", err);
+      setError("Failed to update status!");
+    }
+  };
 
-  // ✅ Reporting Summary
+  // Summary counts
   const total = tickets.length;
-  const open = tickets.filter((t) => t.status === "open").length;
-  const inProgress = tickets.filter((t) => t.status === "in_progress").length;
-  const resolved = tickets.filter((t) => t.status === "resolved").length;
-  const closed = tickets.filter((t) => t.status === "closed").length;
-
-  if (loading) return <p>Loading tickets...</p>;
+  const pending = tickets.filter((t) => t.status === "Pending").length;
+  const inProgress = tickets.filter((t) => t.status === "In Progress").length;
+  const resolved = tickets.filter((t) => t.status === "Resolved").length;
 
   return (
-    <div className="space-y-6">
-      {/* 📊 Reporting Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-indigo-100 p-4 rounded-xl flex items-center gap-3">
-          <BarChart3 className="text-indigo-600" />
-          <div>
-            <p className="text-sm text-gray-500">Total Tickets</p>
-            <p className="text-lg font-semibold">{total}</p>
-          </div>
-        </div>
-        <div className="bg-yellow-100 p-4 rounded-xl flex items-center gap-3">
-          <MessageSquare className="text-yellow-600" />
-          <div>
-            <p className="text-sm text-gray-500">In Progress</p>
-            <p className="text-lg font-semibold">{inProgress}</p>
-          </div>
-        </div>
-        <div className="bg-green-100 p-4 rounded-xl flex items-center gap-3">
-          <CheckCircle className="text-green-600" />
-          <div>
-            <p className="text-sm text-gray-500">Resolved</p>
-            <p className="text-lg font-semibold">{resolved}</p>
-          </div>
-        </div>
-        <div className="bg-red-100 p-4 rounded-xl flex items-center gap-3">
-          <Trash2 className="text-red-600" />
-          <div>
-            <p className="text-sm text-gray-500">Closed</p>
-            <p className="text-lg font-semibold">{closed}</p>
-          </div>
-        </div>
+    <div className="p-6 bg-white shadow-lg rounded-2xl border border-gray-200 space-y-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">Support Tickets</h2>
       </div>
 
-      {/* 🧭 Filter Section */}
-      <div className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm">
-        <h3 className="text-lg font-semibold text-gray-800">Support Tickets</h3>
-
-        <div className="flex items-center gap-2">
-          <Filter size={18} className="text-gray-500" />
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm"
-          >
-            <option value="All">All</option>
-            <option value="open">Open</option>
-            <option value="in_progress">In Progress</option>
-            <option value="pending_customer">Pending Customer</option>
-            <option value="resolved">Resolved</option>
-            <option value="closed">Closed</option>
-          </select>
-        </div>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <SummaryCard icon={<BarChart3 className="text-indigo-600" />} label="Total" value={total} color="indigo" />
+        <SummaryCard icon={<MessageSquare className="text-yellow-600" />} label="Pending" value={pending} color="yellow" />
+        <SummaryCard icon={<CheckCircle className="text-blue-600" />} label="In Progress" value={inProgress} color="blue" />
+        <SummaryCard icon={<CheckCircle className="text-green-600" />} label="Resolved" value={resolved} color="green" />
       </div>
 
-      {/* 🧾 Table */}
-      <div className="bg-white p-6 rounded-xl shadow-md overflow-x-auto">
-        <table className="w-full text-left text-sm">
+      {error && (
+        <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4">
+          {error}
+        </div>
+      )}
+
+      {/* Tickets Table */}
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <table className="min-w-full text-sm border-collapse">
           <thead className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
             <tr>
-              <th className="py-3 px-4">Ticket ID</th>
-              <th className="py-3 px-4">User</th>
-              <th className="py-3 px-4">Subject</th>
-              <th className="py-3 px-4">Priority</th>
-              <th className="py-3 px-4">Status</th>
-              <th className="py-3 px-4">Date</th>
-              <th className="py-3 px-4">Actions</th>
+              <th className="px-5 py-3 text-left font-semibold">Subject</th>
+              <th className="px-5 py-3 text-left font-semibold">Category</th>
+              <th className="px-5 py-3 text-left font-semibold">Date</th>
+              <th className="px-5 py-3 text-left font-semibold">Status</th>
+              <th className="px-5 py-3 text-center font-semibold">Actions</th>
             </tr>
           </thead>
+
           <tbody>
-            {filteredTickets.map((ticket) => (
-              <tr
-                key={ticket._id}
-                className="border-b border-gray-200 hover:bg-gray-50"
-              >
-                <td className="py-3 px-4 font-medium text-gray-800">
-                  {ticket.ticketId}
-                </td>
-                <td className="py-3 px-4">{ticket.user}</td>
-                <td className="py-3 px-4">{ticket.subject}</td>
-                <td className="py-3 px-4">{ticket.priority}</td>
-                <td className="py-3 px-4">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      ticket.status === "open"
-                        ? "bg-red-100 text-red-600"
-                        : ticket.status === "in_progress"
-                        ? "bg-yellow-100 text-yellow-600"
-                        : ticket.status === "pending_customer"
-                        ? "bg-orange-100 text-orange-600"
-                        : ticket.status === "resolved"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-gray-200 text-gray-600"
-                    }`}
-                  >
-                    {ticket.status}
-                  </span>
-                </td>
-                <td className="py-3 px-4">{ticket.date}</td>
-                <td className="py-3 px-4 flex gap-2">
-                  <button className="p-2 bg-gray-200 rounded hover:bg-gray-300 transition">
-                    <Eye className="w-4 h-4 text-gray-700" />
-                  </button>
+            {tickets.length > 0 ? (
+              tickets.map((t, i) => (
+                <tr
+                  key={t._id}
+                  className={`transition-all ${i % 2 === 0 ? "bg-white" : "bg-indigo-50/30"} hover:bg-indigo-100/50`}
+                >
+                  <td className="px-5 py-3 font-medium text-gray-800">{t.subject}</td>
+                  <td className="px-5 py-3 text-gray-600">{t.category}</td>
+                  <td className="px-5 py-3 text-gray-500">{t.date}</td>
+                  <td className={`px-5 py-3 font-semibold ${
+                    t.status === "Pending"
+                      ? "text-yellow-600"
+                      : t.status === "Resolved"
+                      ? "text-green-600"
+                      : "text-blue-600"
+                  }`}>
+                    {t.status}
+                  </td>
+                  <td className="relative px-5 py-3 text-center">
+                    <button
+                      onClick={() => setOpenMenuId(openMenuId === t._id ? null : t._id)}
+                      className="p-2 rounded-md hover:bg-indigo-50 transition"
+                    >
+                      <Settings className="w-5 h-5 text-gray-700" />
+                    </button>
 
-                  {/* Status Change Buttons */}
-                  {ticket.status !== "resolved" &&
-                    ticket.status !== "closed" && (
-                      <button
-                        onClick={() =>
-                          handleStatusUpdate(
-                            ticket._id,
-                            getNextStatus(ticket.status)
-                          )
-                        }
-                        className="p-2 bg-blue-100 rounded hover:bg-blue-200 transition"
-                      >
-                        <CheckCircle className="w-4 h-4 text-blue-600" />
-                      </button>
+                    {/* Dropdown */}
+                    {openMenuId === t._id && (
+                      <div className="absolute right-8 top-10 bg-white border border-gray-200 rounded-lg shadow-lg w-36 z-10">
+                        <button
+                          onClick={() => {
+                            setDetailsModal(t);
+                            setOpenMenuId(null);
+                          }}
+                          className="w-full text-left px-4 py-2 hover:bg-indigo-50"
+                        >
+                          Details
+                        </button>
+                        <button
+                          onClick={() => handleDelete(t._id)}
+                          className="w-full text-left px-4 py-2 hover:bg-indigo-50 text-red-600"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     )}
-
-                  <button
-                    onClick={() => handleDelete(ticket._id)}
-                    className="p-2 bg-red-100 rounded hover:bg-red-200 transition"
-                  >
-                    <Trash2 className="w-4 h-4 text-red-600" />
-                  </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center py-8 text-gray-500 bg-gray-50 font-medium">
+                  No Support Tickets Found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
-
-        {filteredTickets.length === 0 && (
-          <p className="text-center py-6 text-gray-500">No tickets found.</p>
-        )}
       </div>
+
+      {/* Details Modal */}
+      {detailsModal && (
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <div className="bg-white max-w-lg w-full rounded-2xl p-8 relative shadow-2xl">
+            <button
+              onClick={() => setDetailsModal(null)}
+              className="absolute top-4 right-4 bg-gray-100 hover:bg-red-100 p-2 rounded-full"
+            >
+              <X className="w-5 h-5 text-gray-600" />
+            </button>
+
+            <h3 className="text-2xl font-bold mb-4 text-gray-800">{detailsModal.subject}</h3>
+            <p className="text-gray-700 mb-3"><strong>Category:</strong> {detailsModal.category}</p>
+            <p className="text-gray-700 mb-3"><strong>Description:</strong> {detailsModal.description}</p>
+            <p className="text-sm text-gray-500 mb-3"><strong>Date:</strong> {detailsModal.date}</p>
+            <p className="text-sm mb-4">
+              <strong>Status:</strong>{" "}
+              <span className={`${detailsModal.status === "Pending" ? "text-yellow-600" : detailsModal.status === "Resolved" ? "text-green-600" : "text-blue-600"} font-semibold`}>
+                {detailsModal.status}
+              </span>
+            </p>
+
+            {/* Admin status control */}
+            <div className="border-t pt-4 mt-4">
+              <h4 className="font-semibold mb-2">Change Ticket Status:</h4>
+              <div className="flex gap-3">
+                {["Pending", "In Progress", "Resolved"].map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => handleStatusChange(detailsModal._id, s)}
+                    className={`px-4 py-2 rounded-lg border font-medium transition ${
+                      detailsModal.status === s ? "bg-indigo-600 text-white" : "bg-gray-100 hover:bg-indigo-50"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-// ✅ Status Flow Helper Function
-const getNextStatus = (current) => {
-  const flow = ["open", "in_progress", "pending_customer", "resolved", "closed"];
-  const index = flow.indexOf(current);
-  return flow[index + 1] || "closed";
-};
+// Summary Card Component
+const SummaryCard = ({ icon, label, value, color }) => (
+  <div className={`flex items-center gap-3 p-4 rounded-xl bg-${color}-100 shadow-sm`}>
+    {icon}
+    <div>
+      <p className="text-sm text-gray-500">{label}</p>
+      <p className="text-lg font-semibold">{value}</p>
+    </div>
+  </div>
+);
 
 export default SupportTickets;
