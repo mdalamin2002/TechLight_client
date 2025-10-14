@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/Components/ui/card";
 import { ArrowRight } from "lucide-react";
 
 const OrderSummary = ({ cartItems, subtotal, totalSavings, shippingCost, total }) => {
