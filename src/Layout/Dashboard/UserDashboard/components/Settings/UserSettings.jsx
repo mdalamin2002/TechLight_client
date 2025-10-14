@@ -4,24 +4,24 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@/Components/ui/tabs";
 import {
   Input
-} from "@/components/ui/input";
+} from "@/Components/ui/input";
 import {
   Label
-} from "@/components/ui/label";
+} from "@/Components/ui/label";
 import {
   Switch
-} from "@/components/ui/switch";
+} from "@/Components/ui/switch";
 import {
   Button
-} from "@/components/ui/button";
+} from "@/Components/ui/button";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage
-} from "@/components/ui/avatar";
+} from "@/Components/ui/avatar";
 
 import {
   Moon, Sun, Bell, UserCog, Lock, Trash

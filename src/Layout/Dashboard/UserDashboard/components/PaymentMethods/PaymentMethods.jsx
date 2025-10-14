@@ -6,9 +6,9 @@ import {
   CardHeader,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+} from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Badge } from "@/Components/ui/badge";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 
 const PaymentMethods = () => {
