@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/Components/ui/badge";
 
 const CouponsSection = ({ coupons }) => {
   return (

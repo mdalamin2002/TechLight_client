@@ -1,16 +1,14 @@
-
-
-import React, { useEffect, useState } from "react";
+import { Button } from "@/Components/ui/button";
 import {
   Card,
-  CardHeader,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+  CardHeader,
+} from "@/Components/ui/card";
+import { Input } from "@/Components/ui/input";
+import { Skeleton } from "@/Components/ui/skeleton";
 import { Pencil, Save, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
