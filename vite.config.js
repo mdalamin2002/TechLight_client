@@ -14,10 +14,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-// build: {
-
-//     cssMinify: 'esbuild', 
-
-//   }
-
+  build: {
+    cssMinify: 'lightningcss',
+  }
 });

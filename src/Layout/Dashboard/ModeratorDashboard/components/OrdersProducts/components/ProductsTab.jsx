@@ -10,6 +10,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DebouncedInput from "../../../../AdminDashboard/components/AllUsers/components/DebouncedInput";
 import { Search, Settings, ChevronLeft, ChevronRight } from "lucide-react";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const ProductsTab = () => {
   const columnHelper = createColumnHelper();
@@ -17,30 +18,36 @@ const ProductsTab = () => {
   const [data, setData] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [openMenu, setOpenMenu] = useState(null);
+  const axiosSecure = useAxiosSecure();
 
   // ===== Load products =====
   useEffect(() => {
-    axios
-      .get("/ModeratorOrders_Products_Data.json")
-      .then((res) => setData(res.data)) // no `.products`, because JSON is an array
-      .catch((err) => console.error(err));
+    axiosSecure
+      .get("/moderator/orders-products/products")
+      .then((res) => setData(res.data))
+      .catch((err) => console.error("Error fetching products:", err));
   }, []);
+
   // ===== Update product status =====
   const handleUpdateStatus = (id, status) => {
+    if (!id) return console.error("Invalid product ID");
+
+    // Optimistically update UI
     setData((prevData) =>
       prevData.map((product) =>
-        product.id === id ? { ...product, status: status } : product
+        product._id === id ? { ...product, status } : product
       )
     );
-    axios
-      .patch(`/api/moderator/products/${id}/status`, { status })
+
+    axiosSecure
+      .patch(`/moderator/orders-products/products/${id}/status`, { status })
       .then(() => {
         setData((prevData) =>
           prevData.map((product) =>
-            product.id === id ? { ...product, status } : product
+            product._id === id ? { ...product, status } : product
           )
         );
-        setOpenMenu(null); // Close dropdown
+        setOpenMenu(null);
       })
       .catch((err) => console.error("Status update failed:", err));
   };
@@ -150,7 +157,7 @@ const ProductsTab = () => {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() =>
-                        handleUpdateStatus(row.original.id, "Approved")
+                        handleUpdateStatus(row.original._id, "Approved")
                       }
                       className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded-md"
                     >
@@ -159,7 +166,7 @@ const ProductsTab = () => {
 
                     <button
                       onClick={() =>
-                        handleUpdateStatus(row.original.id, "Rejected")
+                        handleUpdateStatus(row.original._id, "Rejected")
                       }
                       className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md"
                     >
