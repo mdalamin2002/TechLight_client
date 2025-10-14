@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge";
 
 const OrderCard = ({ order }) => {
   return (
