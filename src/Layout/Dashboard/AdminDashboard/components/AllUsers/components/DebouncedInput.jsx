@@ -2,24 +2,22 @@ import { useEffect, useState } from "react";
 
 const DebouncedInput = ({
   value: initialValue,
-  onChange,        
+  onChange,
   debounce = 500,
-  ...props       
+  ...props
 }) => {
   const [value, setValue] = useState(initialValue);
 
-  
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
 
-  // * 0.5s after set value in state, then call onChange
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (onChange) onChange(value);  
+      if (onChange) onChange(value);
     }, debounce);
 
-    return () => clearTimeout(timeout); // cleanup previous timeout
+    return () => clearTimeout(timeout);
   }, [value, debounce, onChange]);
 
   return (
@@ -27,7 +25,6 @@ const DebouncedInput = ({
       {...props}
       value={value}
       onChange={(e) => setValue(e.target.value)}
-      
     />
   );
 };
