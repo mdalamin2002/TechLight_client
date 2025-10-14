@@ -19,19 +19,21 @@ import {
   Bell,
 } from "lucide-react";
 import DebouncedInput from "../../../../AdminDashboard/components/AllUsers/components/DebouncedInput";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const InventoryAlertsTab = () => {
   const columnHelper = createColumnHelper();
 
   const [data, setData] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const axiosSecure = useAxiosSecure();
 
   // ===== Load data =====
   useEffect(() => {
-    axios
-      .get("/ModeratorOrder_InventoryAlertsTab.json")
+    axiosSecure
+      .get("/moderator/orders-products/inventory-alerts")
       .then((res) => setData(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error fetching orders:", err));
   }, []);
 
   // ===== Action Handler =====
