@@ -13,6 +13,8 @@ import {
   LogOut,
   LayoutDashboard,
   UserCircle,
+  Lightbulb,
+  Zap,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import TechLightLogo from "../Logo/TechLightLogo";
@@ -162,8 +164,18 @@ export default function Navbar() {
               </Button>
 
               {/* Logo */}
-              <Link to="/" className="flex items-center">
-                <TechLightLogo />
+              <Link
+                to="/"
+                className="flex items-center p-2 hover:bg-primary/5 rounded-xl transition-all duration-300"
+              >
+                <TechLightLogo
+                  icon={Lightbulb}
+                  overlayIcon={Zap}
+                  size={6}
+                  text="TechLight"
+                  iconBgGradient="from-primary to-accent"
+                  textGradient="from-primary to-accent"
+                />
               </Link>
             </div>
 

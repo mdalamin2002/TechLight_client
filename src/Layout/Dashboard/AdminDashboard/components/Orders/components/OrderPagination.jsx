@@ -3,59 +3,82 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const OrderPagination = ({ pageIndex, setPageIndex, pageSize, setPageSize, pageCount }) => {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
-      {/* Prev/Next buttons */}
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-6 border-t border-border/50">
+      {/* Page info */}
+      <div className="text-sm text-muted-foreground">
+        Showing <span className="font-medium text-foreground">{pageIndex * pageSize + 1}</span> to{" "}
+        <span className="font-medium text-foreground">
+          {Math.min((pageIndex + 1) * pageSize, pageCount * pageSize)}
+        </span>{" "}
+        of <span className="font-medium text-foreground">{pageCount * pageSize}</span> results
+      </div>
+
       <div className="flex items-center gap-2">
+        {/* Prev/Next buttons */}
         <button
           onClick={() => setPageIndex(prev => Math.max(prev - 1, 0))}
           disabled={pageIndex === 0}
-          className="px-3 py-1.5 rounded-lg bg-indigo-500 text-white disabled:bg-gray-300 hover:bg-indigo-600 transition flex items-center gap-1"
+          className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-foreground bg-card border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          <ChevronLeft size={16} /> Prev
+          <ChevronLeft size={16} className="mr-1" /> Previous
         </button>
+
+        {/* Page numbers */}
+        <div className="hidden sm:flex">
+          {Array.from({ length: Math.min(5, pageCount) }, (_, i) => {
+            let pageNum;
+            if (pageCount <= 5) {
+              pageNum = i;
+            } else if (pageIndex < 3) {
+              pageNum = i;
+            } else if (pageIndex > pageCount - 4) {
+              pageNum = pageCount - 5 + i;
+            } else {
+              pageNum = pageIndex - 2 + i;
+            }
+
+            return (
+              <button
+                key={pageNum}
+                onClick={() => setPageIndex(pageNum)}
+                className={`relative inline-flex items-center px-4 py-2 text-sm font-medium ${
+                  pageIndex === pageNum
+                    ? "z-10 bg-primary text-primary-foreground border-primary"
+                    : "text-foreground bg-card border border-border hover:bg-muted"
+                } border mx-px rounded-lg transition-colors`}
+              >
+                {pageNum + 1}
+              </button>
+            );
+          })}
+        </div>
+
         <button
           onClick={() => setPageIndex(prev => Math.min(prev + 1, pageCount - 1))}
           disabled={pageIndex >= pageCount - 1}
-          className="px-3 py-1.5 rounded-lg bg-indigo-500 text-white disabled:bg-gray-300 hover:bg-indigo-600 transition flex items-center gap-1"
+          className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-foreground bg-card border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          Next <ChevronRight size={16} />
+          Next <ChevronLeft size={16} className="ml-1 rotate-180" />
         </button>
       </div>
 
-      {/* Page info */}
-      <span className="text-gray-700 text-sm">
-        Page <strong>{pageIndex + 1}</strong> of <strong>{pageCount}</strong>
-      </span>
-
-      {/* Go to page */}
-      <div className="flex items-center gap-2 text-sm text-gray-700">
-        Go to page:
-        <input
-          type="number"
-          min={1}
-          max={pageCount}
-          value={pageIndex + 1}
+      {/* Page size selector */}
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-muted-foreground">Show</span>
+        <select
+          value={pageSize}
           onChange={(e) => {
-            const page = e.target.value ? Number(e.target.value) - 1 : 0;
-            setPageIndex(Math.min(Math.max(page, 0), pageCount - 1));
+            setPageIndex(0);
+            setPageSize(Number(e.target.value));
           }}
-          className="w-16 p-1 border rounded-lg shadow-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
-        />
+          className="text-sm border border-border rounded-lg bg-card text-foreground py-1 px-2 focus:ring-2 focus:ring-primary/50 focus:outline-none"
+        >
+          {[5, 10, 20, 30, 50].map(size => (
+            <option key={size} value={size}>{size}</option>
+          ))}
+        </select>
+        <span className="text-sm text-muted-foreground">per page</span>
       </div>
-
-      {/* Page size */}
-      <select
-        value={pageSize}
-        onChange={(e) => {
-          setPageIndex(0);
-          setPageSize(Number(e.target.value));
-        }}
-        className="p-2 border rounded-lg shadow-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
-      >
-        {[5, 10, 20, 30, 50].map(size => (
-          <option key={size} value={size}>Show {size}</option>
-        ))}
-      </select>
     </div>
   );
 };
