@@ -1,5 +1,4 @@
-// DownloadBtn.jsx
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 import { Download } from "lucide-react";
 
 const DownloadBtn = ({ data = [], user }) => {
@@ -12,13 +11,13 @@ const DownloadBtn = ({ data = [], user }) => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    XLSX.writeFile(workbook, user ? `${user}.xlsx` : 'data.xlsx');
+    XLSX.writeFile(workbook, user ? `${user}.xlsx` : "data.xlsx");
   };
 
   return (
     <button
       onClick={handleDownload}
-      className='flex items-center gap-2 cursor-pointer bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition'
+      className="flex items-center gap-2 cursor-pointer bg-primary/90 hover:bg-primary text-white px-4 py-2 rounded-lg shadow transition"
     >
       <Download size={16} />
       Download

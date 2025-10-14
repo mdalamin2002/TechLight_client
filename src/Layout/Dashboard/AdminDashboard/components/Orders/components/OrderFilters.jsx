@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, Download } from "lucide-react";
+import { Search, Download, Filter } from "lucide-react";
 import { CSVLink } from "react-csv";
 
 const OrderFilters = ({
@@ -14,23 +14,30 @@ const OrderFilters = ({
   filteredOrders
 }) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between mb-6 gap-3 items-center">
+    <div className="flex flex-col lg:flex-row justify-between gap-4 mb-6">
       {/* Search */}
-      <div className="relative w-72">
-        <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+      <div className="relative flex-1 max-w-md">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search size={18} className="text-muted-foreground" />
+        </div>
         <input
           type="text"
-          placeholder="Search orders..."
+          placeholder="Search orders by ID or customer..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="py-2 pl-10 pr-3 bg-white shadow-sm border rounded-lg w-full focus:ring-2 focus:ring-indigo-400 outline-none"
+          className="block w-full pl-10 pr-3 py-2.5 border border-border rounded-lg bg-card text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
         />
       </div>
 
       {/* Filters */}
-      <div className="flex gap-4 flex-wrap">
+      <div className="flex flex-wrap gap-3 items-center">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Filter size={16} />
+          <span>Filters:</span>
+        </div>
+
         <select
-          className="px-3 py-2 rounded-lg text-sm outline-none w-full md:w-auto bg-card shadow"
+          className="px-4 py-2.5 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
           value={selectedPayment}
           onChange={(e) => setSelectedPayment(e.target.value)}
         >
@@ -40,7 +47,7 @@ const OrderFilters = ({
         </select>
 
         <select
-          className="px-3 py-2 rounded-lg text-sm outline-none w-full md:w-auto bg-card shadow"
+          className="px-4 py-2.5 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
           value={selectedDelivery}
           onChange={(e) => setSelectedDelivery(e.target.value)}
         >
@@ -53,7 +60,7 @@ const OrderFilters = ({
         <CSVLink
           data={filteredOrders}
           filename={"orders-report.csv"}
-          className="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg shadow transition"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
         >
           <Download size={16} /> Export
         </CSVLink>

@@ -13,7 +13,6 @@ import {
   Zap,
   Star,
   PhoneCall,
-  BarChart3Icon,
   FileText,
   LayoutDashboard,
   User,
@@ -23,28 +22,44 @@ import {
   RotateCcw,
   MessageCircle,
   PackageOpen,
-  SettingsIcon,
-  CreditCardIcon,
   Bell,
+  ChevronRight,
+  Lightbulb,
 } from "lucide-react";
-import TechLightLogo from "@/Components/Shared/Logo/TechLightLogo";
 
-export default function DashboardSidebar() {
+
+export default function DashboardSidebar({
+  isMobileMenuOpen,
+  setIsMobileMenuOpen,
+}) {
   const role = "admin"; // "admin", "moderator", or "user"
 
-  const NavItem = ({ to, label, icon: Icon }) => (
+  const NavItem = ({ to, label, icon: Icon, onClick }) => (
     <NavLink
       to={to}
+      onClick={onClick}
       className={({ isActive }) =>
-        `flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
+        `group mb-1 flex items-center gap-3 px-4 py-2.5 rounded-xl  font-medium relative border ${
           isActive
-            ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 border border-purple-500/30"
-            : "text-primary-foreground hover:text-purple-300 hover:bg-purple-500/10"
+            ? "bg-gradient-to-r from-primary/15 via-primary/10 to-transparent text-primary  border-primary/30"
+            : "text-foreground/70 hover:text-primary hover:bg-primary/8 border-transparent hover:border-primary/20  hover:shadow-md"
         }`
       }
     >
-      {Icon && <Icon size={18} />}
-      {label}
+      {({ isActive }) => (
+        <>
+          {Icon && (
+            <Icon
+              size={20}
+              className={`transition-all duration-300 ease-in-out ${
+                isActive ? "scale-105" : "group-hover:scale-105"
+              }`}
+            />
+          )}
+          <span className="truncate text-sm">{label}</span>
+          {isActive && <ChevronRight size={16} className="ml-auto" />}
+        </>
+      )}
     </NavLink>
   );
 
@@ -78,7 +93,7 @@ export default function DashboardSidebar() {
       {
         to: "/dashboard/reports-analytics",
         label: "Reports Analytics",
-        icon: BarChart3Icon,
+        icon: BarChart3,
       },
       {
         to: "/dashboard/developer-notes",
@@ -88,12 +103,12 @@ export default function DashboardSidebar() {
       {
         to: "/dashboard/moderator-settings",
         label: "Settings",
-        icon: SettingsIcon,
+        icon: Settings,
       },
       {
         to: "/dashboard/payments",
         label: "Payments",
-        icon: CreditCardIcon,
+        icon: CreditCard,
       },
       {
         to: "/dashboard/notifications",
@@ -103,16 +118,24 @@ export default function DashboardSidebar() {
     ],
 
     user: [
-      { to: "/dashboard/my-overview", label: "Overview", icon: LayoutDashboard },
+      {
+        to: "/dashboard/my-overview",
+        label: "Overview",
+        icon: LayoutDashboard,
+      },
       { to: "/dashboard/my-profile", label: "Profile", icon: User },
       { to: "/dashboard/my-orders", label: "My Orders", icon: PackageOpen },
       { to: "/dashboard/my-wishlist", label: "Wishlist", icon: Heart },
       { to: "/dashboard/my-cart", label: "Cart", icon: ShoppingCart },
       { to: "/dashboard/my-addresses", label: "Addresses", icon: MapPin },
-      { to: "/dashboard/my-payment-methods", label: "Payment Methods", icon: CreditCard },
+      {
+        to: "/dashboard/my-payment-methods",
+        label: "Payment Methods",
+        icon: CreditCard,
+      },
       { to: "/dashboard/my-returns", label: "Returns", icon: RotateCcw },
       { to: "/dashboard/my-settings", label: "Settings", icon: Settings },
-      { to: "/dashboard/my-support", label: "support", icon: MessageCircle }
+      { to: "/dashboard/my-support", label: "Support", icon: MessageCircle },
     ],
   };
 
@@ -120,37 +143,163 @@ export default function DashboardSidebar() {
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <nav className="hidden md:flex flex-col gap-6 p-4 min-h-screen w-64 bg-gradient-to-b bg-primary">
-        {/* Logo */}
-        <Link to="/" className="text-xl font-bold text-textPrimary">
-          <TechLightLogo />
+      {/* Desktop Sidebar - xl screens (1280px+) */}
+      <nav className="hidden xl:flex flex-col gap-6 p-5 min-h-screen w-72 bg-gradient-to-b from-sidebar via-sidebar to-sidebar/95 border-r border-sidebar-border/40 shadow-xl backdrop-blur-xl">
+        <Link
+          to="/"
+          className="flex items-center space-x-2 px-3 rounded-xl hover:bg-primary/5 transition-all duration-300"
+        >
+          <div className="relative">
+            <div className="relative flex justify-center items-center p-2 h-10 w-10 rounded-full bg-gradient-to-r from-primary to-accent shadow-md">
+              <Lightbulb className="w-7 h-7 text-white" fill="currentColor" />
+              <Zap className="absolute -top-1 -right-1 w-3 h-3 text-yellow-300" />
+            </div>
+          </div>
+          <span className="eagle-lake-regular text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            TechLight
+          </span>
         </Link>
-        <ul className="flex flex-col gap-2">
+
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+        <ul className="flex flex-col gap-2 flex-1 overflow-y-auto">
           {items.map((item) => (
-            <NavItem
-              key={item.to}
-              to={item.to}
-              label={item.label}
-              icon={item.icon}
-            />
+            <li key={item.to}>
+              <NavItem to={item.to} label={item.label} icon={item.icon} />
+            </li>
+          ))}
+        </ul>
+
+        <div className="pt-4 border-t border-sidebar-border/40">
+          <div className="flex items-center gap-3 px-4 py-2 text-xs text-muted-foreground">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <span>System Online</span>
+          </div>
+        </div>
+      </nav>
+
+      {/* Tablet Sidebar - lg to xl screens (1024px - 1279px) */}
+      <nav className="hidden lg:flex xl:hidden flex-col gap-5 p-4 min-h-screen w-64 bg-sidebar border-r border-sidebar-border/40 shadow-lg backdrop-blur-lg">
+        <Link
+          to="/"
+          className="flex items-center space-x-2 px-2 rounded-lg hover:bg-primary/5 transition-all duration-300"
+        >
+          <div className="relative">
+            <div className="relative flex justify-center items-center p-2 h-10 w-10 rounded-full bg-gradient-to-r from-primary to-accent shadow-md">
+              <Lightbulb className="w-7 h-7 text-white" fill="currentColor" />
+              <Zap className="absolute -top-1 -right-1 w-3 h-3 text-yellow-300" />
+            </div>
+          </div>
+          <span className="eagle-lake-regular text-lg font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            TechLight
+          </span>
+        </Link>
+
+        <div className="h-px bg-border/50" />
+
+        <ul className="flex flex-col gap-1.5 flex-1 overflow-y-auto">
+          {items.map((item) => (
+            <li key={item.to}>
+              <NavItem to={item.to} label={item.label} icon={item.icon} />
+            </li>
           ))}
         </ul>
       </nav>
 
-      {/* Mobile Navbar */}
-      <nav className="flex md:hidden gap-2 overflow-x-auto shadow p-2">
-        <ul className="flex gap-2">
+      {/* Medium Sidebar - md to lg screens (768px - 1023px) */}
+      <nav className="hidden md:flex lg:hidden flex-col gap-4 p-3 min-h-screen w-20 bg-sidebar border-r border-sidebar-border/40 shadow-md backdrop-blur-lg">
+        <Link
+          to="/"
+          className="flex justify-center px-2 rounded-lg hover:bg-primary/5 transition-all"
+        >
+          <div className="relative flex justify-center items-center p-2 h-10 w-10 rounded-full bg-gradient-to-r from-primary to-accent shadow-md">
+            <Lightbulb className="w-7 h-7 text-white" fill="currentColor" />
+            <Zap className="absolute -top-1 -right-1 w-3 h-3 text-yellow-300" />
+          </div>
+        </Link>
+
+        <div className="h-px bg-border/50" />
+
+        <ul className="flex flex-col gap-2 flex-1 overflow-y-auto items-center">
           {items.map((item) => (
-            <NavItem
-              key={item.to}
-              to={item.to}
-              label={item.label}
-              icon={item.icon}
-            />
+            <li key={item.to} className="w-full">
+              <NavLink
+                to={item.to}
+                className={({ isActive }) =>
+                  `group flex items-center justify-center p-3 rounded-xl transition-all duration-300 relative ${
+                    isActive
+                      ? "bg-primary/15 text-primary shadow-lg"
+                      : "text-foreground/70 hover:text-primary hover:bg-primary/8"
+                  }`
+                }
+              >
+                {item.icon && <item.icon size={22} />}
+              </NavLink>
+            </li>
           ))}
         </ul>
       </nav>
+
+      {/* Mobile - Hamburger Menu (below 768px) */}
+      <div className="md:hidden">
+        {/* Overlay */}
+        {isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* Mobile Sidebar Drawer */}
+        <nav
+          className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-gradient-to-b from-sidebar via-sidebar to-sidebar/95 border-r border-sidebar-border/40 shadow-2xl backdrop-blur-xl z-50 transform transition-transform duration-300 ${
+            isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="flex flex-col gap-6 p-5 h-full">
+            <Link
+              to="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center space-x-2 px-2 rounded-lg hover:bg-primary/5 transition-all duration-300"
+            >
+              <div className="relative">
+                <div className="relative flex justify-center items-center p-2 h-10 w-10 rounded-full bg-gradient-to-r from-primary to-accent shadow-md">
+                  <Lightbulb
+                    className="w-7 h-7 text-white"
+                    fill="currentColor"
+                  />
+                  <Zap className="absolute -top-1 -right-1 w-3 h-3 text-yellow-300" />
+                </div>
+              </div>
+              <span className="eagle-lake-regular text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                TechLight
+              </span>
+            </Link>
+
+            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+            <ul className="flex flex-col gap-2 flex-1 overflow-y-auto">
+              {items.map((item) => (
+                <li key={item.to}>
+                  <NavItem
+                    to={item.to}
+                    label={item.label}
+                    icon={item.icon}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  />
+                </li>
+              ))}
+            </ul>
+
+            <div className="pt-4 border-t border-sidebar-border/40">
+              <div className="flex items-center gap-3 px-4 py-2 text-xs text-muted-foreground">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span>System Online</span>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
     </>
   );
 }
