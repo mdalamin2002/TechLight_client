@@ -6,7 +6,7 @@ import useCart from "@/hooks/useCart";
 import WishlistHeader from "./WishlistHeader";
 import WishlistItem from "./WishlistItem";
 import WishlistSummary from "./WishlistSummary";
-import { Card } from "@/components/ui/card";
+import { Card } from "@/Components/ui/card";
 import { Heart } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "react-router";

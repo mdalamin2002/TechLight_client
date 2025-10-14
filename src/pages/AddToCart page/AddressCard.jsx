@@ -1,6 +1,6 @@
 import React from "react";
 import { MapPin, Plus } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/Components/ui/card";
 
 const AddressCard = ({ savedAddress, onEdit }) => {
   return (
