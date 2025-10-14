@@ -1,6 +1,6 @@
 import React from "react";
 import { Trash2, Plus, Minus, Heart } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/Components/ui/card";
 import { Link } from "react-router";
 
 const CartItem = ({
