@@ -2,27 +2,35 @@ import React, { useEffect, useState } from "react";
 import CategorySidebar from "./CategorySidebar";
 import Slider from "./Slider";
 import { motion } from "framer-motion";
-import axios from "axios";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 
 
 const Banner = () => {
   const [slides, setSlides] = useState([]);
-  const API_URL = import.meta.env.VITE_baseURL;
+  const axiosPublic = useAxiosPublic();
 
   //  Fetch banners from backend
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const res = await axios.get(`${API_URL}/banners`);
-        setSlides(res.data);
+        const res = await axiosPublic.get("/banners");
+        const data = Array.isArray(res.data) ? res.data : [];
+        const normalized = data.map((b, idx) => ({
+          id: b._id || b.id || `banner-${idx}`,
+          image: b.image || b.bannerImage || "",
+          title: b.title || "",
+          subtitle: b.subtitle || b.description || "",
+        })).filter((s) => s.image);
+        setSlides(normalized);
         
       } catch (error) {
         console.error("Failed to load banners:", error);
+        setSlides([]);
       }
     };
     fetchBanners();
-  }, [API_URL]);
+  }, [axiosPublic]);
 
   const shopMegaMenu = [
     { title: "Mobiles & Tablets", items: ["Smartphones", "Tablets", "Mobile Accessories"] },
