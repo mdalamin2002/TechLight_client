@@ -383,24 +383,24 @@ const Sellers = () => {
         </div>
 
         {/* Table Card */}
-        <div className="bg-card rounded-2xl shadow-lg border border-border/50 backdrop-blur-sm">
+        <div className="bg-card rounded-2xl shadow-lg border border-border/50 backdrop-blur-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left py-4 px-6 text-sm font-semibold text-foreground">
+                <tr className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-600 text-white border-b border-indigo-800 last:border-0 hover:opacity-90 transition-all first:rounded-t-2xl last:rounded-b-2xl">
+                  <th className="px-4 md:px-6 py-4 text-left text-xs md:text-sm font-bold tracking-wide">
                     Seller
                   </th>
-                  <th className="text-left py-4 px-6 text-sm font-semibold text-foreground">
+                  <th className="px-4 md:px-6 py-4 text-left text-xs md:text-sm font-bold tracking-wide">
                     Status
                   </th>
-                  <th className="text-left py-4 px-6 text-sm font-semibold text-foreground">
+                  <th className="px-4 md:px-6 py-4 text-left text-xs md:text-sm font-bold tracking-wide">
                     Sales
                   </th>
-                  <th className="text-left py-4 px-6 text-sm font-semibold text-foreground">
+                  <th className="px-4 md:px-6 py-4 text-left text-xs md:text-sm font-bold tracking-wide">
                     Rating
                   </th>
-                  <th className="text-right py-4 px-6 text-sm font-semibold text-foreground">
+                  <th className="text-right px-4 md:px-6 py-4 text-xs md:text-sm font-bold tracking-wide">
                     Actions
                   </th>
                 </tr>
