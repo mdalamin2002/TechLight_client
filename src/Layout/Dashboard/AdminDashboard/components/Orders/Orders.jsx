@@ -76,7 +76,7 @@ const Orders = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-card p-6 rounded-xl shadow-sm border border-border/50 hover:shadow-md transition-shadow">
+        <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-muted-foreground text-sm">Total Orders</p>
@@ -88,7 +88,7 @@ const Orders = () => {
           </div>
         </div>
 
-        <div className="bg-card p-6 rounded-xl shadow-sm border border-border/50 hover:shadow-md transition-shadow">
+        <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-muted-foreground text-sm">Total Revenue</p>
@@ -100,7 +100,7 @@ const Orders = () => {
           </div>
         </div>
 
-        <div className="bg-card p-6 rounded-xl shadow-sm border border-border/50 hover:shadow-md transition-shadow">
+        <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-muted-foreground text-sm">Delivered</p>
@@ -112,7 +112,7 @@ const Orders = () => {
           </div>
         </div>
 
-        <div className="bg-card p-6 rounded-xl shadow-sm border border-border/50 hover:shadow-md transition-shadow">
+        <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-muted-foreground text-sm">Pending</p>
