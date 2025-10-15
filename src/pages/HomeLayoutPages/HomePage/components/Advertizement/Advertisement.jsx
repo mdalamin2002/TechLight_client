@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -8,7 +8,6 @@ import "swiper/css/pagination";
 import { Calendar, Store, Tag, ExternalLink, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 const dummyAds = [
   {
@@ -50,47 +49,6 @@ const dummyAds = [
 ];
 
 const Advertisement = () => {
-  const axiosPublic = useAxiosPublic();
-  const [offers, setOffers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchBanners = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await axiosPublic.get("/banners");
-        if (!isMounted) return;
-        const normalized = (res.data || [])
-          .filter((b) => (b?.status || "active").toLowerCase() !== "inactive")
-          .map((b, idx) => ({
-            _id: b._id || `banner-${idx}`,
-            title: b.title || "Special Offer",
-            description: b.subtitle || b.description || "",
-            discount: b.discount || null,
-            originalPrice: b.originalPrice || null,
-            bannerImage: b.image || b.bannerImage,
-            shopName: b.shopName || null,
-            createdAt: b.createdAt || b.date || null,
-            isHot: b.isHot ?? false,
-          }));
-        setOffers(normalized);
-      } catch (e) {
-        setError("Failed to load offers");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBanners();
-    return () => {
-      isMounted = false;
-    };
-  }, [axiosPublic]);
-
-  const items = offers.length ? offers : dummyAds;
-
   return (
     <div className="container mx-auto section" >
       {/* Section Heading */}
@@ -131,15 +89,13 @@ const Advertisement = () => {
           autoplay={{ delay: 4000 }}
           className="rounded-2xl overflow-hidden shadow-2xl"
         >
-          {items.map((ad) => {
+          {dummyAds.map((ad) => {
             const discountMatch = ad.discount?.match(/(\d+)%/);
             const discountPercent = discountMatch
               ? parseFloat(discountMatch[1])
               : 0;
-            const hasPrice = typeof ad.originalPrice === "number" && discountPercent > 0;
-            const discountedPrice = hasPrice
-              ? ad.originalPrice - (ad.originalPrice * discountPercent) / 100
-              : null;
+            const discountedPrice =
+              ad.originalPrice - (ad.originalPrice * discountPercent) / 100;
 
             return (
               <SwiperSlide key={ad._id}>
@@ -170,50 +126,38 @@ const Advertisement = () => {
                         {ad.title}
                       </h2>
 
-                      {ad.discount && (
-                        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-2 rounded-full text-xl font-bold mb-4">
-                          <Tag size={20} />
-                          {ad.discount}
-                        </div>
-                      )}
+                      <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-2 rounded-full text-xl font-bold mb-4">
+                        <Tag size={20} />
+                        {ad.discount}
+                      </div>
 
-                      {ad.description && (
-                        <p className="text-gray-200 text-lg mb-6 leading-relaxed">
-                          {ad.description}
-                        </p>
-                      )}
+                      <p className="text-gray-200 text-lg mb-6 leading-relaxed">
+                        {ad.description}
+                      </p>
 
                       {/* Price Section */}
-                      {hasPrice && discountedPrice !== null && (
-                        <div className="flex items-center gap-4 mb-6 text-white text-2xl font-bold">
-                          <span className="text-green-600">
-                            ৳{discountedPrice.toFixed(2)}
-                          </span>
-                          <span className="text-gray-400 line-through text-xl">
-                            ৳{ad.originalPrice}
-                          </span>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-4 mb-6 text-white text-2xl font-bold">
+                        <span className="text-green-600">
+                          ৳{discountedPrice.toFixed(2)}
+                        </span>
+                        <span className="text-gray-400 line-through text-xl">
+                          ৳{ad.originalPrice}
+                        </span>
+                      </div>
 
                       {/* Shop Info */}
-                      {(ad.shopName || ad.createdAt) && (
-                        <div className="flex items-center gap-4 mb-6">
-                          {ad.shopName && (
-                            <div className="flex items-center gap-2 text-gray-300">
-                              <Store size={18} />
-                              <span>{ad.shopName}</span>
-                            </div>
-                          )}
-                          {ad.createdAt && (
-                            <div className="flex items-center gap-2 text-gray-300">
-                              <Calendar size={18} />
-                              <span>
-                                {new Date(ad.createdAt).toLocaleDateString("en-GB")}
-                              </span>
-                            </div>
-                          )}
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="flex items-center gap-2 text-gray-300">
+                          <Store size={18} />
+                          <span>{ad.shopName}</span>
                         </div>
-                      )}
+                        <div className="flex items-center gap-2 text-gray-300">
+                          <Calendar size={18} />
+                          <span>
+                            {new Date(ad.createdAt).toLocaleDateString("en-GB")}
+                          </span>
+                        </div>
+                      </div>
 
                       {/* Buttons */}
                       <div className="flex gap-4">
