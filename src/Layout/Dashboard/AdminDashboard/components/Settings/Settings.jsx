@@ -3,6 +3,7 @@ import SiteSettings from "./components/SiteSettings";
 import SecuritySettings from "./components/SecuritySettings";
 import BackupSettings from "./components/BackupSettings";
 import IntegrationsSettings from "./components/IntegrationsSettings";
+import RoleManagement from "./RoleManagement";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("site");
@@ -12,6 +13,7 @@ const Settings = () => {
     { id: "security", label: "Security" },
     { id: "backup", label: "Backup" },
     { id: "integrations", label: "Integrations" },
+    { id: "roles", label: "Roles" },
   ];
 
   return (
@@ -49,6 +51,7 @@ const Settings = () => {
         {activeTab === "security" && <SecuritySettings />}
         {activeTab === "backup" && <BackupSettings />}
         {activeTab === "integrations" && <IntegrationsSettings />}
+        {activeTab === "roles" && <RoleManagement />}
       </div>
     </div>
   );

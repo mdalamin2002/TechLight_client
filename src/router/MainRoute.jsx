@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+const API_BASE = import.meta.env.VITE_API_URL;
 import Home from "../pages/HomeLayoutPages/HomePage/Home";
 import MainLayout from "../Layout/MainLayout/MainLayout";
 import PrivacyPolicy from "../pages/HomeLayoutPages/PrivacyPolicyPage/PrivacyPolicy";
@@ -81,8 +82,7 @@ const MainRoute = createBrowserRouter([
       {
         path: "/allProduct/:id",
         Component: ProductDetails,
-        loader: ({ params }) =>
-          fetch(`http://localhost:5000/api/products/details/${params.id}`),
+        loader: ({ params }) => fetch(`${API_BASE}/products/details/${params.id}`),
       },
       {
         path: "wishlist",
@@ -112,13 +112,7 @@ const MainRoute = createBrowserRouter([
         path: "terms-service",
         Component: TermsOfService,
       },
-      { index: true, Component: Home },
-      { path: "/privacy_policy", Component: PrivacyPolicy },
-      { path: "/mobile", Component: Mobile },
-      { path: "/returns-refunds", Component: ReturnsRefundsPolicy },
-      { path: "/order-tracking", Component: OrderTrackingPolicy },
-      { path: "/terms-service", Component: TermsOfService },
-      { path: "/faq", Component: FAQ },
+      // duplicate route entries removed
     ],
   },
   {
