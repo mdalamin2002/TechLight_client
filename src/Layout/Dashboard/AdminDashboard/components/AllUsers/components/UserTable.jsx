@@ -12,7 +12,7 @@ const UserTable = ({
     <div className="overflow-x-auto rounded-xl border border-border/50 shadow-md">
       <table className="min-w-full border-collapse">
         {/* Table Header */}
-        <thead className="bg-gradient-to-r from-primary via-primary to-accent text-primary-foreground">
+        <thead className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-600 text-white">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
