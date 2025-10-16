@@ -13,6 +13,7 @@ import {
   LogOut,
   LayoutDashboard,
   UserCircle,
+  MessageCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import TechLightLogo from "../Logo/TechLightLogo";
@@ -263,6 +264,13 @@ export default function Navbar() {
                             >
                               <LayoutDashboard size={18} />
                               <span className="text-sm font-medium">Dashboard</span>
+                            </Link>
+                            <Link
+                              to="/my-conversations"
+                              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+                            >
+                              <MessageCircle size={18} />
+                              <span className="text-sm font-medium">My Conversations</span>
                             </Link>
                             <div className="my-1 h-px bg-border" />
                             <button

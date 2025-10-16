@@ -51,6 +51,8 @@ import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
 import AddProduct from "@/Layout/Dashboard/AdminDashboard/components/Products/AddProduct";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import SupportChatPage from "@/pages/SupportChatPage/SupportChatPage";
+import MyConversationsPage from "@/pages/SupportChatPage/MyConversationsPage";
 
 const MainRoute = createBrowserRouter([
   {
@@ -64,6 +66,8 @@ const MainRoute = createBrowserRouter([
       { path: "/order-tracking", Component: OrderTrackingPolicy },
       { path: "/terms-service", Component: TermsOfService },
       { path: "/faq", Component: FAQ },
+      { path: "/support-chat/:conversationId", Component: SupportChatPage },
+      { path: "/my-conversations", Component: MyConversationsPage },
     ],
   },
   {

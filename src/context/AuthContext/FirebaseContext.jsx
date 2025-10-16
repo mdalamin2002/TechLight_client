@@ -24,7 +24,7 @@ export const FirebaseContext = ({ children }) => {
 
 
   //Getting user role
-  const { data: userRole = {}, } = useQuery({
+  const { data: userData = {}, } = useQuery({
     queryKey: ["dbUser", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
@@ -95,7 +95,7 @@ export const FirebaseContext = ({ children }) => {
     googleLogin,
     forgotPassword,
     githubLogin,
-    role:userRole?.role,
+    userData,
   };
 
   return <AuthContext value={userInfo}>{children}</AuthContext>;
