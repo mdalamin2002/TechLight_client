@@ -82,7 +82,7 @@ const MainRoute = createBrowserRouter([
         path: "/allProduct/:id",
         Component: ProductDetails,
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/api/products/details/${params.id}`),
+          fetch(`${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`),
       },
       {
         path: "wishlist",
@@ -144,7 +144,7 @@ const MainRoute = createBrowserRouter([
       { path: "communication", element: <Communication></Communication> },
       { path: "reports", element: <Reports></Reports> },
       { path: "settings", element: <Settings></Settings> },
-      
+
       { path: "advanced", element: <Advanced></Advanced> },
 
       // Moderator Routes

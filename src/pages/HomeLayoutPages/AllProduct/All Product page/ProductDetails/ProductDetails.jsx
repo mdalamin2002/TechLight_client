@@ -2,24 +2,23 @@ import React, { useState } from "react";
 import { ArrowLeft, Share2 } from "lucide-react";
 import { useLoaderData } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
-
 import ProductGallery from "./ProductGallery";
 import ProductInfo from "./ProductInfo";
 import ProductTabs from "./ProductTabs";
 import Reviews from "./Reviews";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const ProductDetails = () => {
   const product = useLoaderData();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specifications");
-  const axiosPublic = useAxiosPublic();
+  const axiosPublic = useAxiosSecure();
 
   const { data: relatedProducts = [], isLoading, isError } = useQuery({
     queryKey: ["relatedProducts", product.category],
     queryFn: async () => {
-      const res = await axiosPublic.get("/api/products");
+      const res = await axiosPublic.get("/products");
       return res.data.filter(
         (p) => p.category === product.category && p._id !== product._id
       );
