@@ -20,6 +20,7 @@ import { Reports } from "@/Layout/Dashboard/AdminDashboard/components/Reports_pa
 import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+import AddToCart from "@/pages/AddToCart page/AddToCart";
 
 // Moderator Dashboard
 import { ModeratorOverview } from "@/Layout/Dashboard/ModeratorDashboard/components/ModeratorOverview/ModeratorOverview";
@@ -35,7 +36,6 @@ import Notifications from "@/Layout/Dashboard/ModeratorDashboard/components/Noti
 // User Dashboard
 import Profile from "@/Layout/Dashboard/UserDashboard/components/Profile/Profile";
 // import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
-import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
 import Cart from "@/Layout/Dashboard/UserDashboard/components/Cart/Cart";
 import Addresses from "@/Layout/Dashboard/UserDashboard/components/Addresses/Addresses";
 import ReturnsRefunds from "@/Layout/Dashboard/UserDashboard/components/ReturnsRefunds/ReturnsRefunds";
@@ -53,12 +53,67 @@ import AddProduct from "@/Layout/Dashboard/AdminDashboard/components/Products/Ad
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
 import SupportChatPage from "@/pages/SupportChatPage/SupportChatPage";
 import MyConversationsPage from "@/pages/SupportChatPage/MyConversationsPage";
+import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
+import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/ProductDetails/ProductDetails";
+import Wishlists from "@/pages/Wishlist page/Wishlists";
+import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
+import WarrantyPolicy from "@/pages/PolicyPages/Warranty/Warranty";
 
 const MainRoute = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout></MainLayout>,
     children: [
+      {
+        index: true,
+        Component: Home,
+      },
+      {
+        path: "/privacy_policy",
+        Component: PrivacyPolicy,
+      },
+      {
+        path: "/mobile",
+        Component: Mobile,
+      },
+      {
+        path: "/allProduct",
+        Component: AllProduct,
+      },
+      {
+        path: "/allProduct/:id",
+        Component: ProductDetails,
+        loader: ({ params }) =>
+          fetch(`${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`),
+      },
+      {
+        path: "wishlist",
+        Component: Wishlists,
+      },
+      {
+        path: "addToCart",
+        Component: AddToCart,
+      },
+      {
+        path: "/returns-refunds",
+        Component: ReturnsRefundsPolicy,
+      },
+      {
+        path: "/order-tracking",
+        Component: OrderTrackingPolicy,
+      },
+      {
+        path: "/warranty",
+        Component: WarrantyPolicy,
+      },
+      // {
+      //   path: "faq",
+      //   Component: FAQ,
+      // },
+      {
+        path: "terms-service",
+        Component: TermsOfService,
+      },
       { index: true, Component: Home },
       { path: "/privacy_policy", Component: PrivacyPolicy },
       { path: "/mobile", Component: Mobile },
@@ -93,6 +148,7 @@ const MainRoute = createBrowserRouter([
       { path: "communication", element: <Communication></Communication> },
       { path: "reports", element: <Reports></Reports> },
       { path: "settings", element: <Settings></Settings> },
+
       { path: "advanced", element: <Advanced></Advanced> },
 
       // Moderator Routes
@@ -103,7 +159,9 @@ const MainRoute = createBrowserRouter([
       { path: "reports-analytics", element: <ReportsAnalytics></ReportsAnalytics> },
       { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
       { path: "moderator-settings", element: <ModeratorSettings></ModeratorSettings> },
+      // Moderator Payment routes
       { path: "payments", element: <Payments></Payments>},
+
       { path: "notifications", element: <Notifications></Notifications>},
 
       // User Routes

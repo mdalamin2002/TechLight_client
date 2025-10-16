@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 import { FirebaseContext } from "./context/AuthContext/FirebaseContext";
 import { SocketProvider } from "./context/AuthContext/SocketContext/SocketContext";
+import { ToastContainer } from "react-toastify";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -15,6 +16,7 @@ createRoot(document.getElementById("root")).render(
       <FirebaseContext>
         <SocketProvider>
           <RouterProvider router={MainRoute} />
+        <ToastContainer />
         </SocketProvider>
       </FirebaseContext>
     </QueryClientProvider>

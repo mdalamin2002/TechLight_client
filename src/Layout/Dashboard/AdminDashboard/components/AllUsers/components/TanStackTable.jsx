@@ -1,40 +1,39 @@
-// TanStackTable.jsx
 import {
   createColumnHelper,
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
-  getFilteredRowModel
-} from '@tanstack/react-table';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import { Calendar, Search,
-} from "lucide-react";
-import DebouncedInput from './DebouncedInput';
-import DownloadBtn from './DownloadBtn';
-import Pagination from './Pagination';
-import UserTable from './UserTable';
+  getFilteredRowModel,
+} from "@tanstack/react-table";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { Search, Download } from "lucide-react";
+import DebouncedInput from "./DebouncedInput";
+import DownloadBtn from "./DownloadBtn";
+import Pagination from "./Pagination";
+import UserTable from "./UserTable";
 
 const TanStackTable = () => {
   const columnHelper = createColumnHelper();
 
   // ===== State =====
   const [data, setData] = useState([]);
-  const [globalFilter, setGlobalFilter] = useState('');
+  const [globalFilter, setGlobalFilter] = useState("");
   const [openMenu, setOpenMenu] = useState(null);
 
   // ===== Load data from JSON =====
   useEffect(() => {
-    axios.get("/users.json")
-      .then(res => setData(res.data))
-      .catch(err => console.error(err));
+    axios
+      .get("/users.json")
+      .then((res) => setData(res.data))
+      .catch((err) => console.error(err));
   }, []);
 
   // ===== Action Handlers =====
   const handleToggleBan = (id) => {
-    setData(prevData =>
-      prevData.map(user =>
+    setData((prevData) =>
+      prevData.map((user) =>
         user.id === id
           ? { ...user, status: user.status === "active" ? "banned" : "active" }
           : user
@@ -43,24 +42,24 @@ const TanStackTable = () => {
   };
 
   const handleMakeModerator = (id) => {
-    setData(prevData =>
-      prevData.map(user =>
+    setData((prevData) =>
+      prevData.map((user) =>
         user.id === id ? { ...user, role: "Moderator" } : user
       )
     );
   };
 
   const handleMakeAdmin = (id) => {
-    setData(prevData =>
-      prevData.map(user =>
+    setData((prevData) =>
+      prevData.map((user) =>
         user.id === id ? { ...user, role: "Admin" } : user
       )
     );
   };
 
   const handleRemoveRole = (id) => {
-    setData(prevData =>
-      prevData.map(user =>
+    setData((prevData) =>
+      prevData.map((user) =>
         user.id === id ? { ...user, role: "User" } : user
       )
     );
@@ -133,41 +132,81 @@ const TanStackTable = () => {
   const columns = [
     columnHelper.accessor("id", {
       id: "S.No",
-      cell: (info) => <span>{info.row.index + 1}</span>,
-      header: () => <div className="flex items-center gap-1"> S.No</div>,
+      cell: (info) => (
+        <span className="font-medium text-muted-foreground">
+          {info.row.index + 1}
+        </span>
+      ),
+      header: "S.No",
     }),
     columnHelper.accessor("avatar", {
-      cell: (info) => <img src={info.getValue()} alt="profile" className='rounded-full w-10 h-10 object-cover border-2 border-indigo-200 shadow-sm' />,
-      header: () => <div className="flex items-center gap-1"> Profile</div>,
+      cell: (info) => (
+        <img
+          src={info.getValue()}
+          alt="profile"
+          className="rounded-full w-10 h-10 object-cover border-2 border-primary/20 shadow-md"
+        />
+      ),
+      header: "Profile",
     }),
     columnHelper.accessor("user", {
-      cell: (info) => <span className='font-semibold text-gray-800'>{info.getValue()}</span>,
-      header: () => <div className="flex items-center gap-1"> User</div>,
+      cell: (info) => (
+        <span className="font-semibold text-foreground">{info.getValue()}</span>
+      ),
+      header: "User",
     }),
     columnHelper.accessor("email", {
-      cell: (info) => <span className='text-gray-600'>{info.getValue()}</span>,
-      header: () => <div className="flex items-center gap-1"> Email</div>,
+      cell: (info) => (
+        <span className="text-muted-foreground text-sm">{info.getValue()}</span>
+      ),
+      header: "Email",
     }),
     columnHelper.accessor("role", {
-      cell: (info) => <span className='capitalize text-indigo-600 font-medium'>{info.getValue()}</span>,
-      header: () => <div className="flex items-center gap-1"> Role</div>,
+      cell: (info) => {
+        const role = info.getValue();
+        const colors = {
+          Admin: "bg-purple-100 text-purple-700 border-purple-200",
+          Moderator: "bg-blue-100 text-blue-700 border-blue-200",
+          User: "bg-gray-100 text-gray-700 border-gray-200",
+        };
+        return (
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold border ${
+              colors[role] || colors.User
+            }`}
+          >
+            {role}
+          </span>
+        );
+      },
+      header: "Role",
     }),
     columnHelper.accessor("status", {
       cell: (info) => {
         const status = info.getValue();
-        const color = status === 'active' ? 'bg-green-500' : status === 'pending' ? 'bg-yellow-400' : 'bg-red-500';
+        const colors = {
+          active: "bg-green-500",
+          pending: "bg-yellow-400",
+          banned: "bg-red-500",
+        };
         return (
-          <div className='flex items-center gap-2'>
-            <span className={`w-3 h-3 rounded-full ${color}`}></span>
-            <span className='capitalize text-gray-700'>{status}</span>
+          <div className="flex items-center gap-2">
+            <span
+              className={`w-2.5 h-2.5 rounded-full ${colors[status]} animate-pulse`}
+            ></span>
+            <span className="capitalize text-foreground text-sm font-medium">
+              {status}
+            </span>
           </div>
         );
       },
       header: "Status",
     }),
     columnHelper.accessor("joinDate", {
-      cell: (info) => <span className='text-gray-600'>{info.getValue()}</span>,
-      header: () => <div className="flex items-center gap-1"> Join Date</div>,
+      cell: (info) => (
+        <span className="text-muted-foreground text-sm">{info.getValue()}</span>
+      ),
+      header: "Join Date",
     }),
   ];
 
@@ -182,23 +221,25 @@ const TanStackTable = () => {
   });
 
   return (
-    <div className='rounded-2xl'>
-
-      {/* 🔍 Search + ⬇ Download */}
-      <div className='flex flex-col md:flex-row justify-between mb-6 gap-3 items-center'>
-        <div className="relative w-72">
-          <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+    <div className="bg-card rounded-2xl shadow-lg border border-border/50  py-6 md:px-6 px-3 backdrop-blur-sm">
+      {/* Search + ⬇ Download */}
+      <div className="flex flex-col sm:flex-row justify-between mb-6 gap-4">
+        <div className="relative flex-1 max-w-md">
+          <Search
+            size={18}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          />
           <DebouncedInput
             value={globalFilter}
-            onChange={value => setGlobalFilter(String(value))}
-            placeholder="Search all columns..."
-            className="py-2 pl-10 pr-3 bg-white shadow-sm border rounded-lg w-full focus:ring-2 focus:ring-indigo-400 outline-none"
+            onChange={(value) => setGlobalFilter(String(value))}
+            placeholder="Search users..."
+            className="py-2.5 pl-10 pr-4 bg-background border border-border rounded-xl w-full focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all text-foreground placeholder:text-muted-foreground"
           />
         </div>
         <DownloadBtn data={data} user={"user"} icon />
       </div>
 
-      {/* 📊 Table */}
+      {/* Table */}
       <UserTable
         table={table}
         openMenu={openMenu}
@@ -206,7 +247,7 @@ const TanStackTable = () => {
         handleActionWithConfirm={handleActionWithConfirm}
       />
 
-      {/* Pagination   */}
+      {/* Pagination */}
       <Pagination table={table} />
     </div>
   );

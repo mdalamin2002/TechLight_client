@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import OrderTable from "./components/OrderTable";
 import OrderFilters from "./components/OrderFilters";
 import OrderPagination from "./components/OrderPagination";
+import { Package, TrendingUp, Users, DollarSign } from "lucide-react";
 
 const Orders = () => {
   const [orders, setOrders] = useState([
@@ -20,7 +21,15 @@ const Orders = () => {
   const [selectedPayment, setSelectedPayment] = useState("All Status");
   const [selectedDelivery, setSelectedDelivery] = useState("All Delivery");
 
-  //  status update
+  // Calculate statistics
+  const totalOrders = orders.length;
+  const totalRevenue = orders.reduce((sum, order) =>
+    order.payment === "Paid" ? sum + parseFloat(order.amount.replace('$', '')) : sum, 0
+  );
+  const deliveredOrders = orders.filter(order => order.delivery === "Delivered").length;
+  const pendingOrders = orders.filter(order => order.payment === "Pending").length;
+
+  // status update
   const handleStatusChange = (id, field, value) => {
     setOrders(prev =>
       prev.map(order =>
@@ -29,11 +38,11 @@ const Orders = () => {
     );
   };
 
-  //  dynamically generate unique payment & delivery options
+  // dynamically generate unique payment & delivery options
   const paymentStatuses = ["All Status", ...new Set(orders.map(o => o.payment))];
   const deliveryStatuses = ["All Delivery", ...new Set(orders.map(o => o.delivery))];
 
-  //  dynamic status list for dropdown actions
+  // dynamic status list for dropdown actions
   const uniquePaymentStatusList = [...new Set(orders.map(o => o.payment))];
   const uniqueDeliveryStatusList = [...new Set(orders.map(o => o.delivery))];
 
@@ -57,41 +66,93 @@ const Orders = () => {
   );
 
   return (
-    <div className="p-6 rounded-2xl">
-      <header className="mb-6">
-        <h2 className="text-3xl font-bold text-gray-800">Order Management</h2>
-        <p className="text-sm text-gray-500">
+    <div className="p-4 md:p-6 bg-background min-h-screen">
+      <header className="mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Order Management</h2>
+        <p className="text-muted-foreground">
           Track and manage all customer orders and deliveries.
         </p>
       </header>
 
-      <OrderFilters
-        search={search}
-        setSearch={setSearch}
-        selectedPayment={selectedPayment}
-        setSelectedPayment={setSelectedPayment}
-        selectedDelivery={selectedDelivery}
-        setSelectedDelivery={setSelectedDelivery}
-        paymentStatuses={paymentStatuses}
-        deliveryStatuses={deliveryStatuses}
-        filteredOrders={filteredOrders}
-      />
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-muted-foreground text-sm">Total Orders</p>
+              <p className="text-2xl font-bold text-foreground mt-1">{totalOrders}</p>
+            </div>
+            <div className="p-3 bg-primary/10 rounded-lg">
+              <Package className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+        </div>
 
-      {/* ✅ Pass dynamic lists */}
-      <OrderTable
-        orders={currentPageData}
-        onStatusChange={handleStatusChange}
-        paymentList={uniquePaymentStatusList}
-        deliveryList={uniqueDeliveryStatusList}
-      />
+        <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-muted-foreground text-sm">Total Revenue</p>
+              <p className="text-2xl font-bold text-foreground mt-1">${totalRevenue.toFixed(2)}</p>
+            </div>
+            <div className="p-3 bg-green-100 rounded-lg">
+              <DollarSign className="w-6 h-6 text-green-600" />
+            </div>
+          </div>
+        </div>
 
-      <OrderPagination
-        pageIndex={pageIndex}
-        setPageIndex={setPageIndex}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-        pageCount={pageCount}
-      />
+        <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-muted-foreground text-sm">Delivered</p>
+              <p className="text-2xl font-bold text-foreground mt-1">{deliveredOrders}</p>
+            </div>
+            <div className="p-3 bg-blue-100 rounded-lg">
+              <TrendingUp className="w-6 h-6 text-blue-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-muted-foreground text-sm">Pending</p>
+              <p className="text-2xl font-bold text-foreground mt-1">{pendingOrders}</p>
+            </div>
+            <div className="p-3 bg-amber-100 rounded-lg">
+              <Users className="w-6 h-6 text-amber-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-card rounded-2xl shadow-sm border border-border/50 p-6">
+        <OrderFilters
+          search={search}
+          setSearch={setSearch}
+          selectedPayment={selectedPayment}
+          setSelectedPayment={setSelectedPayment}
+          selectedDelivery={selectedDelivery}
+          setSelectedDelivery={setSelectedDelivery}
+          paymentStatuses={paymentStatuses}
+          deliveryStatuses={deliveryStatuses}
+          filteredOrders={filteredOrders}
+        />
+
+        <OrderTable
+          orders={currentPageData}
+          onStatusChange={handleStatusChange}
+          paymentList={uniquePaymentStatusList}
+          deliveryList={uniqueDeliveryStatusList}
+        />
+
+        <OrderPagination
+          pageIndex={pageIndex}
+          setPageIndex={setPageIndex}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          pageCount={pageCount}
+        />
+      </div>
     </div>
   );
 };

@@ -8,7 +8,7 @@ import axios from "axios";
 
 const Banner = () => {
   const [slides, setSlides] = useState([]);
-  const API_URL = import.meta.env.VITE_baseURL;
+  const API_URL = import.meta.env.VITE_prod_baseURL;
 
   //  Fetch banners from backend
   useEffect(() => {
@@ -16,7 +16,7 @@ const Banner = () => {
       try {
         const res = await axios.get(`${API_URL}/banners`);
         setSlides(res.data);
-        console.log(res.data);
+
       } catch (error) {
         console.error("Failed to load banners:", error);
       }

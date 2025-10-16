@@ -12,8 +12,7 @@ const AddBannerOffer = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
-  
-    const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY; // এখানে তোমার API key দাও
+  const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY; // Replace with your ImageBB API key
 
   // Fetch banners
   const fetchBanners = async () => {
@@ -227,7 +226,7 @@ const AddBannerOffer = () => {
                 required
                 className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              
+
               {/* Image Upload */}
               <input
                 type="file"

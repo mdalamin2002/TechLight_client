@@ -10,10 +10,13 @@ import {
   MapPin,
   ArrowRight,
   Heart,
+  Lightbulb,
+  Zap,
 } from "lucide-react";
 import TechLightLogo from "../Logo/TechLightLogo";
 import { motion } from "framer-motion";
 import SupportChatModal from "../SupportChatModal/SupportChatModal";
+import { Link } from "react-router";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -143,9 +146,27 @@ const Footer = () => {
               viewport={{ once: true, amount: 0.3 }}
               variants={fadeUpVariant}
             >
-              <TechLightLogo className="mb-4" />
+              <Link to={'/'} className="flex items-center space-x-2 mb-4">
+                {/* Icon container */}
+                <div className="relative">
+                  <div className="relative flex justify-center items-center p-2 h-10 w-10 rounded-full bg-gradient-to-r from-primary to-accent shadow-md">
+                    <Lightbulb
+                      className="w-7 h-7 text-white"
+                      fill="currentColor"
+                    />
+                    <Zap className="absolute -top-1 -right-1 w-3 h-3 text-yellow-300" />
+                  </div>
+                </div>
+
+                {/* Logo text */}
+                <span className="eagle-lake-regular text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  TechLight
+                </span>
+              </Link>
+
               <p className="text-slate-600 text-sm leading-relaxed mb-6 max-w-xs">
-                TechLight is your go-to electronics store for high-quality gadgets, smart devices, and home appliances.
+                TechLight is your go-to electronics store for high-quality
+                gadgets, smart devices, and home appliances.
               </p>
               <ul className="space-y-3 text-slate-600 text-sm">
                 <li className="flex items-start gap-3">
@@ -235,9 +256,12 @@ const Footer = () => {
           >
             <div className="rounded-2xl bg-white/90 backdrop-blur-sm border border-slate-200/70 shadow-lg shadow-slate-200/40 px-6 py-8 md:px-10">
               <div className="text-center mb-6">
-                <h5 className="text-slate-800 font-semibold text-lg">Stay Updated</h5>
+                <h5 className="text-slate-800 font-semibold text-lg">
+                  Stay Updated
+                </h5>
                 <p className="text-slate-600 text-sm mt-1">
-                  Subscribe to our newsletter for the latest updates and exclusive offers.
+                  Subscribe to our newsletter for the latest updates and
+                  exclusive offers.
                 </p>
               </div>
               <form
@@ -307,7 +331,11 @@ const Footer = () => {
           >
             <p className="text-center text-slate-600 text-sm flex justify-center gap-2">
               © {new Date().getFullYear()} TechLight. Made with{" "}
-              <span className="text-rose-500"> <Heart /> </span> in Bangladesh
+              <span className="text-rose-500">
+                {" "}
+                <Heart />{" "}
+              </span>{" "}
+              in Bangladesh
             </p>
           </motion.div>
         </div>

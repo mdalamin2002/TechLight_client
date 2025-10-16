@@ -2,11 +2,12 @@ import useAuth from "@/hooks/useAuth";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_baseURL,
+  baseURL: import.meta.env.VITE_prod_baseURL,
 });
 
 const useAxiosSecure = () => {
@@ -30,7 +31,7 @@ const useAxiosSecure = () => {
           if (err?.response?.status === 401 || err?.response?.status === 403) {
             logOutUser()
               .then(() => {
-                console.log("Logged out due to token issue.");
+                toast.error("Logged out due to token issue.")
                 navigate("/auth/login")
               })
               .catch(console.error);

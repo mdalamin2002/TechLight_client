@@ -2,9 +2,9 @@ import React from 'react';
 import TanStackTable from './components/TanStackTable';
 
 const AllUsers = () => {
- 
+
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen p-2 lg:p-6">
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800">User Management</h2>
