@@ -38,7 +38,7 @@ const Products = () => {
     setLoading(true);
     axiosSecure
       .get(`${selectCategory ? `/products/${selectCategory}` : "/products"}`)
-      .then((res) => setProducts(res.data))
+      .then((res) => setProducts(res.data.data))
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   };
@@ -55,6 +55,8 @@ const Products = () => {
     fetchCategories();
   }, [axiosSecure]);
 
+console.log(products)
+
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -65,6 +67,7 @@ const Products = () => {
     setCurrentPage(pageNumber);
   };
 
+  
   const handleProductAction = (action, productId, data) => {
     console.log(`Action: ${action}, Product ID: ${productId}`, data);
     // API call based on action

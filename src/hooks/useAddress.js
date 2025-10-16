@@ -1,9 +1,9 @@
-import useAxiosPublic from "./useAxiosPublic";
 import useAuth from "./useAuth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const useAddress = () => {
-  const axiosSecure = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
@@ -16,7 +16,7 @@ const useAddress = () => {
     queryKey: ["addresses", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/api/addresses?email=${user?.email}`);
+      const res = await axiosSecure.get(`/addresses?email=${user?.email}`);
       return res.data;
     },
   });
@@ -30,7 +30,7 @@ const useAddress = () => {
     queryKey: ["defaultAddress", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/api/addresses/default?email=${user?.email}`);
+      const res = await axiosSecure.get(`/addresses/default?email=${user?.email}`);
       return res.data;
     },
   });
@@ -39,7 +39,7 @@ const useAddress = () => {
   const addAddress = useMutation({
     mutationFn: async (addressData) => {
       const payload = { ...addressData, userEmail: user?.email };
-      const res = await axiosSecure.post("/api/addresses", payload);
+      const res = await axiosSecure.post("/addresses", payload);
       return res.data;
     },
     onSuccess: () => {
@@ -51,7 +51,7 @@ const useAddress = () => {
   // Update address
   const updateAddress = useMutation({
     mutationFn: async ({ id, updatedData }) => {
-      const res = await axiosSecure.put(`/api/addresses/${id}`, updatedData);
+      const res = await axiosSecure.put(`/addresses/${id}`, updatedData);
       return res.data;
     },
     onSuccess: () => {
@@ -63,7 +63,7 @@ const useAddress = () => {
   // Delete address
   const deleteAddress = useMutation({
     mutationFn: async (id) => {
-      const res = await axiosSecure.delete(`/api/addresses/${id}`);
+      const res = await axiosSecure.delete(`/addresses/${id}`);
       return res.data;
     },
     onSuccess: () => {
