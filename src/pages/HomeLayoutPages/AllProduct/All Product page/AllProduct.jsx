@@ -1,16 +1,16 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, X } from "lucide-react";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
 import ProductsHeader from "./ProductsHeader";
 import FiltersPanel from "./FiltersPanel";
 
 import { normalizeProduct, toNumber } from "./product";
 import Pagination from "./Pagination";
 import AllProductCardShare from "@/Components/Shared/All Product/AllProductCardShare";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const AllProduct = () => {
-  const axiosPublic = useAxiosPublic();
+  const axiosPublic = useAxiosSecure();
 
   // UI states
   const [viewMode, setViewMode] = useState("grid");
@@ -32,7 +32,7 @@ const AllProduct = () => {
   } = useQuery({
     queryKey: ["products", "all"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/api/products");
+      const res = await axiosPublic.get("/products");
       const arr = Array.isArray(res.data)
         ? res.data
         : Array.isArray(res.data?.data)
