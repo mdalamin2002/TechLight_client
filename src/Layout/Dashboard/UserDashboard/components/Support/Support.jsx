@@ -22,11 +22,11 @@ const Support = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        // প্রথমে localStorage থেকে data আনছি
+   
         const cachedTickets = localStorage.getItem("supportTickets");
         if (cachedTickets) {
           setTickets(JSON.parse(cachedTickets));
-          // background এ fresh data fetch করব
+          // background এ fresh data fetch 
           refreshTickets();
         } else {
           await refreshTickets();
@@ -36,12 +36,12 @@ const Support = () => {
       }
     };
 
-    // Fresh data আনার function
+    // Fresh data function
     const refreshTickets = async () => {
       try {
         const res = await axiosSecure.get("/support/user");
         setTickets(res.data);
-        localStorage.setItem("supportTickets", JSON.stringify(res.data)); // cache এ save করছি
+        localStorage.setItem("supportTickets", JSON.stringify(res.data)); // cache 
       } catch (err) {
         console.error("❌ Error fetching tickets:", err);
       }
@@ -76,7 +76,7 @@ const Support = () => {
     throw new Error("❌ Image upload failed!");
   };
 
-  // 🚀 Submit form
+  //  Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -100,7 +100,7 @@ const Support = () => {
         alert("✅ Ticket submitted successfully!");
         const newTicket = res.data.ticket;
 
-        // UI ও localStorage দুই জায়গাতেই নতুন data সংরক্ষণ করছি
+        // update tickets
         const updatedTickets = [newTicket, ...tickets];
         setTickets(updatedTickets);
         localStorage.setItem("supportTickets", JSON.stringify(updatedTickets));
@@ -129,7 +129,7 @@ const Support = () => {
         Support Ticket Form
       </h2>
 
-      {/* 🧾 Support Form */}
+      {/*  Support Form */}
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-2xl shadow-md"
@@ -237,7 +237,7 @@ const Support = () => {
         </div>
       </form>
 
-      {/* 🕓 Support History */}
+      {/*  Support History */}
       <h3 className="text-xl font-semibold mt-8 mb-3">
         Latest Support History
       </h3>
