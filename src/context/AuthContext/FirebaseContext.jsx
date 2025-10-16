@@ -28,7 +28,7 @@ export const FirebaseContext = ({ children }) => {
     queryKey: ["dbUser", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_baseURL}/users/role/${user?.email}`);
+      const res = await axios.get(`${import.meta.env.VITE_prod_baseURL}/users/role/${user?.email}`);
       return res.data;
     },
   });
