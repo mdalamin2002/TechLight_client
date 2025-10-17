@@ -1,15 +1,18 @@
 import React from 'react';
-import AdminDashboard from './AdminDashboard/AdminDashboard';
-import ModeratorDashboard from './ModeratorDashboard/ModeratorDashboard';
-import UserDashboard from './UserDashboard/UserDashboard';
+import Admin_Home from './AdminDashboard/components/Admin_Home/Admin_Home';
+import { ModeratorOverview } from './ModeratorDashboard/components/ModeratorOverview/ModeratorOverview';
+import Overview from './UserDashboard/components/Overview/Overview';
+import useAuth from '@/hooks/useAuth';
 
 const MainDashboard = () => {
-    const role = "moderator"; 
+    const { userData } = useAuth();
+
+    const role = userData?.role || "user"; 
     return (
         <div>
-            {role === "admin" && <AdminDashboard></AdminDashboard>}
-            {role === "moderator" && <ModeratorDashboard></ModeratorDashboard>}
-            {role === "user" && <UserDashboard></UserDashboard>}
+            {role === "admin" && <Admin_Home></Admin_Home>}
+            {role === "moderator" && <ModeratorOverview></ModeratorOverview>}
+            {role === "user" && <Overview></Overview>}
         </div>
     );
 };
