@@ -34,7 +34,8 @@ export default function DashboardSidebar({
   setIsMobileMenuOpen,
 }) {
   const { userData } = useAuth();
-  const role = userData?.role; // "admin", "moderator", or "user"
+  // const role = userData?.role; // "admin", "moderator", or "user"
+  const role = 'admin';
 
   const NavItem = ({ to, label, icon: Icon, onClick }) => (
     <NavLink

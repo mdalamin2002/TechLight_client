@@ -178,33 +178,33 @@ const RefundsTable = () => {
       <div className="overflow-x-auto rounded-xl border-0 shadow-sm">
         <table className="min-w-full">
           <thead>
-            <tr className="border-b border-border/50">
+            <tr className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-600 text-white">
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Refund ID</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Refund ID</span>
               </th>
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Order ID</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Order ID</span>
               </th>
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">User</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">User</span>
               </th>
               <th className="px-4 py-4 text-left hidden md:table-cell">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Email</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Email</span>
               </th>
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Amount</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Amount</span>
               </th>
               <th className="px-4 py-4 text-left hidden md:table-cell">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Reason</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Reason</span>
               </th>
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Status</span>
               </th>
               <th className="px-4 py-4 text-left hidden md:table-cell">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Date</span>
               </th>
               <th className="px-4 py-4 text-right">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Actions</span>
               </th>
             </tr>
           </thead>
