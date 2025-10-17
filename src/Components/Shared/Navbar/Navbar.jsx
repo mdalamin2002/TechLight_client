@@ -301,7 +301,7 @@ export default function Navbar() {
                       >
                         <div className="p-2">
                           <Link
-                            to="/profile"
+                            to="/dashboard/my-profile"
                             className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
                           >
                             <UserCircle size={18} />
