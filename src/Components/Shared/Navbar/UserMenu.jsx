@@ -83,7 +83,7 @@ export default function UserMenu({ user, logOutUser }) {
               animate={{ opacity: 1, y: -2 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.15 }}
-              className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs bg-card px-2 py-1 rounded-md border border-border shadow whitespace-nowrap"
+              className="absolute left-full top-1/2 -translate-y-1/2 ml-2 text-xs text-black bg-card px-2 py-1 rounded-md border border-border shadow whitespace-nowrap"
             >
               {getUserDisplayName()}
             </motion.span>
