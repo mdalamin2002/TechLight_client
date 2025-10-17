@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSocket } from "@/context/AuthContext/SocketContext/SocketContext";
 import useAuth from "@/hooks/useAuth";
-import axios from "axios";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 import { toast } from "react-hot-toast";
 import {
   MessageCircle,
@@ -35,7 +35,8 @@ import { Card } from "@/Components/ui/card";
 
 const LiveChatTab = () => {
   const socket = useSocket();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -44,6 +45,7 @@ const LiveChatTab = () => {
   const [sending, setSending] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [viewMode, setViewMode] = useState("available"); // 'available' or 'assigned'
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
@@ -161,7 +163,7 @@ const LiveChatTab = () => {
     try {
       setLoading(true);
       const params = statusFilter !== "all" ? { status: statusFilter } : {};
-      const response = await axios.get("http://localhost:5000/api/support/conversations/allConversations", {
+      const response = await axiosSecure.get("/support/conversations/allConversations", {
         params,
       });
       console.log(response);
@@ -176,17 +178,31 @@ const LiveChatTab = () => {
 
   const fetchMessages = async (conversationId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/support/messages/${conversationId}`
+      // Additional check before fetching messages
+      const conversation = conversations.find(c => c._id === conversationId);
+      if (conversation && conversation.assignedTo && conversation.assignedTo !== userData?._id) {
+        toast.error("Access denied: This conversation is assigned to another moderator");
+        setSelectedConversation(null);
+        return;
+      }
+
+      const response = await axiosSecure.get(
+        `/support/messages/${conversationId}`
       );
       setMessages(response.data.messages || []);
     } catch (error) {
       console.error("Error fetching messages:", error);
-      toast.error("Failed to load messages");
+      toast.error(error.response?.data?.message || "Failed to load messages");
     }
   };
 
   const handleConversationClick = (conversation) => {
+    // Prevent accessing other moderators' conversations
+    if (conversation.assignedTo && conversation.assignedTo !== userData?._id) {
+      toast.error("This conversation is being handled by another moderator");
+      return;
+    }
+
     setSelectedConversation(conversation);
     fetchMessages(conversation._id);
 
@@ -208,14 +224,14 @@ const LiveChatTab = () => {
     try {
       const messageData = {
         conversationId: selectedConversation._id,
-        senderId: user?.uid,
+        senderId: userData?._id || user?.uid,
         senderName: user?.displayName || "Moderator",
-        senderRole: "moderator",
+        senderRole: userData?.role || "moderator",
         message: newMessage.trim(),
       };
 
-      const response = await axios.post(
-        "http://localhost:5000/api/support/messages",
+      const response = await axiosSecure.post(
+        "/support/messages",
         messageData
       );
 
@@ -231,6 +247,9 @@ const LiveChatTab = () => {
             agentName: user?.displayName,
           });
         }
+
+        // Refresh conversation to get updated status and assignment
+        fetchConversations();
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -265,10 +284,19 @@ const LiveChatTab = () => {
   const handleStatusChange = async (newStatus) => {
     if (!selectedConversation) return;
 
+    // Moderators cannot close conversations
+    if (newStatus === "closed" && userData?.role !== "admin") {
+      toast.error("Only admins can close conversations");
+      return;
+    }
+
     try {
-      await axios.patch(
-        `http://localhost:5000/api/support/conversations/${selectedConversation._id}`,
-        { status: newStatus }
+      await axiosSecure.patch(
+        `/support/conversations/${selectedConversation._id}`,
+        { 
+          status: newStatus,
+          userRole: userData?.role || "moderator" // Send user role for backend validation
+        }
       );
 
       setSelectedConversation((prev) => ({ ...prev, status: newStatus }));
@@ -281,7 +309,7 @@ const LiveChatTab = () => {
       toast.success("Status updated successfully");
     } catch (error) {
       console.error("Error updating status:", error);
-      toast.error("Failed to update status");
+      toast.error(error.response?.data?.message || "Failed to update status");
     }
   };
 
@@ -332,6 +360,45 @@ const LiveChatTab = () => {
     conv.userEmail.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Filter conversations based on view mode and moderator assignment
+  const getModeratorVisibleConversations = () => {
+    const currentModeratorId = userData?._id;
+    
+    // Filter by search first
+    let filtered = filteredConversations;
+
+    // Apply view mode filter
+    if (viewMode === "available") {
+      // Show only unassigned chats (open status, no assignedTo)
+      filtered = filtered.filter((conv) => 
+        conv.status === "open" && !conv.assignedTo
+      );
+    } else if (viewMode === "assigned") {
+      // Show only chats assigned to current moderator
+      filtered = filtered.filter((conv) => 
+        conv.assignedTo === currentModeratorId
+      );
+    }
+
+    // Apply status filter if not "all"
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((conv) => conv.status === statusFilter);
+    }
+
+    return filtered;
+  };
+
+  const visibleConversations = getModeratorVisibleConversations();
+
+  // Count statistics
+  const availableCount = conversations.filter((conv) => 
+    conv.status === "open" && !conv.assignedTo
+  ).length;
+  
+  const assignedCount = conversations.filter((conv) => 
+    conv.assignedTo === userData?._id
+  ).length;
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -347,6 +414,58 @@ const LiveChatTab = () => {
     <div className="grid grid-cols-12 gap-4 h-[calc(100vh-200px)]">
       {/* Conversations List */}
       <div className="col-span-4 flex flex-col bg-white rounded-lg border border-slate-200 shadow-sm">
+        {/* View Mode Toggle */}
+        <div className="p-4 border-b border-slate-200">
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={() => setViewMode("available")}
+              className={`flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
+                viewMode === "available"
+                  ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <MessageCircle className="w-4 h-4" />
+                <span>Available</span>
+                {availableCount > 0 && (
+                  <span className="px-2 py-0.5 bg-white/30 rounded-full text-xs font-bold">
+                    {availableCount}
+                  </span>
+                )}
+              </div>
+            </button>
+            <button
+              onClick={() => setViewMode("assigned")}
+              className={`flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
+                viewMode === "assigned"
+                  ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <User className="w-4 h-4" />
+                <span>My Chats</span>
+                {assignedCount > 0 && (
+                  <span className="px-2 py-0.5 bg-white/30 rounded-full text-xs font-bold">
+                    {assignedCount}
+                  </span>
+                )}
+              </div>
+            </button>
+          </div>
+
+          {/* Info Badge */}
+          <div className="flex items-center gap-2 text-xs text-slate-600 bg-blue-50 border border-blue-200 rounded-lg p-2">
+            <AlertCircle className="w-4 h-4 text-blue-600" />
+            <span>
+              {viewMode === "available" 
+                ? "Pick up new chats to help customers"
+                : "Manage your assigned conversations"}
+            </span>
+          </div>
+        </div>
+
         {/* Search and Filter */}
         <div className="p-4 border-b border-slate-200 space-y-3">
           <div className="relative">
@@ -375,13 +494,25 @@ const LiveChatTab = () => {
 
         {/* Conversations */}
         <div className="flex-1 overflow-y-auto">
-          {filteredConversations.length === 0 ? (
+          {visibleConversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-slate-400 p-4">
               <MessageCircle className="w-12 h-12 mb-2" />
-              <p>No conversations found</p>
+              <p className="text-center">
+                {viewMode === "available" 
+                  ? "No available chats at the moment"
+                  : "You haven't picked up any chats yet"}
+              </p>
+              {viewMode === "assigned" && availableCount > 0 && (
+                <button
+                  onClick={() => setViewMode("available")}
+                  className="mt-3 text-sm text-blue-600 hover:text-blue-700 underline"
+                >
+                  View {availableCount} available chat{availableCount !== 1 ? 's' : ''}
+                </button>
+              )}
             </div>
           ) : (
-            filteredConversations.map((conv) => (
+            visibleConversations.map((conv) => (
               <div
                 key={conv._id}
                 onClick={() => handleConversationClick(conv)}
@@ -462,7 +593,9 @@ const LiveChatTab = () => {
                       <SelectItem value="open">Open</SelectItem>
                       <SelectItem value="in-progress">In Progress</SelectItem>
                       <SelectItem value="resolved">Resolved</SelectItem>
-                      <SelectItem value="closed">Closed</SelectItem>
+                      {userData?.role === "admin" && (
+                        <SelectItem value="closed">Closed</SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
