@@ -137,6 +137,31 @@ export default function Navbar() {
 
   const isActiveRoute = (route) => location.pathname === route;
 
+  // Voice input using Web Speech API
+  const startVoiceInput = () => {
+    try {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        toast?.info?.("Voice input not supported in this browser.");
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.onresult = (event) => {
+        const transcript = event.results?.[0]?.[0]?.transcript || "";
+        if (transcript) setSearchQuery(transcript);
+      };
+      recognition.onerror = () => {
+        toast?.error?.("Voice recognition error. Please try again.");
+      };
+      recognition.start();
+    } catch (_) {
+      // no-op
+    }
+  };
+
   return (
     <>
       {/* TOP NAVBAR */}
@@ -181,7 +206,7 @@ export default function Navbar() {
             </div>
 
             {/* CENTER: Search Bar - Desktop/Tablet (md+) */}
-            <div className="hidden md:flex flex-1 justify-center max-w-2xl mx-4">
+            <div className="hidden md:flex flex-1 justify-center max-w-3xl mx-4">
               <div className="relative w-full group">
                 <Search
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors pointer-events-none"
@@ -191,19 +216,34 @@ export default function Navbar() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for products, brands and more..."
-                  className="w-full pl-12 pr-10 h-11 rounded-xl bg-muted/50 border-border/50 focus-visible:ring-primary/20"
+                  placeholder="Search products, brands, categories..."
+                  className="w-full pl-12 pr-24 h-12 rounded-2xl bg-background border border-border focus-visible:ring-2 focus-visible:ring-primary/30 shadow-sm"
                 />
+                {/* Clear button */}
                 {searchQuery && (
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7"
+                    className="absolute right-12 top-1/2 -translate-y-1/2 h-8 w-8"
+                    aria-label="Clear search"
                   >
                     <X size={16} />
                   </Button>
                 )}
+                {/* Mic button (desktop) */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={startVoiceInput}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9"
+                  aria-label="Voice search"
+                >
+                  {/* Using inline SVG to avoid extra imports */}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                    <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3zm5-3a5 5 0 1 1-10 0H5a7 7 0 0 0 6 6.92V20H8v2h8v-2h-3v-2.08A7 7 0 0 0 19 11h-2z" />
+                  </svg>
+                </Button>
               </div>
             </div>
 
@@ -374,8 +414,8 @@ export default function Navbar() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search products..."
-                    className="pl-11 pr-10 rounded-xl"
+                    placeholder="Search products, brands, categories..."
+                    className="pl-11 pr-24 h-11 rounded-xl bg-background border border-border"
                     autoFocus
                   />
                   {searchQuery && (
@@ -383,11 +423,23 @@ export default function Navbar() {
                       variant="ghost"
                       size="icon"
                       onClick={() => setSearchQuery("")}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7"
+                      className="absolute right-12 top-1/2 -translate-y-1/2 h-8 w-8"
                     >
                       <X size={16} />
                     </Button>
                   )}
+                  {/* Mic button (mobile) */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={startVoiceInput}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9"
+                    aria-label="Voice search"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                      <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3zm5-3a5 5 0 1 1-10 0H5a7 7 0 0 0 6 6.92V20H8v2h8v-2h-3v-2.08A7 7 0 0 0 19 11h-2z" />
+                    </svg>
+                  </Button>
                 </div>
               </div>
             </motion.div>
