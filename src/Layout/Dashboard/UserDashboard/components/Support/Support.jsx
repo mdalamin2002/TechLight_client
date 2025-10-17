@@ -26,19 +26,9 @@ const Support = () => {
         const cachedTickets = localStorage.getItem("supportTickets");
         console.log("Tickets data:", cachedTickets);
         if (cachedTickets) {
-          try {
-            const parsedTickets = JSON.parse(cachedTickets);
-            // Ensure parsed data is an array
-            const safeTickets = Array.isArray(parsedTickets) ? parsedTickets : [];
-            setTickets(safeTickets);
-            // background এ fresh data fetch করব
-            refreshTickets();
-          } catch (parseError) {
-            console.error("❌ Error parsing cached tickets:", parseError);
-            // Clear corrupted cache and fetch fresh data
-            localStorage.removeItem("supportTickets");
-            await refreshTickets();
-          }
+          setTickets(JSON.parse(cachedTickets));
+          // background এ fresh data fetch করব
+          refreshTickets();
         } else {
           await refreshTickets();
         }
@@ -51,15 +41,10 @@ const Support = () => {
     const refreshTickets = async () => {
       try {
         const res = await axiosSecure.get("/support/user");
-        // Ensure data is always an array
-        const safeData = Array.isArray(res.data) ? res.data : [];
-        setTickets(safeData);
-        localStorage.setItem("supportTickets", JSON.stringify(safeData)); // cache এ save করছি
+        setTickets(res.data);
+        localStorage.setItem("supportTickets", JSON.stringify(res.data)); // cache এ save করছি
       } catch (err) {
         console.error("❌ Error fetching tickets:", err);
-        // Set empty array on error to prevent crashes
-        setTickets([]);
-        localStorage.setItem("supportTickets", JSON.stringify([]));
       }
     };
 
@@ -117,8 +102,7 @@ const Support = () => {
         const newTicket = res.data.ticket;
 
         // UI ও localStorage দুই জায়গাতেই নতুন data সংরক্ষণ করছি
-        const currentTickets = Array.isArray(tickets) ? tickets : [];
-        const updatedTickets = [newTicket, ...currentTickets];
+        const updatedTickets = [newTicket, ...tickets];
         setTickets(updatedTickets);
         localStorage.setItem("supportTickets", JSON.stringify(updatedTickets));
 
@@ -271,7 +255,7 @@ const Support = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(tickets) && tickets.length > 0 ? (
+            {tickets.length > 0 ? (
               tickets.map((t) => (
                 <tr key={t._id} className="hover:bg-gray-50">
                   <td className="px-4 py-2 border">{t.ticketId}</td>
