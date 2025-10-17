@@ -16,6 +16,98 @@ export default function SearchBar({
   const [isListening, setIsListening] = useState(false);
   const navigate = useNavigate();
 
+  // Parse voice commands for navigation
+  const parseVoiceCommand = (transcript) => {
+    const lowerTranscript = transcript.toLowerCase().trim();
+
+    // Voice command patterns
+    const commandPatterns = [
+      // "Go to [page]" commands
+      { pattern: /go\s+to\s+(.+)/i, handler: (match) => {
+        const destination = match[1].trim();
+        
+        // Map common destinations to routes
+        const routeMap = {
+          'home': '/',
+          'homepage': '/',
+          'electronics': '/products/electronics',
+          'product': '/products',
+          'products': '/products',
+          'laptops': '/products/category/laptops',
+          'laptop': '/products/category/laptops',
+          'smartphones': '/smartphones',
+          'smartphone': '/smartphones',
+          'tablets': '/tablets',
+          'tablet': '/tablets',
+          'cart': '/addToCart',
+          'shopping cart': '/addToCart',
+          'wishlist': '/wishlist',
+          'dashboard': '/dashboard',
+          'profile': '/dashboard/my-profile',
+          'my profile': '/dashboard/my-profile',
+          'offers': '/offers',
+          'headphones': '/headphones',
+          'earbuds': '/earbuds',
+          'speakers': '/speakers',
+        };
+
+        // Check for exact match first
+        if (routeMap[destination]) {
+          navigate(routeMap[destination]);
+          toast.success(`Navigating to ${destination}`);
+          return true;
+        }
+
+        // Try partial match for flexibility
+        for (const [key, route] of Object.entries(routeMap)) {
+          if (destination.includes(key) || key.includes(destination)) {
+            navigate(route);
+            toast.success(`Navigating to ${key}`);
+            return true;
+          }
+        }
+
+        // No match found
+        toast.info(`No route found for "${destination}". Try saying "Go to products" or "Go to cart"`);
+        return false;
+      }},
+
+      // "Show me [category]" commands
+      { pattern: /show\s+me\s+(.+)/i, handler: (match) => {
+        const category = match[1].trim();
+        navigate(`/products/${category.replace(/\s+/g, '-')}`);
+        toast.success(`Showing ${category}`);
+        return true;
+      }},
+
+      // "Open [page]" commands
+      { pattern: /open\s+(.+)/i, handler: (match) => {
+        const destination = match[1].trim();
+        if (destination.includes('cart')) {
+          navigate('/addToCart');
+          toast.success('Opening cart');
+          return true;
+        }
+        if (destination.includes('wishlist')) {
+          navigate('/wishlist');
+          toast.success('Opening wishlist');
+          return true;
+        }
+        return false;
+      }},
+    ];
+
+    // Try to match command patterns
+    for (const { pattern, handler } of commandPatterns) {
+      const match = lowerTranscript.match(pattern);
+      if (match) {
+        return handler(match);
+      }
+    }
+
+    return false; // No command matched
+  };
+
   // Voice input using Web Speech API
   const startVoiceInput = () => {
     try {
@@ -35,8 +127,17 @@ export default function SearchBar({
         const transcript = event.results?.[0]?.[0]?.transcript || "";
         if (transcript) {
           setSearchQuery(transcript);
-          // Auto-submit after voice input
-          handleSearch(transcript);
+          
+          // Try to parse as voice command first
+          const isCommand = parseVoiceCommand(transcript);
+          
+          // If not a command, just store the search query
+          // (Auto-search disabled until /search page is implemented)
+          if (!isCommand) {
+            toast.info(`Search saved: "${transcript}". Press Enter to search when ready.`);
+            // TODO: Uncomment when /search page is ready
+            // handleSearch(transcript);
+          }
         }
         setIsListening(false);
       };
@@ -57,16 +158,22 @@ export default function SearchBar({
   };
 
   // Handle search submission
+  // TODO: Re-enable when /search page is implemented
   const handleSearch = (query = searchQuery) => {
     const trimmedQuery = query.trim();
     if (trimmedQuery) {
-      navigate(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+      // TEMPORARILY DISABLED - Search page not yet implemented
+      // navigate(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+      
+      toast.info(`Search feature coming soon! Query: "${trimmedQuery}"`);
+      console.log('Search query:', trimmedQuery);
     }
   };
 
   // Handle Enter key press
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
+      // Temporarily disabled until search page is ready
       handleSearch();
     }
   };

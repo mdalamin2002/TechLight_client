@@ -13,16 +13,33 @@ The Navbar has been refactored from a single 600+ line file into smaller, mainta
 ### Subcomponents
 
 #### 1. SearchBar.jsx
-**Purpose:** Search functionality with voice input support
+**Purpose:** Search functionality with voice input support and voice commands
 
 **Features:**
-- Text search with Enter key and button submission
+- Text search input (auto-navigation temporarily disabled)
 - Voice input using Web Speech API
 - 🎙️ "Listening..." indicator during voice recording
+- **Voice command navigation** - supports natural language commands:
+  - "Go to [page]" → Navigate to specific routes
+  - "Show me [category]" → Browse product categories
+  - "Open cart/wishlist" → Quick navigation to key pages
 - Animated listening state feedback
-- Auto-navigation to `/search?q=query` on submission
 - Clear button to reset search
 - Responsive design (desktop & mobile variants)
+- Toast notifications for command feedback
+
+**Supported Voice Commands:**
+```
+"Go to home" → /
+"Go to electronics" → /products/electronics
+"Go to laptops" → /products/category/laptops
+"Go to cart" → /addToCart
+"Go to wishlist" → /wishlist
+"Go to dashboard" → /dashboard
+"Go to profile" → /dashboard/my-profile
+"Show me headphones" → /products/headphones
+"Open cart" → /addToCart
+```
 
 **Props:**
 - `searchQuery` (string) - Current search query value
@@ -30,6 +47,8 @@ The Navbar has been refactored from a single 600+ line file into smaller, mainta
 - `className` (string, optional) - Additional CSS classes
 - `isMobile` (boolean, default: false) - Mobile variant styling
 - `autoFocus` (boolean, default: false) - Auto-focus on mount
+
+**Note:** Text search navigation is temporarily disabled until `/search` page is implemented. Voice commands work independently.
 
 ---
 
@@ -122,11 +141,30 @@ Visual feedback during voice recording:
 - "🎙️ Listening..." text appears below search bar
 - Smooth fade in/out animations
 
-### 3. Search Navigation
-Search now automatically navigates to results:
-- Press **Enter** in search field → Navigate to `/search?q=query`
-- Voice input completion → Auto-navigate to results
-- Clean URL encoding for special characters
+### 3. Voice Command Navigation
+Natural language voice commands for hands-free navigation:
+- **Pattern matching** - Recognizes "Go to", "Show me", "Open" commands
+- **Smart routing** - Maps common phrases to application routes
+- **User feedback** - Toast notifications confirm successful navigation
+- **Fallback handling** - Helpful suggestions when commands aren't recognized
+
+**Examples:**
+```
+User: "Go to electronics"
+Action: Navigate to /products/electronics
+
+User: "Show me laptops"
+Action: Navigate to /products/laptops
+
+User: "Open cart"
+Action: Navigate to /addToCart
+```
+
+### 4. Search Navigation (Temporarily Disabled)
+Text search auto-navigation is disabled until the `/search` results page is implemented:
+- Pressing Enter shows "coming soon" message
+- Search queries are logged for future integration
+- Easy to re-enable by uncommenting marked code sections
 
 ## Categories Data Structure
 
@@ -166,8 +204,23 @@ function App() {
 
 ## Future Enhancements
 
+### Search System (Planned)
+- [ ] Create `/search` route and SearchResults component
+- [ ] Implement product filtering and search logic
+- [ ] Add backend search API for scalability
+- [ ] Re-enable auto-navigation on Enter key
+- [ ] Add search suggestions/autocomplete
+- [ ] Implement search history
+
+### Voice Commands (Future)
+- [ ] Add more complex command patterns
+- [ ] Support multi-language voice commands
+- [ ] Implement voice-activated product filtering
+- [ ] Add voice command help menu
+- [ ] Support custom user-defined commands
+
+### Accessibility & UX
 - [ ] Add keyboard navigation for accessibility
-- [ ] Implement search suggestions/autocomplete
-- [ ] Add search history
-- [ ] Multi-language voice input support
-- [ ] Search filters UI
+- [ ] Implement voice command tutorial/onboarding
+- [ ] Add command history and favorites
+- [ ] Improve error handling and user guidance
