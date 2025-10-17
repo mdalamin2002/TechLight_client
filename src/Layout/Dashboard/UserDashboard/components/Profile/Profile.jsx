@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 
 const Profile = () => {
   const axiosSecure = useAxiosSecure();
-  const { user: authUser } = useAuth();
+  const { user: authUser, updateUser: updateAuthProfile, setUser: setAuthUser } = useAuth();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -28,6 +28,25 @@ const Profile = () => {
   const [avatarFile, setAvatarFile] = useState(null);
   const userEmail = useMemo(() => authUser?.email || "", [authUser]);
   const DEFAULT_AVATAR_URL = "https://ui-avatars.com/api/?name=User&background=random";
+
+  // Guard: show message if not logged in
+  if (!authUser) {
+    return (
+      <Card className="w-full max-w-full mx-auto p-6 text-center space-y-4">
+        <CardHeader>
+          <h2 className="text-xl font-semibold">Access Restricted</h2>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">Please log in to view your profile.</p>
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <Button asChild>
+            <a href="/auth/login">Go to Login</a>
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
 
   // Fetch real user profile
   useEffect(() => {
@@ -117,6 +136,16 @@ const Profile = () => {
       };
       setUser(updated);
       setFormData(updated);
+      // Update Firebase auth profile (photo & name) so Navbar reflects immediately
+      try {
+        await updateAuthProfile({ displayName: updated.name || authUser?.displayName, photoURL: updated.avatar });
+      } catch (_) {
+        // no-op; proceed to optimistic state update
+      }
+      // Optimistically update global auth state for immediate UI refresh
+      if (setAuthUser) {
+        setAuthUser((prev) => ({ ...prev, displayName: updated.name || prev?.displayName, photoURL: updated.avatar }));
+      }
       setEditing(false);
       setAvatarFile(null);
       toast.success("Profile updated");

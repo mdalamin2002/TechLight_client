@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import NotFound from "@/pages/NotFound/NotFound";
 import Home from "../pages/HomeLayoutPages/HomePage/Home";
 import MainLayout from "../Layout/MainLayout/MainLayout";
 import PrivacyPolicy from "../pages/HomeLayoutPages/PrivacyPolicyPage/PrivacyPolicy";
@@ -176,6 +177,8 @@ const MainRoute = createBrowserRouter([
       { path: "my-support", element: <Support></Support> },
     ],
   },
+  // Catch-all route for 404
+  { path: "*", element: <NotFound /> },
 ]);
 
 export default MainRoute;

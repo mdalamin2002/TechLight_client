@@ -272,22 +272,34 @@ export default function Navbar() {
 
               {/* Profile / Account */}
 
-              <>
-                {/* Desktop: hover dropdown */}
+              {user ? (
                 <div className="block relative" ref={profileRef}>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="gap-2 px-2"
+                    className="gap-2 px-2 relative"
                     onMouseEnter={() => setProfileOpen(true)}
                     onMouseLeave={() => setProfileOpen(false)}
                   >
                     <img
-                      src={"https://i.ibb.co.com/3mWYSkKt/image.png"}
+                      src={user?.photoURL || user?.avatar || "https://ui-avatars.com/api/?name=" + (user?.displayName || user?.email || "U")}
                       alt="User"
                       className="w-8 h-8 rounded-full object-cover ring-2 ring-border"
                     />
                     <ChevronDown size={16} className="hidden lg:block" />
+                    <AnimatePresence>
+                      {profileOpen && (
+                        <motion.span
+                          initial={{ opacity: 0, y: -6 }}
+                          animate={{ opacity: 1, y: -2 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs bg-card px-2 py-1 rounded-md border border-border shadow"
+                        >
+                          {(user?.displayName || user?.email || "User")}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
                   </Button>
                   <AnimatePresence>
                     {profileOpen && (
@@ -330,10 +342,9 @@ export default function Navbar() {
                     )}
                   </AnimatePresence>
                 </div>
-              </>
-              {!user && (
+              ) : (
                 <Button size="sm" asChild>
-                  <Link to="/auth/register" className="gap-2">
+                  <Link to="/auth/login" className="gap-2">
                     <User size={18} />
                     <span className="hidden sm:inline">Sign In</span>
                   </Link>
@@ -564,9 +575,9 @@ export default function Navbar() {
             className="flex-col h-auto py-2 gap-1"
           >
             <Link
-              to="/profile"
+              to="/dashboard/profile"
               className={`flex flex-col items-center ${
-                isActiveRoute("/profile") ? "text-primary" : ""
+                isActiveRoute("/dashboard/profile") ? "text-primary" : ""
               }`}
             >
               <User size={20} />
