@@ -15,13 +15,12 @@ import {
 } from "lucide-react";
 import TechLightLogo from "../Logo/TechLightLogo";
 import { motion } from "framer-motion";
-import SupportChatModal from "../SupportChatModal/SupportChatModal";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const Footer = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
-  const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -44,8 +43,6 @@ const Footer = () => {
   ];
 
   const supportLinks = [
-    { name: "Help Center", path: "/help", onClick: () => setIsSupportModalOpen(true) },
-    { name: "My Conversations", path: "/my-conversations" },
     { name: "FAQ", path: "/faq" },
     { name: "Privacy Policy", path: "/privacy" },
     { name: "Terms of Service", path: "/terms" },
@@ -340,12 +337,6 @@ const Footer = () => {
           </motion.div>
         </div>
       </div>
-
-      {/* Support Chat Modal */}
-      <SupportChatModal 
-        isOpen={isSupportModalOpen} 
-        onClose={() => setIsSupportModalOpen(false)} 
-      />
     </footer>
   );
 };
