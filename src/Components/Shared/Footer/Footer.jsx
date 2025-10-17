@@ -15,9 +15,10 @@ import {
 } from "lucide-react";
 import TechLightLogo from "../Logo/TechLightLogo";
 import { motion } from "framer-motion";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const Footer = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -42,7 +43,6 @@ const Footer = () => {
   ];
 
   const supportLinks = [
-    { name: "Help Center", path: "/help" },
     { name: "FAQ", path: "/faq" },
     { name: "Privacy Policy", path: "/privacy" },
     { name: "Terms of Service", path: "/terms" },
@@ -92,10 +92,16 @@ const Footer = () => {
     },
   ];
 
-  const LinkItem = ({ href, children }) => (
+  const LinkItem = ({ href, children, onClick }) => (
     <a
       href={href}
-      className="group inline-flex items-center gap-1 text-slate-600 hover:text-blue-600 transition-all duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded"
+      onClick={(e) => {
+        if (onClick) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      className="group inline-flex items-center gap-1 text-slate-600 hover:text-blue-600 transition-all duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded cursor-pointer"
     >
       <span className="relative after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-0 after:bg-gradient-to-r after:from-blue-500 after:to-indigo-500 after:transition-all after:duration-300 group-hover:after:w-full">
         {children}
@@ -209,7 +215,7 @@ const Footer = () => {
               <ul className="space-y-3">
                 {supportLinks.map((item) => (
                   <li key={item.path}>
-                    <LinkItem href={item.path}>{item.name}</LinkItem>
+                    <LinkItem href={item.path} onClick={item.onClick}>{item.name}</LinkItem>
                   </li>
                 ))}
               </ul>

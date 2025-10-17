@@ -13,6 +13,7 @@ import {
   LogOut,
   LayoutDashboard,
   UserCircle,
+  MessageCircle,
   Lightbulb,
   Zap,
 } from "lucide-react";
