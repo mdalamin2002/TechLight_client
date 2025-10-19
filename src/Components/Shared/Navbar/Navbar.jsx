@@ -148,7 +148,7 @@ export default function Navbar() {
       >
         {/* Main Top Bar */}
         <div className="border-b border-border/50">
-          <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+          <div className="container mx-auto  h-16 flex items-center justify-between gap-4">
             {/* LEFT: Menu + Logo */}
             <div className="flex items-center gap-3">
               {/* Categories Button - visible on <xl only */}
