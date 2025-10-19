@@ -28,8 +28,6 @@ const SupportChatPage = () => {
   const [typing, setTyping] = useState(false);
   const [supportAgent, setSupportAgent] = useState(null);
 
-  console.log(messages);
-
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -243,6 +241,21 @@ const SupportChatPage = () => {
     }
   };
 
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case "open":
+        return "Open";
+      case "in-progress":
+        return "In Progress";
+      case "resolved":
+        return "Resolved";
+      case "closed":
+        return "Closed";
+      default:
+        return status;
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
@@ -288,7 +301,7 @@ const SupportChatPage = () => {
                       variant="outline"
                       className={`${getStatusColor(conversation?.status)} text-white border-none text-xs`}
                     >
-                      {conversation?.status || "Open"}
+                      {getStatusLabel(conversation?.status)}
                     </Badge>
                     {typing && (
                       <span className="text-xs text-blue-600 flex items-center gap-1">
