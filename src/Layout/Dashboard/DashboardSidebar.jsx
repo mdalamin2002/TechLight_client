@@ -28,14 +28,12 @@ import {
 } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 
-
 export default function DashboardSidebar({
   isMobileMenuOpen,
   setIsMobileMenuOpen,
 }) {
   const { userData } = useAuth();
-  // const role = userData?.role; // "admin", "moderator", or "user"
-  const role = 'admin';
+  const role = userData?.role; // "admin", "moderator", or "user"
 
   const NavItem = ({ to, label, icon: Icon, onClick }) => (
     <NavLink

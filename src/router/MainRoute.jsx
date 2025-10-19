@@ -58,6 +58,9 @@ import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/
 import Wishlists from "@/pages/Wishlist page/Wishlists";
 import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
 import WarrantyPolicy from "@/pages/PolicyPages/Warranty/Warranty";
+import PaymentSuccess from "@/pages/PaymentPages/PaymentSuccess";
+import PaymentFail from "@/pages/PaymentPages/PaymentFail";
+import PaymentCancel from "@/pages/PaymentPages/PaymentCancel";
 
 const MainRoute = createBrowserRouter([
   {
@@ -84,7 +87,9 @@ const MainRoute = createBrowserRouter([
         path: "/allProduct/:id",
         Component: ProductDetails,
         loader: ({ params }) =>
-          fetch(`${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`),
+          fetch(
+            `${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`
+          ),
       },
       {
         path: "wishlist",
@@ -93,6 +98,18 @@ const MainRoute = createBrowserRouter([
       {
         path: "addToCart",
         Component: AddToCart,
+      },
+      {
+        path: "payment/success/:tranId",
+        Component: PaymentSuccess,
+      },
+      {
+        path: "payment/fail/:tranId",
+        Component: PaymentFail,
+      },
+      {
+        path: "payment/cancel/:tranId",
+        Component: PaymentCancel,
       },
       {
         path: "/returns-refunds",
@@ -142,7 +159,7 @@ const MainRoute = createBrowserRouter([
       { path: "users", element: <AllUsers></AllUsers> },
       { path: "sellers", element: <Sellers></Sellers> },
       { path: "products", element: <Products></Products> },
-      {path:"products/addProduct",element:<AddProduct></AddProduct>},
+      { path: "products/addProduct", element: <AddProduct></AddProduct> },
       { path: "orders", element: <Orders></Orders> },
       { path: "finance", element: <Finance></Finance> },
       { path: "communication", element: <Communication></Communication> },
@@ -152,17 +169,29 @@ const MainRoute = createBrowserRouter([
       { path: "advanced", element: <Advanced></Advanced> },
 
       // Moderator Routes
-      { path: "moderator-overview", element: <ModeratorOverview></ModeratorOverview> },
+      {
+        path: "moderator-overview",
+        element: <ModeratorOverview></ModeratorOverview>,
+      },
       { path: "orders-products", element: <OrdersProducts></OrdersProducts> },
       { path: "users-reviews", element: <UsersReviews></UsersReviews> },
-      { path: "support-communication", element: <SupportCommunication></SupportCommunication> },
-      { path: "reports-analytics", element: <ReportsAnalytics></ReportsAnalytics> },
+      {
+        path: "support-communication",
+        element: <SupportCommunication></SupportCommunication>,
+      },
+      {
+        path: "reports-analytics",
+        element: <ReportsAnalytics></ReportsAnalytics>,
+      },
       { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
-      { path: "moderator-settings", element: <ModeratorSettings></ModeratorSettings> },
+      {
+        path: "moderator-settings",
+        element: <ModeratorSettings></ModeratorSettings>,
+      },
       // Moderator Payment routes
-      { path: "payments", element: <Payments></Payments>},
+      { path: "payments", element: <Payments></Payments> },
 
-      { path: "notifications", element: <Notifications></Notifications>},
+      { path: "notifications", element: <Notifications></Notifications> },
 
       // User Routes
       { path: "my-overview", element: <Overview></Overview> },
@@ -171,7 +200,10 @@ const MainRoute = createBrowserRouter([
       { path: "my-wishlist", element: <Wishlist></Wishlist> },
       { path: "my-cart", element: <Cart></Cart> },
       { path: "my-addresses", element: <Addresses></Addresses> },
-      { path: "my-payment-methods", element: <PaymentMethods></PaymentMethods> },
+      {
+        path: "my-payment-methods",
+        element: <PaymentMethods></PaymentMethods>,
+      },
       { path: "my-returns", element: <ReturnsRefunds></ReturnsRefunds> },
       { path: "my-settings", element: <UserSettings></UserSettings> },
       { path: "my-support", element: <Support></Support> },

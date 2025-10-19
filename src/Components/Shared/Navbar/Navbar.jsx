@@ -148,7 +148,7 @@ export default function Navbar() {
       >
         {/* Main Top Bar */}
         <div className="border-b border-border/50">
-          <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+          <div className="container mx-auto  h-16 flex items-center justify-between gap-4">
             {/* LEFT: Menu + Logo */}
             <div className="flex items-center gap-3">
               {/* Categories Button - visible on <xl only */}
@@ -272,10 +272,9 @@ export default function Navbar() {
 
               {/* Profile / Account */}
 
-                <>
-                  {/* Desktop: hover dropdown */}
-                {
-                  user && 
+              <>
+                {/* Desktop: hover dropdown */}
+                {user && (
                   <div className="block relative" ref={profileRef}>
                     <Button
                       variant="ghost"
@@ -285,7 +284,7 @@ export default function Navbar() {
                       onMouseLeave={() => setProfileOpen(false)}
                     >
                       <img
-                        src={ "https://i.ibb.co.com/3mWYSkKt/image.png"}
+                        src={"https://i.ibb.co.com/3mWYSkKt/image.png"}
                         alt="User"
                         className="w-8 h-8 rounded-full object-cover ring-2 ring-border"
                       />
@@ -308,21 +307,27 @@ export default function Navbar() {
                               className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
                             >
                               <UserCircle size={18} />
-                              <span className="text-sm font-medium">Profile</span>
+                              <span className="text-sm font-medium">
+                                Profile
+                              </span>
                             </Link>
                             <Link
                               to="/dashboard"
                               className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
                             >
                               <LayoutDashboard size={18} />
-                              <span className="text-sm font-medium">Dashboard</span>
+                              <span className="text-sm font-medium">
+                                Dashboard
+                              </span>
                             </Link>
                             <Link
                               to="/my-conversations"
                               className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
                             >
                               <MessageCircle size={18} />
-                              <span className="text-sm font-medium">My Conversations</span>
+                              <span className="text-sm font-medium">
+                                My Conversations
+                              </span>
                             </Link>
                             <div className="my-1 h-px bg-border" />
                             <button
@@ -330,16 +335,18 @@ export default function Navbar() {
                               className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"
                             >
                               <LogOut size={18} />
-                              <span className="text-sm font-medium">Logout</span>
+                              <span className="text-sm font-medium">
+                                Logout
+                              </span>
                             </button>
                           </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
-                  }
-                </>
-              
+                )}
+              </>
+
               {!user && (
                 <Button size="sm" asChild>
                   <Link to="/auth/register" className="gap-2">
