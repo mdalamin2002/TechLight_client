@@ -8,30 +8,30 @@ const OrderTable = ({ orders, onStatusChange, paymentList, deliveryList }) => {
     <div className="overflow-x-auto rounded-xl border-0 shadow-sm">
       <table className="min-w-full">
         <thead>
-          <tr className="border-b border-border bg-muted/30">
+          <tr className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-600 text-white">
             <th className="px-4 py-4 text-left">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Order ID</span>
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Order ID</span>
             </th>
             <th className="px-4 py-4 text-left">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Customer</span>
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Customer</span>
             </th>
             <th className="px-4 py-4 text-left hidden md:table-cell">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Products</span>
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Products</span>
             </th>
             <th className="px-4 py-4 text-left">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Amount</span>
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Amount</span>
             </th>
             <th className="px-4 py-4 text-left">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Payment</span>
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Payment</span>
             </th>
             <th className="px-4 py-4 text-left">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Delivery</span>
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Delivery</span>
             </th>
             <th className="px-4 py-4 text-left hidden md:table-cell">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</span>
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Date</span>
             </th>
             <th className="px-4 py-4 text-right">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</span>
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Actions</span>
             </th>
           </tr>
         </thead>

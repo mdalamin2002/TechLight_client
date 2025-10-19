@@ -50,12 +50,14 @@ import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/Ord
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
 import AddProduct from "@/Layout/Dashboard/AdminDashboard/components/Products/AddProduct";
-import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import SupportChatPage from "@/pages/SupportChatPage/SupportChatPage";
 import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
 import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/ProductDetails/ProductDetails";
 import Wishlists from "@/pages/Wishlist page/Wishlists";
 import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
 import WarrantyPolicy from "@/pages/PolicyPages/Warranty/Warranty";
+import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
+import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
 
 const MainRoute = createBrowserRouter([
   {
@@ -82,7 +84,7 @@ const MainRoute = createBrowserRouter([
         path: "/allProduct/:id",
         Component: ProductDetails,
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/api/products/details/${params.id}`),
+          fetch(`${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`),
       },
       {
         path: "wishlist",
@@ -119,6 +121,7 @@ const MainRoute = createBrowserRouter([
       { path: "/order-tracking", Component: OrderTrackingPolicy },
       { path: "/terms-service", Component: TermsOfService },
       { path: "/faq", Component: FAQ },
+      { path: "/support-chat/:conversationId", Component: SupportChatPage },
     ],
   },
   {
@@ -144,8 +147,8 @@ const MainRoute = createBrowserRouter([
       { path: "communication", element: <Communication></Communication> },
       { path: "reports", element: <Reports></Reports> },
       { path: "settings", element: <Settings></Settings> },
-      
       { path: "advanced", element: <Advanced></Advanced> },
+      { path: "admin/support", element: <SupportManagement></SupportManagement> },
 
       // Moderator Routes
       { path: "moderator-overview", element: <ModeratorOverview></ModeratorOverview> },

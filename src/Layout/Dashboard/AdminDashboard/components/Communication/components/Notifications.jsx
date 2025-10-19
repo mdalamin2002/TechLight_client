@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Bell, Send, Users, Store, Star, UserX, Mail } from "lucide-react";
+import { Bell, Send, Mail, } from "lucide-react";
 import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const Notifications = () => {
   const axiosSecure = useAxiosSecure();
-  const [recipient, setRecipient] = useState("All Users");
+  const [recipient, setRecipient] = useState("users");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [notifications, setNotifications] = useState([]);
@@ -80,12 +80,10 @@ const Notifications = () => {
           <label className="block text-sm mb-2 text-gray-700">Recipient Type</label>
           <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-6">
             {[
-              { label: "All Users", icon: Users },
-              { label: "Sellers", icon: Store },
-              { label: "Premium Users", icon: Star },
-              { label: "Inactive Users", icon: UserX },
-            ].map(({ label, icon: Icon }) => (
-              <label key={label} className="flex items-center gap-2 cursor-pointer text-gray-600">
+              { label: "users", },
+              { label: "moderator",},
+            ].map(({ label, }) => (
+              <label key={label} className="cursor-pointer font-semibold">
                 <input
                   type="radio"
                   name="recipient"
@@ -93,8 +91,7 @@ const Notifications = () => {
                   checked={recipient === label}
                   onChange={() => setRecipient(label)}
                 />
-                <Icon className="w-4 h-4" />
-                {label}
+                <span className="pl-1">{label.charAt(0).toUpperCase() + label.slice(1)}</span>
               </label>
             ))}
           </div>

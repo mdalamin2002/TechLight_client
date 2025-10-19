@@ -92,27 +92,27 @@ const TransactionsTable = () => {
       <div className="overflow-x-auto rounded-xl border-0 shadow-sm">
         <table className="min-w-full">
           <thead>
-            <tr className="border-b border-border bg-muted/30">
+            <tr className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-600 text-white">
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Transaction ID</span>
+                <span className="text-left text-xs md:text-sm font-bold tracking-wide uppercase">Transaction ID</span>
               </th>
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">User</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">User</span>
               </th>
               <th className="px-4 py-4 text-left hidden md:table-cell">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Email</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Email</span>
               </th>
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Amount</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Amount</span>
               </th>
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Method</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Method</span>
               </th>
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Status</span>
               </th>
               <th className="px-4 py-4 text-left">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</span>
+                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Date</span>
               </th>
             </tr>
           </thead>

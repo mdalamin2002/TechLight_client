@@ -26,13 +26,16 @@ import {
   ChevronRight,
   Lightbulb,
 } from "lucide-react";
+import useAuth from "@/hooks/useAuth";
 
 
 export default function DashboardSidebar({
   isMobileMenuOpen,
   setIsMobileMenuOpen,
 }) {
-  const role = "user"; // "admin", "moderator", or "user"
+ 
+  const { userData } = useAuth();
+  const role = userData?.role; // "admin", "moderator", or "user"
 
   const NavItem = ({ to, label, icon: Icon, onClick }) => (
     <NavLink
@@ -76,6 +79,7 @@ export default function DashboardSidebar({
         label: "Communication",
         icon: MessageSquare,
       },
+      { to: "/dashboard/admin/support", label: "Support Management", icon: PhoneCall },
       { to: "/dashboard/reports", label: "Reports", icon: BarChart3 },
       { to: "/dashboard/settings", label: "Settings", icon: Settings },
       { to: "/dashboard/advanced", label: "Advanced", icon: Zap },
