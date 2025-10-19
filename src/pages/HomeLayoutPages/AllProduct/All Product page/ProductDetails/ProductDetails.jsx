@@ -7,6 +7,9 @@ import ProductInfo from "./ProductInfo";
 import ProductTabs from "./ProductTabs";
 import Reviews from "./Reviews";
 import useAxiosSecure from "@/utils/useAxiosSecure";
+import useAuth from "@/hooks/useAuth";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const ProductDetails = () => {
   const product = useLoaderData();
@@ -14,8 +17,13 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specifications");
   const axiosPublic = useAxiosSecure();
+  const { user } = useAuth();
 
-  const { data: relatedProducts = [], isLoading, isError } = useQuery({
+  const {
+    data: relatedProducts = [],
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["relatedProducts", product.category],
     queryFn: async () => {
       const res = await axiosPublic.get("/products");
@@ -24,6 +32,174 @@ const ProductDetails = () => {
       );
     },
   });
+
+  const handleBuyNow = async (product) => {
+    try {
+      // Check if user is logged in
+      if (!user?.email) {
+        toast.warning("Please login first!");
+        return;
+      }
+
+      // Validate product data
+      if (!product || !product._id || !product.name || !product.price) {
+        toast.error("Invalid product information. Please try again.");
+        return;
+      }
+
+      // Get user's saved address
+      const { data: addresses } = await axiosPublic.get(
+        `/addresses/?email=${user.email}`
+      );
+
+      const address = Array.isArray(addresses)
+        ? addresses.find((addr) => addr.default) || addresses[0]
+        : addresses;
+
+      if (!address) {
+        toast.error("Please add a shipping address first!");
+        return;
+      }
+
+      // Calculate total amount
+      const totalAmount = product.price * quantity;
+
+      // Show confirmation modal with product details
+      const result = await Swal.fire({
+        title: "Confirm Your Order",
+        html: `
+        <div style="text-align: left; font-size: 14px;">
+          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+            <h4 style="margin-top: 0; color: #16a34a; display: flex; align-items: center;">
+              <i class="fas fa-shopping-bag" style="margin-right: 8px;"></i> Product Details
+            </h4>
+            <div style="display: flex; align-items: center; margin-bottom: 12px;">
+            <img
+                src="${
+                  product.image ||
+                  (product.images?.gallery?.length > 0
+                    ? product.images.gallery[0]
+                    : "https://via.placeholder.com/100")
+                }"
+                alt="${product.name}"
+                style="width: 80px; height: 80px; margin-right: 15px; border-radius: 8px; object-fit: cover;"
+              >
+              <div style="flex-grow: 1;">
+                <strong style="font-size: 16px;">${product.name}</strong>
+                <div style="color: #666; font-size: 13px;">Quantity: ${quantity}</div>
+                <div style="color: #666; font-size: 13px;">Price: ${
+                  product.price
+                }৳</div>
+              </div>
+              <div style="font-weight: bold; font-size: 16px;">
+                ${totalAmount}৳
+              </div>
+            </div>
+          </div>
+
+          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+            <h4 style="margin-top: 0; color: #16a34a; display: flex; align-items: center;">
+              <i class="fas fa-user" style="margin-right: 8px;"></i> Customer Information
+            </h4>
+            <p><strong>Name:</strong> ${
+              user.displayName || user.name || "Unknown User"
+            }</p>
+            <p><strong>Email:</strong> ${user.email}</p>
+            <p><strong>Phone:</strong> ${address.phone || "N/A"}</p>
+          </div>
+
+          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+            <h4 style="margin-top: 0; color: #16a34a; display: flex; align-items: center;">
+              <i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i> Shipping Address
+            </h4>
+            <p>${address.street || "N/A"}, ${address.city || "N/A"}, ${
+          address.postal || "1000"
+        }, Bangladesh</p>
+          </div>
+
+          <div style="background-color: #e8f5e9; padding: 15px; border-radius: 8px; text-align: center;">
+            <h3 style="margin-top: 0; color: #16a34a;">Total Amount: ${totalAmount}৳</h3>
+            <p style="margin-bottom: 0; font-size: 12px; color: #666;">
+              <i class="fas fa-lock"></i> Your payment information is secure and encrypted
+            </p>
+          </div>
+        </div>
+      `,
+        showCancelButton: true,
+        confirmButtonText: "Confirm & Pay",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#16a34a",
+        cancelButtonColor: "#d33",
+        focusConfirm: false,
+        width: 500,
+        backdrop: true,
+        showClass: {
+          popup: "animate__animated animate__fadeInDown",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp",
+        },
+      });
+
+      if (!result.isConfirmed) {
+        toast.info("Order cancelled.");
+        return;
+      }
+
+      // Check product availability before payment
+      const checkResponse = await axiosPublic.post("/payments/check-products", {
+        productIds: [product._id],
+      });
+
+      if (checkResponse.data.missing?.length > 0) {
+        toast.error("This product is no longer available.");
+        return;
+      }
+
+      // Prepare payment information
+      const paymentData = {
+        cart: [
+          {
+            productId: product._id,
+            name: product.name,
+            price: product.price,
+            quantity,
+            image: product.image || "https://via.placeholder.com/100",
+          },
+        ],
+        customer: {
+          name: user.displayName || user.name || "Unknown User",
+          email: user.email,
+          phone: address.phone || "N/A",
+          address: address.street || "N/A",
+          city: address.city || "N/A",
+          postal: address.postal || "1000",
+          country: "Bangladesh",
+        },
+        currency: "BDT",
+      };
+
+      // Send data to backend for payment initialization
+      const { data } = await axiosPublic.post("/payments/order", paymentData);
+
+      // Redirect to payment gateway if URL is returned
+      if (data?.url) {
+        toast.success("Redirecting to payment gateway...");
+        window.location.replace(data.url);
+      } else {
+        toast.error("Payment initialization failed!");
+      }
+    } catch (error) {
+      console.error("Buy Now Error:", error);
+      if (error.response?.data?.message) {
+        toast.error(`Payment Error: ${error.response.data.message}`);
+      } else if (error.response?.status === 404) {
+        toast.error("This product is no longer available.");
+      } else {
+        toast.error("Something went wrong while processing the payment!");
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -53,6 +229,7 @@ const ProductDetails = () => {
         />
 
         <ProductInfo
+          handleBuyNow={() => handleBuyNow(product)}
           product={product}
           quantity={quantity}
           setQuantity={setQuantity}
