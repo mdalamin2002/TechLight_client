@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MessageCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,6 +12,16 @@ const FloatingSupportButton = () => {
   const { user, userData } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [isLoading, setIsLoading] = useState(false);
+  const [showText, setShowText] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowText(true);
+      setTimeout(() => setShowText(false), 3000);
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Hide button for admin and moderator users
   if (userData?.role === "admin" || userData?.role === "moderator") {
@@ -60,16 +70,34 @@ const FloatingSupportButton = () => {
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.3, delay: 0.5 }}
-      className="fixed bottom-6 right-6 z-[9999]"
+      className="fixed bottom-14 right-8 z-[9999] flex items-center gap-3"
     >
-      {/* Pulse effect - behind button */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 animate-ping opacity-20 pointer-events-none" />
-      
-      <Button
-        onClick={handleSupportClick}
-        disabled={isLoading}
-        className="relative h-14 w-14 rounded-full shadow-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition-all duration-300 hover:scale-110 hover:shadow-blue-500/50"
-      >
+      {/* "Need help?" text */}
+      <AnimatePresence>
+        {showText && (
+          <motion.div
+            initial={{ opacity: 0, x: 20, scale: 0.8 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 20, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white px-4 py-2 rounded-full shadow-lg border border-slate-200"
+          >
+            <p className="text-sm font-medium text-slate-700 whitespace-nowrap">
+              Need help?
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="relative">
+        {/* Pulse effect - behind button */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 animate-ping opacity-20 pointer-events-none" />
+        
+        <Button
+          onClick={handleSupportClick}
+          disabled={isLoading}
+          className="relative h-14 w-14 rounded-full shadow-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition-all duration-300 hover:scale-110 hover:shadow-blue-500/50"
+        >
         <AnimatePresence mode="wait">
           {isLoading ? (
             <motion.div
@@ -92,7 +120,8 @@ const FloatingSupportButton = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </Button>
+        </Button>
+      </div>
     </motion.div>
   );
 };

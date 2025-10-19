@@ -10,6 +10,7 @@ import { Input } from "@/Components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
 import { Badge } from "@/Components/ui/badge";
 import useAxiosSecure from "@/utils/useAxiosSecure";
+import GlobalLoading from "@/Components/Shared/Loading/GlobalLoading";
 
 const SupportChatPage = () => {
   const { conversationId } = useParams();
@@ -258,12 +259,7 @@ const SupportChatPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-600">Loading conversation...</p>
-        </div>
-      </div>
+      <GlobalLoading></GlobalLoading>
     );
   }
 
