@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +9,7 @@ import { toast } from "react-toastify";
 import useProductSearch from "@/hooks/useProductSearch";
 import SearchResultsDropdown from "./SearchResultsDropdown";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { parseCategoryCommand, getCategoryDisplayName, getClarificationMessage, getNoProductsInCategoryMessage } from "@/utils/categoryMapping";
 
 export default function SearchBar({ 
   searchQuery, 
@@ -50,11 +52,50 @@ export default function SearchBar({
     }
   }, [searchQuery, enableLiveSearch]);
 
-  // Parse voice commands for navigation (English only)
+  // Parse voice commands for navigation (English and Bengali)
   const parseVoiceCommand = async (transcript) => {
     const lowerTranscript = transcript.toLowerCase().trim();
 
-    // English-only command patterns
+    // FIRST: Check if it's a category-based command (supports English & Bengali)
+    const categoryResult = parseCategoryCommand(transcript);
+    
+    if (categoryResult.category) {
+      // User mentioned a category (e.g., "show me electronics", "দেখাও ল্যাপটপ")
+      const language = categoryResult.language || 'english';
+      const displayName = getCategoryDisplayName(categoryResult.category, language);
+      
+      // Check if category has products
+      try {
+        const response = await axiosPublic.get('/products/search', {
+          params: { category: categoryResult.category, limit: 1 }
+        });
+        
+        if (response.data.total === 0) {
+          // No products in this category
+          const noProductsMsg = getNoProductsInCategoryMessage(categoryResult.category, language);
+          toast.warning(noProductsMsg);
+          setSearchQuery("");
+          setShowDropdown(false);
+          return true;
+        }
+      } catch (error) {
+        console.error('Category validation error:', error);
+      }
+      
+      // Navigate to category search
+      navigate(`/search?category=${encodeURIComponent(categoryResult.category)}`);
+      setSearchQuery("");
+      setShowDropdown(false);
+      
+      // Show success message in appropriate language
+      const successMsg = language === 'bengali' 
+        ? `${displayName} দেখাচ্ছি`
+        : `Showing ${displayName}`;
+      toast.success(successMsg);
+      return true;
+    }
+
+    // SECOND: Check standard command patterns
     const commandPatterns = [
       // "Go to [product name]" or "Open [product name]"
       { 
@@ -62,14 +103,22 @@ export default function SearchBar({
         handler: async (match) => await handleProductOrRouteNavigation(match[1].trim())
       },
 
-      // "Show me [category]"
+      // "Show me [anything]" - now handles both categories and products
       { 
         pattern: /show\s+me\s+(.+)/i, 
-        handler: (match) => {
-          const category = match[1].trim();
-          navigate(`/search?q=${encodeURIComponent(category)}`);
-          toast.success(`Showing ${category}`);
-          return true;
+        handler: async (match) => {
+          const searchTerm = match[1].trim();
+          // Already checked category above, so this is a product search
+          return await handleProductOrRouteNavigation(searchTerm);
+        }
+      },
+      
+      // "Find [anything]" or "Search for [anything]"
+      { 
+        pattern: /^(?:find|search|search\s+for)\s+(.+)/i, 
+        handler: async (match) => {
+          const searchTerm = match[1].trim();
+          return await handleProductOrRouteNavigation(searchTerm);
         }
       },
     ];
@@ -157,7 +206,7 @@ export default function SearchBar({
     return false; // No command matched
   };
 
-  // Voice input using Web Speech API (English only)
+  // Voice input using Web Speech API (English and Bengali)
   const startVoiceInput = () => {
     try {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -166,25 +215,38 @@ export default function SearchBar({
         return;
       }
       const recognition = new SpeechRecognition();
-      recognition.lang = "en-US"; // English only
+      
+      // Support both English and Bengali
+      recognition.lang = "en-US"; // Primary language
       recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
+      recognition.maxAlternatives = 3; // Get multiple alternatives for better Bengali recognition
 
       setIsListening(true);
 
       recognition.onresult = async (event) => {
-        const transcript = event.results?.[0]?.[0]?.transcript || "";
-        if (transcript) {
-          setSearchQuery(transcript);
-          
-          // Try to parse as voice command first
-          const isCommand = await parseVoiceCommand(transcript);
-          
-          // If it was a command and successfully handled, query is already cleared
-          // If not a command, keep the search query for manual search
-          if (!isCommand) {
-            toast.info(`Search saved: "${transcript}". Press Enter to search.`);
+        // Try all alternatives (helps with Bengali recognition)
+        for (let i = 0; i < event.results[0].length; i++) {
+          const transcript = event.results[0][i]?.transcript || "";
+          if (transcript) {
+            setSearchQuery(transcript);
+            
+            // Try to parse as voice command first
+            const isCommand = await parseVoiceCommand(transcript);
+            
+            if (isCommand) {
+              break; // Command processed successfully
+            }
           }
+        }
+        
+        // If no command matched from any alternative
+        const firstTranscript = event.results?.[0]?.[0]?.transcript || "";
+        if (firstTranscript && !await parseVoiceCommand(firstTranscript)) {
+          const isBengali = /[\u0980-\u09FF]/.test(firstTranscript);
+          const msg = isBengali 
+            ? `সার্চ সেভ হয়েছে: "${firstTranscript}". এন্টার চাপুন সার্চ করতে।`
+            : `Search saved: "${firstTranscript}". Press Enter to search.`;
+          toast.info(msg);
         }
         setIsListening(false);
       };
