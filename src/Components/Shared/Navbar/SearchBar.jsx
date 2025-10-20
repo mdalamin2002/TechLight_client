@@ -31,7 +31,7 @@ export default function SearchBar({
           'home': '/',
           'homepage': '/',
           'electronics': '/products/electronics',
-          'product': '/products',
+          'product': '/allproduct',
           'products': '/products',
           'laptops': '/products/category/laptops',
           'laptop': '/products/category/laptops',
@@ -45,7 +45,10 @@ export default function SearchBar({
           'dashboard': '/dashboard',
           'profile': '/dashboard/my-profile',
           'my profile': '/dashboard/my-profile',
+          'my orders': '/dashboard/my-orders',
           'offers': '/offers',
+          'settings': '/dashboard/my-settings',
+          'admin dashboard': '/dashboard/advanced/home',
           'headphones': '/headphones',
           'earbuds': '/earbuds',
           'speakers': '/speakers',
@@ -239,7 +242,7 @@ export default function SearchBar({
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
-            className="absolute -bottom-8 left-0 flex items-center gap-2 text-xs text-primary font-medium"
+            className="absolute bottom-5 right-20 flex items-center gap-2 text-xs text-primary font-medium"
           >
             <span className="animate-pulse">🎙️</span>
             <span>Listening...</span>
