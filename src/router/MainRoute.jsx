@@ -84,6 +84,14 @@ const MainRoute = createBrowserRouter([
         Component: AllProduct,
       },
       {
+        path: "/products/category/:category",
+        Component: AllProduct,
+      },
+      {
+        path: "/products/category/:category/:subcategory",
+        Component: AllProduct,
+      },
+      {
         path: "/allProduct/:id",
         Component: ProductDetails,
         loader: ({ params }) =>
