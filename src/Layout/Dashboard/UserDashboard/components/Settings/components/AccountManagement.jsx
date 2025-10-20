@@ -102,14 +102,14 @@ const AccountManagement = () => {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Deactivate Account */}
-        <div className="p-4 border border-yellow-500/50 bg-yellow-500/10 rounded-lg">
+        <div className="p-4 border border-primary/50 bg-primary/10 rounded-lg">
           <div className="flex items-start gap-3 mb-4">
-            <Pause className="w-5 h-5 text-yellow-600 dark:text-yellow-500 mt-0.5" />
+            <Pause className="w-5 h-5 text-primary dark:text-primary mt-0.5" />
             <div>
-              <h3 className="font-semibold text-yellow-900 dark:text-yellow-100">
+              <h3 className="font-semibold text-primary dark:text-primary">
                 Deactivate Account
               </h3>
-              <p className="text-sm text-yellow-800 dark:text-yellow-200 mt-1">
+              <p className="text-sm text-primary dark:text-primary mt-1">
                 Temporarily disable your account. You can reactivate it anytime by logging back in. 
                 Your data will be preserved.
               </p>
@@ -118,7 +118,7 @@ const AccountManagement = () => {
           
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline" className="border-yellow-600 text-yellow-700 hover:bg-yellow-50 dark:text-yellow-400 dark:hover:bg-yellow-950">
+              <Button variant="outline" className="border-primary text-primary hover:bg-primary-foreground dark:text-primary dark:hover:bg-primary-foreground">
                 <Pause className="w-4 h-4 mr-2" />
                 Deactivate Account
               </Button>

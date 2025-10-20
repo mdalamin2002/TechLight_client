@@ -1,6 +1,6 @@
 import { Card } from "@/Components/ui/card";
 import { Skeleton } from "@/Components/ui/skeleton";
-import { Sparkles, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 
 const WelcomeBanner = ({ user, loading }) => {
@@ -42,7 +42,6 @@ const WelcomeBanner = ({ user, loading }) => {
               <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                 {getGreeting()}, {user?.displayName || user?.name || "User"}!
               </h1>
-              <Sparkles className="w-6 h-6 text-primary animate-pulse" />
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="w-4 h-4" />

@@ -59,6 +59,7 @@ import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishl
 import WarrantyPolicy from "@/pages/PolicyPages/Warranty/Warranty";
 import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import SearchResultsPage from "@/pages/SearchResultsPage/SearchResultsPage";
 
 const MainRoute = createBrowserRouter([
   {
@@ -84,8 +85,23 @@ const MainRoute = createBrowserRouter([
       {
         path: "/allProduct/:id",
         Component: ProductDetails,
-        loader: ({ params }) =>
-          fetch(`${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`),
+        loader: async ({ params }) => {
+          try {
+            const response = await fetch(`${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`);
+            
+            if (!response.ok) {
+              // If response is not OK (404, 500, etc.), return null
+              console.error(`Failed to fetch product: ${response.status}`);
+              return null;
+            }
+            
+            const data = await response.json();
+            return data;
+          } catch (error) {
+            console.error('Error loading product:', error);
+            return null;
+          }
+        },
       },
       {
         path: "wishlist",
@@ -94,6 +110,10 @@ const MainRoute = createBrowserRouter([
       {
         path: "addToCart",
         Component: AddToCart,
+      },
+      {
+        path: "/search",
+        Component: SearchResultsPage,
       },
       {
         path: "/returns-refunds",
