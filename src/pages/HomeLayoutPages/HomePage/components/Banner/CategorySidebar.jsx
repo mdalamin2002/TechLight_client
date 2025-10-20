@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const CategorySidebar = ({ shopMegaMenu }) => {
   const [openIndex, setOpenIndex] = useState(null);
+  const navigate = useNavigate();
 
   const toggleOpen = (index) => {
     setOpenIndex(openIndex === index ? null : index);
+  };
+
+  const handleCategoryClick = (category, item) => {
+    const categoryPath = `/products/category/${category.toLowerCase().replace(/\s+/g, "-")}/${item.toLowerCase().replace(/\s+/g, "-")}`;
+    navigate(categoryPath);
   };
 
   return (
@@ -48,7 +55,10 @@ const CategorySidebar = ({ shopMegaMenu }) => {
                   >
                     {section.items.map((item, i) => (
                       <li key={i}>
-                        <button className="w-full text-left text-sm py-1.5 px-2 rounded-md hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary transition-all duration-200">
+                        <button
+                          onClick={() => handleCategoryClick(section.title, item)}
+                          className="w-full text-left text-sm py-1.5 px-2 rounded-md hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary transition-all duration-200"
+                        >
                           {item}
                         </button>
                       </li>
