@@ -188,8 +188,8 @@ const Addresses = () => {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-6 lg:p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen p-2 md:p-6 lg:p-8">
+      <div className="">
         {/* Header */}
         <div className="mb-8 flex items-center gap-3">
           <div className="p-3 rounded-lg bg-primary/20">
