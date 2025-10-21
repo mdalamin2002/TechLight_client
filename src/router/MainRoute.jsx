@@ -50,12 +50,17 @@ import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/Ord
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
 import AddProduct from "@/Layout/Dashboard/AdminDashboard/components/Products/AddProduct";
-import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import SupportChatPage from "@/pages/SupportChatPage/SupportChatPage";
 import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
 import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/ProductDetails/ProductDetails";
 import Wishlists from "@/pages/Wishlist page/Wishlists";
 import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
 import WarrantyPolicy from "@/pages/PolicyPages/Warranty/Warranty";
+import PaymentSuccess from "@/pages/PaymentPages/PaymentSuccess";
+import PaymentFail from "@/pages/PaymentPages/PaymentFail";
+import PaymentCancel from "@/pages/PaymentPages/PaymentCancel";
+import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
+import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
 
 const MainRoute = createBrowserRouter([
   {
@@ -79,10 +84,20 @@ const MainRoute = createBrowserRouter([
         Component: AllProduct,
       },
       {
+        path: "/products/category/:category",
+        Component: AllProduct,
+      },
+      {
+        path: "/products/category/:category/:subcategory",
+        Component: AllProduct,
+      },
+      {
         path: "/allProduct/:id",
         Component: ProductDetails,
         loader: ({ params }) =>
-          fetch(`${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`),
+          fetch(
+            `${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`
+          ),
       },
       {
         path: "wishlist",
@@ -91,6 +106,18 @@ const MainRoute = createBrowserRouter([
       {
         path: "addToCart",
         Component: AddToCart,
+      },
+      {
+        path: "payment/success/:tranId",
+        Component: PaymentSuccess,
+      },
+      {
+        path: "payment/fail/:tranId",
+        Component: PaymentFail,
+      },
+      {
+        path: "payment/cancel/:tranId",
+        Component: PaymentCancel,
       },
       {
         path: "/returns-refunds",
@@ -119,7 +146,7 @@ const MainRoute = createBrowserRouter([
       { path: "/order-tracking", Component: OrderTrackingPolicy },
       { path: "/terms-service", Component: TermsOfService },
       { path: "/faq", Component: FAQ },
-      
+      { path: "/support-chat/:conversationId", Component: SupportChatPage },
     ],
   },
   {
@@ -145,17 +172,29 @@ const MainRoute = createBrowserRouter([
       { path: "communication", element: <Communication></Communication> },
       { path: "reports", element: <Reports></Reports> },
       { path: "settings", element: <Settings></Settings> },
-
       { path: "advanced", element: <Advanced></Advanced> },
+      { path: "admin/support", element: <SupportManagement></SupportManagement> },
 
       // Moderator Routes
-      { path: "moderator-overview", element: <ModeratorOverview></ModeratorOverview> },
+      {
+        path: "moderator-overview",
+        element: <ModeratorOverview></ModeratorOverview>,
+      },
       { path: "orders-products", element: <OrdersProducts></OrdersProducts> },
       { path: "users-reviews", element: <UsersReviews></UsersReviews> },
-      { path: "support-communication", element: <SupportCommunication></SupportCommunication> },
-      { path: "reports-analytics", element: <ReportsAnalytics></ReportsAnalytics> },
+      {
+        path: "support-communication",
+        element: <SupportCommunication></SupportCommunication>,
+      },
+      {
+        path: "reports-analytics",
+        element: <ReportsAnalytics></ReportsAnalytics>,
+      },
       { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
-      { path: "moderator-settings", element: <ModeratorSettings></ModeratorSettings> },
+      {
+        path: "moderator-settings",
+        element: <ModeratorSettings></ModeratorSettings>,
+      },
       // Moderator Payment routes
       { path: "payments", element: <Payments></Payments> },
 
@@ -168,7 +207,10 @@ const MainRoute = createBrowserRouter([
       { path: "my-wishlist", element: <Wishlist></Wishlist> },
       { path: "my-cart", element: <Cart></Cart> },
       { path: "my-addresses", element: <Addresses></Addresses> },
-      { path: "my-payment-methods", element: <PaymentMethods></PaymentMethods> },
+      {
+        path: "my-payment-methods",
+        element: <PaymentMethods></PaymentMethods>,
+      },
       { path: "my-returns", element: <ReturnsRefunds></ReturnsRefunds> },
       { path: "my-settings", element: <UserSettings></UserSettings> },
       { path: "my-support", element: <Support></Support> },

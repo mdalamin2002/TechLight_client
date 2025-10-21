@@ -1,39 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
-import "chartjs-adapter-date-fns";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  Users,
+  UserPlus,
+  Activity,
+  Clock,
+  TrendingUp,
+  AlertCircle,
+  Calendar,
+  Download,
+} from "lucide-react";
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
   Legend,
-  TimeScale,
-} from "chart.js";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale
-);
+  ResponsiveContainer,
+  ComposedChart,
+  Bar,
+} from "recharts";
 
 export const UsersReport = ({ dateRange, onDataUpdate }) => {
   const [analytics, setAnalytics] = useState([]);
-  const [chartKey, setChartKey] = useState(0); // key to force remount
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Fetch JSON file
   useEffect(() => {
+    setLoading(true);
     fetch("/UserReport_Data.json")
       .then((res) => res.json())
-      .then((data) => setAnalytics(data))
-      .catch((err) => console.error("Error fetching User Analytics:", err));
+      .then((data) => {
+        setAnalytics(data);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error("Error fetching User Analytics:", err);
+        setError("Failed to load user analytics data");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   // Helper: filter data by date range
@@ -76,11 +85,14 @@ export const UsersReport = ({ dateRange, onDataUpdate }) => {
     return minutes + seconds / 60;
   };
 
-  // Calculate % change
+  // Helper: calculate % change
   const calcChange = (current, prev) => {
-    if (!prev || prev === 0) return "+0%";
+    if (!prev || prev === 0) return { value: "+0%", positive: true };
     const change = ((current - prev) / prev) * 100;
-    return `${change >= 0 ? "+" : ""}${change.toFixed(1)}%`;
+    return {
+      value: `${change >= 0 ? "+" : ""}${change.toFixed(1)}%`,
+      positive: change >= 0,
+    };
   };
 
   // Calculate summary
@@ -91,7 +103,6 @@ export const UsersReport = ({ dateRange, onDataUpdate }) => {
     let currentStart = new Date();
     let offsetDays = 0;
 
-    // Determine current period start
     switch (dateRange) {
       case "Last 7 Days":
         offsetDays = 7;
@@ -100,7 +111,7 @@ export const UsersReport = ({ dateRange, onDataUpdate }) => {
         offsetDays = 30;
         break;
       case "Last 6 Months":
-        offsetDays = 182; // approx
+        offsetDays = 182;
         break;
       case "Last 1 Year":
         offsetDays = 365;
@@ -157,186 +168,325 @@ export const UsersReport = ({ dateRange, onDataUpdate }) => {
 
     return [
       {
+        icon: UserPlus,
         title: "New Registrations",
         value: totalRegistrations.toLocaleString(),
         change: calcChange(totalRegistrations, prevRegistrations),
-        color: totalRegistrations >= prevRegistrations ? "green" : "red",
+        color: "from-blue-500 to-blue-600",
       },
       {
+        icon: Users,
         title: "Active Users",
         value: totalActiveUsers.toLocaleString(),
         change: calcChange(totalActiveUsers, prevActiveUsers),
-        color: totalActiveUsers >= prevActiveUsers ? "green" : "red",
+        color: "from-purple-500 to-purple-600",
       },
       {
+        icon: Activity,
         title: "User Retention",
         value: `${avgRetention.toFixed(1)}%`,
         change: calcChange(avgRetention, prevRetention),
-        color: avgRetention >= prevRetention ? "green" : "red",
+        color: "from-emerald-500 to-emerald-600",
       },
       {
-        title: "Average Session",
+        icon: Clock,
+        title: "Avg Session Time",
         value: `${Math.floor(avgSessionCurrent)}m ${Math.round(
           (avgSessionCurrent % 1) * 60
         )}s`,
         change: calcChange(avgSessionCurrent, avgSessionPrevious),
-        color: avgSessionCurrent >= avgSessionPrevious ? "green" : "red",
+        color: "from-amber-500 to-amber-600",
       },
     ];
   };
 
   const analyticsData = summary();
-
-  // ========== bar start
-  useEffect(() => {
-    // Force Line chart to remount whenever dateRange or analytics changes
-    setChartKey((prev) => prev + 1);
-  }, [dateRange, analytics]);
-
   const currentData = filterByDate(analytics, dateRange);
 
-  const chartData = {
-    datasets: [
-      {
-        label: "New Registrations",
-        data: currentData.map((d) => ({ x: d.date, y: d.newRegistrations })),
-        borderColor: "rgba(34,197,94,1)",
-        backgroundColor: "rgba(34,197,94,0.2)",
-        tension: 0.3,
-      },
-      {
-        label: "Active Users",
-        data: currentData.map((d) => ({ x: d.date, y: d.activeUsers })),
-        borderColor: "rgba(59,130,246,1)",
-        backgroundColor: "rgba(59,130,246,0.2)",
-        tension: 0.3,
-      },
-      {
-        label: "User Retention (%)",
-        data: currentData.map((d) => ({ x: d.date, y: d.userRetention })),
-        borderColor: "rgba(234,179,8,1)",
-        backgroundColor: "rgba(234,179,8,0.2)",
-        tension: 0.3,
-        yAxisID: "y1",
-      },
-      {
-        label: "Average Session (min)",
-        data: currentData.map((d) => ({
-          x: d.date,
-          y: parseSession(d.averageSession),
-        })),
-        borderColor: "rgba(239,68,68,1)",
-        backgroundColor: "rgba(239,68,68,0.2)",
-        tension: 0.3,
-        yAxisID: "y1",
-      },
-    ],
-  };
+  // Prepare chart data
+  const chartData = currentData.map((d) => ({
+    date: new Date(d.date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    }),
+    newRegistrations: d.newRegistrations,
+    activeUsers: d.activeUsers,
+    userRetention: d.userRetention,
+    averageSession: parseSession(d.averageSession),
+  }));
 
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: { position: "top" },
-      title: { display: true, text: `User Analytics - ${dateRange}` },
-    },
-    scales: {
-      x: {
-        type: "time",
-        time: {
-          unit: "month",
-          tooltipFormat: "MMM dd, yyyy",
-        },
-        title: { display: true, text: "Date" },
-      },
-      y: {
-        beginAtZero: true,
-        title: { display: true, text: "Registrations / Active Users" },
-      },
-      y1: {
-        type: "linear",
-        display: true,
-        position: "right",
-        grid: { drawOnChartArea: false },
-        title: { display: true, text: "Retention (%) / Avg Session (min)" },
-      },
-    },
-  };
-  // ============= bar end
-
-  // Send data to parent for Excel export (with delay)
+  // Send data to parent
   useEffect(() => {
     if (!onDataUpdate) return;
-
-    const timer = setTimeout(() => {
-      onDataUpdate({
-        topProducts: currentData, // or full analytics data, depending on export need
-        summary: analyticsData || [],
-      });
-    }, 300);
-
-    return () => clearTimeout(timer);
+    onDataUpdate({
+      topProducts: currentData,
+      summary: analyticsData || [],
+    });
   }, [currentData, analyticsData, onDataUpdate]);
 
   return (
-    <div className="space-y-6">
-      <h3 className="text-xl font-semibold text-gray-800">User Analytics</h3>
-
-      {!analyticsData ? (
-        <p className="text-gray-500 italic">
-          No user data available for {dateRange}
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          {analyticsData.map((item) => {
-            const numericChange = parseFloat(item.change.replace("%", ""));
-            const barWidth = Math.min(Math.abs(numericChange), 100);
-
-            return (
-              <div
-                key={item.title}
-                className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition"
-              >
-                <h4 className="text-gray-500 text-sm font-medium">
-                  {item.title}
-                </h4>
-                <p className="text-2xl font-bold text-gray-900 mt-2">
-                  {item.value}
-                </p>
-                <div className="mt-2">
-                  {/* Bar chart */}
-                  <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className={`h-2 rounded-full ${
-                        item.color === "green" ? "bg-green-500" : "bg-red-500"
-                      }`}
-                      style={{ width: `${barWidth}%` }}
-                    ></div>
-                  </div>
-                  <p
-                    className={`text-sm font-medium mt-1 ${
-                      item.color === "green" ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    vs previous: {item.change}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+    <div className="bg-gradient-to-br from-background via-background to-primary/5 min-h-screen p-4 md:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-primary/20 to-blue-100">
+              <Users size={28} className="text-primary" />
+            </div>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+                User Analytics
+              </h1>
+              <p className="text-muted-foreground text-sm md:text-base mt-1">
+                Track user growth, engagement, and retention metrics
+              </p>
+            </div>
+          </div>
+          {dateRange && (
+            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 w-fit">
+              <Calendar size={16} className="text-primary" />
+              <span className="text-sm font-medium text-primary">{dateRange}</span>
+            </div>
+          )}
         </div>
-      )}
 
-      <div className="space-y-6">
-        {currentData.length > 0 ? (
-          <div className="bg-white p-4 rounded-xl shadow-md border border-gray-200">
-            <Line key={chartKey} data={chartData} options={chartOptions} />
+        {/* Error Alert */}
+        {error && (
+          <div className="p-4 rounded-lg bg-red-50 border border-red-200 flex items-start gap-3">
+            <AlertCircle size={18} className="text-red-600 flex-shrink-0 mt-0.5" />
+            <p className="text-red-700 font-medium">{error}</p>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        ) : !analyticsData ? (
+          <div className="bg-card border border-border/50 rounded-2xl p-12 flex flex-col items-center justify-center text-center">
+            <AlertCircle size={32} className="text-muted-foreground mb-3" />
+            <p className="text-muted-foreground font-medium">
+              No user data available for {dateRange}
+            </p>
           </div>
         ) : (
-          <p className="text-gray-500 italic">
-            No user analytics available for {dateRange}
-          </p>
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {analyticsData.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={stat.title}
+                    className={`bg-gradient-to-br ${stat.color} bg-opacity-10 border border-opacity-20 rounded-2xl p-6 hover:shadow-lg transition-all`}
+                    style={{ borderColor: `var(--primary)` }}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div
+                        className={`p-3 rounded-lg bg-gradient-to-br ${stat.color} bg-opacity-20`}
+                      >
+                        <Icon size={24} className="text-foreground" />
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground text-sm font-medium mb-1">
+                      {stat.title}
+                    </p>
+                    <p className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+                      {stat.value}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className={`h-1.5 rounded-full ${
+                            stat.change.positive ? "bg-emerald-500" : "bg-red-500"
+                          }`}
+                          style={{
+                            width: `${Math.min(
+                              Math.abs(
+                                parseFloat(stat.change.value.replace("%", ""))
+                              ),
+                              100
+                            )}%`,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                    <p
+                      className={`text-xs font-semibold mt-2 ${
+                        stat.change.positive
+                          ? "text-emerald-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      vs previous: {stat.change.value}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Registrations & Active Users */}
+              <div className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                  <TrendingUp size={20} className="text-primary" />
+                  User Growth Trend
+                </h2>
+                {chartData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <AreaChart data={chartData}>
+                      <defs>
+                        <linearGradient id="colorReg" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
+                        </linearGradient>
+                        <linearGradient id="colorActive" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                      <XAxis dataKey="date" stroke="var(--muted-foreground)" />
+                      <YAxis stroke="var(--muted-foreground)" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "var(--card)",
+                          border: "1px solid var(--border)",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <Legend />
+                      <Area
+                        type="monotone"
+                        dataKey="newRegistrations"
+                        stroke="var(--primary)"
+                        fillOpacity={1}
+                        fill="url(#colorReg)"
+                        name="New Registrations"
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="activeUsers"
+                        stroke="#7c3aed"
+                        fillOpacity={1}
+                        fill="url(#colorActive)"
+                        name="Active Users"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-80 flex items-center justify-center text-muted-foreground">
+                    No data available
+                  </div>
+                )}
+              </div>
+
+              {/* Retention & Session Time */}
+              <div className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                  <Activity size={20} className="text-primary" />
+                  Engagement Metrics
+                </h2>
+                {chartData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <ComposedChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                      <XAxis dataKey="date" stroke="var(--muted-foreground)" />
+                      <YAxis stroke="var(--muted-foreground)" />
+                      <YAxis
+                        yAxisId="right"
+                        orientation="right"
+                        stroke="var(--muted-foreground)"
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "var(--card)",
+                          border: "1px solid var(--border)",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <Legend />
+                      <Bar
+                        yAxisId="right"
+                        dataKey="userRetention"
+                        fill="#10b981"
+                        name="Retention %"
+                        radius={[8, 8, 0, 0]}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="averageSession"
+                        stroke="#f59e0b"
+                        name="Avg Session (min)"
+                        strokeWidth={2}
+                      />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-80 flex items-center justify-center text-muted-foreground">
+                    No data available
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Detailed Data Table */}
+            <div className="bg-card border border-border/50 rounded-2xl shadow-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-primary/10 to-blue-50 border-b border-border/30 px-6 py-4">
+                <h2 className="text-lg font-bold text-foreground">Detailed Analytics</h2>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gradient-to-r from-primary to-blue-600 text-primary-foreground">
+                      <th className="text-left p-4 font-bold">Date</th>
+                      <th className="text-center p-4 font-bold">New Registrations</th>
+                      <th className="text-center p-4 font-bold">Active Users</th>
+                      <th className="text-center p-4 font-bold">Retention %</th>
+                      <th className="text-center p-4 font-bold">Avg Session</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {chartData.slice(0, 10).map((row, idx) => (
+                      <tr
+                        key={idx}
+                        className={`border-b border-border/30 transition-colors ${
+                          idx % 2 === 0
+                            ? "bg-white hover:bg-primary/5"
+                            : "bg-muted/30 hover:bg-primary/5"
+                        }`}
+                      >
+                        <td className="p-4 text-foreground font-medium">{row.date}</td>
+                        <td className="p-4 text-center">
+                          <span className="inline-flex px-2.5 py-1 rounded-full bg-blue-50 text-primary font-semibold text-sm">
+                            {row.newRegistrations}
+                          </span>
+                        </td>
+                        <td className="p-4 text-center">
+                          <span className="inline-flex px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 font-semibold text-sm">
+                            {row.activeUsers}
+                          </span>
+                        </td>
+                        <td className="p-4 text-center font-bold text-emerald-600">
+                          {row.userRetention.toFixed(1)}%
+                        </td>
+                        <td className="p-4 text-center text-foreground">
+                          {Math.floor(row.averageSession)}m{" "}
+                          {Math.round((row.averageSession % 1) * 60)}s
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>
   );
 };
+
+export default UsersReport;
