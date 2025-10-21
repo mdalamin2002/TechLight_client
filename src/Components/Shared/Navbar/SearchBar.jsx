@@ -7,7 +7,7 @@ import { Input } from "@/Components/ui/input";
 import { toast } from "react-toastify";
 import useProductSearch from "@/hooks/useProductSearch";
 import SearchResultsDropdown from "./SearchResultsDropdown";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 import { parseCategoryCommand, getCategoryDisplayName, getClarificationMessage, getNoProductsInCategoryMessage } from "@/utils/categoryMapping";
 
 export default function SearchBar({ 
@@ -22,7 +22,7 @@ export default function SearchBar({
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
   const searchRef = useRef(null);
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
 
   // Use live search hook (with debouncing)
   const { results, loading, total } = useProductSearch(
@@ -65,7 +65,7 @@ export default function SearchBar({
       
       // Check if category has products
       try {
-        const response = await axiosPublic.get('/products/search', {
+        const response = await axiosSecure.get('/products/search', {
           params: { category: categoryResult.category, limit: 1 }
         });
         
@@ -167,7 +167,7 @@ export default function SearchBar({
       
       // If not a route, search for product
       try {
-        const response = await axiosPublic.get('/products/search', {
+        const response = await axiosSecure.get('/products/search', {
           params: { q: searchTerm, limit: 1 }
         });
         

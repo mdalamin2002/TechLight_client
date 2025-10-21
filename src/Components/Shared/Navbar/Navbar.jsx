@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Heart,
@@ -16,12 +16,12 @@ import {
   Lightbulb,
   Zap,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import TechLightLogo from "../Logo/TechLightLogo";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { toast } from "react-toastify";
-import { auth } from "@/firebase/firebase.init";
+// import { toast } from "react-toastify"; // Unused - managed in UserMenu
+// import { auth } from "@/firebase/firebase.init"; // Unused - managed in UserMenu
 import useAuth from "@/hooks/useAuth";
 import useCart from "@/hooks/useCart";
 import useWishlist from "@/hooks/useWishlist";
@@ -45,12 +45,12 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [profileOpen, setProfileOpen] = useState(false);
+  // const [profileOpen, setProfileOpen] = useState(false); // Unused - managed in UserMenu
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
-  const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
+  // const [openCategoryIndex, setOpenCategoryIndex] = useState(null); // Unused - managed in MobileMenu
   const [shopMegaMenu, setShopMegaMenu] = useState([]);
 
-  const profileRef = useRef(null);
+  // const profileRef = useRef(null); // Unused - managed in UserMenu
   const API_URL = import.meta.env.VITE_prod_baseURL;
 
   // Fetch categories from backend
@@ -102,31 +102,31 @@ export default function Navbar() {
   }, [lastScrollY]);
 
   // Close profile dropdown on outside click
-  useEffect(() => {
-    const handler = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target)) {
-        setProfileOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  // useEffect(() => {
+  //   const handler = (e) => {
+  //     if (profileRef.current && !profileRef.current.contains(e.target)) {
+  //       setProfileOpen(false);
+  //     }
+  //   };
+  //   document.addEventListener("mousedown", handler);
+  //   return () => document.removeEventListener("mousedown", handler);
+  // }, []); // Unused - managed in UserMenu
 
-  const toggleCategory = (index) => {
-    setOpenCategoryIndex(openCategoryIndex === index ? null : index);
-  };
+  // const toggleCategory = (index) => {
+  //   setOpenCategoryIndex(openCategoryIndex === index ? null : index);
+  // }; // Unused - managed in MobileMenu
 
   const handleRedirect = (path) => {
     if (!user) navigate("/auth/login");
     else navigate(path);
   };
 
-  const handleLogout = () => {
-    logOutUser(auth)
-      .then(() => toast.success("Logged out successfully!"))
-      .catch(() => toast.error("Failed to logout"));
-    setProfileOpen(false);
-  };
+  // const handleLogout = () => {
+  //   logOutUser(auth)
+  //     .then(() => toast.success("Logged out successfully!"))
+  //     .catch(() => toast.error("Failed to logout"));
+  //   setProfileOpen(false);
+  // }; // Unused - managed in UserMenu
 
   const isActiveRoute = (route) => location.pathname === route;
   const cartCount = cart.length;
@@ -135,11 +135,12 @@ export default function Navbar() {
   return (
     <>
       {/* TOP NAVBAR */}
-      <motion.header
-        initial={false}
-        animate={{ y: showNavbar ? 0 : -100 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+      <header
         className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border shadow-sm text-foreground"
+        style={{
+          transform: showNavbar ? 'translateY(0)' : 'translateY(-100%)',
+          transition: 'transform 0.3s ease-in-out'
+        }}
       >
         {/* Main Top Bar */}
         <div className="border-b border-border/50">
@@ -258,14 +259,14 @@ export default function Navbar() {
         </AnimatePresence>
 
         {/* XL+ Categories Bar */}
-        <CategoryNav categories={categories} />
-      </motion.header>
+        <CategoryNav categories={shopMegaMenu} />
+      </header>
 
       {/* Mobile Categories Drawer - <XL */}
       <MobileMenu 
         isOpen={isCategoriesOpen} 
         onClose={() => setIsCategoriesOpen(false)}
-        categories={categories}
+        categories={shopMegaMenu}
       />
 
       {/* Bottom Mobile Navbar */}
@@ -312,45 +313,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Search */}
-      <AnimatePresence>
-        {searchOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden border-b border-border overflow-hidden"
-          >
-            <div className="px-4 py-3">
-              <div className="relative">
-                <Search
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
-                  size={18}
-                />
-                <Input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search products..."
-                  className="pl-11 pr-10 rounded-xl"
-                  autoFocus
-                />
-                {searchQuery && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7"
-                  >
-                    <X size={16} />
-                  </Button>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Note: Duplicate mobile search removed - already rendered above in AnimatePresence */}
     </>
   );
 }

@@ -13,12 +13,12 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 import { getCategoryDisplayName, getNoProductsInCategoryMessage } from "@/utils/categoryMapping";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 export default function SearchResultsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
   
   const queryParam = searchParams.get("q") || "";
   const categoryParam = searchParams.get("category") || "";
@@ -50,7 +50,7 @@ export default function SearchResultsPage() {
         setCategoryLoading(true);
         setCategoryError(null);
         
-        const response = await axiosPublic.get('/products/search', {
+        const response = await axiosSecure.get('/products/search', {
           params: {
             category: categoryParam,
             q: queryParam || undefined, // Include text search if present
@@ -71,7 +71,7 @@ export default function SearchResultsPage() {
     };
 
     fetchCategoryResults();
-  }, [categoryParam, queryParam, axiosPublic]);
+  }, [categoryParam, queryParam, axiosSecure]);
 
   // Determine which results to use
   const results = categoryParam ? categoryResults : textResults;

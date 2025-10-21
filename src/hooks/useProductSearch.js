@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import useAxiosPublic from './useAxiosPublic';
+import useAxiosSecure from '@/utils/useAxiosSecure';
 
 /**
  * Custom hook for product search with debouncing
@@ -15,7 +15,7 @@ export default function useProductSearch(query = '', debounceMs = 300) {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
   const abortControllerRef = useRef(null);
 
   // Search function
@@ -39,7 +39,7 @@ export default function useProductSearch(query = '', debounceMs = 300) {
       // Create new abort controller
       abortControllerRef.current = new AbortController();
 
-      const response = await axiosPublic.get('/products/search', {
+      const response = await axiosSecure.get('/products/search', {
         params: {
           q: searchQuery,
           page: pageNum,
@@ -67,7 +67,7 @@ export default function useProductSearch(query = '', debounceMs = 300) {
     } finally {
       setLoading(false);
     }
-  }, [axiosPublic]);
+  }, [axiosSecure]);
 
   // Debounced search effect
   useEffect(() => {

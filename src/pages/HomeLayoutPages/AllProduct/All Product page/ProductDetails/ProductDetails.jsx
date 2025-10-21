@@ -23,7 +23,24 @@ const ProductDetails = () => {
   // Check if we're in a loading state (navigation in progress)
   const isNavigating = navigation.state === "loading";
 
-  // Show loading state while navigating (BEFORE checking product)
+  // Move useQuery BEFORE any conditional returns (React Hooks Rule)
+  const {
+    data: relatedProducts = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["relatedProducts", product?.category],
+    queryFn: async () => {
+      if (!product?.category) return [];
+      const res = await axiosPublic.get("/products");
+      return res.data.filter(
+        (p) => p.category === product.category && p._id !== product._id
+      );
+    },
+    enabled: !!product?.category, // Only run query if product exists
+  });
+
+  // Show loading state while navigating (AFTER hooks)
   if (isNavigating) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -52,20 +69,6 @@ const ProductDetails = () => {
       </div>
     );
   }
-
-  const {
-    data: relatedProducts = [],
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["relatedProducts", product.category],
-    queryFn: async () => {
-      const res = await axiosPublic.get("/products");
-      return res.data.filter(
-        (p) => p.category === product.category && p._id !== product._id
-      );
-    },
-  });
 
   const handleBuyNow = async (product) => {
     try {
