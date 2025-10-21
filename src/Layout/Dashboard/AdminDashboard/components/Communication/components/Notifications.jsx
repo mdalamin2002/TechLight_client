@@ -229,7 +229,7 @@ const Notifications = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="min-h-screen">
       <div className=" space-y-6">
         {/* Page Header */}
         <div className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm">
@@ -268,7 +268,7 @@ const Notifications = () => {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           {/* Left Column - Send Notification Form */}
           <div className="xl:col-span-1">
-            <div className="bg-card border border-border/50 rounded-2xl overflow-hidden shadow-sm sticky top-6">
+            <div className="bg-card border border-border/50 rounded-2xl overflow-hidden shadow-sm sticky top-6" style={{ height: 'calc(100vh - 12rem)' }}>
               {/* Form Header */}
               <div className="bg-gradient-to-r from-primary/10 to-blue-50 border-b border-border/30 px-6 py-4">
                 <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
@@ -281,7 +281,7 @@ const Notifications = () => {
               </div>
 
               {/* Form Body */}
-              <div className="p-6 space-y-5 max-h-[calc(100vh-16rem)] overflow-y-auto custom-scrollbar">
+              <div className="p-6 space-y-5 overflow-y-auto custom-scrollbar" style={{ height: 'calc(100vh - 20rem)' }}>
                 {/* Recipient Type Selection */}
                 <div>
                   <label className="block text-sm font-semibold text-foreground mb-3">
@@ -524,7 +524,7 @@ const Notifications = () => {
 
           {/* Right Column - Notification History Table */}
           <div className="xl:col-span-2">
-            <div className="bg-card border border-border/50 rounded-2xl overflow-hidden shadow-sm">
+            <div className="bg-card border border-border/50 rounded-2xl overflow-hidden shadow-sm" style={{ height: 'calc(100vh - 12rem)' }}>
               {/* Table Header */}
               <div className="bg-gradient-to-r from-primary/10 to-blue-50 border-b border-border/30 px-6 py-4">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -568,7 +568,8 @@ const Notifications = () => {
               </div>
 
               {/* Table Content */}
-              <div className="overflow-x-auto">
+              <div className="overflow-y-auto custom-scrollbar" style={{ height: 'calc(100vh - 24rem)' }}>
+                <div className="overflow-x-auto">
                 {fetchLoading ? (
                   <div className="flex justify-center items-center py-12">
                     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
@@ -657,6 +658,7 @@ const Notifications = () => {
                     </tbody>
                   </table>
                 )}
+                </div>
               </div>
             </div>
           </div>
