@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Bell, X, Trash2, CheckCircle, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import useAxiosSecure from "@/utils/useAxiosSecure";
 import { useSocket } from "@/context/AuthContext/SocketContext/SocketContext";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 
 const NotificationBell = () => {
+  const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
   const socket = useSocket();
   const { user, userData } = useAuth();
@@ -248,7 +250,7 @@ const NotificationBell = () => {
                 <button
                   onClick={() => {
                     setShowNotifications(false);
-                    // Could navigate to a full notifications page
+                    navigate('/dashboard/my-notifications');
                   }}
                   className="w-full text-sm text-primary hover:underline font-medium"
                 >
