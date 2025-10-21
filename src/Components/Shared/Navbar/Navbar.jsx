@@ -148,7 +148,7 @@ export default function Navbar() {
       >
         {/* Main Top Bar */}
         <div className="border-b border-border/50">
-          <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+          <div className="container mx-auto  h-16 flex items-center justify-between gap-4">
             {/* LEFT: Menu + Logo */}
             <div className="flex items-center gap-3">
               {/* Categories Button - visible on <xl only */}
@@ -272,67 +272,65 @@ export default function Navbar() {
 
               {/* Profile / Account */}
 
-                <>
-                  {/* Desktop: hover dropdown */}
-                {
-                  user && 
-                  <div className="block relative" ref={profileRef}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="gap-2 px-2"
-                      onMouseEnter={() => setProfileOpen(true)}
-                      onMouseLeave={() => setProfileOpen(false)}
-                    >
-                      <img
-                        src={ "https://i.ibb.co.com/3mWYSkKt/image.png"}
-                        alt="User"
-                        className="w-8 h-8 rounded-full object-cover ring-2 ring-border"
-                      />
-                      <ChevronDown size={16} className="hidden lg:block" />
-                    </Button>
-                    <AnimatePresence>
-                      {profileOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.15 }}
-                          className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden"
-                          onMouseEnter={() => setProfileOpen(true)}
-                          onMouseLeave={() => setProfileOpen(false)}
-                        >
-                          <div className="p-2">
-                            <Link
-                              to="/profile"
-                              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <UserCircle size={18} />
-                              <span className="text-sm font-medium">Profile</span>
-                            </Link>
-                            <Link
-                              to="/dashboard"
-                              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <LayoutDashboard size={18} />
-                              <span className="text-sm font-medium">Dashboard</span>
-                            </Link>
-                            <div className="my-1 h-px bg-border" />
-                            <button
-                              onClick={handleLogout}
-                              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"
-                            >
-                              <LogOut size={18} />
-                              <span className="text-sm font-medium">Logout</span>
-                            </button>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  }
-                </>
-              
+              <>
+                {/* Desktop: hover dropdown */}
+                <div className="block relative" ref={profileRef}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="gap-2 px-2"
+                    onMouseEnter={() => setProfileOpen(true)}
+                    onMouseLeave={() => setProfileOpen(false)}
+                  >
+                    <img
+                      src={"https://i.ibb.co.com/3mWYSkKt/image.png"}
+                      alt="User"
+                      className="w-8 h-8 rounded-full object-cover ring-2 ring-border"
+                    />
+                    <ChevronDown size={16} className="hidden lg:block" />
+                  </Button>
+                  <AnimatePresence>
+                    {profileOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden"
+                        onMouseEnter={() => setProfileOpen(true)}
+                        onMouseLeave={() => setProfileOpen(false)}
+                      >
+                        <div className="p-2">
+                          <Link
+                            to="/dashboard/my-profile"
+                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+                          >
+                            <UserCircle size={18} />
+                            <span className="text-sm font-medium">Profile</span>
+                          </Link>
+                          <Link
+                            to="/dashboard"
+                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+                          >
+                            <LayoutDashboard size={18} />
+                            <span className="text-sm font-medium">
+                              Dashboard
+                            </span>
+                          </Link>
+                          <div className="my-1 h-px bg-border" />
+                          <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"
+                          >
+                            <LogOut size={18} />
+                            <span className="text-sm font-medium">Logout</span>
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </>
               {!user && (
                 <Button size="sm" asChild>
                   <Link to="/auth/register" className="gap-2">
