@@ -55,7 +55,6 @@ import CouponManagement from "@/Layout/Dashboard/SellerDashboard/components/Coup
 import MyProductsEarnings from "@/Layout/Dashboard/SellerDashboard/components/MyProductsEarnings/MyProductsEarnings";
 import ProductReviews from "@/Layout/Dashboard/SellerDashboard/components/ProductReviews/ProductReviews";
 import EditProduct from "@/Layout/Dashboard/SellerDashboard/components/AddNewProduct/components/EditProduct";
-import SalesAnalytics from "@/Layout/Dashboard/SellerDashboard/components/SalesAnalytics/SalesAnalytics";
 import SupportHelp from "@/Layout/Dashboard/SellerDashboard/components/SupportHelp/SupportHelp";
 
 
@@ -227,7 +226,6 @@ const MainRoute = createBrowserRouter([
       {path: "seller-earnings", element: <MyProductsEarnings/>},
       {path: "seller-products-reviews", element: <ProductReviews/>},
       {path: "seller-product-edit/:id", element: <EditProduct/>},
-      {path: "sales-analytics", element: <SalesAnalytics/>},
       {path: "seller-support-help", element: <SupportHelp/>},
 
       // User Routes
