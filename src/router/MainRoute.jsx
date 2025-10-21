@@ -57,6 +57,9 @@ import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/
 import Wishlists from "@/pages/Wishlist page/Wishlists";
 import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
 import WarrantyPolicy from "@/pages/PolicyPages/Warranty/Warranty";
+import PaymentSuccess from "@/pages/PaymentPages/PaymentSuccess";
+import PaymentFail from "@/pages/PaymentPages/PaymentFail";
+import PaymentCancel from "@/pages/PaymentPages/PaymentCancel";
 import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
 import SearchResultsPage from "@/pages/SearchResultsPage/SearchResultsPage";
@@ -83,25 +86,20 @@ const MainRoute = createBrowserRouter([
         Component: AllProduct,
       },
       {
+        path: "/products/category/:category",
+        Component: AllProduct,
+      },
+      {
+        path: "/products/category/:category/:subcategory",
+        Component: AllProduct,
+      },
+      {
         path: "/allProduct/:id",
         Component: ProductDetails,
-        loader: async ({ params }) => {
-          try {
-            const response = await fetch(`${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`);
-            
-            if (!response.ok) {
-              // If response is not OK (404, 500, etc.), return null
-              console.error(`Failed to fetch product: ${response.status}`);
-              return null;
-            }
-            
-            const data = await response.json();
-            return data;
-          } catch (error) {
-            console.error('Error loading product:', error);
-            return null;
-          }
-        },
+        loader: ({ params }) =>
+          fetch(
+            `${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`
+          ),
       },
       {
         path: "wishlist",
@@ -116,6 +114,18 @@ const MainRoute = createBrowserRouter([
         Component: SearchResultsPage,
       },
       {
+        path: "payment/success/:tranId",
+        Component: PaymentSuccess,
+      },
+      {
+        path: "payment/fail/:tranId",
+        Component: PaymentFail,
+      },
+      {
+        path: "payment/cancel/:tranId",
+        Component: PaymentCancel,
+      },
+      {
         path: "/returns-refunds",
         Component: ReturnsRefundsPolicy,
       },
@@ -127,22 +137,18 @@ const MainRoute = createBrowserRouter([
         path: "/warranty",
         Component: WarrantyPolicy,
       },
-      // {
-      //   path: "faq",
-      //   Component: FAQ,
-      // },
       {
         path: "terms-service",
         Component: TermsOfService,
       },
-      { index: true, Component: Home },
-      { path: "/privacy_policy", Component: PrivacyPolicy },
-      { path: "/mobile", Component: Mobile },
-      { path: "/returns-refunds", Component: ReturnsRefundsPolicy },
-      { path: "/order-tracking", Component: OrderTrackingPolicy },
-      { path: "/terms-service", Component: TermsOfService },
-      { path: "/faq", Component: FAQ },
-      { path: "/support-chat/:conversationId", Component: SupportChatPage },
+      {
+        path: "/faq",
+        Component: FAQ,
+      },
+      {
+        path: "/support-chat/:conversationId",
+        Component: SupportChatPage,
+      },
     ],
   },
   {
@@ -162,7 +168,7 @@ const MainRoute = createBrowserRouter([
       { path: "users", element: <AllUsers></AllUsers> },
       { path: "sellers", element: <Sellers></Sellers> },
       { path: "products", element: <Products></Products> },
-      {path:"products/addProduct",element:<AddProduct></AddProduct>},
+      { path: "products/addProduct", element: <AddProduct></AddProduct> },
       { path: "orders", element: <Orders></Orders> },
       { path: "finance", element: <Finance></Finance> },
       { path: "communication", element: <Communication></Communication> },
@@ -172,17 +178,29 @@ const MainRoute = createBrowserRouter([
       { path: "admin/support", element: <SupportManagement></SupportManagement> },
 
       // Moderator Routes
-      { path: "moderator-overview", element: <ModeratorOverview></ModeratorOverview> },
+      {
+        path: "moderator-overview",
+        element: <ModeratorOverview></ModeratorOverview>,
+      },
       { path: "orders-products", element: <OrdersProducts></OrdersProducts> },
       { path: "users-reviews", element: <UsersReviews></UsersReviews> },
-      { path: "support-communication", element: <SupportCommunication></SupportCommunication> },
-      { path: "reports-analytics", element: <ReportsAnalytics></ReportsAnalytics> },
+      {
+        path: "support-communication",
+        element: <SupportCommunication></SupportCommunication>,
+      },
+      {
+        path: "reports-analytics",
+        element: <ReportsAnalytics></ReportsAnalytics>,
+      },
       { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
-      { path: "moderator-settings", element: <ModeratorSettings></ModeratorSettings> },
+      {
+        path: "moderator-settings",
+        element: <ModeratorSettings></ModeratorSettings>,
+      },
       // Moderator Payment routes
-      { path: "payments", element: <Payments></Payments>},
+      { path: "payments", element: <Payments></Payments> },
 
-      { path: "notifications", element: <Notifications></Notifications>},
+      { path: "notifications", element: <Notifications></Notifications> },
 
       // User Routes
       { path: "my-overview", element: <Overview></Overview> },
@@ -191,7 +209,10 @@ const MainRoute = createBrowserRouter([
       { path: "my-wishlist", element: <Wishlist></Wishlist> },
       { path: "my-cart", element: <Cart></Cart> },
       { path: "my-addresses", element: <Addresses></Addresses> },
-      { path: "my-payment-methods", element: <PaymentMethods></PaymentMethods> },
+      {
+        path: "my-payment-methods",
+        element: <PaymentMethods></PaymentMethods>,
+      },
       { path: "my-returns", element: <ReturnsRefunds></ReturnsRefunds> },
       { path: "my-settings", element: <UserSettings></UserSettings> },
       { path: "my-support", element: <Support></Support> },

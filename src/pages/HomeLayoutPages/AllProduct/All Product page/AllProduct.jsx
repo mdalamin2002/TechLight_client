@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, X } from "lucide-react";
+import { useParams } from "react-router-dom";
 import ProductsHeader from "./ProductsHeader";
 import FiltersPanel from "./FiltersPanel";
 
@@ -11,6 +12,7 @@ import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const AllProduct = () => {
   const axiosPublic = useAxiosSecure();
+  const { category, subcategory } = useParams();
 
   // UI states
   const [viewMode, setViewMode] = useState("grid");
@@ -92,6 +94,26 @@ const AllProduct = () => {
     }
   }, [minPrice, maxPrice, allProducts.length]);
 
+  // Auto-select category/subcategory from URL params
+  useEffect(() => {
+    if (category || subcategory) {
+      // Normalize URL params (convert kebab-case back to normal)
+      const normalizedSubcategory = subcategory?.replace(/-/g, " ").toLowerCase();
+
+      // Find matching category/subcategory in the data
+      if (normalizedSubcategory) {
+        const matchingSubcat = categoryGroups
+          .flatMap(g => g.categories)
+          .find(cat => cat.toLowerCase() === normalizedSubcategory);
+
+        if (matchingSubcat && !selectedCategories.includes(matchingSubcat)) {
+          setSelectedCategories([matchingSubcat]);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category, subcategory, categoryGroups]);
+
   // Handlers
   const toggleCategory = (category) => {
     setSelectedCategories((prev) =>
@@ -120,7 +142,7 @@ const AllProduct = () => {
 
   const handlePriceChange = (type, value) => {
     const num = parseInt(value, 10) || 0;
-    if (type === "min") setPriceRange(([_, max]) => [Math.min(num, max), max]);
+    if (type === "min") setPriceRange(([, max]) => [Math.min(num, max), max]);
     else setPriceRange(([min]) => [min, Math.max(num, min)]);
     setCurrentPage(1);
   };

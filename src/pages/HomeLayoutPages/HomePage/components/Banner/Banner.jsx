@@ -4,19 +4,17 @@ import Slider from "./Slider";
 import { motion } from "framer-motion";
 import axios from "axios";
 
-
-
 const Banner = () => {
   const [slides, setSlides] = useState([]);
+  const [shopMegaMenu, setShopMegaMenu] = useState([]);
   const API_URL = import.meta.env.VITE_prod_baseURL;
 
-  //  Fetch banners from backend
+  // Fetch banners from backend
   useEffect(() => {
     const fetchBanners = async () => {
       try {
         const res = await axios.get(`${API_URL}/banners`);
         setSlides(res.data);
-
       } catch (error) {
         console.error("Failed to load banners:", error);
       }
@@ -24,15 +22,65 @@ const Banner = () => {
     fetchBanners();
   }, [API_URL]);
 
-  const shopMegaMenu = [
-    { title: "Mobiles & Tablets", items: ["Smartphones", "Tablets", "Mobile Accessories"] },
-    { title: "Laptops & Computers", items: ["Laptops", "Desktops", "Keyboards & Mouse"] },
-    { title: "Smart Watches", items: ["Smart Watches", "Fitness Bands"] },
-    { title: "Audio Devices", items: ["Headphones", "Earbuds", "Speakers"] },
-    { title: "Gaming Consoles", items: ["PlayStation & Xbox", "VR Headsets", "Accessories"] },
-    { title: "Smart Home", items: ["Smart Lights", "Security Cameras", "Voice Assistants"] },
-    { title: "Accessories", items: ["Power Banks", "Cables & Chargers", "Storage Devices"] },
-  ];
+  // Fetch categories from backend
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/categories`);
+        const data = response.data;
+
+        // Transform backend data to sidebar format
+        const formattedCategories = data.map((cat) => ({
+          title: cat.category,
+          items: cat.subCategory || [],
+        }));
+
+        setShopMegaMenu(formattedCategories);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+        // Fallback to default categories
+        setShopMegaMenu([
+          {
+            category: "Smart Home",
+            subCategory: [
+              "Security Cameras",
+              "Smart Lights",
+              "Voice Assistants",
+            ],
+          },
+          {
+            category: "Mobile",
+            subCategory: ["Smartphones", "Tablets"],
+          },
+          {
+            category: "Wearables",
+            subCategory: ["Fitness Bands", "Smart Watches"],
+          },
+          {
+            category: "Audio",
+            subCategory: ["Headphones", "Earbuds", "Speakers"],
+          },
+          {
+            category: "Gaming",
+            subCategory: ["PlayStation & Xbox", "VR Headsets"],
+          },
+          {
+            category: "Computing",
+            subCategory: ["Desktops", "Keyboards", "Mouse"],
+          },
+          {
+            category: "Accessories",
+            subCategory: [
+              "Power Banks",
+              "Cables & Chargers",
+              "Storage Devices",
+            ],
+          },
+        ]);
+      }
+    };
+    fetchCategories();
+  }, [API_URL]);
 
   return (
     <motion.section

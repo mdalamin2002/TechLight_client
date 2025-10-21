@@ -1,12 +1,31 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Heart, ShoppingCart, Menu, X, Search, Lightbulb, Zap } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Heart,
+  ShoppingCart,
+  Percent,
+  User,
+  Search,
+  Menu,
+  X,
+  ChevronRight,
+  ChevronDown,
+  LogOut,
+  LayoutDashboard,
+  UserCircle,
+  Lightbulb,
+  Zap,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import TechLightLogo from "../Logo/TechLightLogo";
 import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { toast } from "react-toastify";
+import { auth } from "@/firebase/firebase.init";
 import useAuth from "@/hooks/useAuth";
 import useCart from "@/hooks/useCart";
 import useWishlist from "@/hooks/useWishlist";
+import axios from "axios";
 
 // Subcomponents
 import SearchBar from "./SearchBar";
@@ -16,75 +35,102 @@ import CategoryNav from "./CategoryNav";
 import MobileBottomNav from "./MobileBottomNav";
 
 export default function Navbar() {
-  const { user, loading, logOutUser } = useAuth();
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logOutUser } = useAuth();
   const { cart } = useCart();
   const { wishlist } = useWishlist();
-  const navigate = useNavigate();
 
-  const cartCount = cart.length;
-  const wishlistCount = wishlist.length;
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
+  const [shopMegaMenu, setShopMegaMenu] = useState([]);
 
-  const categories = [
-    {
-      title: "Mobiles & Tablets",
-      items: ["Smartphones", "Tablets", "Mobile Accessories"],
-    },
-    {
-      title: "Laptops & Computers",
-      items: ["Laptops", "Desktops", "Keyboards & Mouse"],
-    },
-    {
-      title: "Smart Watches",
-      items: ["Smart Watches", "Fitness Bands"],
-    },
-    {
-      title: "Audio Devices",
-      items: ["Headphones", "Earbuds", "Speakers"],
-    },
-    {
-      title: "Gaming Consoles",
-      items: ["PlayStation & Xbox", "VR Headsets", "Accessories"],
-    },
-    {
-      title: "Smart Home",
-      items: ["Smart Lights", "Security Cameras", "Voice Assistants"],
-    },
-    {
-      title: "Accessories",
-      items: ["Power Banks", "Cables & Chargers", "Storage Devices"],
-    },
-  ];
+  const profileRef = useRef(null);
+  const API_URL = import.meta.env.VITE_prod_baseURL;
 
-  const handleRedirect = (path) => {
-    if (!user) {
-      navigate("/auth/login");
-    } else {
-      navigate(path);
-    }
-  };
+  // Fetch categories from backend
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/categories`);
+        const data = response.data;
 
-  // Smart scroll hide/show
+        const formatted = data.map((cat) => ({
+          title: cat.category,
+          items: cat.subCategory || [],
+        }));
+        setShopMegaMenu(formatted);
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+
+        // fallback
+        setShopMegaMenu([
+          {
+            title: "Smart Home",
+            items: ["Security Cameras", "Smart Lights", "Voice Assistants"],
+          },
+          { title: "Mobile", items: ["Smartphones", "Tablets"] },
+          { title: "Wearables", items: ["Fitness Bands", "Smart Watches"] },
+          { title: "Audio", items: ["Headphones", "Earbuds", "Speakers"] },
+          { title: "Gaming", items: ["PlayStation & Xbox", "VR Headsets"] },
+          { title: "Computing", items: ["Desktops", "Keyboards", "Mouse"] },
+          {
+            title: "Accessories",
+            items: ["Power Banks", "Cables & Chargers", "Storage Devices"],
+          },
+        ]);
+      }
+    };
+    fetchCategories();
+  }, [API_URL]);
+
+  // Scroll hide/show
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > lastScrollY && window.scrollY > 80) {
+      if (window.scrollY > lastScrollY && window.scrollY > 80)
         setShowNavbar(false);
-      } else {
-        setShowNavbar(true);
-      }
+      else setShowNavbar(true);
       setLastScrollY(window.scrollY);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  // Close profile dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
+  const toggleCategory = (index) => {
+    setOpenCategoryIndex(openCategoryIndex === index ? null : index);
+  };
 
+  const handleRedirect = (path) => {
+    if (!user) navigate("/auth/login");
+    else navigate(path);
+  };
 
+  const handleLogout = () => {
+    logOutUser(auth)
+      .then(() => toast.success("Logged out successfully!"))
+      .catch(() => toast.error("Failed to logout"));
+    setProfileOpen(false);
+  };
+
+  const isActiveRoute = (route) => location.pathname === route;
+  const cartCount = cart.length;
+  const wishlistCount = wishlist.length;
 
   return (
     <>
@@ -97,10 +143,9 @@ export default function Navbar() {
       >
         {/* Main Top Bar */}
         <div className="border-b border-border/50">
-          <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+          <div className="container mx-auto h-16 flex items-center justify-between gap-4">
             {/* LEFT: Menu + Logo */}
             <div className="flex items-center gap-3">
-              {/* Categories Button - visible on <xl only */}
               <Button
                 variant="default"
                 size="sm"
@@ -113,7 +158,6 @@ export default function Navbar() {
                 </span>
               </Button>
 
-              {/* Logo */}
               <Link
                 to="/"
                 className="flex items-center p-2 hover:bg-primary/5 rounded-xl transition-all duration-300"
@@ -139,7 +183,6 @@ export default function Navbar() {
 
             {/* RIGHT: Actions */}
             <div className="flex items-center gap-2">
-              {/* Mobile Search Icon */}
               <Button
                 variant="ghost"
                 size="icon"
@@ -149,54 +192,40 @@ export default function Navbar() {
                 <Search size={20} />
               </Button>
 
-              {/* Wishlist & Cart - Desktop */}
+              {/* Wishlist & Cart */}
               <div className="flex items-center gap-1">
-                {/* Wishlist */}
                 <Button
                   variant="ghost"
                   size="sm"
-                  asChild
-                  className="gap-2"
-                  onClick={(e) => {
-                    e.preventDefault(); // Link er default behavior stop
-                    handleRedirect("/wishlist");
-                  }}
+                  onClick={() => handleRedirect("/wishlist")}
+                  className="flex gap-2"
                 >
-                  <Link to="/wishlist" className="flex items-center">
-                    <div className="relative">
-                      <Heart size={22} className="text-foreground" />
-                      {wishlistCount > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                          {wishlistCount}
-                        </span>
-                      )}
-                    </div>
-                    <span className="hidden lg:inline">Wishlist</span>
-                  </Link>
+                  <div className="relative">
+                    <Heart size={22} />
+                    {wishlistCount > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                        {wishlistCount}
+                      </span>
+                    )}
+                  </div>
+                  <span className="hidden lg:inline">Wishlist</span>
                 </Button>
 
-                {/* Cart */}
                 <Button
                   variant="ghost"
                   size="sm"
-                  asChild
-                  className="gap-2"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleRedirect("/addToCart");
-                  }}
+                  onClick={() => handleRedirect("/addToCart")}
+                  className="flex gap-2"
                 >
-                  <Link to="/addToCart" className="flex items-center">
-                    <div className="relative">
-                      <ShoppingCart size={22} className="text-foreground" />
-                      {cartCount > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                          {cartCount}
-                        </span>
-                      )}
-                    </div>
-                    <span className="hidden lg:inline">Cart</span>
-                  </Link>
+                  <div className="relative">
+                    <ShoppingCart size={22} />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                        {cartCount}
+                      </span>
+                    )}
+                  </div>
+                  <span className="hidden lg:inline">Cart</span>
                 </Button>
               </div>
 
@@ -240,7 +269,88 @@ export default function Navbar() {
       />
 
       {/* Bottom Mobile Navbar */}
-      <MobileBottomNav onWishlistClick={() => handleRedirect("/wishlist")} />
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/90 backdrop-blur-xl border-t border-border shadow-lg z-40">
+        <div className="grid grid-cols-3 gap-1 px-2 py-2">
+          <Button
+            variant="ghost"
+            asChild
+            className="flex-col h-auto py-2 gap-1"
+          >
+            <Link
+              to="/offers"
+              className={`flex flex-col items-center ${
+                isActiveRoute("/offers") ? "text-primary" : ""
+              }`}
+            >
+              <Percent size={20} />
+              <span className="text-xs">Offers</span>
+            </Link>
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => handleRedirect("/wishlist")}
+            className="flex-col h-auto py-2 gap-1"
+          >
+            <Heart size={20} />
+            <span className="text-xs">Wishlist</span>
+          </Button>
+          <Button
+            variant="ghost"
+            asChild
+            className="flex-col h-auto py-2 gap-1"
+          >
+            <Link
+              to="/profile"
+              className={`flex flex-col items-center ${
+                isActiveRoute("/profile") ? "text-primary" : ""
+              }`}
+            >
+              <User size={20} />
+              <span className="text-xs">Profile</span>
+            </Link>
+          </Button>
+        </div>
+      </nav>
+
+      {/* Mobile Search */}
+      <AnimatePresence>
+        {searchOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden border-b border-border overflow-hidden"
+          >
+            <div className="px-4 py-3">
+              <div className="relative">
+                <Search
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                  size={18}
+                />
+                <Input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search products..."
+                  className="pl-11 pr-10 rounded-xl"
+                  autoFocus
+                />
+                {searchQuery && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7"
+                  >
+                    <X size={16} />
+                  </Button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
