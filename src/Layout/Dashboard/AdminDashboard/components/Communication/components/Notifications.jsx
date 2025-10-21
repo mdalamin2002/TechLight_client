@@ -10,20 +10,40 @@ import {
   AlertCircle,
   CheckCircle,
   Zap,
+  UserCheck,
+  Globe,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import useAxiosSecure from "@/utils/useAxiosSecure";
+import { useSocket } from "@/context/AuthContext/SocketContext/SocketContext";
+import useAuth from "@/hooks/useAuth";
 
 const Notifications = () => {
   const axiosSecure = useAxiosSecure();
-  const [recipient, setRecipient] = useState("users");
+  const { userData } = useAuth();
+  const socket = useSocket();
+  
+  const [recipientType, setRecipientType] = useState("role");
+  const [selectedRole, setSelectedRole] = useState("user");
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Fetch all users for specific selection
+  const fetchUsers = async () => {
+    try {
+      const res = await axiosSecure.get("/users");
+      setAllUsers(res.data);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    }
+  };
 
   const fetchNotifications = async () => {
     setFetchLoading(true);
@@ -42,6 +62,7 @@ const Notifications = () => {
 
   useEffect(() => {
     fetchNotifications();
+    fetchUsers();
   }, []);
 
   const handleSend = async () => {
@@ -69,20 +90,47 @@ const Notifications = () => {
       return;
     }
 
+    if (recipientType === "specific" && selectedUsers.length === 0) {
+      console.log(recipientType);
+      Swal.fire({
+        icon: "warning",
+        title: "No Users Selected",
+        text: "Please select at least one user to send notification.",
+        customClass: {
+          popup: "rounded-2xl",
+        },
+      });
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      const res = await axiosSecure.post("/notifications/send", {
-        recipient,
+      const payload = {
+        recipientType,
         subject,
         message,
-      });
+        adminEmail: userData?.email || "admin"
+      };
 
-      toast.success("Notification sent successfully!");
+      if (recipientType === "role") {
+        payload.role = selectedRole;
+      } else if (recipientType === "specific") {
+        payload.specificUsers = selectedUsers.map(u => ({
+          userId: u._id,
+          email: u.email,
+          role: u.role
+        }));
+      }
+
+      const res = await axiosSecure.post("/notifications/send", payload);
+
+      toast.success(`Notification sent to ${res.data.recipientCount} user(s)!`);
       fetchNotifications();
       setSubject("");
       setMessage("");
+      setSelectedUsers([]);
     } catch (err) {
       console.error(err);
       toast.error("Failed to send notification");
@@ -119,18 +167,40 @@ const Notifications = () => {
     });
   };
 
-  const getRecipientIcon = (type) => {
-    return type === "moderator" ? (
-      <ShieldAlert size={16} />
-    ) : (
-      <Users size={16} />
-    );
+  const getRecipientIcon = (type, role) => {
+    if (type === "all") return <Globe size={16} />;
+    if (type === "specific") return <UserCheck size={16} />;
+    if (type === "role") {
+      if (role === "moderator") return <ShieldAlert size={16} />;
+      if (role === "admin") return <ShieldAlert size={16} />;
+      return <Users size={16} />;
+    }
+    return <Users size={16} />;
   };
 
-  const getRecipientColor = (type) => {
-    return type === "moderator"
-      ? "bg-purple-50 border-purple-200 text-purple-700"
-      : "bg-blue-50 border-blue-200 text-blue-700";
+  const getRecipientColor = (type, role) => {
+    if (type === "all") return "bg-green-50 border-green-200 text-green-700";
+    if (type === "specific") return "bg-orange-50 border-orange-200 text-orange-700";
+    if (type === "role") {
+      if (role === "moderator") return "bg-purple-50 border-purple-200 text-purple-700";
+      if (role === "admin") return "bg-red-50 border-red-200 text-red-700";
+      return "bg-blue-50 border-blue-200 text-blue-700";
+    }
+    return "bg-blue-50 border-blue-200 text-blue-700";
+  };
+
+  const getRecipientLabel = (notification) => {
+    if (notification.recipientType === "all") return "All Users";
+    if (notification.recipientType === "specific") {
+      const count = notification.specificUsers?.length || 0;
+      return `${count} User${count !== 1 ? 's' : ''}`;
+    }
+    if (notification.recipientType === "role") {
+      if (notification.role === "moderator") return "Moderators";
+      if (notification.role === "admin") return "Admins";
+      return "Users";
+    }
+    return "Unknown";
   };
 
   return (
@@ -146,7 +216,7 @@ const Notifications = () => {
               Mass Notifications
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Send notifications to users and moderators
+              Send targeted notifications to specific users or groups
             </p>
           </div>
         </div>
@@ -180,31 +250,32 @@ const Notifications = () => {
             Send New Notification
           </h3>
 
-          {/* Recipient Selection */}
+          {/* Recipient Type Selection */}
           <div>
             <label className="block text-sm font-semibold text-foreground mb-3">
-              Send To
+              Recipient Type
             </label>
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { value: "users", label: "Users", icon: Users },
-                { value: "moderator", label: "Moderators", icon: ShieldAlert },
+                { value: "role", label: "By Role", icon: Users },
+                { value: "specific", label: "Specific Users", icon: UserCheck },
+                { value: "all", label: "All Users", icon: Globe },
               ].map(({ value, label, icon: Icon }) => (
                 <label
                   key={value}
-                  className={`flex-1 relative cursor-pointer transition-all`}
+                  className="relative cursor-pointer transition-all"
                 >
                   <input
                     type="radio"
-                    name="recipient"
+                    name="recipientType"
                     value={value}
-                    checked={recipient === value}
-                    onChange={() => setRecipient(value)}
+                    checked={recipientType === value}
+                    onChange={() => setRecipientType(value)}
                     className="absolute opacity-0"
                   />
                   <div
                     className={`p-4 rounded-xl border-2 flex items-center gap-2 font-medium transition-all ${
-                      recipient === value
+                      recipientType === value
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-border/50 bg-background text-muted-foreground hover:border-border"
                     }`}
@@ -216,6 +287,99 @@ const Notifications = () => {
               ))}
             </div>
           </div>
+
+          {/* Role Selection (when recipientType is "role") */}
+          {recipientType === "role" && (
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-3">
+                Select Role
+              </label>
+              <div className="flex flex-col sm:flex-row gap-3">
+                {[
+                  { value: "user", label: "Users", icon: Users },
+                  { value: "moderator", label: "Moderators", icon: ShieldAlert },
+                  { value: "admin", label: "Admins", icon: ShieldAlert },
+                ].map(({ value, label, icon: Icon }) => (
+                  <label
+                    key={value}
+                    className="flex-1 relative cursor-pointer transition-all"
+                  >
+                    <input
+                      type="radio"
+                      name="role"
+                      value={value}
+                      checked={selectedRole === value}
+                      onChange={() => setSelectedRole(value)}
+                      className="absolute opacity-0"
+                    />
+                    <div
+                      className={`p-3 rounded-xl border-2 flex items-center gap-2 font-medium transition-all ${
+                        selectedRole === value
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border/50 bg-background text-muted-foreground hover:border-border"
+                      }`}
+                    >
+                      <Icon size={16} />
+                      {label}
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* User Selection (when recipientType is "specific") */}
+          {recipientType === "specific" && (
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-3">
+                Select Users ({selectedUsers.length} selected)
+              </label>
+              <div className="border border-border rounded-xl p-4 bg-background max-h-64 overflow-y-auto">
+                {allUsers.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    Loading users...
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    {allUsers.map((user) => (
+                      <label
+                        key={user._id}
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-all"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedUsers.some((u) => u._id === user._id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedUsers([...selectedUsers, user]);
+                            } else {
+                              setSelectedUsers(
+                                selectedUsers.filter((u) => u._id !== user._id)
+                              );
+                            }
+                          }}
+                          className="w-4 h-4 text-primary border-border rounded focus:ring-2 focus:ring-primary/50"
+                        />
+                        <div className="flex-1 flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {user.name || "No Name"}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {user.email}
+                            </p>
+                          </div>
+                          <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">
+                            {user.role}
+                          </span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Subject Input */}
           <div>
@@ -307,11 +471,12 @@ const Notifications = () => {
                         </h4>
                         <div
                           className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-xs font-semibold ${getRecipientColor(
-                            n.recipient
+                            n.recipientType,
+                            n.role
                           )}`}
                         >
-                          {getRecipientIcon(n.recipient)}
-                          {n.recipient === "moderator" ? "Moderators" : "Users"}
+                          {getRecipientIcon(n.recipientType, n.role)}
+                          {getRecipientLabel(n)}
                         </div>
                       </div>
                       <p className="text-sm text-muted-foreground mb-2 break-words">
