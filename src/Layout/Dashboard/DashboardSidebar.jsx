@@ -25,16 +25,18 @@ import {
   Bell,
   ChevronRight,
   Lightbulb,
+  PlusCircle,
 } from "lucide-react";
-import useAuth from "@/hooks/useAuth";
+// import useAuth from "@/hooks/useAuth";
 
 export default function DashboardSidebar({
   isMobileMenuOpen,
   setIsMobileMenuOpen,
 }) {
-  const { userData } = useAuth();
-  const role = userData?.role; // "admin", "moderator", or "user"
-  console.log(role);
+  // const { userData } = useAuth();
+  // const role = userData?.role; // "admin", "moderator", or "user" ,
+  const role = "seller"; // "admin", "moderator", or "user" ,
+  // console.log(role);
 
   const NavItem = ({ to, label, icon: Icon, onClick }) => (
     <NavLink
@@ -117,6 +119,59 @@ export default function DashboardSidebar({
         to: "/dashboard/notifications",
         label: "Notifications",
         icon: Bell,
+      },
+    ],
+
+    seller:[
+      {
+        to: "/dashboard/seller-overview", 
+        label: "Overview", 
+        icon: LayoutDashboard
+      },
+      {
+        to: "/dashboard/seller-products-orders", 
+        label: "All Orders", 
+        icon: Box
+      },
+      {
+        to: "/dashboard/seller-products-list", 
+        label: "Products List", 
+        icon: Store
+      },
+      {
+        to: "/dashboard/seller-earnings", 
+        label: "Earnings", 
+        icon: DollarSign
+      },
+      {
+        to: "/dashboard/seller-add-product", 
+        label: "Add New Product", 
+        icon: PlusCircle
+      },
+      {
+        to: "/dashboard/seller-coupons", 
+        label: "Coupons", 
+        icon: Star
+      },
+      {
+        to: "/dashboard/seller-products-reviews", 
+        label: "Product Reviews", 
+        icon: Star
+      },
+      {
+        to: "/dashboard/seller-support-help", 
+        label: "Support Help", 
+        icon: MessageSquare
+      },
+      {
+        to: "/dashboard/sales-analytics", 
+        label: "Sales Analytics", 
+        icon: BarChart3
+      },
+      {
+        to: "/dashboard/seller-settings", 
+        label: "Settings", 
+        icon: Settings
       },
     ],
 

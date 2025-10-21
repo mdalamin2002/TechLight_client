@@ -44,6 +44,21 @@ import PaymentMethods from "@/Layout/Dashboard/UserDashboard/components/PaymentM
 import Overview from "@/Layout/Dashboard/UserDashboard/components/Overview/Overview";
 import Support from "@/Layout/Dashboard/UserDashboard/components/Support/Support";
 
+//seller dashboard
+import SellerOverview from "@/Layout/Dashboard/SellerDashboard/components/SellerDashboardOverview/SellerOverview";
+import MyProductsOrders from "@/Layout/Dashboard/SellerDashboard/components/MyProductsOrders/MyProductsOrders";
+import MyProductsList from "@/Layout/Dashboard/SellerDashboard/components/MyProductsList/MyProductsList";
+import SellerProfile from "@/Layout/Dashboard/SellerDashboard/components/SellerProfileSettings/components/SellerProfile";
+import SellerSettings from "@/Layout/Dashboard/SellerDashboard/components/SellerProfileSettings/SellerSettings";
+import AddNewProduct from "@/Layout/Dashboard/SellerDashboard/components/AddNewProduct/AddNewProduct";
+import CouponManagement from "@/Layout/Dashboard/SellerDashboard/components/CouponManagement/CouponManagement";
+import MyProductsEarnings from "@/Layout/Dashboard/SellerDashboard/components/MyProductsEarnings/MyProductsEarnings";
+import ProductReviews from "@/Layout/Dashboard/SellerDashboard/components/ProductReviews/ProductReviews";
+import EditProduct from "@/Layout/Dashboard/SellerDashboard/components/AddNewProduct/components/EditProduct";
+import SalesAnalytics from "@/Layout/Dashboard/SellerDashboard/components/SalesAnalytics/SalesAnalytics";
+import SupportHelp from "@/Layout/Dashboard/SellerDashboard/components/SupportHelp/SupportHelp";
+
+
 // Policies
 import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/ReturnsRefundsPolicy";
 import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
@@ -61,6 +76,7 @@ import PaymentFail from "@/pages/PaymentPages/PaymentFail";
 import PaymentCancel from "@/pages/PaymentPages/PaymentCancel";
 import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+
 
 const MainRoute = createBrowserRouter([
   {
@@ -199,6 +215,20 @@ const MainRoute = createBrowserRouter([
       { path: "payments", element: <Payments></Payments> },
 
       { path: "notifications", element: <Notifications></Notifications> },
+
+      //seller routes
+      {path: "seller-overview", element: <SellerOverview/>},
+      {path: "seller-products-orders", element: <MyProductsOrders/> },
+      {path: "seller-products-list", element: <MyProductsList/> },
+      {path: "seller-profile", element: <SellerProfile/> },
+      {path: "seller-settings", element: <SellerSettings/> },
+      {path: "seller-add-product", element: <AddNewProduct/>},
+      {path: "seller-coupons", element: <CouponManagement/>},
+      {path: "seller-earnings", element: <MyProductsEarnings/>},
+      {path: "seller-products-reviews", element: <ProductReviews/>},
+      {path: "seller-product-edit/:id", element: <EditProduct/>},
+      {path: "sales-analytics", element: <SalesAnalytics/>},
+      {path: "seller-support-help", element: <SupportHelp/>},
 
       // User Routes
       { path: "my-overview", element: <Overview></Overview> },
