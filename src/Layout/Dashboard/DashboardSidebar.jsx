@@ -164,11 +164,6 @@ export default function DashboardSidebar({
         icon: MessageSquare
       },
       {
-        to: "/dashboard/sales-analytics", 
-        label: "Sales Analytics", 
-        icon: BarChart3
-      },
-      {
         to: "/dashboard/seller-settings", 
         label: "Settings", 
         icon: Settings
