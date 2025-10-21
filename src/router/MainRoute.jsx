@@ -56,9 +56,6 @@ import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/
 import Wishlists from "@/pages/Wishlist page/Wishlists";
 import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
 import WarrantyPolicy from "@/pages/PolicyPages/Warranty/Warranty";
-import PaymentSuccess from "@/pages/AddToCart page/components/PaymentSuccess";
-import PaymentFail from "@/pages/AddToCart page/components/PaymentFail";
-import PaymentCancel from "@/pages/AddToCart page/components/PaymentCancel";
 
 const MainRoute = createBrowserRouter([
   {
@@ -122,18 +119,7 @@ const MainRoute = createBrowserRouter([
       { path: "/order-tracking", Component: OrderTrackingPolicy },
       { path: "/terms-service", Component: TermsOfService },
       { path: "/faq", Component: FAQ },
-      {
-        path: "/payment/success/:tran_id",
-        Component: PaymentSuccess,
-      },
-      {
-        path: "/payment/fail/:tran_id",
-        Component: PaymentFail,
-      },
-      {
-        path: "/payment/cancel/:tran_id",
-        Component: PaymentCancel,
-      },
+      
     ],
   },
   {
