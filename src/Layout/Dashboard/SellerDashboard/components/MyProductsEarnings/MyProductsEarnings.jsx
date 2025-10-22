@@ -128,7 +128,112 @@ const MyProductsEarnings = () => {
         </div>
       </div>
 
-     
+      {/*  Earnings Table */}
+      <div className="bg-white border border-gray-100 rounded-2xl shadow p-4 overflow-x-auto">
+        <table className="w-full text-sm text-left">
+          <thead>
+            <tr className="border-b text-gray-600">
+              <th className="py-3 px-4">Product</th>
+              <th className="py-3 px-4">Sold</th>
+              <th className="py-3 px-4">Earnings</th>
+              <th className="py-3 px-4">Status</th>
+              <th className="py-3 px-4">Date</th>
+              <th className="py-3 px-4 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((p) => (
+              <tr key={p.id} className="border-b hover:bg-gray-50 transition">
+                <td className="py-3 px-4 flex items-center gap-3">
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    className="w-12 h-12 object-cover rounded-md border"
+                  />
+                  <span className="font-medium">{p.name}</span>
+                </td>
+                <td className="py-3 px-4">{p.sold}</td>
+                <td className="py-3 px-4 text-green-600 font-semibold">
+                  ${p.earnings}
+                </td>
+                <td className="py-3 px-4">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      p.status === "Completed"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {p.status}
+                  </span>
+                </td>
+                <td className="py-3 px-4">{p.date}</td>
+                <td className="py-3 px-4 text-center">
+                  <button
+                    onClick={() => setSelectedProduct(p)}
+                    className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition mx-auto"
+                  >
+                    <Eye size={16} /> View
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {filtered.length === 0 && (
+              <tr>
+                <td colSpan="6" className="text-center py-6 text-gray-500">
+                  No products found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 🪟 Product Details Modal */}
+      {selectedProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg relative animate-fadeIn">
+            <button
+              onClick={() => setSelectedProduct(null)}
+              className="absolute top-3 right-3 text-gray-600 hover:text-red-500"
+            >
+              <X size={20} />
+            </button>
+            <div className="flex flex-col items-center space-y-3">
+              <img
+                src={selectedProduct.image}
+                alt={selectedProduct.name}
+                className="w-24 h-24 rounded-xl object-cover border"
+              />
+              <h2 className="text-lg font-semibold">
+                {selectedProduct.name}
+              </h2>
+              <div className="w-full text-sm space-y-2">
+                <p>
+                  <strong>Sold:</strong> {selectedProduct.sold}
+                </p>
+                <p>
+                  <strong>Earnings:</strong> ${selectedProduct.earnings}
+                </p>
+                <p>
+                  <strong>Status:</strong> {selectedProduct.status}
+                </p>
+                <p>
+                  <strong>Date:</strong> {selectedProduct.date}
+                </p>
+                <p>
+                  <strong>Commission (10%):</strong> $
+                  {(selectedProduct.earnings * 0.1).toFixed(2)}
+                </p>
+                <p>
+                  <strong>Net Payout:</strong> $
+                  {(selectedProduct.earnings * 0.9).toFixed(2)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
