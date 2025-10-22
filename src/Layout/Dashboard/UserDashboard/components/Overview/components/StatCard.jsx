@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "@/Components/ui/card";
 
 const StatCard = ({ title, value, icon, className }) => (
   <Card className={`p-4 flex flex-col items-start gap-2 ${className}`}>

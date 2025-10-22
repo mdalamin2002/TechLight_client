@@ -20,6 +20,7 @@ import { Reports } from "@/Layout/Dashboard/AdminDashboard/components/Reports_pa
 import AllUsers from "@/Layout/Dashboard/AdminDashboard/components/AllUsers/AllUsers";
 import Orders from "@/Layout/Dashboard/AdminDashboard/components/Orders/Orders";
 import Finance from "@/Layout/Dashboard/AdminDashboard/components/Finance/Finance";
+import AddToCart from "@/pages/AddToCart page/AddToCart";
 
 // Moderator Dashboard
 import { ModeratorOverview } from "@/Layout/Dashboard/ModeratorDashboard/components/ModeratorOverview/ModeratorOverview";
@@ -35,7 +36,6 @@ import Notifications from "@/Layout/Dashboard/ModeratorDashboard/components/Noti
 // User Dashboard
 import Profile from "@/Layout/Dashboard/UserDashboard/components/Profile/Profile";
 // import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
-import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
 import Cart from "@/Layout/Dashboard/UserDashboard/components/Cart/Cart";
 import Addresses from "@/Layout/Dashboard/UserDashboard/components/Addresses/Addresses";
 import ReturnsRefunds from "@/Layout/Dashboard/UserDashboard/components/ReturnsRefunds/ReturnsRefunds";
@@ -50,13 +50,96 @@ import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/Ord
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
 import AddProduct from "@/Layout/Dashboard/AdminDashboard/components/Products/AddProduct";
+import SupportChatPage from "@/pages/SupportChatPage/SupportChatPage";
+import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
+import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/ProductDetails/ProductDetails";
+import Wishlists from "@/pages/Wishlist page/Wishlists";
+import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
+import WarrantyPolicy from "@/pages/PolicyPages/Warranty/Warranty";
+import PaymentSuccess from "@/pages/PaymentPages/PaymentSuccess";
+import PaymentFail from "@/pages/PaymentPages/PaymentFail";
+import PaymentCancel from "@/pages/PaymentPages/PaymentCancel";
+import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import Offers from "@/Layout/Dashboard/AdminDashboard/components/Offers/Offers";
 
 const MainRoute = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout></MainLayout>,
     children: [
+      {
+        index: true,
+        Component: Home,
+      },
+      {
+        path: "/privacy_policy",
+        Component: PrivacyPolicy,
+      },
+      {
+        path: "/mobile",
+        Component: Mobile,
+      },
+      {
+        path: "/allProduct",
+        Component: AllProduct,
+      },
+      {
+        path: "/products/category/:category",
+        Component: AllProduct,
+      },
+      {
+        path: "/products/category/:category/:subcategory",
+        Component: AllProduct,
+      },
+      {
+        path: "/allProduct/:id",
+        Component: ProductDetails,
+        loader: ({ params }) =>
+          fetch(
+            `${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`
+          ),
+      },
+      {
+        path: "wishlist",
+        Component: Wishlists,
+      },
+      {
+        path: "addToCart",
+        Component: AddToCart,
+      },
+      {
+        path: "payment/success/:tranId",
+        Component: PaymentSuccess,
+      },
+      {
+        path: "payment/fail/:tranId",
+        Component: PaymentFail,
+      },
+      {
+        path: "payment/cancel/:tranId",
+        Component: PaymentCancel,
+      },
+      {
+        path: "/returns-refunds",
+        Component: ReturnsRefundsPolicy,
+      },
+      {
+        path: "/order-tracking",
+        Component: OrderTrackingPolicy,
+      },
+      {
+        path: "/warranty",
+        Component: WarrantyPolicy,
+      },
+      // {
+      //   path: "faq",
+      //   Component: FAQ,
+      // },
+      {
+        path: "terms-service",
+        Component: TermsOfService,
+      },
       { index: true, Component: Home },
       { path: "/privacy_policy", Component: PrivacyPolicy },
       { path: "/mobile", Component: Mobile },
@@ -64,6 +147,7 @@ const MainRoute = createBrowserRouter([
       { path: "/order-tracking", Component: OrderTrackingPolicy },
       { path: "/terms-service", Component: TermsOfService },
       { path: "/faq", Component: FAQ },
+      { path: "/support-chat/:conversationId", Component: SupportChatPage },
     ],
   },
   {
@@ -83,24 +167,46 @@ const MainRoute = createBrowserRouter([
       { path: "users", element: <AllUsers></AllUsers> },
       { path: "sellers", element: <Sellers></Sellers> },
       { path: "products", element: <Products></Products> },
-      {path:"products/addProduct",element:<AddProduct></AddProduct>},
+      { path: "products/addProduct", element: <AddProduct></AddProduct> },
       { path: "orders", element: <Orders></Orders> },
       { path: "finance", element: <Finance></Finance> },
       { path: "communication", element: <Communication></Communication> },
       { path: "reports", element: <Reports></Reports> },
       { path: "settings", element: <Settings></Settings> },
       { path: "advanced", element: <Advanced></Advanced> },
+      {
+        path: "admin/support",
+        element: <SupportManagement></SupportManagement>,
+      },
 
       // Moderator Routes
-      { path: "moderator-overview", element: <ModeratorOverview></ModeratorOverview> },
+      {
+        path: "moderator-overview",
+        element: <ModeratorOverview></ModeratorOverview>,
+      },
       { path: "orders-products", element: <OrdersProducts></OrdersProducts> },
       { path: "users-reviews", element: <UsersReviews></UsersReviews> },
-      { path: "support-communication", element: <SupportCommunication></SupportCommunication> },
-      { path: "reports-analytics", element: <ReportsAnalytics></ReportsAnalytics> },
+      {
+        path: "support-communication",
+        element: <SupportCommunication></SupportCommunication>,
+      },
+      {
+        path: "reports-analytics",
+        element: <ReportsAnalytics></ReportsAnalytics>,
+      },
+      {
+        path: "offers",
+        element: <Offers></Offers>,
+      },
       { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
-      { path: "moderator-settings", element: <ModeratorSettings></ModeratorSettings> },
-      { path: "payments", element: <Payments></Payments>},
-      { path: "notifications", element: <Notifications></Notifications>},
+      {
+        path: "moderator-settings",
+        element: <ModeratorSettings></ModeratorSettings>,
+      },
+      // Moderator Payment routes
+      { path: "payments", element: <Payments></Payments> },
+
+      { path: "notifications", element: <Notifications></Notifications> },
 
       // User Routes
       { path: "my-overview", element: <Overview></Overview> },
@@ -109,7 +215,10 @@ const MainRoute = createBrowserRouter([
       { path: "my-wishlist", element: <Wishlist></Wishlist> },
       { path: "my-cart", element: <Cart></Cart> },
       { path: "my-addresses", element: <Addresses></Addresses> },
-      { path: "my-payment-methods", element: <PaymentMethods></PaymentMethods> },
+      {
+        path: "my-payment-methods",
+        element: <PaymentMethods></PaymentMethods>,
+      },
       { path: "my-returns", element: <ReturnsRefunds></ReturnsRefunds> },
       { path: "my-settings", element: <UserSettings></UserSettings> },
       { path: "my-support", element: <Support></Support> },

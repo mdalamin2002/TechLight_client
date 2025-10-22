@@ -7,6 +7,7 @@ import Tracking from "./components/Tracking";
 import ContactUs from "./components/ContactUs";
 import Banner from "./components/Banner/Banner";
 import Advertisement from "./components/Advertizement/Advertisement";
+import FloatingSupportButton from "@/Components/Shared/FloatingSupportButton/FloatingSupportButton";
 
 const Home = () => {
   return (
@@ -19,6 +20,7 @@ const Home = () => {
       {/* <Tracking></Tracking> */}
       <ContactUs></ContactUs>
       <Reviews></Reviews>
+      <FloatingSupportButton />
     </div>
   );
 };

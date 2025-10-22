@@ -38,5 +38,5 @@ export const validPass = async (password, confirmPassword) => {
 
 //save or update user
 export const SaveUserInDb = async (userData) => {
-   axios.post(`${import.meta.env.VITE_baseURL}/users/auth/register`, userData);
+   axios.post(`${import.meta.env.VITE_prod_baseURL}/users/auth/register`, userData);
 };

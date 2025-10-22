@@ -1,16 +1,18 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, X } from "lucide-react";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useParams } from "react-router-dom";
 import ProductsHeader from "./ProductsHeader";
 import FiltersPanel from "./FiltersPanel";
 
 import { normalizeProduct, toNumber } from "./product";
 import Pagination from "./Pagination";
 import AllProductCardShare from "@/Components/Shared/All Product/AllProductCardShare";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const AllProduct = () => {
-  const axiosPublic = useAxiosPublic();
+  const axiosPublic = useAxiosSecure();
+  const { category, subcategory } = useParams();
 
   // UI states
   const [viewMode, setViewMode] = useState("grid");
@@ -32,7 +34,7 @@ const AllProduct = () => {
   } = useQuery({
     queryKey: ["products", "all"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/api/products");
+      const res = await axiosPublic.get("/products");
       const arr = Array.isArray(res.data)
         ? res.data
         : Array.isArray(res.data?.data)
@@ -92,6 +94,26 @@ const AllProduct = () => {
     }
   }, [minPrice, maxPrice, allProducts.length]);
 
+  // Auto-select category/subcategory from URL params
+  useEffect(() => {
+    if (category || subcategory) {
+      // Normalize URL params (convert kebab-case back to normal)
+      const normalizedSubcategory = subcategory?.replace(/-/g, " ").toLowerCase();
+
+      // Find matching category/subcategory in the data
+      if (normalizedSubcategory) {
+        const matchingSubcat = categoryGroups
+          .flatMap(g => g.categories)
+          .find(cat => cat.toLowerCase() === normalizedSubcategory);
+
+        if (matchingSubcat && !selectedCategories.includes(matchingSubcat)) {
+          setSelectedCategories([matchingSubcat]);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category, subcategory, categoryGroups]);
+
   // Handlers
   const toggleCategory = (category) => {
     setSelectedCategories((prev) =>
@@ -120,7 +142,7 @@ const AllProduct = () => {
 
   const handlePriceChange = (type, value) => {
     const num = parseInt(value, 10) || 0;
-    if (type === "min") setPriceRange(([_, max]) => [Math.min(num, max), max]);
+    if (type === "min") setPriceRange(([, max]) => [Math.min(num, max), max]);
     else setPriceRange(([min]) => [min, Math.max(num, min)]);
     setCurrentPage(1);
   };
@@ -323,8 +345,10 @@ const AllProduct = () => {
                   }
                 >
                   {currentProducts.map((product) => (
+
                     <AllProductCardShare
-                      key={product.id}
+                      key={product._id}
+                      id={product._id}
                       {...product}
                       variant={viewMode}
                       buttonText="Add to Cart"
@@ -332,6 +356,7 @@ const AllProduct = () => {
                         alert(`Added ${product.name} to cart`)
                       }
                     />
+
                   ))}
                 </div>
 

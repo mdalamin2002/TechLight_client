@@ -5,60 +5,115 @@ const OrderTable = ({ orders, onStatusChange, paymentList, deliveryList }) => {
   const [openMenu, setOpenMenu] = useState(null);
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-      <table className="min-w-full border-collapse">
-        <thead className="bg-indigo-600 text-white">
-          <tr>
-            <th className="px-4 py-3 text-sm font-semibold text-left">Order ID</th>
-            <th className="px-4 py-3 text-sm font-semibold text-left">Customer</th>
-            <th className="px-4 py-3 text-sm font-semibold text-left">Products</th>
-            <th className="px-4 py-3 text-sm font-semibold text-left">Amount</th>
-            <th className="px-4 py-3 text-sm font-semibold text-left">Payment</th>
-            <th className="px-4 py-3 text-sm font-semibold text-left">Delivery</th>
-            <th className="px-4 py-3 text-sm font-semibold text-left">Date</th>
-            <th className="px-4 py-3 text-sm font-semibold text-left">Actions</th>
+    <div className="overflow-x-auto rounded-xl border-0 shadow-sm">
+      <table className="min-w-full">
+        <thead>
+          <tr className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-600 text-white">
+            <th className="px-4 py-4 text-left">
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Order ID</span>
+            </th>
+            <th className="px-4 py-4 text-left">
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Customer</span>
+            </th>
+            <th className="px-4 py-4 text-left hidden md:table-cell">
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Products</span>
+            </th>
+            <th className="px-4 py-4 text-left">
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Amount</span>
+            </th>
+            <th className="px-4 py-4 text-left">
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Payment</span>
+            </th>
+            <th className="px-4 py-4 text-left">
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Delivery</span>
+            </th>
+            <th className="px-4 py-4 text-left hidden md:table-cell">
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Date</span>
+            </th>
+            <th className="px-4 py-4 text-right">
+              <span className=" text-left text-xs md:text-sm font-bold tracking-wide">Actions</span>
+            </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-border/30">
           {orders.map((order, i) => (
             <tr
               key={i}
-              className={`${
-                i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
-              } hover:bg-indigo-100/70 transition-colors`}
+              className="hover:bg-muted/20 transition-colors duration-150"
             >
-              <td className="px-4 py-3 text-purple-500 font-medium">{order.id}</td>
-              <td className="px-4 py-3 font-medium">{order.customer}</td>
-              <td className="px-4 py-3">{order.products}</td>
-              <td className="px-4 py-3 font-medium">{order.amount}</td>
-              <td
-                className={`px-4 py-3 font-medium ${
+              <td className="px-4 py-4">
+                <span className="text-sm font-medium text-primary">{order.id}</span>
+              </td>
+              <td className="px-4 py-4">
+                <div className="flex items-center">
+                  <div className="h-8 w-8 flex-shrink-0">
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-xs font-medium text-primary">
+                        {order.customer.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-foreground">{order.customer}</p>
+                  </div>
+                </div>
+              </td>
+              <td className="px-4 py-4 hidden md:table-cell">
+                <div className="text-sm text-muted-foreground max-w-xs truncate" title={order.products}>
+                  {order.products}
+                </div>
+              </td>
+              <td className="px-4 py-4">
+                <span className="text-sm font-semibold text-foreground">{order.amount}</span>
+              </td>
+              <td className="px-4 py-4">
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   order.payment === "Paid"
-                    ? "text-green-600"
+                    ? "bg-green-100 text-green-800"
                     : order.payment === "Pending"
-                    ? "text-yellow-600"
-                    : "text-red-600"
-                }`}
-              >
-                {order.payment}
+                    ? "bg-amber-100 text-amber-800"
+                    : "bg-red-100 text-red-800"
+                }`}>
+                  <span className={`w-1.5 h-1.5 mr-1.5 rounded-full ${
+                    order.payment === "Paid"
+                      ? "bg-green-500"
+                      : order.payment === "Pending"
+                      ? "bg-amber-500"
+                      : "bg-red-500"
+                  }`}></span>
+                  {order.payment}
+                </span>
               </td>
-              <td
-                className={`px-4 py-3 font-medium ${
+              <td className="px-4 py-4">
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   order.delivery === "Delivered"
-                    ? "text-green-600"
+                    ? "bg-green-100 text-green-800"
                     : order.delivery === "Shipped"
-                    ? "text-blue-600"
+                    ? "bg-blue-100 text-blue-800"
                     : order.delivery === "Processing"
-                    ? "text-yellow-600"
+                    ? "bg-amber-100 text-amber-800"
                     : order.delivery === "Cancelled"
-                    ? "text-red-600"
-                    : "text-orange-600"
-                }`}
-              >
-                {order.delivery}
+                    ? "bg-red-100 text-red-800"
+                    : "bg-orange-100 text-orange-800"
+                }`}>
+                  <span className={`w-1.5 h-1.5 mr-1.5 rounded-full ${
+                    order.delivery === "Delivered"
+                      ? "bg-green-500"
+                      : order.delivery === "Shipped"
+                      ? "bg-blue-500"
+                      : order.delivery === "Processing"
+                      ? "bg-amber-500"
+                      : order.delivery === "Cancelled"
+                      ? "bg-red-500"
+                      : "bg-orange-500"
+                  }`}></span>
+                  {order.delivery}
+                </span>
               </td>
-              <td className="px-4 py-3">{order.date}</td>
-              <td className="px-4 py-3 relative">
+              <td className="px-4 py-4 hidden md:table-cell">
+                <span className="text-sm text-muted-foreground">{order.date}</span>
+              </td>
+              <td className="px-4 py-4 text-right">
                 <OrderActions
                   order={order}
                   openMenu={openMenu}
