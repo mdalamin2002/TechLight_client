@@ -84,6 +84,14 @@ const MainRoute = createBrowserRouter([
         Component: AllProduct,
       },
       {
+        path: "/products/category/:category",
+        Component: AllProduct,
+      },
+      {
+        path: "/products/category/:category/:subcategory",
+        Component: AllProduct,
+      },
+      {
         path: "/allProduct/:id",
         Component: ProductDetails,
         loader: ({ params }) =>
@@ -123,10 +131,10 @@ const MainRoute = createBrowserRouter([
         path: "/warranty",
         Component: WarrantyPolicy,
       },
-      // {
-      //   path: "faq",
-      //   Component: FAQ,
-      // },
+      {
+        path: "faq",
+        Component: FAQ,
+      },
       {
         path: "terms-service",
         Component: TermsOfService,

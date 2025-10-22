@@ -37,7 +37,7 @@ const Footer = () => {
     { name: "Home", path: "/" },
     { name: "About Us", path: "/about" },
     { name: "Services", path: "/services" },
-    { name: "Products", path: "/products" },
+    { name: "Products", path: "/allProduct" },
     { name: "Contact", path: "/contact" },
     { name: "Blog", path: "/blog" },
   ];
