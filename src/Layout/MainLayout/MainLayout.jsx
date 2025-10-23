@@ -4,6 +4,7 @@ import Navbar from "../../Components/Shared/Navbar/Navbar";
 import Footer from "../../Components/Shared/Footer/Footer";
 import useAuth from "@/hooks/useAuth";
 import GlobalLoading from "@/Components/Shared/Loading/GlobalLoading";
+import TechLightChatbot from "@/pages/Floating AiChatbot/TechLightChatbot";
 
 
 
@@ -23,6 +24,7 @@ const MainLayout = () => {
         <Outlet />
       </div>
       {!isSupportChatPage && <Footer />}
+      <TechLightChatbot/>
     </div>
   );
 };

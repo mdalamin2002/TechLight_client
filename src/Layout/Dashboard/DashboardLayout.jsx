@@ -4,6 +4,7 @@ import DashboardSidebar from "./DashboardSidebar";
 import DashboardNavbar from "./DashboardNavbar";
 import useAuth from "@/hooks/useAuth";
 import GlobalLoading from "@/Components/Shared/Loading/GlobalLoading";
+import TechLightChatbot from "@/pages/Floating AiChatbot/TechLightChatbot";
 
 const DashboardLayout = () => {
   const { loading } = useAuth();
@@ -32,6 +33,7 @@ const DashboardLayout = () => {
           <Outlet />
         </main>
       </div>
+      <TechLightChatbot/>
     </div>
   );
 };
