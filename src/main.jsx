@@ -9,6 +9,7 @@ const queryClient = new QueryClient();
 import { FirebaseContext } from "./context/AuthContext/FirebaseContext";
 import { SocketProvider } from "./context/AuthContext/SocketContext/SocketContext";
 import { ToastContainer } from "react-toastify";
+import TechLightChatbot from "./pages/Floating AiChatbot/TechLightChatbot";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -16,7 +17,8 @@ createRoot(document.getElementById("root")).render(
       <FirebaseContext>
         <SocketProvider>
           <RouterProvider router={MainRoute} />
-        <ToastContainer />
+          <TechLightChatbot />
+          <ToastContainer />
         </SocketProvider>
       </FirebaseContext>
     </QueryClientProvider>
