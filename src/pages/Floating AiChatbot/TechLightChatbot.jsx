@@ -19,9 +19,9 @@ export default function TechLightChatbot() {
   const [sidebarWidth, setSidebarWidth] = useState(420);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Apply margin to body when sidebar is open (but not in fullscreen)
+  // Apply margin to body when sidebar is open (but not in fullscreen and only on desktop)
   useEffect(() => {
-    if (isOpen && !isFullscreen) {
+    if (isOpen && !isFullscreen && typeof window !== 'undefined' && window.innerWidth >= 768) {
       document.body.style.marginRight = `${sidebarWidth}px`;
       document.body.style.transition = "margin-right 0.3s ease";
     } else {

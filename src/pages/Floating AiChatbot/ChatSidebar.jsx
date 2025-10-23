@@ -54,14 +54,14 @@ export default function ChatSidebar({
       ref={sidebarRef}
       className={`fixed top-0 right-0 h-full bg-card border-l border-border shadow-2xl transition-all duration-300 z-[9998] ${
         isOpen ? "translate-x-0" : "translate-x-full"
-      } ${isFullscreen ? "left-0 w-full" : ""}`}
-      style={!isFullscreen ? { width: `${sidebarWidth}px` } : { width: "100%" }}
+      } ${isFullscreen ? "left-0 w-full" : "w-full md:w-auto"}`}
+      style={!isFullscreen && typeof window !== 'undefined' && window.innerWidth >= 768 ? { width: `${sidebarWidth}px` } : {}}
     >
-      {/* Resize Handle - hidden in fullscreen */}
+      {/* Resize Handle - hidden in fullscreen and on mobile */}
       {!isFullscreen && (
         <div
           onMouseDown={handleMouseDown}
-          className={`absolute left-0 top-0 bottom-0 w-1 bg-border hover:bg-primary cursor-ew-resize group transition-colors ${
+          className={`hidden md:block absolute left-0 top-0 bottom-0 w-1 bg-border hover:bg-primary cursor-ew-resize group transition-colors ${
             isResizing ? "bg-primary" : ""
           }`}
         >
@@ -79,9 +79,9 @@ export default function ChatSidebar({
           onClose={onClose}
         />
 
-        <MessagesArea messages={messages} isTyping={isTyping} />
+        <MessagesArea messages={messages} isTyping={isTyping} isFullscreen={isFullscreen} />
 
-        <ChatInput input={input} setInput={setInput} onSend={onSend} />
+        <ChatInput input={input} setInput={setInput} onSend={onSend} isFullscreen={isFullscreen} />
       </div>
     </div>
   );

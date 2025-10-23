@@ -3,7 +3,7 @@ import { Bot, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-export default function MessagesArea({ messages, isTyping }) {
+export default function MessagesArea({ messages, isTyping, isFullscreen }) {
   const messagesEndRef = useRef(null);
 
   // Auto scroll to bottom
@@ -24,18 +24,22 @@ export default function MessagesArea({ messages, isTyping }) {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-4 bg-background/30">
-      <div className="space-y-4">
+    <div className={`flex-1 overflow-y-auto bg-background/30 ${
+      isFullscreen ? "px-6 py-4 md:px-12 md:py-8" : "px-6 py-4"
+    }`}>
+      <div className={`space-y-4 ${isFullscreen ? "md:max-w-5xl md:mx-auto md:space-y-6" : ""}`}>
         {messages.map((message) => (
           <div
             key={message.id}
             className={`flex gap-2 ${
               message.type === "user" ? "justify-end" : "justify-start"
-            }`}
+            } ${isFullscreen ? "md:gap-3" : ""}`}
           >
             {message.type === "ai" && (
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary via-primary/80 to-primary/60 flex items-center justify-center flex-shrink-0">
-                <Bot className="w-4 h-4 text-primary-foreground" />
+              <div className={`rounded-lg bg-gradient-to-br from-primary via-primary/80 to-primary/60 flex items-center justify-center flex-shrink-0 ${
+                isFullscreen ? "w-7 h-7 md:w-9 md:h-9" : "w-7 h-7"
+              }`}>
+                <Bot className={`text-primary-foreground ${isFullscreen ? "w-4 h-4 md:w-5 md:h-5" : "w-4 h-4"}`} />
               </div>
             )}
             <div
@@ -44,22 +48,22 @@ export default function MessagesArea({ messages, isTyping }) {
               } max-w-[75%]`}
             >
               <div
-                className={`px-3 py-2 rounded-2xl ${
+                className={`rounded-2xl ${
                   message.type === "user"
                     ? "bg-primary text-primary-foreground rounded-br-sm"
                     : "bg-card border border-border/50 text-foreground rounded-bl-sm shadow-sm"
-                }`}
+                } ${isFullscreen ? "px-3 py-2 md:px-5 md:py-3" : "px-3 py-2"}`}
               >
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
                     p: ({ children }) => (
                       <p
-                        className={`text-sm leading-relaxed mb-2 ${
+                        className={`leading-relaxed mb-2 ${
                           message.type === "user"
                             ? "text-primary-foreground"
                             : "text-foreground"
-                        }`}
+                        } ${isFullscreen ? "text-sm md:text-base" : "text-sm"}`}
                       >
                         {children}
                       </p>
@@ -77,11 +81,11 @@ export default function MessagesArea({ messages, isTyping }) {
                     ),
                     code: ({ children }) => (
                       <code
-                        className={`px-1.5 py-0.5 rounded text-xs ${
+                        className={`px-1.5 py-0.5 rounded ${
                           message.type === "user"
                             ? "bg-primary-foreground/20 text-primary-foreground"
                             : "bg-muted text-foreground"
-                        }`}
+                        } ${isFullscreen ? "text-xs md:text-sm" : "text-xs"}`}
                       >
                         {children}
                       </code>
@@ -110,11 +114,11 @@ export default function MessagesArea({ messages, isTyping }) {
                     ),
                     table: ({ children }) => (
                       <table
-                        className={`border text-sm ${
+                        className={`border ${
                           message.type === "user"
                             ? "border-primary-foreground/30 text-primary-foreground"
                             : "border-border text-foreground"
-                        }`}
+                        } ${isFullscreen ? "text-sm md:text-base" : "text-sm"}`}
                       >
                         {children}
                       </table>
@@ -146,35 +150,47 @@ export default function MessagesArea({ messages, isTyping }) {
                   {message.text}
                 </ReactMarkdown>
               </div>
-              <span className="text-xs text-muted-foreground mt-1">
+              <span className={`text-muted-foreground mt-1 ${isFullscreen ? "text-xs md:text-sm" : "text-xs"}`}>
                 {formatTime(message.timestamp)}
               </span>
             </div>
             {message.type === "user" && (
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center flex-shrink-0">
-                <User className="w-4 h-4 text-white" />
+              <div className={`rounded-lg bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center flex-shrink-0 ${
+                isFullscreen ? "w-7 h-7 md:w-9 md:h-9" : "w-7 h-7"
+              }`}>
+                <User className={`text-white ${isFullscreen ? "w-4 h-4 md:w-5 md:h-5" : "w-4 h-4"}`} />
               </div>
             )}
           </div>
         ))}
 
         {isTyping && (
-          <div className="flex gap-2 justify-start">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary via-primary/80 to-primary/60 flex items-center justify-center flex-shrink-0">
-              <Bot className="w-4 h-4 text-primary-foreground" />
+          <div className={`flex justify-start ${isFullscreen ? "gap-2 md:gap-3" : "gap-2"}`}>
+            <div className={`rounded-lg bg-gradient-to-br from-primary via-primary/80 to-primary/60 flex items-center justify-center flex-shrink-0 ${
+              isFullscreen ? "w-7 h-7 md:w-9 md:h-9" : "w-7 h-7"
+            }`}>
+              <Bot className={`text-primary-foreground ${isFullscreen ? "w-4 h-4 md:w-5 md:h-5" : "w-4 h-4"}`} />
             </div>
-            <div className="bg-card border border-border/50 px-3 py-2 rounded-2xl rounded-bl-sm shadow-sm">
+            <div className={`bg-card border border-border/50 rounded-2xl rounded-bl-sm shadow-sm ${
+              isFullscreen ? "px-3 py-2 md:px-5 md:py-3" : "px-3 py-2"
+            }`}>
               <div className="flex gap-1">
                 <div
-                  className="w-2 h-2 rounded-full bg-muted-foreground/40 animate-bounce"
+                  className={`rounded-full bg-muted-foreground/40 animate-bounce ${
+                    isFullscreen ? "w-2 h-2 md:w-2.5 md:h-2.5" : "w-2 h-2"
+                  }`}
                   style={{ animationDelay: "0ms" }}
                 />
                 <div
-                  className="w-2 h-2 rounded-full bg-muted-foreground/40 animate-bounce"
+                  className={`rounded-full bg-muted-foreground/40 animate-bounce ${
+                    isFullscreen ? "w-2 h-2 md:w-2.5 md:h-2.5" : "w-2 h-2"
+                  }`}
                   style={{ animationDelay: "150ms" }}
                 />
                 <div
-                  className="w-2 h-2 rounded-full bg-muted-foreground/40 animate-bounce"
+                  className={`rounded-full bg-muted-foreground/40 animate-bounce ${
+                    isFullscreen ? "w-2 h-2 md:w-2.5 md:h-2.5" : "w-2 h-2"
+                  }`}
                   style={{ animationDelay: "300ms" }}
                 />
               </div>
