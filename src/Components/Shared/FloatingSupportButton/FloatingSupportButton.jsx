@@ -51,7 +51,7 @@ const FloatingSupportButton = () => {
 
       if (response.data.success) {
         const conversationId = response.data.conversation._id;
-        
+
         // Navigate to chat page
         navigate(`/support-chat/${conversationId}`, {
           state: { conversation: response.data.conversation },
@@ -70,7 +70,7 @@ const FloatingSupportButton = () => {
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.3, delay: 0.5 }}
-      className="fixed bottom-14 right-8 z-[9999] flex items-center gap-3"
+      className="fixed bottom-3 right-6 z-[9999] flex items-center gap-3"
     >
       {/* "Need help?" text */}
       <AnimatePresence>
@@ -92,7 +92,7 @@ const FloatingSupportButton = () => {
       <div className="relative">
         {/* Pulse effect - behind button */}
         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 animate-ping opacity-20 pointer-events-none" />
-        
+
         <Button
           onClick={handleSupportClick}
           disabled={isLoading}

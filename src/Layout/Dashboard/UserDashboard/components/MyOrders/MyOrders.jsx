@@ -46,7 +46,7 @@ const MyOrders = () => {
       }
     } catch (error) {
       console.error('Error fetching orders:', error);
-      toast.error('Failed to load orders');
+      // toast.error('Failed to load orders');
       setOrders([]);
     } finally {
       setLoading(false);
