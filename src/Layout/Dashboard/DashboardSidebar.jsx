@@ -25,6 +25,7 @@ import {
   Bell,
   ChevronRight,
   Lightbulb,
+  BadgePercent,
 } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 
@@ -81,6 +82,7 @@ export default function DashboardSidebar({
       },
       { to: "/dashboard/admin/support", label: "Support Management", icon: PhoneCall },
       { to: "/dashboard/reports", label: "Reports", icon: BarChart3 },
+      { to: "/dashboard/offers", label: "Offers", icon: BadgePercent },
       { to: "/dashboard/settings", label: "Settings", icon: Settings },
       { to: "/dashboard/advanced", label: "Advanced", icon: Zap },
     ],

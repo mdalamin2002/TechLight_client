@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Heart,
@@ -16,16 +16,23 @@ import {
   Lightbulb,
   Zap,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import TechLightLogo from "../Logo/TechLightLogo";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { toast } from "react-toastify";
-import { auth } from "@/firebase/firebase.init";
+// import { toast } from "react-toastify"; // Unused - managed in UserMenu
+// import { auth } from "@/firebase/firebase.init"; // Unused - managed in UserMenu
 import useAuth from "@/hooks/useAuth";
 import useCart from "@/hooks/useCart";
 import useWishlist from "@/hooks/useWishlist";
 import axios from "axios";
+
+// Subcomponents
+import SearchBar from "./SearchBar";
+import UserMenu from "./UserMenu";
+import MobileMenu from "./MobileMenu";
+import CategoryNav from "./CategoryNav";
+import MobileBottomNav from "./MobileBottomNav";
 
 export default function Navbar() {
   const location = useLocation();
@@ -38,12 +45,12 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [profileOpen, setProfileOpen] = useState(false);
+  // const [profileOpen, setProfileOpen] = useState(false); // Unused - managed in UserMenu
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
-  const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
+  // const [openCategoryIndex, setOpenCategoryIndex] = useState(null); // Unused - managed in MobileMenu
   const [shopMegaMenu, setShopMegaMenu] = useState([]);
 
-  const profileRef = useRef(null);
+  // const profileRef = useRef(null); // Unused - managed in UserMenu
   const API_URL = import.meta.env.VITE_prod_baseURL;
 
   // Fetch categories from backend
@@ -95,31 +102,31 @@ export default function Navbar() {
   }, [lastScrollY]);
 
   // Close profile dropdown on outside click
-  useEffect(() => {
-    const handler = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target)) {
-        setProfileOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  // useEffect(() => {
+  //   const handler = (e) => {
+  //     if (profileRef.current && !profileRef.current.contains(e.target)) {
+  //       setProfileOpen(false);
+  //     }
+  //   };
+  //   document.addEventListener("mousedown", handler);
+  //   return () => document.removeEventListener("mousedown", handler);
+  // }, []); // Unused - managed in UserMenu
 
-  const toggleCategory = (index) => {
-    setOpenCategoryIndex(openCategoryIndex === index ? null : index);
-  };
+  // const toggleCategory = (index) => {
+  //   setOpenCategoryIndex(openCategoryIndex === index ? null : index);
+  // }; // Unused - managed in MobileMenu
 
   const handleRedirect = (path) => {
     if (!user) navigate("/auth/login");
     else navigate(path);
   };
 
-  const handleLogout = () => {
-    logOutUser(auth)
-      .then(() => toast.success("Logged out successfully!"))
-      .catch(() => toast.error("Failed to logout"));
-    setProfileOpen(false);
-  };
+  // const handleLogout = () => {
+  //   logOutUser(auth)
+  //     .then(() => toast.success("Logged out successfully!"))
+  //     .catch(() => toast.error("Failed to logout"));
+  //   setProfileOpen(false);
+  // }; // Unused - managed in UserMenu
 
   const isActiveRoute = (route) => location.pathname === route;
   const cartCount = cart.length;
@@ -128,11 +135,12 @@ export default function Navbar() {
   return (
     <>
       {/* TOP NAVBAR */}
-      <motion.header
-        initial={false}
-        animate={{ y: showNavbar ? 0 : -100 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+      <header
         className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border shadow-sm text-foreground"
+        style={{
+          transform: showNavbar ? 'translateY(0)' : 'translateY(-100%)',
+          transition: 'transform 0.3s ease-in-out'
+        }}
       >
         {/* Main Top Bar */}
         <div className="border-b border-border/50">
@@ -166,31 +174,12 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* CENTER: Search Bar */}
-            <div className="hidden md:flex flex-1 justify-center max-w-2xl mx-4">
-              <div className="relative w-full group">
-                <Search
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
-                  size={20}
-                />
-                <Input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for products, brands and more..."
-                  className="w-full pl-12 pr-10 h-11 rounded-xl bg-muted/50 border-border/50 focus-visible:ring-primary/20"
-                />
-                {searchQuery && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7"
-                  >
-                    <X size={16} />
-                  </Button>
-                )}
-              </div>
+            {/* CENTER: Search Bar - Desktop/Tablet (md+) */}
+            <div className="hidden md:flex flex-1 justify-center max-w-3xl mx-4">
+              <SearchBar 
+                searchQuery={searchQuery} 
+                setSearchQuery={setSearchQuery}
+              />
             </div>
 
             {/* RIGHT: Actions */}
@@ -241,223 +230,44 @@ export default function Navbar() {
                 </Button>
               </div>
 
-              {/* Profile / Auth */}
-              <div className="relative" ref={profileRef}>
-                {user ? (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="gap-2 px-2"
-                      onMouseEnter={() => setProfileOpen(true)}
-                      onMouseLeave={() => setProfileOpen(false)}
-                    >
-                      <img
-                        src="https://i.ibb.co.com/3mWYSkKt/image.png"
-                        alt="User"
-                        className="w-8 h-8 rounded-full object-cover ring-2 ring-border"
-                      />
-                      <ChevronDown size={16} className="hidden lg:block" />
-                    </Button>
-                    <AnimatePresence>
-                      {profileOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.15 }}
-                          className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden"
-                          onMouseEnter={() => setProfileOpen(true)}
-                          onMouseLeave={() => setProfileOpen(false)}
-                        >
-                          <Link
-                            to="/dashboard/my-profile"
-                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
-                          >
-                            <UserCircle size={18} />{" "}
-                            <span className="text-sm font-medium">Profile</span>
-                          </Link>
-                          <Link
-                            to="/dashboard"
-                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
-                          >
-                            <LayoutDashboard size={18} />{" "}
-                            <span className="text-sm font-medium">
-                              Dashboard
-                            </span>
-                          </Link>
-                          <div className="my-1 h-px bg-border" />
-                          <button
-                            onClick={handleLogout}
-                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"
-                          >
-                            <LogOut size={18} />{" "}
-                            <span className="text-sm font-medium">Logout</span>
-                          </button>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </>
-                ) : (
-                  <Button size="sm" asChild>
-                    <Link to="/auth/register" className="gap-2">
-                      <User size={18} />{" "}
-                      <span className="hidden sm:inline">Sign In</span>
-                    </Link>
-                  </Button>
-                )}
-              </div>
+              {/* Profile / Account */}
+              <UserMenu user={user} logOutUser={logOutUser} />
             </div>
           </div>
         </div>
 
-        {/* XL+ Categories */}
-        <div className="hidden xl:block border-b border-border/30">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center gap-1 py-2 relative">
-              {shopMegaMenu.map((category, idx) => (
-                <div
-                  key={idx}
-                  className="relative group"
-                  onMouseEnter={() => setOpenCategoryIndex(idx)}
-                  onMouseLeave={() => setOpenCategoryIndex(null)}
-                >
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    {category.title} <ChevronDown size={14} />
-                  </Button>
-                  <AnimatePresence>
-                    {openCategoryIndex === idx && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -5 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute top-full left-0 mt-1 w-56 bg-card border border-border rounded-xl shadow-lg z-50"
-                      >
-                        <div className="px-3 py-2 text-xs text-muted-foreground uppercase">
-                          {category.title}
-                        </div>
-                        <div className="border-b border-border/30" />
-                        {category.items.map((item, i) => {
-                          const path = `/products/category/${category.title
-                            .toLowerCase()
-                            .replace(/\s+/g, "-")}/${item
-                            .toLowerCase()
-                            .replace(/\s+/g, "-")}`;
-                          return (
-                            <Link
-                              key={i}
-                              to={path}
-                              className={`block px-3 py-2 rounded-lg text-sm hover:bg-muted ${
-                                isActiveRoute(path)
-                                  ? "bg-primary/10 font-semibold"
-                                  : ""
-                              }`}
-                            >
-                              {item}
-                            </Link>
-                          );
-                        })}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.header>
-
-      {/* Mobile Categories Sidebar */}
-      <AnimatePresence>
-        {isCategoriesOpen && (
-          <>
+        {/* Mobile Search (Dropdown style) */}
+        <AnimatePresence>
+          {searchOpen && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/50 z-40"
-              onClick={() => setIsCategoriesOpen(false)}
-            />
-            <motion.aside
-              initial={{ x: -300 }}
-              animate={{ x: 0 }}
-              exit={{ x: -300 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed left-0 top-16 w-80 max-w-[85vw] h-[calc(100vh-4rem)] bg-card border-r border-border shadow-2xl z-50 overflow-hidden"
+              className="md:hidden border-b border-border overflow-hidden"
             >
-              <div className="h-full overflow-y-auto p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-bold text-foreground">
-                    All Categories
-                  </h2>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsCategoriesOpen(false)}
-                  >
-                    <X size={18} />
-                  </Button>
-                </div>
-                <div className="h-px bg-border mb-4" />
-                <nav className="space-y-1">
-                  {shopMegaMenu.map((category, idx) => {
-                    const isOpen = openCategoryIndex === idx;
-                    return (
-                      <div
-                        key={idx}
-                        className="border-b border-border/30 last:border-0"
-                      >
-                        <button
-                          onClick={() => toggleCategory(idx)}
-                          className="flex items-center justify-between w-full text-left py-3 px-3 rounded-lg hover:bg-muted transition-all duration-200"
-                        >
-                          {category.title}{" "}
-                          <ChevronRight
-                            className={`w-4 h-4 text-primary transform transition-transform duration-300 ${
-                              isOpen ? "rotate-90" : ""
-                            }`}
-                          />
-                        </button>
-                        <AnimatePresence initial={false}>
-                          {isOpen && (
-                            <motion.ul
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: "auto" }}
-                              exit={{ opacity: 0, height: 0 }}
-                              transition={{ duration: 0.25 }}
-                              className="pl-4 pb-2 space-y-1 overflow-hidden"
-                            >
-                              {category.items.map((item, i) => {
-                                const path = `/products/category/${category.title
-                                  .toLowerCase()
-                                  .replace(/\s+/g, "-")}/${item
-                                  .toLowerCase()
-                                  .replace(/\s+/g, "-")}`;
-                                return (
-                                  <Link
-                                    key={i}
-                                    to={path}
-                                    className="block w-full text-left text-sm py-2 px-3 rounded-lg hover:bg-muted"
-                                    onClick={() => setIsCategoriesOpen(false)}
-                                  >
-                                    {item}
-                                  </Link>
-                                );
-                              })}
-                            </motion.ul>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    );
-                  })}
-                </nav>
+              <div className="px-4 py-3">
+                <SearchBar 
+                  searchQuery={searchQuery} 
+                  setSearchQuery={setSearchQuery}
+                  isMobile={true}
+                  autoFocus={true}
+                />
               </div>
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* XL+ Categories Bar */}
+        <CategoryNav categories={shopMegaMenu} />
+      </header>
+
+      {/* Mobile Categories Drawer - <XL */}
+      <MobileMenu 
+        isOpen={isCategoriesOpen} 
+        onClose={() => setIsCategoriesOpen(false)}
+        categories={shopMegaMenu}
+      />
 
       {/* Bottom Mobile Navbar */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/90 backdrop-blur-xl border-t border-border shadow-lg z-40">
@@ -503,45 +313,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Search */}
-      <AnimatePresence>
-        {searchOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden border-b border-border overflow-hidden"
-          >
-            <div className="px-4 py-3">
-              <div className="relative">
-                <Search
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
-                  size={18}
-                />
-                <Input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search products..."
-                  className="pl-11 pr-10 rounded-xl"
-                  autoFocus
-                />
-                {searchQuery && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7"
-                  >
-                    <X size={16} />
-                  </Button>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Note: Duplicate mobile search removed - already rendered above in AnimatePresence */}
     </>
   );
 }

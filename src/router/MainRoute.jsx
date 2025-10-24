@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import NotFound from "@/pages/NotFound/NotFound";
 import Home from "../pages/HomeLayoutPages/HomePage/Home";
 import MainLayout from "../Layout/MainLayout/MainLayout";
 import PrivacyPolicy from "../pages/HomeLayoutPages/PrivacyPolicyPage/PrivacyPolicy";
@@ -61,6 +62,8 @@ import PaymentFail from "@/pages/PaymentPages/PaymentFail";
 import PaymentCancel from "@/pages/PaymentPages/PaymentCancel";
 import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import SearchResultsPage from "@/pages/SearchResultsPage/SearchResultsPage";
+import Offers from "@/Layout/Dashboard/AdminDashboard/components/Offers/Offers";
 
 const MainRoute = createBrowserRouter([
   {
@@ -108,6 +111,10 @@ const MainRoute = createBrowserRouter([
         Component: AddToCart,
       },
       {
+        path: "/search",
+        Component: SearchResultsPage,
+      },
+      {
         path: "payment/success/:tranId",
         Component: PaymentSuccess,
       },
@@ -139,14 +146,14 @@ const MainRoute = createBrowserRouter([
         path: "terms-service",
         Component: TermsOfService,
       },
-      { index: true, Component: Home },
-      { path: "/privacy_policy", Component: PrivacyPolicy },
-      { path: "/mobile", Component: Mobile },
-      { path: "/returns-refunds", Component: ReturnsRefundsPolicy },
-      { path: "/order-tracking", Component: OrderTrackingPolicy },
-      { path: "/terms-service", Component: TermsOfService },
-      { path: "/faq", Component: FAQ },
-      { path: "/support-chat/:conversationId", Component: SupportChatPage },
+      {
+        path: "/faq",
+        Component: FAQ,
+      },
+      {
+        path: "/support-chat/:conversationId",
+        Component: SupportChatPage,
+      },
     ],
   },
   {
@@ -173,7 +180,10 @@ const MainRoute = createBrowserRouter([
       { path: "reports", element: <Reports></Reports> },
       { path: "settings", element: <Settings></Settings> },
       { path: "advanced", element: <Advanced></Advanced> },
-      { path: "admin/support", element: <SupportManagement></SupportManagement> },
+      {
+        path: "admin/support",
+        element: <SupportManagement></SupportManagement>,
+      },
 
       // Moderator Routes
       {
@@ -189,6 +199,10 @@ const MainRoute = createBrowserRouter([
       {
         path: "reports-analytics",
         element: <ReportsAnalytics></ReportsAnalytics>,
+      },
+      {
+        path: "offers",
+        element: <Offers></Offers>,
       },
       { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
       {
@@ -216,6 +230,8 @@ const MainRoute = createBrowserRouter([
       { path: "my-support", element: <Support></Support> },
     ],
   },
+  // Catch-all route for 404
+  { path: "*", element: <NotFound /> },
 ]);
 
 export default MainRoute;
