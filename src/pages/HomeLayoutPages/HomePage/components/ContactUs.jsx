@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import emailjs from "emailjs-com";
 import {
   Mail,
   Phone,
@@ -21,48 +22,35 @@ import {
   AlertDialogTitle,
 } from "@/Components/ui/alert-dialog";
 
-// Modern Gradient Contact Info Card with motion
-const ContactInfoCard = ({
-  icon: Icon,
-  title,
-  info,
-  subInfo,
-  gradient,
-  index,
-}) => {
-  return (
-    <motion.div
-      className="group relative overflow-hidden bg-card rounded-2xl border border-border p-6 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.6 }}
-    >
+// Reusable Contact Info Card
+const ContactInfoCard = ({ icon: Icon, title, info, subInfo, gradient, index }) => (
+  <motion.div
+    className="group relative overflow-hidden bg-card rounded-2xl border border-border p-6 hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: index * 0.1, duration: 0.6 }}
+  >
+    <div
+      className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${gradient}`}
+    />
+    <div className="relative flex items-start gap-4">
       <div
-        className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${gradient}`}
-      />
-
-      <div className="relative flex items-start gap-4">
-        <div
-          className={`p-3 rounded-xl bg-gradient-to-br ${gradient} shadow-lg group-hover:scale-110 transition-transform duration-300`}
-        >
-          <Icon className="w-6 h-6 text-white" />
-        </div>
-        <div className="flex-1">
-          <h5 className="font-semibold text-foreground mb-1.5 group-hover:text-primary transition-colors">
-            {title}
-          </h5>
-          <p className="text-muted-foreground font-medium">{info}</p>
-          {subInfo && (
-            <p className="text-sm text-muted-foreground/70 mt-1">{subInfo}</p>
-          )}
-        </div>
+        className={`p-3 rounded-xl bg-gradient-to-br ${gradient} shadow-lg group-hover:scale-110 transition-transform duration-300`}
+      >
+        <Icon className="w-6 h-6 text-white" />
       </div>
-    </motion.div>
-  );
-};
+      <div className="flex-1">
+        <h5 className="font-semibold text-foreground mb-1.5 group-hover:text-primary transition-colors">
+          {title}
+        </h5>
+        <p className="text-muted-foreground font-medium">{info}</p>
+        {subInfo && <p className="text-sm text-muted-foreground/70 mt-1">{subInfo}</p>}
+      </div>
+    </div>
+  </motion.div>
+);
 
-// Main Contact Us Section
 const ContactUs = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -76,12 +64,14 @@ const ContactUs = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [focusedField, setFocusedField] = useState("");
 
+  // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
+  // Validation
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
@@ -100,25 +90,50 @@ const ContactUs = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // 🧠 EmailJS Integration
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowSuccessDialog(true);
-      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-    }, 1500);
+
+    const templateParams = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      subject: formData.subject,
+      message: formData.message,
+    };
+
+    const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    emailjs
+      .send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
+      .then(
+        (response) => {
+          
+          setIsSubmitting(false);
+          setShowSuccessDialog(true);
+          setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+        },
+        (error) => {
+          console.error("❌ FAILED...", error);
+          setIsSubmitting(false);
+          alert("Failed to send message. Please try again later.");
+        }
+      );
   };
 
   return (
     <section className="relative section py-8 overflow-hidden">
-      {/* Decorative Elements */}
+      {/* Background Elements */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto relative z-10">
-        {/* Section Header */}
+        {/* Header */}
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 50 }}
@@ -128,26 +143,24 @@ const ContactUs = () => {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">
-              Get In Touch
-            </span>
+            <span className="text-sm font-medium text-primary">Get In Touch</span>
           </div>
           <h2>Let's Start a Conversation</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Questions about our cutting-edge gadgets? Our tech-savvy team is
-            ready to help you find the perfect solution.
+            Questions about our products? Our team is ready to help you.
           </p>
         </motion.div>
 
+        {/* Main Grid */}
         <div className="grid lg:grid-cols-5 gap-8 mx-auto">
-          {/* Contact Cards */}
+          {/* Contact Info */}
           <div className="lg:col-span-2 space-y-6 md:mt-3">
             <ContactInfoCard
               index={0}
               icon={Phone}
               title="Call Us"
               info="+1 (555) 123-4567"
-              subInfo="Mon-Fri, 9AM - 6PM EST"
+              subInfo="Mon-Fri, 9AM - 6PM"
               gradient="from-blue-500 to-cyan-500"
             />
             <ContactInfoCard
@@ -163,7 +176,7 @@ const ContactUs = () => {
               icon={MapPin}
               title="Visit Our Store"
               info="123 Tech Street, Silicon Valley"
-              subInfo="CA 94025, United States"
+              subInfo="CA 94025, USA"
               gradient="from-orange-500 to-red-500"
             />
             <ContactInfoCard
@@ -176,7 +189,7 @@ const ContactUs = () => {
             />
           </div>
 
-          {/* Contact Form */}
+          {/* Form Section */}
           <motion.div
             className="lg:col-span-3"
             initial={{ opacity: 0, y: 50 }}
@@ -185,222 +198,163 @@ const ContactUs = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="relative bg-card/80 backdrop-blur-xl rounded-3xl border border-border shadow-sm p-6 lg:p-7">
-              {/* Floating gradient orb */}
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-primary/20 to-blue-500/20 rounded-full blur-2xl" />
-
               <div className="relative">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-2.5 bg-gradient-to-br from-primary to-blue-600 rounded-xl shadow-lg">
                     <MessageSquare className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-foreground font-bold">
-                      Send us a Message
-                    </h3>
+                    <h3 className="text-foreground font-bold">Send us a Message</h3>
                     <p className="text-sm text-muted-foreground">
                       We'll get back to you quickly
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  {/* Name and Email Row */}
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-semibold text-foreground mb-2.5"
-                      >
+                      <label className="block text-sm font-semibold text-foreground mb-2.5">
                         Full Name <span className="text-red-500">*</span>
                       </label>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          onFocus={() => setFocusedField("name")}
-                          onBlur={() => setFocusedField("")}
-                          className={`w-full px-4 py-3.5 rounded-xl border-2 ${
-                            errors.name
-                              ? "border-red-500"
-                              : focusedField === "name"
-                              ? "border-primary"
-                              : "border-border"
-                          } bg-background/50 text-foreground focus:outline-none transition-all duration-300 placeholder:text-muted-foreground/50`}
-                          placeholder="John Doe"
-                        />
-                      </div>
-                      {errors.name && (
-                        <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
-                          <span className="w-1 h-1 bg-red-500 rounded-full" />
-                          {errors.name}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-semibold text-foreground mb-2.5"
-                      >
-                        Email Address <span className="text-red-500">*</span>
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          onFocus={() => setFocusedField("email")}
-                          onBlur={() => setFocusedField("")}
-                          className={`w-full px-4 py-3.5 rounded-xl border-2 ${
-                            errors.email
-                              ? "border-red-500"
-                              : focusedField === "email"
-                              ? "border-primary"
-                              : "border-border"
-                          } bg-background/50 text-foreground focus:outline-none transition-all duration-300 placeholder:text-muted-foreground/50`}
-                          placeholder="john@example.com"
-                        />
-                      </div>
-                      {errors.email && (
-                        <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
-                          <span className="w-1 h-1 bg-red-500 rounded-full" />
-                          {errors.email}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Phone and Subject Row */}
-                  <div className="grid md:grid-cols-2 gap-5">
-                    <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-semibold text-foreground mb-2.5"
-                      >
-                        Phone Number <span className="text-red-500">*</span>
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="tel"
-                          id="phone"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          onFocus={() => setFocusedField("phone")}
-                          onBlur={() => setFocusedField("")}
-                          className={`w-full px-4 py-3.5 rounded-xl border-2 ${
-                            errors.phone
-                              ? "border-red-500"
-                              : focusedField === "phone"
-                              ? "border-primary"
-                              : "border-border"
-                          } bg-background/50 text-foreground focus:outline-none transition-all duration-300 placeholder:text-muted-foreground/50`}
-                          placeholder="+1 (555) 123-4567"
-                        />
-                      </div>
-                      {errors.phone && (
-                        <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
-                          <span className="w-1 h-1 bg-red-500 rounded-full" />
-                          {errors.phone}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="subject"
-                        className="block text-sm font-semibold text-foreground mb-2.5"
-                      >
-                        Subject <span className="text-red-500">*</span>
-                      </label>
-                      <div className="relative">
-                        <select
-                          id="subject"
-                          name="subject"
-                          value={formData.subject}
-                          onChange={handleChange}
-                          onFocus={() => setFocusedField("subject")}
-                          onBlur={() => setFocusedField("")}
-                          className={`w-full px-4 py-3.5 rounded-xl border-2 ${
-                            errors.subject
-                              ? "border-red-500"
-                              : focusedField === "subject"
-                              ? "border-primary"
-                              : "border-border"
-                          } bg-background/50 text-foreground focus:outline-none transition-all duration-300 appearance-none cursor-pointer`}
-                        >
-                          <option value="">Select a subject</option>
-                          <option value="product-inquiry">
-                            Product Inquiry
-                          </option>
-                          <option value="technical-support">
-                            {" "}
-                            Technical Support
-                          </option>
-                          <option value="order-status">Order Status</option>
-                          <option value="warranty">Warranty Claim</option>
-                          <option value="return">Return/Exchange</option>
-                          <option value="other">Other</option>
-                        </select>
-                      </div>
-                      {errors.subject && (
-                        <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
-                          <span className="w-1 h-1 bg-red-500 rounded-full" />
-                          {errors.subject}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Message */}
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-semibold text-foreground mb-2.5"
-                    >
-                      Message <span className="text-red-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <textarea
-                        id="message"
-                        name="message"
-                        value={formData.message}
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
                         onChange={handleChange}
-                        onFocus={() => setFocusedField("message")}
+                        onFocus={() => setFocusedField("name")}
                         onBlur={() => setFocusedField("")}
-                        rows="5"
                         className={`w-full px-4 py-3.5 rounded-xl border-2 ${
-                          errors.message
+                          errors.name
                             ? "border-red-500"
-                            : focusedField === "message"
+                            : focusedField === "name"
                             ? "border-primary"
                             : "border-border"
-                        } bg-background/50 text-foreground focus:outline-none transition-all duration-300 resize-none placeholder:text-muted-foreground/50`}
-                        placeholder="Tell us how we can help you with our tech products..."
+                        } bg-background/50 text-foreground`}
+                        placeholder="John Doe"
                       />
+                      {errors.name && (
+                        <p className="mt-2 text-sm text-red-500">{errors.name}</p>
+                      )}
                     </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-foreground mb-2.5">
+                        Email Address <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        onFocus={() => setFocusedField("email")}
+                        onBlur={() => setFocusedField("")}
+                        className={`w-full px-4 py-3.5 rounded-xl border-2 ${
+                          errors.email
+                            ? "border-red-500"
+                            : focusedField === "email"
+                            ? "border-primary"
+                            : "border-border"
+                        } bg-background/50 text-foreground`}
+                        placeholder="john@example.com"
+                      />
+                      {errors.email && (
+                        <p className="mt-2 text-sm text-red-500">{errors.email}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-semibold text-foreground mb-2.5">
+                        Phone Number <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        onFocus={() => setFocusedField("phone")}
+                        onBlur={() => setFocusedField("")}
+                        className={`w-full px-4 py-3.5 rounded-xl border-2 ${
+                          errors.phone
+                            ? "border-red-500"
+                            : focusedField === "phone"
+                            ? "border-primary"
+                            : "border-border"
+                        } bg-background/50 text-foreground`}
+                        placeholder="+1 (555) 123-4567"
+                      />
+                      {errors.phone && (
+                        <p className="mt-2 text-sm text-red-500">{errors.phone}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-foreground mb-2.5">
+                        Subject <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        onFocus={() => setFocusedField("subject")}
+                        onBlur={() => setFocusedField("")}
+                        className={`w-full px-4 py-3.5 rounded-xl border-2 ${
+                          errors.subject
+                            ? "border-red-500"
+                            : focusedField === "subject"
+                            ? "border-primary"
+                            : "border-border"
+                        } bg-background/50 text-foreground`}
+                      >
+                        <option value="">Select a subject</option>
+                        <option value="Product Inquiry">Product Inquiry</option>
+                        <option value="Technical Support">Technical Support</option>
+                        <option value="Order Status">Order Status</option>
+                        <option value="Warranty">Warranty Claim</option>
+                        <option value="Return">Return/Exchange</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      {errors.subject && (
+                        <p className="mt-2 text-sm text-red-500">{errors.subject}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-foreground mb-2.5">
+                      Message <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField("message")}
+                      onBlur={() => setFocusedField("")}
+                      rows="5"
+                      className={`w-full px-4 py-3.5 rounded-xl border-2 ${
+                        errors.message
+                          ? "border-red-500"
+                          : focusedField === "message"
+                          ? "border-primary"
+                          : "border-border"
+                      } bg-background/50 text-foreground resize-none`}
+                      placeholder="Tell us how we can help..."
+                    />
                     {errors.message && (
-                      <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
-                        <span className="w-1 h-1 bg-red-500 rounded-full" />
-                        {errors.message}
-                      </p>
+                      <p className="mt-2 text-sm text-red-500">{errors.message}</p>
                     )}
                   </div>
 
-                  {/* Modern Submit Button */}
                   <div className="pt-2">
                     <button
-                      type="button"
-                      onClick={handleSubmit}
+                      type="submit"
                       disabled={isSubmitting}
-                      className="group relative w-full md:w-auto px-8 py-4 bg-gradient-to-r from-primary via-blue-600 to-primary bg-size-200 bg-pos-0 hover:bg-pos-100 text-white rounded-xl font-semibold transition-all duration-500 hover:shadow-2xl hover:shadow-primary/50 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
+                      className="group relative w-full md:w-auto px-8 py-4 bg-gradient-to-r from-primary via-blue-600 to-primary text-white rounded-xl font-semibold flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                       {isSubmitting ? (
                         <>
                           <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -408,24 +362,21 @@ const ContactUs = () => {
                         </>
                       ) : (
                         <>
-                          <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                          <Send className="w-5 h-5" />
                           <span>Send Message</span>
                           <Zap className="w-4 h-4 opacity-70" />
                         </>
                       )}
                     </button>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Success Dialog remains unchanged */}
-        <AlertDialog
-          open={showSuccessDialog}
-          onOpenChange={setShowSuccessDialog}
-        >
+        {/* Success Dialog */}
+        <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
           <AlertDialogContent className="max-w-md border-0 shadow-2xl bg-card/95 backdrop-blur-xl">
             <AlertDialogHeader>
               <div className="flex justify-center mb-4">
@@ -440,11 +391,10 @@ const ContactUs = () => {
                 Message Sent Successfully!
               </AlertDialogTitle>
               <AlertDialogDescription className="text-center text-base text-muted-foreground leading-relaxed">
-                Thank you for reaching out! Our tech support team has received
-                your message and will respond within 24 hours.
+                Thank you for reaching out! Our support team will respond within 24 hours.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter className="flex justify-center sm:justify-center">
+            <AlertDialogFooter className="flex justify-center">
               <AlertDialogAction className="bg-gradient-to-r from-primary to-blue-600 text-white hover:from-primary/90 hover:to-blue-700 px-8 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
                 Awesome!
               </AlertDialogAction>

@@ -37,17 +37,18 @@ const Footer = () => {
     { name: "Home", path: "/" },
     { name: "About Us", path: "/about" },
     { name: "Services", path: "/services" },
-    { name: "Products", path: "/products" },
+    { name: "Products", path: "/allProduct" },
     { name: "Contact", path: "/contact" },
     { name: "Blog", path: "/blog" },
   ];
 
   const supportLinks = [
     { name: "FAQ", path: "/faq" },
-    { name: "Privacy Policy", path: "/privacy" },
-    { name: "Terms of Service", path: "/terms" },
-    { name: "Returns & Refunds", path: "/returns" },
-    { name: "Order Tracking", path: "/tracking" },
+    { name: "Privacy Policy", path: "/privacy_policy" },
+    { name: "Terms of Service", path: "/terms-service" },
+    { name: "Returns & Refunds", path: "/returns-refunds" },
+    { name: "Order Tracking", path: "/order-tracking" },
+    { name: "Warranty", path: "/warranty" },
   ];
 
   const categories = [

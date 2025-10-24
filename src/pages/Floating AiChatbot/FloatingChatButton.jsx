@@ -5,7 +5,7 @@ export default function FloatingChatButton({ isOpen, setIsOpen, showHelp }) {
   if (isOpen) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999]">
+    <div className="fixed bottom-16 right-6 z-[9999]">
       {/* Help Text Bubble */}
       {showHelp && (
         <div className="absolute bottom-full right-full  animate-bounce">
