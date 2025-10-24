@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Bell, User, Search, Menu, X } from "lucide-react";
 import NotificationBell from "@/components/NotificationBell/NotificationBell";
 import useAuth from "@/hooks/useAuth";
+import SearchBar from "@/Components/Shared/Navbar/SearchBar";
 
 const DashboardNavbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const [showProfile, setShowProfile] = useState(false);
@@ -16,6 +17,7 @@ const DashboardNavbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
     }
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 py-3 bg-sidebar/95 border-b border-sidebar-border/60 shadow-sm backdrop-blur-xl">
       {/* Left Section - Mobile Menu + Search */}
@@ -33,15 +35,10 @@ const DashboardNavbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
         </button>
 
         {/* Search Box */}
-        <div className="w-full max-w-md relative">
-          <Search
-            size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/70"
-          />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full rounded-xl pl-10 pr-4 py-2.5 text-sm bg-input/50 text-foreground/90 placeholder:text-muted-foreground/70 border border-border/50 focus:border-primary/60 focus:ring-2 focus:ring-primary/30 outline-none transition-all duration-300"
+        <div className="flex flex-1 justify-center max-w-3xl mx-4">
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
           />
         </div>
       </div>

@@ -45,7 +45,6 @@ const AddToCart = () => {
   const {
     wishlist,
     addToWishlist,
-    removing: removingWishlist,
     adding: addingWishlist,
   } = useWishlist();
 
@@ -99,32 +98,34 @@ const AddToCart = () => {
           id: editingAddress._id,
           updatedData: data,
         });
+        toast.success("Address updated successfully!");
       } else {
         await addAddress.mutateAsync(data);
+        toast.success("Address added successfully!");
       }
-      toast.success("Address saved successfully!");
       setAddressModal(false);
       setEditingAddress(null);
       await refetch();
       await refetchDefault();
     } catch (err) {
-      toast.error("Failed to save address");
+      toast.error(err.response?.data?.message || "Failed to save address");
       console.error(err);
     }
   };
 
   // Helper 1: Fetch and validate address
   const getDefaultAddress = async (user, axiosSecure) => {
-    const { data: addresses } = await axiosSecure.get(
-      `/addresses/?email=${user.email}`
-    );
-    const address = Array.isArray(addresses)
-      ? addresses.find((addr) => addr.default) || addresses[0]
-      : addresses;
+    try {
+      const { data } = await axiosSecure.get(`/addresses/default`);
+      const address = data?.data || data;
 
-    if (!address)
-      throw new Error("No address found. Please add a shipping address first.");
-    return address;
+      if (!address || !address._id) {
+        throw new Error("No address found. Please add a shipping address first.");
+      }
+      return address;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "No address found. Please add a shipping address first.");
+    }
   };
 
   // Helper 2: Prepare payment data
@@ -373,6 +374,10 @@ const AddToCart = () => {
                   savedAddress={defaultAddress}
                   onEdit={() => {
                     setEditingAddress(defaultAddress);
+                    setAddressModal(true);
+                  }}
+                  onAddNew={() => {
+                    setEditingAddress(null);
                     setAddressModal(true);
                   }}
                 />

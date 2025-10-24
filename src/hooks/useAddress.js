@@ -16,8 +16,8 @@ const useAddress = () => {
     queryKey: ["addresses", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/addresses?email=${user?.email}`);
-      return res.data;
+      const res = await axiosSecure.get(`/addresses`);
+      return res.data?.data || res.data || [];
     },
   });
 
@@ -30,17 +30,16 @@ const useAddress = () => {
     queryKey: ["defaultAddress", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/addresses/default?email=${user?.email}`);
-      return res.data;
+      const res = await axiosSecure.get(`/addresses/default`);
+      return res.data?.data || res.data || null;
     },
   });
 
   // Add new address
   const addAddress = useMutation({
     mutationFn: async (addressData) => {
-      const payload = { ...addressData, userEmail: user?.email };
-      const res = await axiosSecure.post("/addresses", payload);
-      return res.data;
+      const res = await axiosSecure.post("/addresses", addressData);
+      return res.data?.data || res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["addresses", user?.email]);
@@ -52,7 +51,7 @@ const useAddress = () => {
   const updateAddress = useMutation({
     mutationFn: async ({ id, updatedData }) => {
       const res = await axiosSecure.put(`/addresses/${id}`, updatedData);
-      return res.data;
+      return res.data?.data || res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["addresses", user?.email]);
@@ -72,6 +71,18 @@ const useAddress = () => {
     },
   });
 
+  // Set default address
+  const setDefaultAddress = useMutation({
+    mutationFn: async (id) => {
+      const res = await axiosSecure.patch(`/addresses/${id}/set-default`);
+      return res.data?.data || res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["addresses", user?.email]);
+      queryClient.invalidateQueries(["defaultAddress", user?.email]);
+    },
+  });
+
   return {
     addresses,
     defaultAddress,
@@ -82,6 +93,7 @@ const useAddress = () => {
     addAddress,
     updateAddress,
     deleteAddress,
+    setDefaultAddress,
   };
 };
 

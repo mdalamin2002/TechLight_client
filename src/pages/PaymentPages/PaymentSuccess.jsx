@@ -19,6 +19,7 @@ import {
   FileText,
 } from "lucide-react";
 import useAxiosSecure from "@/utils/useAxiosSecure";
+import useCart from "@/hooks/useCart";
 import { toast } from "react-toastify";
 import jsPDF from "jspdf";
 
@@ -26,8 +27,10 @@ const PaymentSuccess = () => {
   const { tranId } = useParams();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
+  const { clearCart } = useCart();
   const [paymentData, setPaymentData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [cartCleared, setCartCleared] = useState(false);
 
   useEffect(() => {
     if (tranId) {
@@ -39,6 +42,19 @@ const PaymentSuccess = () => {
     try {
       const response = await axiosSecure.get(`/payments/details/${tranId}`);
       setPaymentData(response.data);
+
+      // Clear cart after successful payment (only once)
+      if (response.data?.status === "success" && !cartCleared) {
+        clearCart(undefined, {
+          onSuccess: () => {
+            setCartCleared(true);
+            console.log("Cart cleared after successful payment");
+          },
+          onError: (error) => {
+            console.error("Failed to clear cart:", error);
+          },
+        });
+      }
     } catch (error) {
       console.error("Error fetching payment details:", error);
       toast.error("Failed to load payment details");

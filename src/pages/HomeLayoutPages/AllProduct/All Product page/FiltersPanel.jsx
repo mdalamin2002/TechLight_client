@@ -16,7 +16,7 @@ const FiltersPanel = ({
   clearAllFilters = () => {},
 }) => {
   const [expandedGroups, setExpandedGroups] = useState([]);
-
+console.log(categoryGroups);
   const toggleGroup = (g) =>
     setExpandedGroups((prev) =>
       prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g]
