@@ -28,6 +28,7 @@ import {
   BadgePercent,
   PlusCircle,
 } from "lucide-react";
+import useAuth from "@/hooks/useAuth";
 // import useAuth from "@/hooks/useAuth";
 
 export default function DashboardSidebar({
@@ -37,6 +38,9 @@ export default function DashboardSidebar({
  
   const { userData } = useAuth();
   const role = userData?.role; // "admin", "moderator", or "user"
+  console.log(role);
+ 
+  
 
   const NavItem = ({ to, label, icon: Icon, onClick }) => (
     <NavLink
