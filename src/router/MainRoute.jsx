@@ -63,6 +63,7 @@ import PaymentCancel from "@/pages/PaymentPages/PaymentCancel";
 import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
 import SearchResultsPage from "@/pages/SearchResultsPage/SearchResultsPage";
+import Offers from "@/Layout/Dashboard/AdminDashboard/components/Offers/Offers";
 
 const MainRoute = createBrowserRouter([
   {
@@ -175,7 +176,10 @@ const MainRoute = createBrowserRouter([
       { path: "reports", element: <Reports></Reports> },
       { path: "settings", element: <Settings></Settings> },
       { path: "advanced", element: <Advanced></Advanced> },
-      { path: "admin/support", element: <SupportManagement></SupportManagement> },
+      {
+        path: "admin/support",
+        element: <SupportManagement></SupportManagement>,
+      },
 
       // Moderator Routes
       {
@@ -191,6 +195,10 @@ const MainRoute = createBrowserRouter([
       {
         path: "reports-analytics",
         element: <ReportsAnalytics></ReportsAnalytics>,
+      },
+      {
+        path: "offers",
+        element: <Offers></Offers>,
       },
       { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
       {
