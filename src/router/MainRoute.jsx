@@ -139,6 +139,10 @@ const MainRoute = createBrowserRouter([
         Component: WarrantyPolicy,
       },
       {
+        path: "faq",
+        Component: FAQ,
+      },
+      {
         path: "terms-service",
         Component: TermsOfService,
       },

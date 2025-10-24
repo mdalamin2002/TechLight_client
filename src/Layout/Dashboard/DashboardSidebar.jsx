@@ -33,6 +33,7 @@ export default function DashboardSidebar({
   isMobileMenuOpen,
   setIsMobileMenuOpen,
 }) {
+ 
   const { userData } = useAuth();
   const role = userData?.role; // "admin", "moderator", or "user"
   console.log(role);
