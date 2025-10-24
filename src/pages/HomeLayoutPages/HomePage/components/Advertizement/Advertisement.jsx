@@ -1,56 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
 import { Calendar, Store, Tag, ExternalLink, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-
-const dummyAds = [
-  {
-    _id: 1,
-    title: "Noise Cancelling Headphones",
-    description: "Experience immersive sound with crystal-clear quality.",
-    discount: "25%",
-    originalPrice: 12000,
-    bannerImage:
-      "https://i.ibb.co.com/Jj6PBPps/image-3-1.png",
-    shopName: "Tech World",
-    createdAt: "2025-09-01",
-    isHot: true,
-  },
-  {
-    _id: 2,
-    title: "Smartphone Flash Sale",
-    description: "Latest Android smartphones with unbeatable discounts.",
-    discount: "15%",
-    originalPrice: 30000,
-    bannerImage:
-      "https://i.ibb.co.com/Txwmq308/image-4-1.png",
-    shopName: "Gadget Hub",
-    createdAt: "2025-08-28",
-    isHot: true,
-  },
-  {
-    _id: 3,
-    title: "Smartwatch Exclusive Deal",
-    description: "Track your fitness & stay connected on the go.",
-    discount: "30%",
-    originalPrice: 10000,
-    bannerImage:
-      "https://i.ibb.co.com/TD6w6kb2/image-5-1.png",
-    shopName: "ElectroMart",
-    createdAt: "2025-08-20",
-    isHot: true,
-  },
-];
+import axios from "axios";
 
 const Advertisement = () => {
+  const [offers, setOffers] = useState([]);
+
+  // Fetch offers from backend API
+  useEffect(() => {
+  const fetchOffers = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_prod_baseURL}/offers`); // full backend URL
+      const data = await res.json();
+      // Ensure it's an array
+      setOffers(Array.isArray(data) ? data : data.data || []);
+    } catch (error) {
+      console.error("Error fetching offers:", error);
+    }
+  };
+
+  fetchOffers();
+}, []);
+
+
   return (
-    <div className="container mx-auto section" >
+    <div className="container mx-auto section">
       {/* Section Heading */}
       <motion.div
         className="text-center mb-12"
@@ -60,11 +40,9 @@ const Advertisement = () => {
         viewport={{ once: true }}
       >
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">
-              Offers
-            </span>
-          </div>
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span className="text-sm font-medium text-primary">Offers</span>
+        </div>
         <h2 className="text-3xl lg:text-4xl font-bold text-base-content mb-4">
           Special Offers & Promotions
         </h2>
@@ -89,7 +67,7 @@ const Advertisement = () => {
           autoplay={{ delay: 4000 }}
           className="rounded-2xl overflow-hidden shadow-2xl"
         >
-          {dummyAds.map((ad) => {
+          {offers.map((ad) => {
             const discountMatch = ad.discount?.match(/(\d+)%/);
             const discountPercent = discountMatch
               ? parseFloat(discountMatch[1])
@@ -98,7 +76,7 @@ const Advertisement = () => {
               ad.originalPrice - (ad.originalPrice * discountPercent) / 100;
 
             return (
-              <SwiperSlide key={ad._id}>
+              <SwiperSlide key={ad.id || ad._id}>
                 <div className="relative w-full">
                   <img
                     src={ad.bannerImage}

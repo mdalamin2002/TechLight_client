@@ -25,6 +25,7 @@ import {
   Bell,
   ChevronRight,
   Lightbulb,
+  BadgePercent,
   PlusCircle,
 } from "lucide-react";
 // import useAuth from "@/hooks/useAuth";
@@ -33,10 +34,9 @@ export default function DashboardSidebar({
   isMobileMenuOpen,
   setIsMobileMenuOpen,
 }) {
-  // const { userData } = useAuth();
-  // const role = userData?.role; // "admin", "moderator", or "user" ,
-  const role = "seller"; // "admin", "moderator", or "user" ,
-  // console.log(role);
+ 
+  const { userData } = useAuth();
+  const role = userData?.role; // "admin", "moderator", or "user"
 
   const NavItem = ({ to, label, icon: Icon, onClick }) => (
     <NavLink
@@ -82,6 +82,7 @@ export default function DashboardSidebar({
       },
       { to: "/dashboard/admin/support", label: "Support Management", icon: PhoneCall },
       { to: "/dashboard/reports", label: "Reports", icon: BarChart3 },
+      { to: "/dashboard/offers", label: "Offers", icon: BadgePercent },
       { to: "/dashboard/settings", label: "Settings", icon: Settings },
       { to: "/dashboard/advanced", label: "Advanced", icon: Zap },
     ],
