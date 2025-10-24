@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Bell, User, Search, Menu, X } from "lucide-react";
-import NotificationBell from "@/components/NotificationBell/NotificationBell";
 import useAuth from "@/hooks/useAuth";
 import SearchBar from "@/Components/Shared/Navbar/SearchBar";
+import NotificationBell from "@/Components/NotificationBell/NotificationBell";
+// import NotificationBell from "@/Components/NotificationBell/NotificationBell";
 
 const DashboardNavbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const [showProfile, setShowProfile] = useState(false);
