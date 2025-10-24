@@ -1,142 +1,97 @@
-import React from "react";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/Components/ui/tabs";
-import {
-  Input
-} from "@/Components/ui/input";
-import {
-  Label
-} from "@/Components/ui/label";
-import {
-  Switch
-} from "@/Components/ui/switch";
-import {
-  Button
-} from "@/Components/ui/button";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage
-} from "@/Components/ui/avatar";
-
-import {
-  Moon, Sun, Bell, UserCog, Lock, Trash
-} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
+import { Settings, Lock, Bell, Palette, Shield, User as UserIcon } from "lucide-react";
+import { Link } from "react-router-dom";
+import PasswordSettings from "./components/PasswordSettings";
+import NotificationSettings from "./components/NotificationSettings";
+import AppearanceSettings from "./components/AppearanceSettings";
+import PrivacySettings from "./components/PrivacySettings";
+import AccountManagement from "./components/AccountManagement";
 
 const UserSettings = () => {
   return (
-    <section className="">
-      <div className="bg-card p-6 md:p-10 rounded-xl shadow-md">
-        <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
-          <UserCog className="w-6 h-6" />
-          User Settings
-        </h1>
+    <section className="max-w-5xl mx-auto">
+      <div className="bg-card p-6 md:p-8 rounded-xl shadow-md space-y-6">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold mb-2 flex items-center gap-2">
+            <Settings className="w-7 h-7" />
+            Settings
+          </h1>
+          <p className="text-muted-foreground">
+            Manage your account preferences and settings
+          </p>
+        </div>
 
-        <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid grid-cols-4 w-full mb-6">
-            <TabsTrigger value="profile"><UserCog className="w-4 h-4 mr-2" /> Profile</TabsTrigger>
-            <TabsTrigger value="password"><Lock className="w-4 h-4 mr-2" /> Password</TabsTrigger>
-            <TabsTrigger value="notifications"><Bell className="w-4 h-4 mr-2" /> Notifications</TabsTrigger>
-            <TabsTrigger value="appearance"><Sun className="w-4 h-4 mr-2" /> Theme</TabsTrigger>
-          </TabsList>
-
-          {/* Profile Tab */}
-          <TabsContent value="profile">
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <Avatar>
-                  <AvatarImage src="/avatar.png" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <Button variant="outline">Change Avatar</Button>
+        {/* Profile Quick Link */}
+        <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <UserIcon className="w-5 h-5 text-primary" />
+              <div>
+                <h3 className="font-medium">Profile Information</h3>
+                <p className="text-sm text-muted-foreground">
+                  Update your name, photo, and contact details
+                </p>
               </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <Label htmlFor="name">Name</Label>
-                  <Input id="name" placeholder="Your name" />
-                </div>
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="you@example.com" />
-                </div>
-              </div>
-              <Button className="mt-4">Save Changes</Button>
             </div>
-          </TabsContent>
+            <Link to="/dashboard/my-profile">
+              <span className="text-sm font-medium text-primary hover:underline">
+                Go to Profile →
+              </span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Settings Tabs */}
+        <Tabs defaultValue="password" className="w-full">
+          <TabsList className="grid grid-cols-2 md:grid-cols-5 w-full mb-6">
+            <TabsTrigger value="password">
+              <Lock className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Password</span>
+            </TabsTrigger>
+            <TabsTrigger value="notifications">
+              <Bell className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Notifications</span>
+            </TabsTrigger>
+            <TabsTrigger value="appearance">
+              <Palette className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Appearance</span>
+            </TabsTrigger>
+            <TabsTrigger value="privacy">
+              <Shield className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Privacy</span>
+            </TabsTrigger>
+            <TabsTrigger value="account" className="col-span-2 md:col-span-1">
+              <UserIcon className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Account</span>
+            </TabsTrigger>
+          </TabsList>
 
           {/* Password Tab */}
           <TabsContent value="password">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="current-password">Current Password</Label>
-                <Input id="current-password" type="password" />
-              </div>
-              <div>
-                <Label htmlFor="new-password">New Password</Label>
-                <Input id="new-password" type="password" />
-              </div>
-              <Button className="mt-4">Update Password</Button>
-            </div>
+            <PasswordSettings />
           </TabsContent>
 
           {/* Notifications Tab */}
           <TabsContent value="notifications">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Email Notifications</Label>
-                  <p className="text-muted-foreground text-sm">Receive updates via email</p>
-                </div>
-                <Switch />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Push Notifications</Label>
-                  <p className="text-muted-foreground text-sm">Allow browser notifications</p>
-                </div>
-                <Switch />
-              </div>
-              <Button className="mt-4">Save Preferences</Button>
-            </div>
+            <NotificationSettings />
           </TabsContent>
 
           {/* Appearance Tab */}
           <TabsContent value="appearance">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label>Dark Mode</Label>
-                <Switch
-                  onCheckedChange={(checked) => {
-                    document.documentElement.classList.toggle("dark", checked);
-                  }}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label>System Theme</Label>
-                <Switch
-                  onCheckedChange={(checked) => {
-                    // system theme logic (optional)
-                    console.log("System theme toggle:", checked);
-                  }}
-                />
-              </div>
-            </div>
+            <AppearanceSettings />
+          </TabsContent>
+
+          {/* Privacy Tab */}
+          <TabsContent value="privacy">
+            <PrivacySettings />
+          </TabsContent>
+
+          {/* Account Management Tab */}
+          <TabsContent value="account">
+            <AccountManagement />
           </TabsContent>
         </Tabs>
-
-        {/* Danger Zone */}
-        <div className="mt-10 border-t pt-6">
-          <h3 className="text-xl font-semibold text-destructive mb-2">Danger Zone</h3>
-          <p className="text-muted-foreground mb-4">Once deleted, your account cannot be recovered.</p>
-          <Button variant="destructive" className="flex items-center gap-2">
-            <Trash className="w-4 h-4" />
-            Delete Account
-          </Button>
-        </div>
       </div>
     </section>
   );
