@@ -62,6 +62,7 @@ import PaymentFail from "@/pages/PaymentPages/PaymentFail";
 import PaymentCancel from "@/pages/PaymentPages/PaymentCancel";
 import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import NotificationsPage from "@/pages/NotificationsPage/NotificationsPage";
 import SearchResultsPage from "@/pages/SearchResultsPage/SearchResultsPage";
 import Offers from "@/Layout/Dashboard/AdminDashboard/components/Offers/Offers";
 
@@ -228,6 +229,12 @@ const MainRoute = createBrowserRouter([
       { path: "my-returns", element: <ReturnsRefunds></ReturnsRefunds> },
       { path: "my-settings", element: <UserSettings></UserSettings> },
       { path: "my-support", element: <Support></Support> },
+      
+      // Notifications Page (accessible to all dashboard users)
+      { path: "my-notifications", element: <NotificationsPage></NotificationsPage> },
+      
+      // Notifications Page (accessible to all dashboard users)
+      { path: "my-notifications", element: <NotificationsPage></NotificationsPage> },
     ],
   },
   // Catch-all route for 404
