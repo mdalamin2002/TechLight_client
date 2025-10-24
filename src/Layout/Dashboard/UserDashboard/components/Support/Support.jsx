@@ -24,6 +24,7 @@ const Support = () => {
       try {
         // প্রথমে localStorage থেকে data আনছি
         const cachedTickets = localStorage.getItem("supportTickets");
+        console.log("Tickets data:", cachedTickets);
         if (cachedTickets) {
           setTickets(JSON.parse(cachedTickets));
           // background এ fresh data fetch করব

@@ -52,15 +52,28 @@ const useCart = () => {
     },
   });
 
+  // Clear entire cart (after successful payment)
+  const { mutate: clearCart, isPending: clearing } = useMutation({
+    mutationFn: async () => {
+      const res = await axiosSecure.delete(`/cart/clear?email=${user.email}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cart", user?.email]);
+    },
+  });
+
   return {
     cart,
     isLoading,
     addToCart,
     removeFromCart,
     updateQuantity,
+    clearCart,
     adding,
     removing,
     updating,
+    clearing,
   };
 };
 

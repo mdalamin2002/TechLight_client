@@ -1,13 +1,86 @@
 import React, { useState } from "react";
 import { Star, Check, Minus, Plus, ShoppingCart, Heart, Truck, RefreshCw, MapPin, Shield, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import useCart from "@/hooks/useCart";
+import useWishlist from "@/hooks/useWishlist";
+import { toast } from "react-toastify";
 
-const ProductInfo = ({ product, quantity, setQuantity }) => {
+const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { addToWishlist, wishlist } = useWishlist();
 
   const handleQuantityChange = (type) => {
     if (type === "increment") setQuantity((prev) => prev + 1);
     else if (type === "decrement" && quantity > 1) setQuantity((prev) => prev - 1);
   };
+
+  const handleAddToCart = () => {
+    const cartData = {
+      productId: product._id,
+      name: product.name,
+      price: product.price,
+      quantity: quantity,
+      image: product.images?.main,
+      category: product.category,
+      subcategory: product.subcategory,
+      brand: product.brand,
+      model: product.model,
+      productCode: product.productCode,
+      regularPrice: product.regularPrice,
+      rating: product.rating,
+      totalReviews: product.totalReviews,
+      status: product.status,
+      keyFeatures: product.keyFeatures,
+      specifications: product.specifications,
+      description: product.description,
+      images: product.images
+    };
+
+    addToCart(cartData, {
+      onSuccess: () => {
+        toast.success(`${product.name} added to cart!`);
+      },
+      onError: () => {
+        toast.error("Failed to add to cart");
+      }
+    });
+  };
+
+  const handleAddToWishlist = () => {
+    const wishlistData = {
+      productId: product._id,
+      name: product.name,
+      price: product.price,
+      image: product.images?.main,
+      category: product.category,
+      subcategory: product.subcategory,
+      brand: product.brand,
+      model: product.model,
+      productCode: product.productCode,
+      regularPrice: product.regularPrice,
+      rating: product.rating,
+      totalReviews: product.totalReviews,
+      status: product.status,
+      keyFeatures: product.keyFeatures,
+      specifications: product.specifications,
+      description: product.description,
+      images: product.images
+    };
+
+    addToWishlist(wishlistData, {
+      onSuccess: () => {
+        toast.success(`${product.name} added to wishlist!`);
+        setIsFavorite(true);
+      },
+      onError: () => {
+        toast.error("Failed to add to wishlist");
+      }
+    });
+  };
+
+  const isInWishlist = wishlist.some(item => item.productId === product._id);
 
   return (
     <div className="lg:col-span-5 space-y-4">
@@ -106,22 +179,25 @@ const ProductInfo = ({ product, quantity, setQuantity }) => {
         </div>
 
         <div className="flex gap-3">
-          <button className="flex-1 bg-gradient-to-r from-primary to-blue-600 text-primary-foreground py-3.5 px-6 rounded-lg text-base font-semibold hover:shadow-xl hover:scale-[1.03] transition-all duration-300 flex items-center justify-center gap-2">
+          <button onClick={handleBuyNow} className="flex-1 bg-gradient-to-r from-primary to-blue-600 text-primary-foreground py-3.5 px-6 rounded-lg text-base font-semibold hover:shadow-xl hover:scale-[1.03] transition-all duration-300 flex items-center justify-center gap-2">
             Buy Now
           </button>
 
-          <button className="flex items-center justify-center gap-2 bg-muted text-foreground py-2 px-3 rounded-md text-xs font-medium hover:bg-primary/10 transition-all duration-300 border border-border">
+          <button
+            onClick={handleAddToCart}
+            className="flex items-center justify-center gap-2 bg-muted text-foreground py-2 px-3 rounded-md text-xs font-medium hover:bg-primary/10 transition-all duration-300 border border-border"
+          >
             <ShoppingCart className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Add to Cart</span>
           </button>
 
           <button
-            onClick={() => setIsFavorite(!isFavorite)}
+            onClick={handleAddToWishlist}
             className={`p-2.5 rounded-md border-2 transition-all duration-300 ${
-              isFavorite ? "bg-red-50 border-red-500 text-red-500" : "border-border hover:border-primary hover:bg-muted"
+              isInWishlist ? "bg-red-50 border-red-500 text-red-500" : "border-border hover:border-primary hover:bg-muted"
             }`}
           >
-            <Heart className={`w-4 h-4 ${isFavorite ? "fill-current" : ""}`} />
+            <Heart className={`w-4 h-4 ${isInWishlist ? "fill-current" : ""}`} />
           </button>
         </div>
       </div>

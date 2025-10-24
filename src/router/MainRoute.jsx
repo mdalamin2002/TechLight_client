@@ -44,6 +44,20 @@ import PaymentMethods from "@/Layout/Dashboard/UserDashboard/components/PaymentM
 import Overview from "@/Layout/Dashboard/UserDashboard/components/Overview/Overview";
 import Support from "@/Layout/Dashboard/UserDashboard/components/Support/Support";
 
+//seller dashboard
+import SellerOverview from "@/Layout/Dashboard/SellerDashboard/components/SellerDashboardOverview/SellerOverview";
+import MyProductsOrders from "@/Layout/Dashboard/SellerDashboard/components/MyProductsOrders/MyProductsOrders";
+import MyProductsList from "@/Layout/Dashboard/SellerDashboard/components/MyProductsList/MyProductsList";
+import SellerProfile from "@/Layout/Dashboard/SellerDashboard/components/SellerProfileSettings/components/SellerProfile";
+import SellerSettings from "@/Layout/Dashboard/SellerDashboard/components/SellerProfileSettings/SellerSettings";
+import AddNewProduct from "@/Layout/Dashboard/SellerDashboard/components/AddNewProduct/AddNewProduct";
+import CouponManagement from "@/Layout/Dashboard/SellerDashboard/components/CouponManagement/CouponManagement";
+import MyProductsEarnings from "@/Layout/Dashboard/SellerDashboard/components/MyProductsEarnings/MyProductsEarnings";
+import ProductReviews from "@/Layout/Dashboard/SellerDashboard/components/ProductReviews/ProductReviews";
+import EditProduct from "@/Layout/Dashboard/SellerDashboard/components/AddNewProduct/components/EditProduct";
+import SupportHelp from "@/Layout/Dashboard/SellerDashboard/components/SupportHelp/SupportHelp";
+
+
 // Policies
 import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/ReturnsRefundsPolicy";
 import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
@@ -56,8 +70,12 @@ import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/
 import Wishlists from "@/pages/Wishlist page/Wishlists";
 import Wishlist from "@/Layout/Dashboard/UserDashboard/components/Wishlist/Wishlist";
 import WarrantyPolicy from "@/pages/PolicyPages/Warranty/Warranty";
+import PaymentSuccess from "@/pages/PaymentPages/PaymentSuccess";
+import PaymentFail from "@/pages/PaymentPages/PaymentFail";
+import PaymentCancel from "@/pages/PaymentPages/PaymentCancel";
 import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
 import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+
 
 const MainRoute = createBrowserRouter([
   {
@@ -81,10 +99,20 @@ const MainRoute = createBrowserRouter([
         Component: AllProduct,
       },
       {
+        path: "/products/category/:category",
+        Component: AllProduct,
+      },
+      {
+        path: "/products/category/:category/:subcategory",
+        Component: AllProduct,
+      },
+      {
         path: "/allProduct/:id",
         Component: ProductDetails,
         loader: ({ params }) =>
-          fetch(`${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`),
+          fetch(
+            `${import.meta.env.VITE_prod_baseURL}/products/details/${params.id}`
+          ),
       },
       {
         path: "wishlist",
@@ -93,6 +121,18 @@ const MainRoute = createBrowserRouter([
       {
         path: "addToCart",
         Component: AddToCart,
+      },
+      {
+        path: "payment/success/:tranId",
+        Component: PaymentSuccess,
+      },
+      {
+        path: "payment/fail/:tranId",
+        Component: PaymentFail,
+      },
+      {
+        path: "payment/cancel/:tranId",
+        Component: PaymentCancel,
       },
       {
         path: "/returns-refunds",
@@ -141,7 +181,7 @@ const MainRoute = createBrowserRouter([
       { path: "users", element: <AllUsers></AllUsers> },
       { path: "sellers", element: <Sellers></Sellers> },
       { path: "products", element: <Products></Products> },
-      {path:"products/addProduct",element:<AddProduct></AddProduct>},
+      { path: "products/addProduct", element: <AddProduct></AddProduct> },
       { path: "orders", element: <Orders></Orders> },
       { path: "finance", element: <Finance></Finance> },
       { path: "communication", element: <Communication></Communication> },
@@ -151,17 +191,42 @@ const MainRoute = createBrowserRouter([
       { path: "admin/support", element: <SupportManagement></SupportManagement> },
 
       // Moderator Routes
-      { path: "moderator-overview", element: <ModeratorOverview></ModeratorOverview> },
+      {
+        path: "moderator-overview",
+        element: <ModeratorOverview></ModeratorOverview>,
+      },
       { path: "orders-products", element: <OrdersProducts></OrdersProducts> },
       { path: "users-reviews", element: <UsersReviews></UsersReviews> },
-      { path: "support-communication", element: <SupportCommunication></SupportCommunication> },
-      { path: "reports-analytics", element: <ReportsAnalytics></ReportsAnalytics> },
+      {
+        path: "support-communication",
+        element: <SupportCommunication></SupportCommunication>,
+      },
+      {
+        path: "reports-analytics",
+        element: <ReportsAnalytics></ReportsAnalytics>,
+      },
       { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
-      { path: "moderator-settings", element: <ModeratorSettings></ModeratorSettings> },
+      {
+        path: "moderator-settings",
+        element: <ModeratorSettings></ModeratorSettings>,
+      },
       // Moderator Payment routes
-      { path: "payments", element: <Payments></Payments>},
+      { path: "payments", element: <Payments></Payments> },
 
-      { path: "notifications", element: <Notifications></Notifications>},
+      { path: "notifications", element: <Notifications></Notifications> },
+
+      //seller routes
+      {path: "seller-overview", element: <SellerOverview/>},
+      {path: "seller-products-orders", element: <MyProductsOrders/> },
+      {path: "seller-products-list", element: <MyProductsList/> },
+      {path: "seller-profile", element: <SellerProfile/> },
+      {path: "seller-settings", element: <SellerSettings/> },
+      {path: "seller-add-product", element: <AddNewProduct/>},
+      {path: "seller-coupons", element: <CouponManagement/>},
+      {path: "seller-earnings", element: <MyProductsEarnings/>},
+      {path: "seller-products-reviews", element: <ProductReviews/>},
+      {path: "seller-product-edit/:id", element: <EditProduct/>},
+      {path: "seller-support-help", element: <SupportHelp/>},
 
       // User Routes
       { path: "my-overview", element: <Overview></Overview> },
@@ -170,7 +235,10 @@ const MainRoute = createBrowserRouter([
       { path: "my-wishlist", element: <Wishlist></Wishlist> },
       { path: "my-cart", element: <Cart></Cart> },
       { path: "my-addresses", element: <Addresses></Addresses> },
-      { path: "my-payment-methods", element: <PaymentMethods></PaymentMethods> },
+      {
+        path: "my-payment-methods",
+        element: <PaymentMethods></PaymentMethods>,
+      },
       { path: "my-returns", element: <ReturnsRefunds></ReturnsRefunds> },
       { path: "my-settings", element: <UserSettings></UserSettings> },
       { path: "my-support", element: <Support></Support> },

@@ -3,6 +3,7 @@ import { useSocket } from "@/context/AuthContext/SocketContext/SocketContext";
 import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/utils/useAxiosSecure";
 import { toast } from "react-hot-toast";
+import GlobalLoading from "@/Components/Shared/Loading/GlobalLoading";
 import {
   MessageCircle,
   Send,
@@ -248,8 +249,24 @@ const LiveChatTab = () => {
           });
         }
 
-        // Refresh conversation to get updated status and assignment
-        fetchConversations();
+        // Update conversation's lastMessageAt timestamp locally (no need to reload entire list)
+        setConversations((prev) =>
+          prev.map((conv) =>
+            conv._id === selectedConversation._id
+              ? { ...conv, lastMessageAt: new Date(), status: response.data.conversation?.status || conv.status, assignedTo: response.data.conversation?.assignedTo || conv.assignedTo }
+              : conv
+          )
+        );
+
+        // Update selected conversation if status changed
+        if (response.data.conversation) {
+          setSelectedConversation((prev) => ({
+            ...prev,
+            status: response.data.conversation.status,
+            assignedTo: response.data.conversation.assignedTo,
+            assignedToName: response.data.conversation.assignedToName,
+          }));
+        }
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -400,20 +417,13 @@ const LiveChatTab = () => {
   ).length;
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-600">Loading conversations...</p>
-        </div>
-      </div>
-    );
+    return <GlobalLoading />;
   }
 
   return (
-    <div className="grid grid-cols-12 gap-4 h-[calc(100vh-200px)]">
+    <div className="grid grid-cols-12 gap-4 h-[calc(100vh-200px)] max-h-[800px]">
       {/* Conversations List */}
-      <div className="col-span-4 flex flex-col bg-white rounded-lg border border-slate-200 shadow-sm">
+      <div className="col-span-4 flex flex-col bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
         {/* View Mode Toggle */}
         <div className="p-4 border-b border-slate-200">
           <div className="flex gap-2 mb-3">
@@ -560,7 +570,7 @@ const LiveChatTab = () => {
       </div>
 
       {/* Chat Area */}
-      <div className="col-span-8 flex flex-col bg-white rounded-lg border border-slate-200 shadow-sm">
+      <div className="col-span-8 flex flex-col bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden h-full">
         {selectedConversation ? (
           <>
             {/* Chat Header */}
@@ -623,7 +633,7 @@ const LiveChatTab = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
               {messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full text-slate-400">
                   <p>No messages yet</p>
