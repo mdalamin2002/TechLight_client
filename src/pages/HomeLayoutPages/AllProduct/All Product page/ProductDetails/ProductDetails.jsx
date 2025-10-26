@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ArrowLeft, Share2, Loader2 } from "lucide-react";
-import { useLoaderData, useNavigation } from "react-router";
+import { useLoaderData, useNavigate, useNavigation } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import ProductGallery from "./ProductGallery";
 import ProductInfo from "./ProductInfo";
@@ -14,6 +14,7 @@ import Swal from "sweetalert2";
 const ProductDetails = () => {
   const product = useLoaderData();
   const navigation = useNavigation();
+  const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specifications");
@@ -40,6 +41,46 @@ const ProductDetails = () => {
     enabled: !!product?.category, // Only run query if product exists
   });
 
+  // Handle back navigation
+  const handleGoBack = () => {
+    // If there's a previous page in history, go back
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      // Otherwise, navigate to the all products page
+      navigate('/allProduct');
+    }
+  };
+
+  // Handle share functionality
+  const handleShare = async () => {
+    const shareData = {
+      title: product.name,
+      text: `Check out this ${product.name} on TechLight!`,
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(window.location.href);
+        toast.success("Link copied to clipboard!");
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast.success("Link copied to clipboard!");
+      } catch (clipboardError) {
+        console.error('Error copying to clipboard:', clipboardError);
+        toast.error("Failed to copy link");
+      }
+    }
+  };
+
   // Show loading state while navigating (AFTER hooks)
   if (isNavigating) {
     return (
@@ -59,8 +100,8 @@ const ProductDetails = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-foreground mb-2">Product Not Found</h2>
           <p className="text-muted-foreground mb-4">The product you're looking for doesn't exist or has been removed.</p>
-          <button 
-            onClick={() => window.history.back()}
+          <button
+            onClick={handleGoBack}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
           >
             Go Back
@@ -124,9 +165,7 @@ const ProductDetails = () => {
               <div style="flex-grow: 1;">
                 <strong style="font-size: 16px;">${product.name}</strong>
                 <div style="color: #666; font-size: 13px;">Quantity: ${quantity}</div>
-                <div style="color: #666; font-size: 13px;">Price: ${
-                  product.price
-                }৳</div>
+                <div style="color: #666; font-size: 13px;">Price: $${product.price}৳</div>
               </div>
               <div style="font-weight: bold; font-size: 16px;">
                 ${totalAmount}৳
@@ -244,12 +283,18 @@ const ProductDetails = () => {
       <div className="sticky top-0 z-40 backdrop-blur-lg -mt-6">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-14">
-            <button className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
+            <button
+              onClick={handleGoBack}
+              className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+            >
               <ArrowLeft className="w-4 h-4" />
               <span className="hidden sm:inline">Back to Products</span>
             </button>
             <div className="flex items-center gap-2">
-              <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+              <button
+                onClick={handleShare}
+                className="p-2 hover:bg-muted rounded-lg transition-colors"
+              >
                 <Share2 className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
