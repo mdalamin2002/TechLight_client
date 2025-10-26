@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Star, Check, Minus, Plus, ShoppingCart, Heart, Truck, RefreshCw, MapPin, Shield, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useCart from "@/hooks/useCart";
 import useWishlist from "@/hooks/useWishlist";
+import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 
 const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
-  const { addToCart } = useCart();
-  const { addToWishlist, wishlist } = useWishlist();
+  const { addToCart, cart } = useCart();
+  const { addToWishlist, removeFromWishlist, wishlist, isLoading } = useWishlist();
+  const { user } = useAuth();
+
+  // Check wishlist state
+  useEffect(() => {
+    if (!isLoading && wishlist?.length > 0) {
+      const exists = wishlist.some((item) => item.productId === product._id);
+      setIsFavorite(exists);
+    }
+  }, [wishlist, product._id, isLoading]);
 
   const handleQuantityChange = (type) => {
     if (type === "increment") setQuantity((prev) => prev + 1);
@@ -17,6 +27,12 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
   };
 
   const handleAddToCart = () => {
+    if (!user?.email) {
+      toast.warning("Please login first!");
+      navigate("/auth/login");
+      return;
+    }
+
     const cartData = {
       productId: product._id,
       name: product.name,
@@ -35,20 +51,35 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
       keyFeatures: product.keyFeatures,
       specifications: product.specifications,
       description: product.description,
-      images: product.images
+      images: product.images,
+      userEmail: user.email,
+      createdAt: new Date().toISOString(),
     };
 
-    addToCart(cartData, {
-      onSuccess: () => {
-        toast.success(`${product.name} added to cart!`);
-      },
-      onError: () => {
-        toast.error("Failed to add to cart");
-      }
-    });
+    // Check if item already exists in cart
+    const exists = cart?.some((item) => item.productId === product._id);
+
+    if (exists) {
+      toast.info(`${product.name} is already in your cart.`);
+    } else {
+      addToCart(cartData, {
+        onSuccess: () => {
+          toast.success(`${product.name} added to cart!`);
+        },
+        onError: () => {
+          toast.error("Failed to add to cart");
+        }
+      });
+    }
   };
 
   const handleAddToWishlist = () => {
+    if (!user?.email) {
+      toast.warning("Please login first!");
+      navigate("/auth/login");
+      return;
+    }
+
     const wishlistData = {
       productId: product._id,
       name: product.name,
@@ -66,21 +97,38 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
       keyFeatures: product.keyFeatures,
       specifications: product.specifications,
       description: product.description,
-      images: product.images
+      images: product.images,
+      userEmail: user.email,
+      createdAt: new Date().toISOString(),
     };
 
-    addToWishlist(wishlistData, {
-      onSuccess: () => {
-        toast.success(`${product.name} added to wishlist!`);
-        setIsFavorite(true);
-      },
-      onError: () => {
-        toast.error("Failed to add to wishlist");
-      }
-    });
+    const wishlistItem = wishlist?.find((item) => item.productId === product._id);
+    const wishlistId = wishlistItem?._id;
+
+    if (!isFavorite) {
+      addToWishlist(wishlistData, {
+        onSuccess: () => {
+          toast.success(`${product.name} added to wishlist!`);
+          setIsFavorite(true);
+        },
+        onError: () => {
+          toast.error("Failed to add to wishlist");
+        }
+      });
+    } else if (wishlistId) {
+      removeFromWishlist(wishlistId, {
+        onSuccess: () => {
+          toast.info(`${product.name} removed from wishlist.`);
+          setIsFavorite(false);
+        },
+        onError: () => {
+          toast.error("Failed to remove from wishlist");
+        }
+      });
+    }
   };
 
-  const isInWishlist = wishlist.some(item => item.productId === product._id);
+  const isInWishlist = isFavorite;
 
   return (
     <div className="lg:col-span-5 space-y-4">
