@@ -51,7 +51,7 @@ export default function CategoryNav({ categories }) {
                         to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
                         className={`block px-3 py-2 rounded-lg text-sm transition-colors hover:bg-muted ${
                           isActiveRoute(
-                            `/${item.toLowerCase().replace(/\s+/g, "-")}`
+                            `/${item?.toLowerCase().replace(/\s+/g, "-")}`
                           )
                             ? "bg-primary/10 font-semibold"
                             : ""

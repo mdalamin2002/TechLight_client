@@ -25,16 +25,22 @@ import {
   Bell,
   ChevronRight,
   Lightbulb,
+  BadgePercent,
+  PlusCircle,
 } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
+// import useAuth from "@/hooks/useAuth";
 
 export default function DashboardSidebar({
   isMobileMenuOpen,
   setIsMobileMenuOpen,
 }) {
+ 
   const { userData } = useAuth();
   const role = userData?.role; // "admin", "moderator", or "user"
   console.log(role);
+ 
+  
 
   const NavItem = ({ to, label, icon: Icon, onClick }) => (
     <NavLink
@@ -80,6 +86,7 @@ export default function DashboardSidebar({
       },
       { to: "/dashboard/admin/support", label: "Support Management", icon: PhoneCall },
       { to: "/dashboard/reports", label: "Reports", icon: BarChart3 },
+      { to: "/dashboard/offers", label: "Offers", icon: BadgePercent },
       { to: "/dashboard/settings", label: "Settings", icon: Settings },
       { to: "/dashboard/advanced", label: "Advanced", icon: Zap },
     ],
@@ -117,6 +124,54 @@ export default function DashboardSidebar({
         to: "/dashboard/notifications",
         label: "Notifications",
         icon: Bell,
+      },
+    ],
+
+    seller:[
+      {
+        to: "/dashboard/seller-overview", 
+        label: "Overview", 
+        icon: LayoutDashboard
+      },
+      {
+        to: "/dashboard/seller-products-orders", 
+        label: "All Orders", 
+        icon: Box
+      },
+      {
+        to: "/dashboard/seller-products-list", 
+        label: "Products List", 
+        icon: Store
+      },
+      {
+        to: "/dashboard/seller-earnings", 
+        label: "Earnings", 
+        icon: DollarSign
+      },
+      {
+        to: "/dashboard/seller-add-product", 
+        label: "Add New Product", 
+        icon: PlusCircle
+      },
+      {
+        to: "/dashboard/seller-coupons", 
+        label: "Coupons", 
+        icon: Star
+      },
+      {
+        to: "/dashboard/seller-products-reviews", 
+        label: "Product Reviews", 
+        icon: Star
+      },
+      {
+        to: "/dashboard/seller-support-help", 
+        label: "Support Help", 
+        icon: MessageSquare
+      },
+      {
+        to: "/dashboard/seller-settings", 
+        label: "Settings", 
+        icon: Settings
       },
     ],
 

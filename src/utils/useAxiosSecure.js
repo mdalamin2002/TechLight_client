@@ -28,7 +28,7 @@ const useAxiosSecure = () => {
       const responseInterceptor = axiosInstance.interceptors.response.use(
         (res) => res,
         (err) => {
-          if (err?.response?.status === 401 || err?.response?.status === 403) {
+          if (err?.response?.status === 40100 || err?.response?.status === 40300) {
             logOutUser()
               .then(() => {
                 toast.error("Logged out due to token issue.")
