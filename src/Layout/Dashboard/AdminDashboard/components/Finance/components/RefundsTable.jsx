@@ -1,55 +1,77 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Swal from "sweetalert2";
 import { CheckCircle, Clock, X, Check, Download, Search, Filter } from "lucide-react";
 import { CSVLink } from "react-csv";
+import useAxiosSecure from "@/utils/useAxiosSecure";
+import { toast } from "react-hot-toast";
 
 const RefundsTable = () => {
-  const [refunds, setRefunds] = useState([
-    { id: "RF-001", orderId: "ORD-002", user: "Jane Smith", email: "jane@example.com", amount: "$129", reason: "Defective Item", status: "Pending", date: "2024-01-15" },
-    { id: "RF-002", orderId: "ORD-005", user: "David Brown", email: "david@example.com", amount: "$299", reason: "Not Delivered", status: "Approved", date: "2024-01-16" },
-    { id: "RF-003", orderId: "ORD-007", user: "Mike Johnson", email: "mike@example.com", amount: "$89", reason: "Wrong Item", status: "Rejected", date: "2024-01-17" },
-    { id: "RF-004", orderId: "ORD-009", user: "Alice Green", email: "alice@example.com", amount: "$199", reason: "Size Issue", status: "Pending", date: "2024-01-18" },
-    { id: "RF-005", orderId: "ORD-011", user: "Bob White", email: "bob@example.com", amount: "$449", reason: "Changed Mind", status: "Approved", date: "2024-01-19" },
-    { id: "RF-006", orderId: "ORD-013", user: "Carol Davis", email: "carol@example.com", amount: "$79", reason: "Damaged in Transit", status: "Pending", date: "2024-01-20" },
-  ]);
-
+  const [refunds, setRefunds] = useState([]);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("All Status");
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalCount: 0,
+    limit: 10,
+  });
+  const axiosSecure = useAxiosSecure();
 
-  // Get unique statuses for filter
-  const statuses = useMemo(() => {
-    const statusList = [...new Set(refunds.map(r => r.status))];
-    return ["All Status", ...statusList];
-  }, [refunds]);
+  useEffect(() => {
+    fetchRefunds();
+  }, [pagination.currentPage, filterStatus]);
 
-  // Filter refunds based on search and status
+  const fetchRefunds = async () => {
+    try {
+      setLoading(true);
+      const statusParam = filterStatus === "All Status" ? "all" : filterStatus;
+      const response = await axiosSecure.get('/returns', {
+        params: {
+          page: pagination.currentPage,
+          limit: pagination.limit,
+          status: statusParam,
+        },
+      });
+
+      if (response.data.success) {
+        setRefunds(response.data.data);
+        setPagination(response.data.pagination);
+      }
+    } catch (error) {
+      console.error('Error fetching refunds:', error);
+      toast.error('Failed to load refunds');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter refunds based on search
   const filteredRefunds = useMemo(() => {
     return refunds.filter(rf => {
       const matchesSearch =
-        rf.id.toLowerCase().includes(search.toLowerCase()) ||
-        rf.orderId.toLowerCase().includes(search.toLowerCase()) ||
-        rf.user.toLowerCase().includes(search.toLowerCase()) ||
-        rf.email.toLowerCase().includes(search.toLowerCase());
+        rf._id?.toLowerCase().includes(search.toLowerCase()) ||
+        rf.orderId?.toLowerCase().includes(search.toLowerCase()) ||
+        rf.userName?.toLowerCase().includes(search.toLowerCase()) ||
+        rf.userEmail?.toLowerCase().includes(search.toLowerCase());
 
-      const matchesStatus = filterStatus === "All Status" || rf.status === filterStatus;
-
-      return matchesSearch && matchesStatus;
+      return matchesSearch;
     });
-  }, [refunds, search, filterStatus]);
+  }, [refunds, search]);
 
-  // SweetAlert confirmation
-  const handleAction = (rf, newStatus) => {
+  // SweetAlert confirmation for status change
+  const handleAction = async (rf, newStatus) => {
     Swal.fire({
       title: `Change Status to "${newStatus}"?`,
       html: `
         <div class="text-left">
           <table style="text-align:left; width:100%; font-size:14px; line-height:1.5">
-            <tr><td style="padding: 4px;"><b>Refund ID:</b></td><td style="padding: 4px;">${rf.id}</td></tr>
-            <tr><td style="padding: 4px;"><b>Order ID:</b></td><td style="padding: 4px;">${rf.orderId}</td></tr>
-            <tr><td style="padding: 4px;"><b>User:</b></td><td style="padding: 4px;">${rf.user}</td></tr>
-            <tr><td style="padding: 4px;"><b>Email:</b></td><td style="padding: 4px;">${rf.email}</td></tr>
-            <tr><td style="padding: 4px;"><b>Amount:</b></td><td style="padding: 4px;">${rf.amount}</td></tr>
-            <tr><td style="padding: 4px;"><b>Reason:</b></td><td style="padding: 4px;">${rf.reason}</td></tr>
+            <tr><td style="padding: 4px;"><b>Refund ID:</b></td><td style="padding: 4px;">${rf._id || 'N/A'}</td></tr>
+            <tr><td style="padding: 4px;"><b>Order ID:</b></td><td style="padding: 4px;">${rf.orderId || 'N/A'}</td></tr>
+            <tr><td style="padding: 4px;"><b>User:</b></td><td style="padding: 4px;">${rf.userName || 'N/A'}</td></tr>
+            <tr><td style="padding: 4px;"><b>Email:</b></td><td style="padding: 4px;">${rf.userEmail || 'N/A'}</td></tr>
+            <tr><td style="padding: 4px;"><b>Amount:</b></td><td style="padding: 4px;">৳${rf.amount || '0'}</td></tr>
+            <tr><td style="padding: 4px;"><b>Reason:</b></td><td style="padding: 4px;">${rf.reason || 'N/A'}</td></tr>
             <tr><td style="padding: 4px;"><b>Current Status:</b></td><td style="padding: 4px;">${rf.status}</td></tr>
           </table>
         </div>
@@ -63,21 +85,32 @@ const RefundsTable = () => {
         popup: 'rounded-xl',
         header: 'rounded-t-xl',
       }
-    }).then((result) => {
+    }).then(async (result) => {
       if(result.isConfirmed){
-        setRefunds(prevRefunds =>
-          prevRefunds.map(r => r.id === rf.id ? { ...r, status: newStatus } : r)
-        );
-        Swal.fire({
-          title: "Updated!",
-          text: `Refund status changed to "${newStatus}".`,
-          icon: "success",
-          timer: 1500,
-          showConfirmButton: false,
-          customClass: {
-            popup: 'rounded-xl',
-          }
-        });
+        try {
+          await axiosSecure.put(`/returns/${rf._id}`, { status: newStatus });
+          
+          setRefunds(prevRefunds =>
+            prevRefunds.map(r => r._id === rf._id ? { ...r, status: newStatus } : r)
+          );
+          
+          Swal.fire({
+            title: "Updated!",
+            text: `Refund status changed to "${newStatus}".`,
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+            customClass: {
+              popup: 'rounded-xl',
+            }
+          });
+          
+          // Refresh data
+          fetchRefunds();
+        } catch (error) {
+          console.error('Error updating refund:', error);
+          toast.error('Failed to update refund status');
+        }
       }
     });
   };
@@ -152,15 +185,28 @@ const RefundsTable = () => {
           <select
             className="px-4 py-2.5 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
+            onChange={(e) => {
+              setFilterStatus(e.target.value);
+              setPagination(prev => ({ ...prev, currentPage: 1 }));
+            }}
           >
-            {statuses.map(status => (
-              <option key={status} value={status}>{status}</option>
-            ))}
+            <option value="All Status">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
           </select>
 
           <CSVLink
-            data={filteredRefunds}
+            data={filteredRefunds.map(rf => ({
+              refund_id: rf._id,
+              order_id: rf.orderId,
+              user: rf.userName,
+              email: rf.userEmail,
+              amount: rf.amount,
+              reason: rf.reason,
+              status: rf.status,
+              date: new Date(rf.createdAt).toLocaleDateString(),
+            }))}
             filename={"refunds-report.csv"}
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
           >
@@ -171,109 +217,148 @@ const RefundsTable = () => {
 
       {/* Results count */}
       <div className="mb-4 text-sm text-muted-foreground">
-        Showing {filteredRefunds.length} of {refunds.length} refunds
+        Showing {filteredRefunds.length} of {pagination.totalCount} refunds
       </div>
 
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border-0 shadow-sm">
-        <table className="min-w-full">
-          <thead>
-            <tr className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-600 text-white">
-              <th className="px-4 py-4 text-left">
-                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Refund ID</span>
-              </th>
-              <th className="px-4 py-4 text-left">
-                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Order ID</span>
-              </th>
-              <th className="px-4 py-4 text-left">
-                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">User</span>
-              </th>
-              <th className="px-4 py-4 text-left hidden md:table-cell">
-                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Email</span>
-              </th>
-              <th className="px-4 py-4 text-left">
-                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Amount</span>
-              </th>
-              <th className="px-4 py-4 text-left hidden md:table-cell">
-                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Reason</span>
-              </th>
-              <th className="px-4 py-4 text-left">
-                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Status</span>
-              </th>
-              <th className="px-4 py-4 text-left hidden md:table-cell">
-                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Date</span>
-              </th>
-              <th className="px-4 py-4 text-right">
-                <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Actions</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border/30">
-            {filteredRefunds.map((rf, i) => (
-              <tr
-                key={i}
-                className="hover:bg-muted/20 transition-colors duration-150"
-              >
-                <td className="px-4 py-4">
-                  <span className="text-sm font-medium text-primary">{rf.id}</span>
-                </td>
-                <td className="px-4 py-4">
-                  <span className="text-sm font-medium text-primary">{rf.orderId}</span>
-                </td>
-                <td className="px-4 py-4">
-                  <div className="flex items-center">
-                    <div className="h-8 w-8 flex-shrink-0">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-xs font-medium text-primary">
-                          {rf.user.split(' ').map(n => n[0]).join('')}
-                        </span>
+        {loading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        ) : filteredRefunds.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            No refunds found
+          </div>
+        ) : (
+          <table className="min-w-full">
+            <thead>
+              <tr className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-600 text-white">
+                <th className="px-4 py-4 text-left">
+                  <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Refund ID</span>
+                </th>
+                <th className="px-4 py-4 text-left">
+                  <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Order ID</span>
+                </th>
+                <th className="px-4 py-4 text-left">
+                  <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">User</span>
+                </th>
+                <th className="px-4 py-4 text-left hidden md:table-cell">
+                  <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Email</span>
+                </th>
+                <th className="px-4 py-4 text-left">
+                  <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Amount</span>
+                </th>
+                <th className="px-4 py-4 text-left hidden md:table-cell">
+                  <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Reason</span>
+                </th>
+                <th className="px-4 py-4 text-left">
+                  <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Status</span>
+                </th>
+                <th className="px-4 py-4 text-left hidden md:table-cell">
+                  <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Date</span>
+                </th>
+                <th className="px-4 py-4 text-right">
+                  <span className="text-left text-xs md:text-sm font-bold uppercase tracking-wider">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/30">
+              {filteredRefunds.map((rf, i) => (
+                <tr
+                  key={i}
+                  className="hover:bg-muted/20 transition-colors duration-150"
+                >
+                  <td className="px-4 py-4">
+                    <span className="text-sm font-medium text-primary">{rf._id?.slice(-8).toUpperCase() || 'N/A'}</span>
+                  </td>
+                  <td className="px-4 py-4">
+                    <span className="text-sm font-medium text-primary">{rf.orderId || 'N/A'}</span>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="flex items-center">
+                      <div className="h-8 w-8 flex-shrink-0">
+                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <span className="text-xs font-medium text-primary">
+                            {rf.userName?.split(' ').map(n => n[0]).join('') || 'U'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm font-medium text-foreground">{rf.userName || 'Unknown'}</p>
                       </div>
                     </div>
-                    <div className="ml-3">
-                      <p className="text-sm font-medium text-foreground">{rf.user}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-4 hidden md:table-cell">
-                  <span className="text-sm text-muted-foreground">{rf.email}</span>
-                </td>
-                <td className="px-4 py-4">
-                  <span className="text-sm font-semibold text-foreground">{rf.amount}</span>
-                </td>
-                <td className="px-4 py-4 hidden md:table-cell">
-                  <span className="text-sm text-muted-foreground max-w-xs truncate" title={rf.reason}>
-                    {rf.reason}
-                  </span>
-                </td>
-                <td className="px-4 py-4">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    rf.status === "Approved"
-                      ? "bg-green-100 text-green-800"
-                      : rf.status === "Rejected"
-                      ? "bg-red-100 text-red-800"
-                      : "bg-amber-100 text-amber-800"
-                  }`}>
-                    <span className={`w-1.5 h-1.5 mr-1.5 rounded-full ${
+                  </td>
+                  <td className="px-4 py-4 hidden md:table-cell">
+                    <span className="text-sm text-muted-foreground">{rf.userEmail || 'N/A'}</span>
+                  </td>
+                  <td className="px-4 py-4">
+                    <span className="text-sm font-semibold text-foreground">৳{rf.amount?.toLocaleString() || '0'}</span>
+                  </td>
+                  <td className="px-4 py-4 hidden md:table-cell">
+                    <span className="text-sm text-muted-foreground max-w-xs truncate" title={rf.reason}>
+                      {rf.reason || 'N/A'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-4">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       rf.status === "Approved"
-                        ? "bg-green-500"
+                        ? "bg-green-100 text-green-800"
                         : rf.status === "Rejected"
-                        ? "bg-red-500"
-                        : "bg-amber-500"
-                    }`}></span>
-                    {rf.status}
-                  </span>
-                </td>
-                <td className="px-4 py-4 hidden md:table-cell">
-                  <span className="text-sm text-muted-foreground">{rf.date}</span>
-                </td>
-                <td className="px-4 py-4">
-                  {renderActions(rf)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                        ? "bg-red-100 text-red-800"
+                        : "bg-amber-100 text-amber-800"
+                    }`}>
+                      <span className={`w-1.5 h-1.5 mr-1.5 rounded-full ${
+                        rf.status === "Approved"
+                          ? "bg-green-500"
+                          : rf.status === "Rejected"
+                          ? "bg-red-500"
+                          : "bg-amber-500"
+                      }`}></span>
+                      {rf.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-4 hidden md:table-cell">
+                    <span className="text-sm text-muted-foreground">
+                      {rf.createdAt ? new Date(rf.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      }) : 'N/A'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-4">
+                    {renderActions(rf)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
+
+      {/* Pagination */}
+      {!loading && pagination.totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-6">
+          <button
+            onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
+            disabled={pagination.currentPage === 1}
+            className="px-4 py-2 border border-border rounded-lg bg-card text-foreground disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition-colors"
+          >
+            Previous
+          </button>
+          <span className="text-sm text-muted-foreground">
+            Page {pagination.currentPage} of {pagination.totalPages}
+          </span>
+          <button
+            onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
+            disabled={pagination.currentPage === pagination.totalPages}
+            className="px-4 py-2 border border-border rounded-lg bg-card text-foreground disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
