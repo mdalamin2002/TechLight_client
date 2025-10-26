@@ -178,14 +178,14 @@ const AllProductCardShare = ({
 
       {/* View Button */}
       <Link
-        to={id}
+        to={`/allProduct/${id}`}
         className="absolute cursor-pointer top-28 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 delay-75 hover:bg-blue-100"
       >
         <Eye className="w-5 h-5 text-gray-700 hover:text-blue-600 transition-colors" />
       </Link>
 
       {/* Product Image */}
-      <Link to={id}>
+      <Link to={`/allProduct/${id}`}>
         <div
           className={
             variant === "list"
@@ -214,7 +214,7 @@ const AllProductCardShare = ({
           </span>
         </div>
 
-        <Link to={id}>
+        <Link to={`/allProduct/${id}`}>
           <h4 className="font-semibold cursor-pointer text-foreground text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary/90 transition-colors">
             {name}
           </h4>

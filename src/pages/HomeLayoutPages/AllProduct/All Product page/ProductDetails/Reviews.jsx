@@ -3,23 +3,18 @@ import { Star, ThumbsUp, Edit2, Trash2, X, Check, TrendingUp, Award, ShieldCheck
 import useReviews from "@/hooks/useReviews";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const Reviews = ({ product }) => {
   const { user } = useAuth();
-  console.log("User data:", user);
-  console.log("User displayName:", user?.displayName);
-  console.log("User email:", user?.email);
-
   const {
     reviews,
     reviewsStats,
     userReview,
     isLoading,
     isError,
-    isLoadingUserReview,
     isCreating,
     isUpdating,
-    isDeleting,
     isMarkingHelpful,
     createReview,
     updateReview,
@@ -57,9 +52,6 @@ const Reviews = ({ product }) => {
     }
 
     if (editingReview) {
-      console.log("Updating review:", editingReview._id);
-      console.log("Update data:", newReview);
-
       updateReview(
         { reviewId: editingReview._id, ...newReview },
         {
@@ -70,7 +62,6 @@ const Reviews = ({ product }) => {
             setShowReviewForm(false);
           },
           onError: (error) => {
-            console.error("Update error:", error);
             toast.error(error.response?.data?.message || "Failed to update review");
           }
         }
@@ -90,10 +81,6 @@ const Reviews = ({ product }) => {
   };
 
   const handleEditReview = (review) => {
-    console.log("Editing review:", review);
-    console.log("Current user:", user?.email);
-    console.log("Review user email:", review.userEmail);
-
     setEditingReview(review);
     setNewReview({
       rating: review.rating,
@@ -104,20 +91,36 @@ const Reviews = ({ product }) => {
   };
 
   const handleDeleteReview = (reviewId) => {
-    console.log("Deleting review ID:", reviewId);
-    console.log("Current user:", user?.email);
-
-    if (window.confirm("Are you sure you want to delete this review?")) {
-      deleteReview(reviewId, {
-        onSuccess: () => {
-          toast.success("Review deleted successfully!");
-        },
-        onError: (error) => {
-          console.error("Delete error:", error);
-          toast.error(error.response?.data?.message || "Failed to delete review");
-        }
-      });
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteReview(reviewId, {
+          onSuccess: () => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your review has been deleted.",
+              icon: "success",
+              timer: 2000,
+              showConfirmButton: false
+            });
+          },
+          onError: (error) => {
+            Swal.fire({
+              title: "Error!",
+              text: error.response?.data?.message || "Failed to delete review",
+              icon: "error"
+            });
+          }
+        });
+      }
+    });
   };
 
   const handleHelpful = (reviewId, reviewUserEmail, helpfulUsers) => {
@@ -469,7 +472,7 @@ const Reviews = ({ product }) => {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-4">
                   {/* User Avatar */}
-                  <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 shadow-lg">
+                  <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 shadow-lg">
                     {review.userPhotoURL ? (
                       <img
                         src={review.userPhotoURL}

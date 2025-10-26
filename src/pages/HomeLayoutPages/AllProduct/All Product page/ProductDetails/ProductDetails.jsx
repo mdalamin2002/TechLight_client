@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, Share2, Loader2 } from "lucide-react";
+import { ArrowLeft, Share2, Loader2, Star } from "lucide-react";
 import { useLoaderData, useNavigate, useNavigation } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import ProductGallery from "./ProductGallery";
@@ -35,14 +35,11 @@ const ProductDetails = () => {
       if (!product?.category) return [];
       try {
         const res = await axiosPublic.get("/products");
-        console.log("API Response:", res.data); // Debug log
         // Fix: Access the data property from the API response
         const products = res.data.data || res.data; // Handle both response formats
-        console.log("Products:", products); // Debug log
         const filtered = products.filter(
           (p) => p.category === product.category && p._id !== product._id
         );
-        console.log("Filtered related products:", filtered); // Debug log
         return filtered;
       } catch (error) {
         console.error("Error fetching related products:", error);
@@ -388,7 +385,7 @@ const ProductDetails = () => {
                 return (
                   <div
                     key={item._id}
-                    onClick={() => navigate(`/product/${item._id}`)}
+                    onClick={() => navigate(`/allProduct/${item._id}`)}
                     className="bg-card rounded-lg border border-border p-3 hover:shadow-md transition-all duration-300 cursor-pointer group hover:border-primary/50"
                   >
                     <div className="flex gap-3">
@@ -409,17 +406,19 @@ const ProductDetails = () => {
                           {item.name}
                         </h4>
                         <div className="flex items-center gap-1 mb-1.5">
-                          {[...Array(5)].map((_, i) => (
-                            <span
-                              key={i}
-                              className={`w-2.5 h-2.5 ${
-                                i < Math.floor(item.rating || 0)
-                                  ? "bg-amber-400"
-                                  : "bg-gray-300"
-                              } inline-block`}
-                            />
-                          ))}
-                          <span className="text-[10px] text-muted-foreground ml-0.5">
+                          <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`w-3 h-3 ${
+                                  i < Math.floor(item.rating || 0)
+                                    ? "fill-amber-400 text-amber-400"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-[10px] text-muted-foreground">
                             {item.rating || 0}
                           </span>
                         </div>
