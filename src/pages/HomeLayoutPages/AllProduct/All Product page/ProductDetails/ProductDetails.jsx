@@ -33,10 +33,21 @@ const ProductDetails = () => {
     queryKey: ["relatedProducts", product?.category],
     queryFn: async () => {
       if (!product?.category) return [];
-      const res = await axiosPublic.get("/products");
-      return res.data.filter(
-        (p) => p.category === product.category && p._id !== product._id
-      );
+      try {
+        const res = await axiosPublic.get("/products");
+        console.log("API Response:", res.data); // Debug log
+        // Fix: Access the data property from the API response
+        const products = res.data.data || res.data; // Handle both response formats
+        console.log("Products:", products); // Debug log
+        const filtered = products.filter(
+          (p) => p.category === product.category && p._id !== product._id
+        );
+        console.log("Filtered related products:", filtered); // Debug log
+        return filtered;
+      } catch (error) {
+        console.error("Error fetching related products:", error);
+        return [];
+      }
     },
     enabled: !!product?.category, // Only run query if product exists
   });
@@ -334,16 +345,42 @@ const ProductDetails = () => {
             Related Products
           </h3>
           {isLoading ? (
-            <p>Loading related products...</p>
+            <div className="space-y-3">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-card rounded-lg border border-border p-3 animate-pulse">
+                  <div className="flex gap-3">
+                    <div className="w-20 h-20 bg-muted rounded-md"></div>
+                    <div className="flex-1 space-y-2">
+                      <div className="h-3 bg-muted rounded w-3/4"></div>
+                      <div className="h-2 bg-muted rounded w-1/2"></div>
+                      <div className="h-3 bg-muted rounded w-1/3"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : isError ? (
-            <p>Failed to load related products.</p>
+            <div className="text-center py-8">
+              <p className="text-sm text-red-500 mb-2">Failed to load related products.</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="text-xs text-primary hover:underline"
+              >
+                Try again
+              </button>
+            </div>
           ) : relatedProducts.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              No related products found.
-            </p>
+            <div className="text-center py-8">
+              <p className="text-sm text-muted-foreground mb-2">
+                No related products found.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Check back later for more products in this category.
+              </p>
+            </div>
           ) : (
             <div className="space-y-3">
-              {relatedProducts.map((item) => {
+              {relatedProducts.slice(0, 4).map((item) => {
                 const itemDiscount = (
                   ((item.regularPrice - item.price) / item.regularPrice) *
                   100
@@ -351,12 +388,13 @@ const ProductDetails = () => {
                 return (
                   <div
                     key={item._id}
+                    onClick={() => navigate(`/product/${item._id}`)}
                     className="bg-card rounded-lg border border-border p-3 hover:shadow-md transition-all duration-300 cursor-pointer group hover:border-primary/50"
                   >
                     <div className="flex gap-3">
                       <div className="w-20 h-20 bg-muted rounded-md overflow-hidden flex-shrink-0 relative">
                         <img
-                          src={item.images?.gallery?.[0]}
+                          src={item.images?.gallery?.[0] || item.image || "https://via.placeholder.com/80"}
                           alt={item.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
@@ -375,23 +413,23 @@ const ProductDetails = () => {
                             <span
                               key={i}
                               className={`w-2.5 h-2.5 ${
-                                i < Math.floor(item.rating)
+                                i < Math.floor(item.rating || 0)
                                   ? "bg-amber-400"
                                   : "bg-gray-300"
                               } inline-block`}
                             />
                           ))}
                           <span className="text-[10px] text-muted-foreground ml-0.5">
-                            {item.rating}
+                            {item.rating || 0}
                           </span>
                         </div>
                         <div className="flex items-baseline gap-1.5">
                           <span className="text-primary font-bold text-sm">
-                            ৳{item.price.toLocaleString()}
+                            ৳{(item.price || 0).toLocaleString()}
                           </span>
                           {item.regularPrice > item.price && (
                             <span className="text-[10px] text-muted-foreground line-through">
-                              ৳{item.regularPrice.toLocaleString()}
+                              ৳{(item.regularPrice || 0).toLocaleString()}
                             </span>
                           )}
                         </div>
