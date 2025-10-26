@@ -20,7 +20,7 @@ createRoot(document.getElementById("root")).render(
           <SocketProvider>
             <RouterProvider router={MainRoute} />
             <TechLightChatbot />
-            <ToastContainer />
+            <ToastContainer position="bottom-right" />
           </SocketProvider>
         </ThemeProvider>
       </FirebaseContext>

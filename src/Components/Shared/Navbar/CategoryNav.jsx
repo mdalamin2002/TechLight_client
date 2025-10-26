@@ -30,7 +30,7 @@ export default function CategoryNav({ categories }) {
                 <span>{category.title}</span>
                 <ChevronDown size={14} />
               </Button>
-              
+
               {/* Dropdown */}
               <AnimatePresence>
                 {openCategoryIndex === idx && (
@@ -48,10 +48,10 @@ export default function CategoryNav({ categories }) {
                     {category.items.map((item, i) => (
                       <Link
                         key={i}
-                        to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                        to={`/products/category/${category.title.toLowerCase().replace(/\s+/g, "-")}/${item.toLowerCase().replace(/\s+/g, "-")}`}
                         className={`block px-3 py-2 rounded-lg text-sm transition-colors hover:bg-muted ${
                           isActiveRoute(
-                            `/${item?.toLowerCase().replace(/\s+/g, "-")}`
+                            `/products/category/${category.title.toLowerCase().replace(/\s+/g, "-")}/${item.toLowerCase().replace(/\s+/g, "-")}`
                           )
                             ? "bg-primary/10 font-semibold"
                             : ""

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 import FloatingChatButton from "./FloatingChatButton";
 import ChatSidebar from "./ChatSidebar";
+import useAuth from "@/hooks/useAuth";
 
 export default function TechLightChatbot() {
+  const { user, userData } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
@@ -86,6 +89,71 @@ export default function TechLightChatbot() {
     }
   };
 
+  const handleSupportClick = async () => {
+    if (!user) {
+      toast.error("Please login to access support");
+      window.location.href = "/auth/login";
+      return;
+    }
+
+    try {
+      // Get Firebase ID token
+      const idToken = await user.getIdToken();
+      const API_URL = import.meta.env.VITE_prod_baseURL;
+
+      // Create axios instance with Firebase ID token
+      const axiosInstance = axios.create({
+        baseURL: API_URL,
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      });
+
+      // Get database user ID
+      let dbUserId = userData?._id;
+
+      // If userData not loaded yet, fetch it by email
+      if (!dbUserId) {
+        const roleRes = await axios.get(
+          `${API_URL}/users/role/${encodeURIComponent(user.email)}`
+        );
+        dbUserId = roleRes.data?._id;
+      }
+
+      if (!dbUserId) {
+        toast.error("Could not resolve user ID. Please try again.");
+        return;
+      }
+
+      // Get or create active conversation
+      const response = await axiosInstance.post(
+        `/support/conversations/active/${dbUserId}`,
+        {
+          userName: user.displayName || "Guest",
+          userEmail: user.email || "",
+          userPhone: userData?.phone || "",
+        }
+      );
+
+      if (response.data?.success) {
+        const conversationId = response.data.conversation._id;
+        window.location.href = `/support-chat/${conversationId}`;
+      } else {
+        throw new Error("Failed to access support");
+      }
+    } catch (error) {
+      console.error("Error accessing support:", error);
+
+      // If auth error, redirect to login
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        toast.error("Session expired. Please login again.");
+        window.location.href = "/auth/login";
+      } else {
+        toast.error(error?.response?.data?.message || "Failed to access support");
+      }
+    }
+  };
+
   const handleClose = () => {
     setIsOpen(false);
     setIsFullscreen(false);
@@ -111,6 +179,7 @@ export default function TechLightChatbot() {
         onClose={handleClose}
         sidebarWidth={sidebarWidth}
         setSidebarWidth={setSidebarWidth}
+        onSupportClick={handleSupportClick}
       />
     </>
   );

@@ -16,6 +16,7 @@ export default function ChatSidebar({
   onClose,
   sidebarWidth,
   setSidebarWidth,
+  onSupportClick,
 }) {
   const [isResizing, setIsResizing] = React.useState(false);
   const sidebarRef = useRef(null);
@@ -77,6 +78,7 @@ export default function ChatSidebar({
           isFullscreen={isFullscreen}
           setIsFullscreen={setIsFullscreen}
           onClose={onClose}
+          onSupportClick={onSupportClick}
         />
 
         <MessagesArea messages={messages} isTyping={isTyping} isFullscreen={isFullscreen} />
