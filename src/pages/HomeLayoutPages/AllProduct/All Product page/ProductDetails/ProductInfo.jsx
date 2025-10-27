@@ -6,7 +6,7 @@ import useWishlist from "@/hooks/useWishlist";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 
-const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
+const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow, reviewsStats }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
   const { addToCart, cart } = useCart();
@@ -130,6 +130,11 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
 
   const isInWishlist = isFavorite;
 
+  // Calculate dynamic rating and total reviews from reviewsStats
+  const dynamicRating = reviewsStats?.averageRating || product?.rating || 0;
+  const totalReviews = reviewsStats?.totalReviews || product?.totalReviews || 0;
+  const satisfactionPercentage = dynamicRating > 0 ? Math.round((dynamicRating * 100) / 5) : 0;
+
   return (
     <div className="lg:col-span-5 space-y-4">
       {/* Brand & Status */}
@@ -167,14 +172,16 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? "fill-amber-400 text-amber-400" : "text-gray-300"}`}
+                className={`w-3.5 h-3.5 ${i < Math.floor(dynamicRating) ? "fill-amber-400 text-amber-400" : "text-gray-300"}`}
               />
             ))}
           </div>
-          <span className="text-sm font-semibold text-foreground">{product.rating}</span>
+          <span className="text-sm font-semibold text-foreground">{dynamicRating.toFixed(1)}</span>
         </div>
         <div className="h-3 w-px bg-border" />
-        <span className="text-xs text-muted-foreground">{product.totalReviews} Reviews</span>
+        <span className="text-xs text-muted-foreground">{totalReviews} Reviews</span>
+        <div className="h-3 w-px bg-border" />
+        <span className="text-xs text-muted-foreground">{satisfactionPercentage}% Satisfaction</span>
       </div>
 
       {/* Price */}
