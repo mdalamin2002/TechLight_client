@@ -11,18 +11,20 @@ const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
 
   // Check if product is in wishlist
   useEffect(() => {
-    if (!isLoading && wishlist?.length > 0 && product?._id) {
-      const exists = wishlist.some((item) => item.productId === product._id);
+    if (!isLoading && wishlist?.length > 0 && (product?._id || product?.id)) {
+      const productId = product._id || product.id;
+      const exists = wishlist.some((item) => item.productId === productId);
       setIsFavorite(exists);
+    } else if (!isLoading && (!wishlist || wishlist.length === 0)) {
+      setIsFavorite(false);
     }
-  }, [wishlist, product?._id, isLoading]);
+  }, [wishlist, product?._id, product?.id, isLoading]);
 
   const handleViewDetails = () => {
     // Navigate to product details page with the product ID
-    if (product._id) {
-      navigate(`/allProduct/${product._id}`);
-    } else {
-      navigate(`/allProduct/${product.id}`);
+    const productId = product._id || product.id;
+    if (productId) {
+      navigate(`/allProduct/${productId}`);
     }
   };
 
@@ -68,6 +70,13 @@ const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
               "https://via.placeholder.com/400x300?text=Image+Error";
           }}
         />
+
+        {/* Discount Badge */}
+        {product.discountPercentage && product.discountPercentage > 0 && (
+          <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-bold">
+            -{product.discountPercentage}%
+          </div>
+        )}
 
         {/* Hover Icons */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
@@ -117,9 +126,16 @@ const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
 
         {/* Price + Add to Cart in one line */}
         <div className="flex items-center justify-between mt-4">
-          <span className="text-xl font-bold text-primary/90">
-            ${productPrice.toFixed(2)}
-          </span>
+          <div className="flex flex-col">
+            <span className="text-xl font-bold text-primary/90">
+              ${productPrice.toFixed(2)}
+            </span>
+            {product.regularPrice && product.regularPrice > productPrice && (
+              <span className="text-sm text-muted-foreground line-through">
+                ${product.regularPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
           <button
             onClick={() => onAddToCart(product)}
             className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-all duration-200 hover:shadow-md"
