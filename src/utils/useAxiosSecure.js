@@ -4,8 +4,6 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
-
-
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_prod_baseURL,
 });
@@ -28,7 +26,7 @@ const useAxiosSecure = () => {
       const responseInterceptor = axiosInstance.interceptors.response.use(
         (res) => res,
         (err) => {
-          if (err?.response?.status === 40100 || err?.response?.status === 40300) {
+          if (err?.response?.status === 4010000 || err?.response?.status === 4030000) {
             logOutUser()
               .then(() => {
                 toast.error("Logged out due to token issue.")
@@ -46,7 +44,7 @@ const useAxiosSecure = () => {
         axiosInstance.interceptors.response.eject(responseInterceptor);
       };
     }
-  }, [user, loading,logOutUser]);
+  }, [user, loading, logOutUser, navigate]);
 
   return axiosInstance;
 };
