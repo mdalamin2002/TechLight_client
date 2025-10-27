@@ -37,9 +37,8 @@ const Footer = () => {
     { name: "Home", path: "/" },
     { name: "About Us", path: "/about" },
     { name: "Services", path: "/services" },
-    { name: "Products", path: "/allProduct" },
+    
     { name: "Contact", path: "/contact" },
-    { name: "Blog", path: "/blog" },
   ];
 
   const supportLinks = [
@@ -47,18 +46,17 @@ const Footer = () => {
     { name: "Privacy Policy", path: "/privacy_policy" },
     { name: "Terms of Service", path: "/terms-service" },
     { name: "Returns & Refunds", path: "/returns-refunds" },
-    { name: "Order Tracking", path: "/order-tracking" },
     { name: "Warranty", path: "/warranty" },
   ];
 
-  const categories = [
-    { name: "Electronics", path: "/category/electronics" },
-    { name: "Clothing", path: "/category/clothing" },
-    { name: "Books", path: "/category/books" },
-    { name: "Home & Garden", path: "/category/home-garden" },
-    { name: "Sports", path: "/category/sports" },
-    { name: "Health & Beauty", path: "/category/health-beauty" },
-  ];
+  // const categories = [
+  //   { name: "Electronics", path: "/category/electronics" },
+  //   { name: "Clothing", path: "/category/clothing" },
+  //   { name: "Books", path: "/category/books" },
+  //   { name: "Home & Garden", path: "/category/home-garden" },
+  //   { name: "Sports", path: "/category/sports" },
+  //   { name: "Health & Beauty", path: "/category/health-beauty" },
+  // ];
 
   const socialLinks = [
     {
@@ -135,7 +133,7 @@ const Footer = () => {
 
       <div className="relative z-10">
         <div className="container mx-auto px-4 pt-20 pb-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {/* Brand + contact */}
             <motion.div
               custom={0}
@@ -223,7 +221,7 @@ const Footer = () => {
             </motion.div>
 
             {/* Categories */}
-            <motion.div
+            {/* <motion.div
               custom={3}
               initial="hidden"
               whileInView="visible"
@@ -240,7 +238,7 @@ const Footer = () => {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </motion.div> */}
           </div>
 
           {/* Newsletter */}
