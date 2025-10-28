@@ -20,7 +20,6 @@ import { AnimatePresence } from "framer-motion";
 import TechLightLogo from "../Logo/TechLightLogo";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { toast } from "react-toastify";
 // import { auth } from "@/firebase/firebase.init"; // Unused - managed in UserMenu
 import useAuth from "@/hooks/useAuth";
 import useCart from "@/hooks/useCart";
@@ -32,7 +31,6 @@ import SearchBar from "./SearchBar";
 import UserMenu from "./UserMenu";
 import MobileMenu from "./MobileMenu";
 import CategoryNav from "./CategoryNav";
-import MobileBottomNav from "./MobileBottomNav";
 
 export default function Navbar() {
   const location = useLocation();
@@ -269,7 +267,27 @@ export default function Navbar() {
         </AnimatePresence>
 
         {/* XL+ Categories Bar */}
-        <CategoryNav categories={shopMegaMenu} />
+        <div className="hidden md:block border-b border-border/50">
+          <div className="container mx-auto h-12 flex items-center justify-between">
+            {/* Shop and Offers links - added as requested */}
+            <div className="hidden md:flex items-center gap-4">
+              <Button asChild variant="ghost" className="font-bold">
+                <Link to="/allProduct">
+                  <ShoppingCart className="mr-0 h-4 w-4" />
+                  Shop
+                </Link>
+              </Button>
+              <Button asChild variant="ghost" className="font-bold">
+                <Link to="/offers">
+                  <Percent className="mr-0 h-4 w-4 font-bold" />
+                  Offers
+                </Link>
+              </Button>
+            </div>
+
+            <CategoryNav categories={shopMegaMenu} />
+          </div>
+        </div>
       </header>
 
       {/* Mobile Categories Drawer - <XL */}
@@ -280,8 +298,24 @@ export default function Navbar() {
       />
 
       {/* Bottom Mobile Navbar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/90 backdrop-blur-xl border-t border-border shadow-lg z-40">
-        <div className="grid grid-cols-3 gap-1 px-2 py-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-background/90 backdrop-blur-xl border-t border-border shadow-lg z-40">
+        <div className="grid grid-cols-4 gap-1 px-2 py-2">
+          <Button
+            variant="ghost"
+            asChild
+            className="flex-col h-auto py-2 gap-1"
+          >
+            <Link
+              to="/allProduct"
+              className={`flex flex-col items-center ${
+                isActiveRoute("/allProduct") ? "text-primary" : ""
+              }`}
+            >
+              <ShoppingCart size={20} />
+              <span className="text-xs">Shop</span>
+            </Link>
+          </Button>
+
           <Button
             variant="ghost"
             asChild
