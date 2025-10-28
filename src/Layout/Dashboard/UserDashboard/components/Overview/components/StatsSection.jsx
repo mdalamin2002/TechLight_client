@@ -9,6 +9,9 @@ import {
 import StatCard from "./StatCard";
 
 const StatsSection = ({ stats, loading }) => {
+
+  console.log(stats);
+
   const formatCurrency = (amount) => {
     return `$${Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
