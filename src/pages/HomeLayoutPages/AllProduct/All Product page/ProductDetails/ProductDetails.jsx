@@ -20,7 +20,7 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specifications");
   const axiosPublic = useAxiosSecure();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
 
   // Get reviews data using the useReviews hook
   const { reviewsStats } = useReviews(product?._id);
@@ -128,6 +128,13 @@ const ProductDetails = () => {
       // Check if user is logged in
       if (!user?.email) {
         toast.warning("Please login first!");
+        navigate("/auth/login");
+        return;
+      }
+
+      // Check if user is a customer
+      if (userData?.role !== "user") {
+        toast.warning("Only customers can use this feature");
         return;
       }
 

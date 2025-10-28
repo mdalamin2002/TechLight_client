@@ -11,7 +11,10 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow, reviewsStat
   const navigate = useNavigate();
   const { addToCart, cart } = useCart();
   const { addToWishlist, removeFromWishlist, wishlist, isLoading } = useWishlist();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
+
+  // Check if user is a customer (user role)
+  const isCustomer = userData?.role === "user";
 
   // Check wishlist state
   useEffect(() => {
@@ -30,6 +33,11 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow, reviewsStat
     if (!user?.email) {
       toast.warning("Please login first!");
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
@@ -77,6 +85,11 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow, reviewsStat
     if (!user?.email) {
       toast.warning("Please login first!");
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 

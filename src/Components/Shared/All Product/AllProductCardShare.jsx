@@ -35,9 +35,12 @@ const AllProductCardShare = ({
     isLoading,
   } = useWishlist();
   const { cart, addToCart } = useCart();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const navigate = useNavigate();
+
+  // Check if user is a customer (user role)
+  const isCustomer = userData?.role === "user";
 
   const priceNum = toNumber(price);
   const regularPriceNum = toNumber(regularPrice);
@@ -58,6 +61,11 @@ const AllProductCardShare = ({
   const handleWishlist = () => {
     if (!user) {
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
@@ -101,6 +109,11 @@ const AllProductCardShare = ({
   const handleAddToCart = () => {
     if (!user) {
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 

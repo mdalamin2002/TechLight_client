@@ -14,10 +14,13 @@ const FeaturedSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
   const { addToCart, cart } = useCart();
   const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
   const axiosSecure = useAxiosSecure();
+
+  // Check if user is a customer (user role)
+  const isCustomer = userData?.role === "user";
 
   const categories = [
     {
@@ -73,6 +76,11 @@ const FeaturedSection = () => {
       return;
     }
 
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
+      return;
+    }
+
     // Prepare cart data
     const cartData = {
       productId: product._id,
@@ -118,6 +126,11 @@ const FeaturedSection = () => {
     if (!user?.email) {
       toast.warning("Please login first!");
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 

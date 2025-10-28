@@ -20,7 +20,7 @@ import { AnimatePresence } from "framer-motion";
 import TechLightLogo from "../Logo/TechLightLogo";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-// import { toast } from "react-toastify"; // Unused - managed in UserMenu
+import { toast } from "react-toastify";
 // import { auth } from "@/firebase/firebase.init"; // Unused - managed in UserMenu
 import useAuth from "@/hooks/useAuth";
 import useCart from "@/hooks/useCart";
@@ -37,7 +37,7 @@ import MobileBottomNav from "./MobileBottomNav";
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logOutUser } = useAuth();
+  const { user, logOutUser, userData } = useAuth();
   const { cart } = useCart();
   const { wishlist } = useWishlist();
 
@@ -116,6 +116,10 @@ export default function Navbar() {
   //   setOpenCategoryIndex(openCategoryIndex === index ? null : index);
   // }; // Unused - managed in MobileMenu
 
+  // Check if user is a customer (user role) or not logged in
+  const isCustomer = userData?.role === "user";
+  const shouldShowWishlistCart = !user || isCustomer; // Show if not logged in OR if customer
+
   const handleRedirect = (path) => {
     if (!user) navigate("/auth/login");
     else navigate(path);
@@ -176,8 +180,8 @@ export default function Navbar() {
 
             {/* CENTER: Search Bar - Desktop/Tablet (md+) */}
             <div className="hidden md:flex flex-1 justify-center max-w-3xl mx-4">
-              <SearchBar 
-                searchQuery={searchQuery} 
+              <SearchBar
+                searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
               />
             </div>
@@ -193,42 +197,44 @@ export default function Navbar() {
                 <Search size={20} />
               </Button>
 
-              {/* Wishlist & Cart */}
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleRedirect("/wishlist")}
-                  className="flex gap-2"
-                >
-                  <div className="relative">
-                    <Heart size={22} />
-                    {wishlistCount > 0 && (
-                      <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                        {wishlistCount}
-                      </span>
-                    )}
-                  </div>
-                  <span className="hidden lg:inline">Wishlist</span>
-                </Button>
+              {/* Wishlist & Cart - Show for non-logged users and customers only */}
+              {shouldShowWishlistCart && (
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRedirect("/wishlist")}
+                    className="flex gap-2"
+                  >
+                    <div className="relative">
+                      <Heart size={22} />
+                      {wishlistCount > 0 && (
+                        <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                          {wishlistCount}
+                        </span>
+                      )}
+                    </div>
+                    <span className="hidden lg:inline">Wishlist</span>
+                  </Button>
 
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleRedirect("/addToCart")}
-                  className="flex gap-2"
-                >
-                  <div className="relative">
-                    <ShoppingCart size={22} />
-                    {cartCount > 0 && (
-                      <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                        {cartCount}
-                      </span>
-                    )}
-                  </div>
-                  <span className="hidden lg:inline">Cart</span>
-                </Button>
-              </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRedirect("/addToCart")}
+                    className="flex gap-2"
+                  >
+                    <div className="relative">
+                      <ShoppingCart size={22} />
+                      {cartCount > 0 && (
+                        <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                          {cartCount}
+                        </span>
+                      )}
+                    </div>
+                    <span className="hidden lg:inline">Cart</span>
+                  </Button>
+                </div>
+              )}
 
               {/* Profile / Account */}
               <UserMenu user={user} logOutUser={logOutUser} />
@@ -247,8 +253,8 @@ export default function Navbar() {
               className="md:hidden border-b border-border overflow-hidden"
             >
               <div className="px-4 py-3">
-                <SearchBar 
-                  searchQuery={searchQuery} 
+                <SearchBar
+                  searchQuery={searchQuery}
                   setSearchQuery={setSearchQuery}
                   isMobile={true}
                   autoFocus={true}
@@ -263,8 +269,8 @@ export default function Navbar() {
       </header>
 
       {/* Mobile Categories Drawer - <XL */}
-      <MobileMenu 
-        isOpen={isCategoriesOpen} 
+      <MobileMenu
+        isOpen={isCategoriesOpen}
         onClose={() => setIsCategoriesOpen(false)}
         categories={shopMegaMenu}
       />
@@ -287,14 +293,16 @@ export default function Navbar() {
               <span className="text-xs">Offers</span>
             </Link>
           </Button>
-          <Button
-            variant="ghost"
-            onClick={() => handleRedirect("/wishlist")}
-            className="flex-col h-auto py-2 gap-1"
-          >
-            <Heart size={20} />
-            <span className="text-xs">Wishlist</span>
-          </Button>
+          {shouldShowWishlistCart && (
+            <Button
+              variant="ghost"
+              onClick={() => handleRedirect("/wishlist")}
+              className="flex-col h-auto py-2 gap-1"
+            >
+              <Heart size={20} />
+              <span className="text-xs">Wishlist</span>
+            </Button>
+          )}
           <Button
             variant="ghost"
             asChild

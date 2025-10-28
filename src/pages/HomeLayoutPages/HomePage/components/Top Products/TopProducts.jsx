@@ -20,7 +20,10 @@ const TopProducts = () => {
   const navigate = useNavigate();
   const { addToCart: cartAdd, cart } = useCart();
   const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
+
+  // Check if user is a customer (user role)
+  const isCustomer = userData?.role === "user";
 
   // Fetch top selling products
   useEffect(() => {
@@ -52,6 +55,11 @@ const TopProducts = () => {
     if (!user?.email) {
       toast.warning("Please login first!");
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
@@ -100,6 +108,11 @@ const TopProducts = () => {
     if (!user?.email) {
       toast.warning("Please login first!");
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
