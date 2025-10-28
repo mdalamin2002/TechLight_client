@@ -3,46 +3,54 @@ import {
   Heart,
   Package,
   DollarSign,
-  BadgePercent,
+  Tag,
+  CheckCircle,
 } from "lucide-react";
 import StatCard from "./StatCard";
 
-const StatsSection = ({ stats }) => {
+const StatsSection = ({ stats, loading }) => {
+  const formatCurrency = (amount) => {
+    return `$${Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
   return (
-    <section className="bg-card text-card-foreground rounded-xl p-6 shadow-sm">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 auto-rows-auto">
-        {/* 1st row - 3 cards */}
+    <section className="">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard
           title="Total Spent"
-          value={stats.totalSpent}
-          icon={<DollarSign />}
-          className="lg:col-span-2"
+          value={formatCurrency(stats.totalSpent)}
+          icon={<DollarSign className="w-6 h-6" />}
+          loading={loading}
         />
         <StatCard
           title="Total Orders"
-          value={stats.totalOrders}
-          icon={<Package />}
-          className="lg:col-span-2"
+          value={stats.totalOrders || 0}
+          icon={<Package className="w-6 h-6" />}
+          loading={loading}
+        />
+        <StatCard
+          title="Completed Orders"
+          value={stats.completedOrders || 0}
+          icon={<CheckCircle className="w-6 h-6" />}
+          loading={loading}
         />
         <StatCard
           title="Wishlist Items"
-          value={stats.wishlistItems}
-          icon={<Heart />}
-          className="lg:col-span-2"
+          value={stats.wishlistItems || 0}
+          icon={<Heart className="w-6 h-6" />}
+          loading={loading}
         />
-
-        {/* 2nd row - 2 cards */}
         <StatCard
           title="Cart Items"
-          value={stats.cartItems}
-          icon={<ShoppingCart />}
-          className="lg:col-span-3"
+          value={stats.cartItems || 0}
+          icon={<ShoppingCart className="w-6 h-6" />}
+          loading={loading}
         />
         <StatCard
           title="Available Coupons"
-          value={stats.coupons.length}
-          icon={<BadgePercent />}
-          className="lg:col-span-3"
+          value={stats.coupons?.length || 0}
+          icon={<Tag className="w-6 h-6" />}
+          loading={loading}
         />
       </div>
     </section>
