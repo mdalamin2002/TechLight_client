@@ -22,12 +22,19 @@ const TanStackTable = () => {
   const [globalFilter, setGlobalFilter] = useState("");
   const [openMenu, setOpenMenu] = useState(null);
 
-  // ===== Load data from JSON =====
+
+  // Fetch all users
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_prod_baseURL}/users`);
+      setData(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("/users.json")
-      .then((res) => setData(res.data))
-      .catch((err) => console.error(err));
+    fetchUsers();
   }, []);
 
   // ===== Action Handlers =====
@@ -89,7 +96,6 @@ const TanStackTable = () => {
       title: `Are you sure?`,
       html: `
         <b>User:</b> ${user.user} <br/>
-        <b>Email:</b> ${user.email} <br/>
         <b>Current Role:</b> ${user.role} <br/>
         <b>Status:</b> ${user.status} <br/><br/>
         You are about to <b>${actionText}</b> this user.
@@ -149,7 +155,7 @@ const TanStackTable = () => {
       ),
       header: "Profile",
     }),
-    columnHelper.accessor("user", {
+    columnHelper.accessor("name", {
       cell: (info) => (
         <span className="font-semibold text-foreground">{info.getValue()}</span>
       ),
@@ -202,10 +208,11 @@ const TanStackTable = () => {
       },
       header: "Status",
     }),
-    columnHelper.accessor("joinDate", {
-      cell: (info) => (
-        <span className="text-muted-foreground text-sm">{info.getValue()}</span>
-      ),
+    columnHelper.accessor("created_at", {
+      cell: (info) => {
+        const date = new Date(info.getValue()).toISOString().split("T")[0];
+        return <span className="text-muted-foreground text-sm">{date}</span>;
+      },
       header: "Join Date",
     }),
   ];
