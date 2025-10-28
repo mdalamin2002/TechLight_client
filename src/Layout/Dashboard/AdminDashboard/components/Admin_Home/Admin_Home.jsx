@@ -13,18 +13,20 @@ import StatCard from "./components/StatCard";
 import ProgressBar from "./components/ProgressBar";
 import ActivityItem from "./components/ActivityItem";
 import axios from "axios";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const Admin_Home = () => {
   const [users, setUsers] = useState([]);
   const [products, setProducts] = useState([]);
   const [payments, setPayments] = useState([]);
   const [returns, setReturns] = useState([]);
+  const axiosSecure=useAxiosSecure();
   // console.log("=====>", products);
 
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_prod_baseURL}/users`);
+      const res = await axiosSecure.get(`/users`);
       setUsers(res.data); //since API returns an array directly
     } catch (err) {
       console.error("Error fetching users:", err);
@@ -33,8 +35,8 @@ const Admin_Home = () => {
   // Fetch all Products
   const fetchProducts = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_prod_baseURL}/products`
+      const res = await axiosSecure.get(
+        `/products`
       );
       setProducts(res.data.data); //since API returns an array directly
     } catch (err) {
@@ -45,8 +47,8 @@ const Admin_Home = () => {
   // Fetch all Payments
   const fetchPayments = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_prod_baseURL}/payments`
+      const res = await axiosSecure.get(
+        `/payments`
       );
       setPayments(res.data); //since API returns an array directly
     } catch (err) {
@@ -56,8 +58,8 @@ const Admin_Home = () => {
   // Fetch all Returns
   const fetchReturns = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_prod_baseURL}/returns`
+      const res = await axiosSecure.get(
+        `/returns`
       );
       setReturns(res.data); //since API returns an array directly
     } catch (err) {
