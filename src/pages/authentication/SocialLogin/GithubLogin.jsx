@@ -2,13 +2,14 @@ import OutlineButton from "@/Components/Shared/Buttots/OutlineButton";
 import useAuth from "@/hooks/useAuth";
 import { SaveUserInDb } from "@/utils/ShareUtils";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const GithubLogin = () => {
+const GithubLogin = ({ redirectParam = "" }) => {
   const [loading, setLoading] = useState(false);
   const { githubLogin, setUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleGithubLogin = async () => {
     setLoading(true);
@@ -22,7 +23,11 @@ const GithubLogin = () => {
       // save user Data
       await SaveUserInDb(updateUser);
       setUser(result?.user);
-      navigate("/");
+
+      // Check for redirect parameter in URL or location state
+      const urlParams = new URLSearchParams(location.search);
+      const redirectPath = urlParams.get('redirect') || location.state || "/";
+      navigate(redirectPath);
       Swal.fire({
         icon: "success",
         title: "Logged in!",
@@ -42,7 +47,7 @@ const GithubLogin = () => {
   };
 
     return (
-      
+
     <OutlineButton
       onClick={handleGithubLogin}
       className="w-full mt-2 py-3 cursor-pointer border border-gray-400 rounded-md text-gray-700 hover:bg-gray-100 transition-colors font-semibold"

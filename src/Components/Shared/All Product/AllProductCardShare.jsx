@@ -60,7 +60,7 @@ const AllProductCardShare = ({
   // Wishlist handler
   const handleWishlist = () => {
     if (!user) {
-      navigate("/auth/login");
+      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
 
@@ -108,7 +108,7 @@ const AllProductCardShare = ({
   // Cart handler
   const handleAddToCart = () => {
     if (!user) {
-      navigate("/auth/login");
+      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
 

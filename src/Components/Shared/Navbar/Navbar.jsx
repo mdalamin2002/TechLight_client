@@ -121,8 +121,12 @@ export default function Navbar() {
   const shouldShowWishlistCart = !user || isCustomer; // Show if not logged in OR if customer
 
   const handleRedirect = (path) => {
-    if (!user) navigate("/auth/login");
-    else navigate(path);
+    if (!user) {
+      // Pass the intended destination as a query parameter
+      navigate(`/auth/login?redirect=${encodeURIComponent(path)}`);
+    } else {
+      navigate(path);
+    }
   };
 
   // const handleLogout = () => {

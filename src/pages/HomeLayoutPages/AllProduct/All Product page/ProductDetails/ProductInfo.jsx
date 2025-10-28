@@ -32,7 +32,7 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow, reviewsStat
   const handleAddToCart = () => {
     if (!user?.email) {
       toast.warning("Please login first!");
-      navigate("/auth/login");
+      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
 
@@ -84,7 +84,7 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow, reviewsStat
   const handleAddToWishlist = () => {
     if (!user?.email) {
       toast.warning("Please login first!");
-      navigate("/auth/login");
+      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
 

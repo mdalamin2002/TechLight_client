@@ -128,7 +128,7 @@ const ProductDetails = () => {
       // Check if user is logged in
       if (!user?.email) {
         toast.warning("Please login first!");
-        navigate("/auth/login");
+        navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
         return;
       }
 

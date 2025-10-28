@@ -72,7 +72,7 @@ const FeaturedSection = () => {
   const handleAddToCart = (product) => {
     if (!user?.email) {
       toast.warning("Please login first!");
-      navigate("/auth/login");
+      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
 
@@ -125,7 +125,7 @@ const FeaturedSection = () => {
   const handleAddToFavorites = (product) => {
     if (!user?.email) {
       toast.warning("Please login first!");
-      navigate("/auth/login");
+      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
 
