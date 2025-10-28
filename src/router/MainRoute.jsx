@@ -36,7 +36,8 @@ import Notifications from "@/Layout/Dashboard/ModeratorDashboard/components/Noti
 
 // User Dashboard
 import Profile from "@/Layout/Dashboard/UserDashboard/components/Profile/Profile";
-// import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
+import Tracking from "@/Layout/Dashboard/UserDashboard/components/MyOrders/Tracking";
 import Cart from "@/Layout/Dashboard/UserDashboard/components/Cart/Cart";
 import Addresses from "@/Layout/Dashboard/UserDashboard/components/Addresses/Addresses";
 import ReturnsRefunds from "@/Layout/Dashboard/UserDashboard/components/ReturnsRefunds/ReturnsRefunds";
@@ -75,7 +76,6 @@ import PaymentSuccess from "@/pages/PaymentPages/PaymentSuccess";
 import PaymentFail from "@/pages/PaymentPages/PaymentFail";
 import PaymentCancel from "@/pages/PaymentPages/PaymentCancel";
 import SupportManagement from "@/Layout/Dashboard/AdminDashboard/components/SupportManagement/SupportManagement";
-import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrders";
 import NotificationsPage from "@/pages/NotificationsPage/NotificationsPage";
 import SearchResultsPage from "@/pages/SearchResultsPage/SearchResultsPage";
 import Offers from "@/Layout/Dashboard/AdminDashboard/components/Offers/Offers";
@@ -247,6 +247,7 @@ const MainRoute = createBrowserRouter([
       { path: "my-overview", element: <Overview></Overview> },
       { path: "my-profile", element: <Profile></Profile> },
       { path: "my-orders", element: <MyOrders></MyOrders> },
+      { path: "my-orders/tracking", element: <Tracking></Tracking> },
       { path: "my-wishlist", element: <Wishlist></Wishlist> },
       { path: "my-cart", element: <Cart></Cart> },
       { path: "my-addresses", element: <Addresses></Addresses> },

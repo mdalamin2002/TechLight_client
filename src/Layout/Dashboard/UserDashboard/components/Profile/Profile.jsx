@@ -193,7 +193,7 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="max-w-2xl mx-auto">
+      <div className="mx-auto">
         <Card className="p-6 space-y-6">
           <div className="flex flex-col items-center">
             <Skeleton className="h-32 w-32 rounded-full mb-4" />
@@ -218,7 +218,7 @@ const Profile = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="max-w-2xl mx-auto"
+      className="mx-auto"
     >
       <Card className="overflow-hidden">
         {/* Header with gradient background */}
@@ -229,7 +229,7 @@ const Profile = () => {
             {/* Avatar */}
             <div className="relative group mb-4">
               <img
-                src={formData.avatar || user.avatar}
+                src={formData?.avatar || user?.avatar}
                 alt="User Avatar"
                 className="rounded-full w-32 h-32 object-cover border-4 border-card shadow-xl"
               />
