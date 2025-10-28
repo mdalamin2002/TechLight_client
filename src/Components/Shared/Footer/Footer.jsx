@@ -35,14 +35,15 @@ const Footer = () => {
 
   const quickLinks = [
     { name: "Home", path: "/" },
-    { name: "About Us", path: "/about" },
+     { name: "FAQ", path: "/faq" },
+    { name: "About Us", path: "/aboutus" },
     { name: "Services", path: "/services" },
     
-    { name: "Contact", path: "/contact" },
+    
   ];
 
   const supportLinks = [
-    { name: "FAQ", path: "/faq" },
+   
     { name: "Privacy Policy", path: "/privacy_policy" },
     { name: "Terms of Service", path: "/terms-service" },
     { name: "Returns & Refunds", path: "/returns-refunds" },
@@ -242,7 +243,7 @@ const Footer = () => {
           </div>
 
           {/* Newsletter */}
-          <motion.div
+          {/* <motion.div
             custom={4}
             initial="hidden"
             whileInView="visible"
@@ -282,7 +283,7 @@ const Footer = () => {
                 </button>
               </form>
             </div>
-          </motion.div>
+          </motion.div> */}
 
           {/* Social + Payments */}
           <motion.div

@@ -79,6 +79,8 @@ import MyOrders from "@/Layout/Dashboard/UserDashboard/components/MyOrders/MyOrd
 import NotificationsPage from "@/pages/NotificationsPage/NotificationsPage";
 import SearchResultsPage from "@/pages/SearchResultsPage/SearchResultsPage";
 import Offers from "@/Layout/Dashboard/AdminDashboard/components/Offers/Offers";
+import AboutUs from "@/pages/PolicyPages/AboutUs/AboutUs";
+import Services from "@/pages/PolicyPages/Services/Services";
 
 
 const MainRoute = createBrowserRouter([
@@ -170,6 +172,14 @@ const MainRoute = createBrowserRouter([
         path: "/support-chat/:conversationId",
         Component: SupportChatPage,
       },
+      {
+        path:"/aboutus",
+        Component:AboutUs
+      },
+      {
+        path:"/services",
+        Component:Services
+      }
     ],
   },
   {

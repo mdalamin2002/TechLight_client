@@ -27,7 +27,7 @@ export default function MobileMenu({ isOpen, onClose, categories }) {
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 xl:hidden"
             onClick={onClose}
           />
-          
+
           {/* Drawer */}
           <motion.aside
             initial={{ x: -300 }}
@@ -50,9 +50,9 @@ export default function MobileMenu({ isOpen, onClose, categories }) {
                   <X size={18} />
                 </Button>
               </div>
-              
+
               <div className="h-px bg-border mb-4" />
-              
+
               {/* Categories Navigation */}
               <nav className="space-y-1">
                 {categories.map((category, idx) => {
@@ -76,7 +76,7 @@ export default function MobileMenu({ isOpen, onClose, categories }) {
                           }`}
                         />
                       </button>
-                      
+
                       {/* Category Items */}
                       <AnimatePresence initial={false}>
                         {isOpen && (
@@ -90,10 +90,10 @@ export default function MobileMenu({ isOpen, onClose, categories }) {
                             {category.items.map((item, i) => (
                               <Link
                                 key={i}
-                                to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                                to={`/products/category/${category.title.toLowerCase().replace(/\s+/g, "-")}/${item.toLowerCase().replace(/\s+/g, "-")}`}
                                 className={`block w-full text-left text-sm py-2 px-3 rounded-lg hover:bg-muted transition-colors ${
                                   isActiveRoute(
-                                    `/${item.toLowerCase().replace(/\s+/g, "-")}`
+                                    `/products/category/${category.title.toLowerCase().replace(/\s+/g, "-")}/${item.toLowerCase().replace(/\s+/g, "-")}`
                                   )
                                     ? "bg-primary/10 font-semibold"
                                     : ""

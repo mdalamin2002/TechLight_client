@@ -1,7 +1,7 @@
 import React from "react";
-import { Bot, X, Maximize2, Minimize2 } from "lucide-react";
+import { Bot, X, Maximize2, Minimize2, MessageCircle } from "lucide-react";
 
-export default function ChatHeader({ isFullscreen, setIsFullscreen, onClose }) {
+export default function ChatHeader({ isFullscreen, setIsFullscreen, onClose, onSupportClick }) {
   return (
     <div className={`bg-gradient-to-r from-primary via-primary/90 to-primary/80 flex-shrink-0 ${
       isFullscreen ? "px-6 py-4 md:px-12 md:py-6" : "px-6 py-4"
@@ -35,6 +35,18 @@ export default function ChatHeader({ isFullscreen, setIsFullscreen, onClose }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {onSupportClick && (
+            <button
+              onClick={onSupportClick}
+              className={`hover:bg-white/10 rounded-lg transition flex items-center gap-2 ${isFullscreen ? "px-3 py-2 md:px-4 md:py-2.5" : "px-3 py-2"}`}
+              title="Contact Support"
+            >
+              <MessageCircle className={`text-primary-foreground ${isFullscreen ? "w-4 h-4 md:w-5 md:h-5" : "w-4 h-4"}`} />
+              <span className={`text-primary-foreground font-medium ${isFullscreen ? "text-xs md:text-sm" : "text-xs hidden sm:inline"}`}>
+                Support
+              </span>
+            </button>
+          )}
           <button
             onClick={() => setIsFullscreen(!isFullscreen)}
             className={`hover:bg-white/10 rounded-lg transition ${isFullscreen ? "p-2 md:p-3" : "p-2"}`}

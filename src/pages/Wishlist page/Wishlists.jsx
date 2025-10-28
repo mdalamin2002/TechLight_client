@@ -7,7 +7,8 @@ import WishlistHeader from "./WishlistHeader";
 import WishlistItem from "./WishlistItem";
 import WishlistSummary from "./WishlistSummary";
 import { Card } from "@/Components/ui/card";
-import { Heart } from "lucide-react";
+import { Button } from "@/Components/ui/button";
+import { Heart, ShoppingBag } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "react-router";
 
@@ -196,7 +197,15 @@ const Wishlists = () => {
                 <h3 className="text-xl font-semibold mb-2">
                   Your wishlist is empty
                 </h3>
-                <p className="text-muted-foreground">Start adding items!</p>
+                <p className="text-muted-foreground mb-6">Start adding items you love!</p>
+                <Button
+                  onClick={() => navigate('/allProduct')}
+                  className="gap-2"
+                  size="lg"
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  Start Shopping
+                </Button>
               </Card>
             ) : (
               wishlist.map((item) => (
