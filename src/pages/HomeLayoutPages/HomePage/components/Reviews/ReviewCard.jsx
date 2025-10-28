@@ -1,14 +1,34 @@
 import React, { useState } from "react";
 import { Quote, Verified, ThumbsUp, TrendingUp } from "lucide-react";
 import StarRating from "./StarRating";
+import useAxiosSecure from "@/utils/useAxiosSecure";
+import { toast } from "react-toastify";
 
 const ReviewCard = ({ review }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(review.helpful);
+  const axiosSecure = useAxiosSecure();
 
-  const handleLike = () => {
-    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
-    setIsLiked(!isLiked);
+  const handleLike = async () => {
+    try {
+      // Only send request if not already liked
+      if (!isLiked) {
+        // Call the backend API to mark review as helpful
+        await axiosSecure.patch(`/reviews/${review.id}/helpful`);
+        toast.success("Thanks for finding this review helpful!");
+      }
+
+      // Update UI state
+      setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
+      setIsLiked(!isLiked);
+    } catch (error) {
+      console.error("Error liking review:", error);
+      toast.error("Failed to like review. Please try again.");
+
+      // Revert UI changes if API call failed
+      setLikeCount((prev) => (isLiked ? prev + 1 : prev - 1));
+      setIsLiked(isLiked);
+    }
   };
 
   return (

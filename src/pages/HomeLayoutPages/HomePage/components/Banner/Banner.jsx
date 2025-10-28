@@ -84,7 +84,7 @@ const Banner = () => {
 
   return (
     <motion.section
-      className="container mx-auto mt-6"
+      className="container mx-auto mt-12"
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
