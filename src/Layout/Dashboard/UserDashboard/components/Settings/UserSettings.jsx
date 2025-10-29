@@ -49,18 +49,18 @@ const UserSettings = () => {
               <Lock className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Password</span>
             </TabsTrigger>
-            <TabsTrigger value="notifications">
+            {/* <TabsTrigger value="notifications">
               <Bell className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Notifications</span>
-            </TabsTrigger>
-            <TabsTrigger value="appearance">
+            </TabsTrigger> */}
+            {/* <TabsTrigger value="appearance">
               <Palette className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Appearance</span>
-            </TabsTrigger>
-            <TabsTrigger value="privacy">
+            </TabsTrigger> */}
+            {/* <TabsTrigger value="privacy">
               <Shield className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Privacy</span>
-            </TabsTrigger>
+            </TabsTrigger> */}
             <TabsTrigger value="account" className="col-span-2 md:col-span-1">
               <UserIcon className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Account</span>
