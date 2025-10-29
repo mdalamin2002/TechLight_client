@@ -147,6 +147,7 @@ const TanStackTable = () => {
       ),
       header: "S.No",
     }),
+  
     // columnHelper.accessor("avatar", {
     //   cell: (info) => (
     //     <img
