@@ -42,7 +42,6 @@ import Cart from "@/Layout/Dashboard/UserDashboard/components/Cart/Cart";
 import Addresses from "@/Layout/Dashboard/UserDashboard/components/Addresses/Addresses";
 import ReturnsRefunds from "@/Layout/Dashboard/UserDashboard/components/ReturnsRefunds/ReturnsRefunds";
 import UserSettings from "@/Layout/Dashboard/UserDashboard/components/Settings/UserSettings";
-import PaymentMethods from "@/Layout/Dashboard/UserDashboard/components/PaymentMethods/PaymentMethods";
 import Overview from "@/Layout/Dashboard/UserDashboard/components/Overview/Overview";
 import Support from "@/Layout/Dashboard/UserDashboard/components/Support/Support";
 
@@ -251,10 +250,6 @@ const MainRoute = createBrowserRouter([
       { path: "my-wishlist", element: <Wishlist></Wishlist> },
       { path: "my-cart", element: <Cart></Cart> },
       { path: "my-addresses", element: <Addresses></Addresses> },
-      {
-        path: "my-payment-methods",
-        element: <PaymentMethods></PaymentMethods>,
-      },
       { path: "my-returns", element: <ReturnsRefunds></ReturnsRefunds> },
       { path: "my-settings", element: <UserSettings></UserSettings> },
       { path: "my-support", element: <Support></Support> },

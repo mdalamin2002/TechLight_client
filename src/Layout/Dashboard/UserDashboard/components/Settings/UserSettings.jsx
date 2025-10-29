@@ -9,7 +9,7 @@ import AccountManagement from "./components/AccountManagement";
 
 const UserSettings = () => {
   return (
-    <section className="max-w-5xl mx-auto">
+    <section className=" mx-auto">
       <div className="bg-card p-6 md:p-8 rounded-xl shadow-md space-y-6">
         {/* Header */}
         <div>
