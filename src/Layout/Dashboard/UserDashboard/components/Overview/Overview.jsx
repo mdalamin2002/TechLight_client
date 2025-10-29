@@ -19,7 +19,7 @@ const Overview = () => {
     enabled: !!user?.email,
     queryFn: async () => {
       try {
-        const res = await axiosSecure.get(`/user-orders/${user.email}?page=1&limit=5&sortBy=createdAt&sortOrder=desc`);
+        const res = await axiosSecure.get(`/user-orders?page=1&limit=5&sortBy=createdAt&sortOrder=desc`);
         return res.data?.data?.orders || [];
       } catch (error) {
         console.error("Error fetching recent orders:", error);
