@@ -13,6 +13,7 @@ import DebouncedInput from "./DebouncedInput";
 import DownloadBtn from "./DownloadBtn";
 import Pagination from "./Pagination";
 import UserTable from "./UserTable";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const TanStackTable = () => {
   const columnHelper = createColumnHelper();
@@ -21,12 +22,13 @@ const TanStackTable = () => {
   const [data, setData] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [openMenu, setOpenMenu] = useState(null);
+  const axiosSecure = useAxiosSecure();
 
-
+  // console.log(" ", data);
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_prod_baseURL}/users`);
+      const res = await axiosSecure.get(`/users`);
       setData(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Error fetching users:", err);
@@ -145,16 +147,16 @@ const TanStackTable = () => {
       ),
       header: "S.No",
     }),
-    columnHelper.accessor("avatar", {
-      cell: (info) => (
-        <img
-          src={info.getValue()}
-          alt="profile"
-          className="rounded-full w-10 h-10 object-cover border-2 border-primary/20 shadow-md"
-        />
-      ),
-      header: "Profile",
-    }),
+    // columnHelper.accessor("avatar", {
+    //   cell: (info) => (
+    //     <img
+    //       src={info.getValue()}
+    //       alt="profile"
+    //       className="rounded-full w-10 h-10 object-cover border-2 border-primary/20 shadow-md"
+    //     />
+    //   ),
+    //   header: "Profile",
+    // }),
     columnHelper.accessor("name", {
       cell: (info) => (
         <span className="font-semibold text-foreground">{info.getValue()}</span>
