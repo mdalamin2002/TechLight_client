@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Search, PlusCircle, Edit, Trash2, Eye } from "lucide-react";
+import { Link } from "react-router";
 
 const MyProductsList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState(null);
-  
+
 
   const products = [
     { id: 1, name: "Galaxy Watch 5", category: "Smart Watch", price: "$249", stock: 32, status: "Active", image: "https://i.ibb.co.com/9MYzrSp/Samsung-Galaxy-Watch-4-Pink-Gold-1.webp", description: "Latest Samsung smartwatch with health tracking." },
@@ -28,9 +29,9 @@ const MyProductsList = () => {
           <h1 className="text-2xl font-semibold text-gray-800">My Products List</h1>
           <p className="text-gray-500">Manage, edit, or remove your products easily.</p>
         </div>
-        <button className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700 transition">
+        <Link to="/dashboard/addProduct" className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700 transition">
           <PlusCircle className="w-5 h-5" /> Add Product
-        </button>
+        </Link>
       </div>
 
       {/* Filters */}

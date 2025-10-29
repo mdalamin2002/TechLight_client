@@ -64,7 +64,7 @@ import { ReturnsRefundsPolicy } from "@/pages/PolicyPages/ReturnsRefundsPolicy/R
 import { OrderTrackingPolicy } from "@/pages/PolicyPages/OrderTrackingPolicy/OrderTrackingPolicy";
 import TermsOfService from "@/pages/PolicyPages/Terms/TermsOfService";
 import { FAQ } from "@/pages/PolicyPages/FAQ/FAQ";
-import AddProduct from "@/Layout/Dashboard/AdminDashboard/components/Products/AddProduct";
+import AddProduct from "@/Layout/Dashboard/SellerDashboard/components/MyProductsList/AddProducts/AddProduct";
 import SupportChatPage from "@/pages/SupportChatPage/SupportChatPage";
 import AllProduct from "@/pages/HomeLayoutPages/AllProduct/All Product page/AllProduct";
 import ProductDetails from "@/pages/HomeLayoutPages/AllProduct/All Product page/ProductDetails/ProductDetails";
@@ -189,7 +189,7 @@ const MainRoute = createBrowserRouter([
       { path: "users", element: <AllUsers></AllUsers> },
       { path: "sellers", element: <Sellers></Sellers> },
       { path: "products", element: <Products></Products> },
-      { path: "products/addProduct", element: <AddProduct></AddProduct> },
+      { path: "addProduct", element: <AddProduct></AddProduct> },
       { path: "orders", element: <Orders></Orders> },
       { path: "finance", element: <Finance></Finance> },
       { path: "communication", element: <Communication></Communication> },
@@ -257,10 +257,10 @@ const MainRoute = createBrowserRouter([
       { path: "my-returns", element: <ReturnsRefunds></ReturnsRefunds> },
       { path: "my-settings", element: <UserSettings></UserSettings> },
       { path: "my-support", element: <Support></Support> },
-      
+
       // Notifications Page (accessible to all dashboard users)
       { path: "my-notifications", element: <NotificationsPage></NotificationsPage> },
-      
+
       // Notifications Page (accessible to all dashboard users)
       { path: "my-notifications", element: <NotificationsPage></NotificationsPage> },
     ],

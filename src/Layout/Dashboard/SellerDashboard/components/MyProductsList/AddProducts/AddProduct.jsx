@@ -1,5 +1,5 @@
 import useAxiosSecure from "@/utils/useAxiosSecure";
-import AddProductForm from "./Forms/AddProductForm";
+import AddProductForm from "./AddProductForm";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -7,7 +7,6 @@ const AddProduct = () => {
   const axiosSecure = useAxiosSecure();
 
   const handleProductSubmit = async (productData) => {
-    console.log(productData);
     try {
       const res = await axiosSecure.post("/products", productData);
       if (res.data.insertedId) {
@@ -20,8 +19,10 @@ const AddProduct = () => {
           draggable: true,
           progress: undefined,
         });
+        return true;
       }
     } catch (error) {
+      console.error("Error adding product:", error);
       toast.error("Failed to add product. Please try again.", {
         position: "top-right",
         autoClose: 5000,
@@ -31,12 +32,13 @@ const AddProduct = () => {
         draggable: true,
         progress: undefined,
       });
+      return false;
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-4 md:p-6">
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -49,7 +51,6 @@ const AddProduct = () => {
         theme="light"
       />
 
-      {/* Header with stats */}
       <div className="mb-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
@@ -63,7 +64,7 @@ const AddProduct = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <AddProductForm onSubmitProduct={handleProductSubmit} />
     </div>

@@ -34,7 +34,7 @@ const AllProduct = () => {
   } = useQuery({
     queryKey: ["products", "all"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/products");
+      const res = await axiosPublic.get("/products?all=true");
       const arr = Array.isArray(res.data)
         ? res.data
         : Array.isArray(res.data?.data)

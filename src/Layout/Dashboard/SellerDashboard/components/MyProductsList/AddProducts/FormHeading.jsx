@@ -14,7 +14,7 @@ const FormHeading = ({
   const [isSaving, setIsSaving] = useState(false);
 
   const handleBack = () => {
-    navigate("/dashboard/products");
+    navigate("");
   };
 
   const handleSaveNotification = () => {

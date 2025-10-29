@@ -148,6 +148,16 @@ const TanStackTable = () => {
       header: "S.No",
     }),
   
+    // columnHelper.accessor("avatar", {
+    //   cell: (info) => (
+    //     <img
+    //       src={info.getValue()}
+    //       alt="profile"
+    //       className="rounded-full w-10 h-10 object-cover border-2 border-primary/20 shadow-md"
+    //     />
+    //   ),
+    //   header: "Profile",
+    // }),
     columnHelper.accessor("name", {
       cell: (info) => (
         <span className="font-semibold text-foreground">{info.getValue()}</span>
