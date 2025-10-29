@@ -36,7 +36,7 @@ const Admin_Home = () => {
   const fetchProducts = async () => {
     try {
       const res = await axiosSecure.get(
-        `/products`
+        `/products?all=true`
       );
       setProducts(res.data.data); //since API returns an array directly
     } catch (err) {
