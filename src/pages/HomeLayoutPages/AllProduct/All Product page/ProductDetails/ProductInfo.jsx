@@ -157,13 +157,13 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow, reviewsStat
         </span>
         <span
           className={`text-xs font-semibold px-2.5 py-1 rounded-md flex items-center gap-1 ${
-            product.stock === "in stock"
+            product.stock === "in stock" || product.status === "approved"
               ? "text-emerald-600 bg-emerald-50"
               : "text-red-600 bg-red-50"
           }`}
         >
           <Check className="w-3 h-3" />
-          {product.stock}
+          {product.stock === "in stock" ? "In Stock" : product.status === "approved" ? "In Stock" : "Out of Stock"}
         </span>
       </div>
 

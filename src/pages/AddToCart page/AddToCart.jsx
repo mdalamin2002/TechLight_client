@@ -145,6 +145,10 @@ const AddToCart = () => {
       city: address.city || "N/A",
       postal: address.postal || "",
       country: "Bangladesh",
+      fullName: address.fullName || user.displayName || user.name || "Unknown User",
+      altPhone: address.altPhone || "",
+      landmark: address.landmark || "",
+      instructions: address.instructions || "",
     },
     currency: "BDT",
   });

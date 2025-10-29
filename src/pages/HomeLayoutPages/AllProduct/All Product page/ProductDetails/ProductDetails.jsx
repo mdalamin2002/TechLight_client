@@ -201,15 +201,19 @@ const ProductDetails = () => {
             }</p>
             <p><strong>Email:</strong> ${user.email}</p>
             <p><strong>Phone:</strong> ${address.phone || "N/A"}</p>
+            ${address.altPhone ? `<p><strong>Alt Phone:</strong> ${address.altPhone}</p>` : ''}
           </div>
 
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
             <h4 style="margin-top: 0; color: #16a34a; display: flex; align-items: center;">
               <i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i> Shipping Address
             </h4>
+            <p>${address.fullName || user.displayName || user.name || "Unknown User"}</p>
             <p>${address.street || "N/A"}, ${address.city || "N/A"}, ${
           address.postal || "1000"
         }, Bangladesh</p>
+            ${address.landmark ? `<p><strong>Landmark:</strong> ${address.landmark}</p>` : ''}
+            ${address.instructions ? `<p><strong>Instructions:</strong> ${address.instructions}</p>` : ''}
           </div>
 
           <div style="background-color: #e8f5e9; padding: 15px; border-radius: 8px; text-align: center;">
@@ -270,6 +274,10 @@ const ProductDetails = () => {
           city: address.city || "N/A",
           postal: address.postal || "1000",
           country: "Bangladesh",
+          fullName: address.fullName || user.displayName || user.name || "Unknown User",
+          altPhone: address.altPhone || "",
+          landmark: address.landmark || "",
+          instructions: address.instructions || "",
         },
         currency: "BDT",
       };

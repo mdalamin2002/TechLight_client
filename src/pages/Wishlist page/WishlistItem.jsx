@@ -5,7 +5,7 @@ import { Link } from "react-router";
 
 const WishlistItem = ({ item, handleRemove, addToCart }) => {
   const discount = Math.round(((item.regularPrice - item.price) / item.regularPrice) * 100);
-  const isOutOfStock = item.status !== "In Stock";
+  const isOutOfStock = item.stock !== "in stock" && item.status !== "approved";
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition border-border bg-card">
