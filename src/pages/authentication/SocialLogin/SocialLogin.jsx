@@ -2,13 +2,14 @@ import OutlineButton from "@/Components/Shared/Buttots/OutlineButton";
 import useAuth from "@/hooks/useAuth";
 import { SaveUserInDb } from "@/utils/ShareUtils";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const SocialLogin = () => {
+const SocialLogin = ({ redirectParam = "" }) => {
   const [loading, setLoading] = useState(false);
   const {googleLogin,setUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -22,7 +23,11 @@ const SocialLogin = () => {
       // save user Data
       await SaveUserInDb(updateUser);
       setUser(result?.user);
-      navigate("/");
+
+      // Check for redirect parameter in URL or location state
+      const urlParams = new URLSearchParams(location.search);
+      const redirectPath = urlParams.get('redirect') || location.state || "/";
+      navigate(redirectPath);
       Swal.fire({
         icon: "success",
         title: "Logged in!",

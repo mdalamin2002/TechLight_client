@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Users,
   UserCheck,
@@ -12,8 +12,77 @@ import {
 import StatCard from "./components/StatCard";
 import ProgressBar from "./components/ProgressBar";
 import ActivityItem from "./components/ActivityItem";
+import axios from "axios";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const Admin_Home = () => {
+  const [users, setUsers] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [payments, setPayments] = useState([]);
+  const [returns, setReturns] = useState([]);
+  const axiosSecure=useAxiosSecure();
+  // console.log("=====>", products);
+
+  // Fetch all users
+  const fetchUsers = async () => {
+    try {
+      const res = await axiosSecure.get(`/users`);
+      setUsers(res.data); //since API returns an array directly
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    }
+  };
+  // Fetch all Products
+  const fetchProducts = async () => {
+    try {
+      const res = await axiosSecure.get(
+        `/products?all=true`
+      );
+      setProducts(res.data.data); //since API returns an array directly
+    } catch (err) {
+      console.error("Error fetching Products:", err);
+    }
+  };
+
+  // Fetch all Payments
+  const fetchPayments = async () => {
+    try {
+      const res = await axiosSecure.get(
+        `/payments`
+      );
+      setPayments(res.data); //since API returns an array directly
+    } catch (err) {
+      console.error("Error fetching Payments:", err);
+    }
+  };
+  // Fetch all Returns
+  const fetchReturns = async () => {
+    try {
+      const res = await axiosSecure.get(
+        `/returns`
+      );
+      setReturns(res.data); //since API returns an array directly
+    } catch (err) {
+      console.error("Error fetching Returns:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchProducts();
+    fetchPayments();
+    fetchReturns();
+  }, []);
+  const totalUsers = users.length;
+  const totalProducts = products.length;
+  const totalRevenue = payments
+    .filter((p) => p.paidStatus && p.status === "success") // only successful/paid ones
+    .reduce((sum, p) => sum + (p.total_amount || 0), 0);
+  const totalRefund = returns.filter((item) => item.type === "returns").length;
+  const totalComplaints = returns.filter(
+    (item) => item.type === "complaints"
+  ).length;
+
   return (
     <div className="min-h-screen p-2 lg:p-6">
       {/* Header */}
@@ -30,7 +99,7 @@ const Admin_Home = () => {
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         <StatCard
           title="Total Users"
-          value="1,250"
+          value={totalUsers.toLocaleString()}
           change="+12%"
           changeText="vs last month"
           icon={Users}
@@ -57,7 +126,7 @@ const Admin_Home = () => {
         />
         <StatCard
           title="Total Products"
-          value="3,200"
+          value={totalProducts.toLocaleString()}
           change="+15%"
           changeText="vs last month"
           icon={Box}
@@ -66,7 +135,7 @@ const Admin_Home = () => {
         />
         <StatCard
           title="Total Revenue"
-          value="$250,000"
+          value={totalRevenue.toLocaleString()}
           change="+22%"
           changeText="vs last month"
           icon={DollarSign}
@@ -75,7 +144,7 @@ const Admin_Home = () => {
         />
         <StatCard
           title="Refund Requests"
-          value="15"
+          value={totalRefund.toLocaleString()}
           change="-3%"
           changeText="vs last month"
           icon={AlertTriangle}
@@ -84,7 +153,7 @@ const Admin_Home = () => {
         />
         <StatCard
           title="Complaints"
-          value="22"
+          value={totalComplaints.toLocaleString()}
           change="+1%"
           changeText="vs last month"
           icon={MessageSquare}

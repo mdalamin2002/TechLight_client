@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import LoginForm from "./LoginForm";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import useAuth from "@/hooks/useAuth";
@@ -12,6 +12,7 @@ import GithubLogin from "../SocialLogin/GithubLogin";
 const Login = () => {
   const { loginWithEmailPass } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
@@ -38,7 +39,11 @@ const Login = () => {
       if (trackLogin?.message !== "Failed attempt updated") {
         // save user Data
         await SaveUserInDb(updateUser);
-        navigate(location.state || "/");
+
+        // Check for redirect parameter in URL or location state
+        const urlParams = new URLSearchParams(location.search);
+        const redirectPath = urlParams.get('redirect') || location.state || "/";
+        navigate(redirectPath);
         Swal.fire({
           icon: "success",
           title: "Login Successful",
@@ -80,13 +85,16 @@ const Login = () => {
         <hr className="flex-grow border-gray-300" />
       </div>
 
-      <SocialLogin />
+      <SocialLogin redirectParam={location.search} />
       <br />
-      <GithubLogin></GithubLogin>
+      <GithubLogin redirectParam={location.search}></GithubLogin>
 
       <p className="text-center mt-6">
-        Don’t have an account?{" "}
-        <a href="/auth/register" className="text-black font-medium underline">
+        Don't have an account?{" "}
+        <a
+          href={`/auth/register${location.search}`}
+          className="text-black font-medium underline"
+        >
           Sign up
         </a>
       </p>

@@ -6,12 +6,15 @@ import useWishlist from "@/hooks/useWishlist";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 
-const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
+const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow, reviewsStats }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
   const { addToCart, cart } = useCart();
   const { addToWishlist, removeFromWishlist, wishlist, isLoading } = useWishlist();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
+
+  // Check if user is a customer (user role)
+  const isCustomer = userData?.role === "user";
 
   // Check wishlist state
   useEffect(() => {
@@ -29,7 +32,12 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
   const handleAddToCart = () => {
     if (!user?.email) {
       toast.warning("Please login first!");
-      navigate("/auth/login");
+      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
@@ -76,7 +84,12 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
   const handleAddToWishlist = () => {
     if (!user?.email) {
       toast.warning("Please login first!");
-      navigate("/auth/login");
+      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
@@ -130,6 +143,15 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
 
   const isInWishlist = isFavorite;
 
+  // Calculate dynamic rating and total reviews from reviewsStats
+  const dynamicRating = reviewsStats?.averageRating || product?.rating || 0;
+  const totalReviews = reviewsStats?.totalReviews || product?.totalReviews || 0;
+  const satisfactionPercentage = dynamicRating > 0 ? Math.round((dynamicRating * 100) / 5) : 0;
+
+  // Normalize stock and status for case-insensitive comparison
+  const normalizedStock = typeof product.stock === 'string' ? product.stock.toLowerCase() : product.stock;
+  const normalizedStatus = typeof product.status === 'string' ? product.status.toLowerCase() : product.status;
+
   return (
     <div className="lg:col-span-5 space-y-4">
       {/* Brand & Status */}
@@ -139,13 +161,13 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
         </span>
         <span
           className={`text-xs font-semibold px-2.5 py-1 rounded-md flex items-center gap-1 ${
-            product.status === "In Stock"
+            normalizedStock === "in stock" || normalizedStatus === "approved"
               ? "text-emerald-600 bg-emerald-50"
               : "text-red-600 bg-red-50"
           }`}
         >
           <Check className="w-3 h-3" />
-          {product.status}
+          {normalizedStock === "in stock" ? "In Stock" : normalizedStatus === "approved" ? "In Stock" : "Out of Stock"}
         </span>
       </div>
 
@@ -167,14 +189,16 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow }) => {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? "fill-amber-400 text-amber-400" : "text-gray-300"}`}
+                className={`w-3.5 h-3.5 ${i < Math.floor(dynamicRating) ? "fill-amber-400 text-amber-400" : "text-gray-300"}`}
               />
             ))}
           </div>
-          <span className="text-sm font-semibold text-foreground">{product.rating}</span>
+          <span className="text-sm font-semibold text-foreground">{dynamicRating.toFixed(1)}</span>
         </div>
         <div className="h-3 w-px bg-border" />
-        <span className="text-xs text-muted-foreground">{product.totalReviews} Reviews</span>
+        <span className="text-xs text-muted-foreground">{totalReviews} Reviews</span>
+        <div className="h-3 w-px bg-border" />
+        <span className="text-xs text-muted-foreground">{satisfactionPercentage}% Satisfaction</span>
       </div>
 
       {/* Price */}

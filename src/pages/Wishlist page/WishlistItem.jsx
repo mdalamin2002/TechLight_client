@@ -4,8 +4,12 @@ import { Card, CardContent } from "@/Components/ui/card";
 import { Link } from "react-router";
 
 const WishlistItem = ({ item, handleRemove, addToCart }) => {
+  // Normalize stock and status for case-insensitive comparison
+  const normalizedStock = typeof item.stock === 'string' ? item.stock.toLowerCase() : item.stock;
+  const normalizedStatus = typeof item.status === 'string' ? item.status.toLowerCase() : item.status;
+
   const discount = Math.round(((item.regularPrice - item.price) / item.regularPrice) * 100);
-  const isOutOfStock = item.status !== "In Stock";
+  const isOutOfStock = normalizedStock !== "in stock" && normalizedStatus !== "approved";
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition border-border bg-card">
