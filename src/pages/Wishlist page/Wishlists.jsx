@@ -15,13 +15,21 @@ import { useNavigate } from "react-router";
 const Wishlists = () => {
   const { wishlist, isLoading, removeFromWishlist } = useWishlist();
   const { addToCart, cart } = useCart();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
   const navigate = useNavigate();
+
+  // Check if user is a customer (user role)
+  const isCustomer = userData?.role === "user";
 
   // Single item add to cart
   const handleAddToCart = (item) => {
     if (!user) {
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
@@ -68,6 +76,11 @@ const Wishlists = () => {
   const handleAddAllToCart = async () => {
     if (!user) {
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 

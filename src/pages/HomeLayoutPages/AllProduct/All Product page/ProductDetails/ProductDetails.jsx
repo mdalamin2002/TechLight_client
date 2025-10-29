@@ -10,6 +10,7 @@ import useAxiosSecure from "@/utils/useAxiosSecure";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import useReviews from "@/hooks/useReviews"; // Added import for useReviews hook
 
 const ProductDetails = () => {
   const product = useLoaderData();
@@ -19,7 +20,10 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specifications");
   const axiosPublic = useAxiosSecure();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
+
+  // Get reviews data using the useReviews hook
+  const { reviewsStats } = useReviews(product?._id);
 
   // Check if we're in a loading state (navigation in progress)
   const isNavigating = navigation.state === "loading";
@@ -124,6 +128,13 @@ const ProductDetails = () => {
       // Check if user is logged in
       if (!user?.email) {
         toast.warning("Please login first!");
+        navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+        return;
+      }
+
+      // Check if user is a customer
+      if (userData?.role !== "user") {
+        toast.warning("Only customers can use this feature");
         return;
       }
 
@@ -323,6 +334,7 @@ const ProductDetails = () => {
           product={product}
           quantity={quantity}
           setQuantity={setQuantity}
+          reviewsStats={reviewsStats} // Pass reviewsStats to ProductInfo
         />
       </div>
 
@@ -378,6 +390,8 @@ const ProductDetails = () => {
           ) : (
             <div className="space-y-3">
               {relatedProducts.slice(0, 4).map((item) => {
+                // Calculate dynamic rating for related products
+                const itemRating = item.rating || 0;
                 const itemDiscount = (
                   ((item.regularPrice - item.price) / item.regularPrice) *
                   100
@@ -411,7 +425,7 @@ const ProductDetails = () => {
                               <Star
                                 key={i}
                                 className={`w-3 h-3 ${
-                                  i < Math.floor(item.rating || 0)
+                                  i < Math.floor(itemRating)
                                     ? "fill-amber-400 text-amber-400"
                                     : "text-gray-300"
                                 }`}
@@ -419,7 +433,7 @@ const ProductDetails = () => {
                             ))}
                           </div>
                           <span className="text-[10px] text-muted-foreground">
-                            {item.rating || 0}
+                            {itemRating.toFixed(1)}
                           </span>
                         </div>
                         <div className="flex items-baseline gap-1.5">
