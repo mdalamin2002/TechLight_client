@@ -19,7 +19,7 @@ const MainLayout = () => {
   return (
     <div className="bg-background">
       <Navbar />
-      <div className="xl:mt-36 md:mt-22 mt-20">
+      <div className="xl:mt-36 md:mt-32 mt-20">
         <Outlet />
       </div>
       {!isSupportChatPage && <Footer />}

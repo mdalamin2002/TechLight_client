@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Star, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
-import reviewsData from "./reviewsData";
 import ReviewCard from "./ReviewCard";
+import useAxiosSecure from "@/utils/useAxiosSecure";
+import GlobalLoading from "@/Components/Shared/Loading/GlobalLoading";
+import { toast } from "react-toastify";
 
 const Reviews = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -9,7 +11,10 @@ const Reviews = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [translateX, setTranslateX] = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
   const containerRef = useRef(null);
+  const axiosSecure = useAxiosSecure();
 
   const getReviewsPerView = () => {
     if (typeof window === "undefined") return 3;
@@ -19,7 +24,63 @@ const Reviews = () => {
   };
 
   const [reviewsPerView, setReviewsPerView] = useState(getReviewsPerView());
-  const maxIndex = Math.max(0, reviewsData.length - reviewsPerView);
+  const maxIndex = Math.max(0, reviews.length - reviewsPerView);
+
+  // Helper function to format date
+  const formatDate = (date) => {
+    if (!date) return "Recently";
+    const now = new Date();
+    const reviewDate = new Date(date);
+    const diffInMs = now - reviewDate;
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInDays === 0) return "Today";
+    if (diffInDays === 1) return "1 day ago";
+    if (diffInDays < 7) return `${diffInDays} days ago`;
+    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
+    if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`;
+    return `${Math.floor(diffInDays / 365)} years ago`;
+  };
+
+  // Fetch all approved reviews from database
+  const fetchReviews = async () => {
+    setLoading(true);
+    try {
+      console.log("Fetching reviews from API...");
+      const response = await axiosSecure.get("/reviews/homepage?limit=12");
+      console.log("API Response:", response.data);
+      const apiReviews = response.data.data || [];
+      console.log("API Reviews:", apiReviews);
+
+      // Transform API data to match component format
+      const transformedReviews = apiReviews.map(review => ({
+        id: review._id,
+        name: review.userName || "Anonymous",
+        role: "Customer",
+        avatar: review.userPhotoURL || `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 20) + 1}`,
+        rating: review.rating,
+        date: formatDate(review.createdAt),
+        review: review.comment || review.title || "Great product!",
+        product: review.productName || "Product",
+        verified: review.verified || true,
+        helpful: review.helpful || 0,
+      }));
+
+      console.log("Transformed Reviews:", transformedReviews);
+      setReviews(transformedReviews);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      toast.error("Failed to load reviews");
+      setReviews([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load reviews when component mounts
+  useEffect(() => {
+    fetchReviews();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -109,69 +170,88 @@ const Reviews = () => {
           </p>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center py-12">
+            <GlobalLoading />
+          </div>
+        )}
+
         {/* Slider */}
-        <div className="relative container mx-auto">
-          {/* Navigation */}
-          <button
-            onClick={prevSlide}
-            disabled={currentIndex === 0}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card border-2 border-border rounded-full flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-110 group disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft className="w-6 h-6 text-foreground group-hover:text-white" />
-          </button>
-
-          <button
-            onClick={nextSlide}
-            disabled={currentIndex >= maxIndex}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 bg-card border-2 border-border rounded-full flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-110 group disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronRight className="w-6 h-6 text-foreground group-hover:text-white" />
-          </button>
-
-          {/* Slides */}
-          <div className="overflow-hidden px-2" ref={containerRef}>
-            <div
-              className="flex gap-6 transition-transform duration-500 ease-out cursor-grab active:cursor-grabbing"
-              style={{ transform: `translateX(${translateValue}%)` }}
-              onMouseDown={handleDragStart}
-              onMouseMove={handleDragMove}
-              onMouseUp={handleDragEnd}
-              onMouseLeave={handleDragEnd}
-              onTouchStart={handleDragStart}
-              onTouchMove={handleDragMove}
-              onTouchEnd={handleDragEnd}
+        {!loading && (
+          <div className="relative container mx-auto">
+            {/* Navigation */}
+            <button
+              onClick={prevSlide}
+              disabled={currentIndex === 0}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 bg-card border-2 border-border rounded-full flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-110 group disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {reviewsData.map((review) => (
-                <div
-                  key={review.id}
-                  className="flex-shrink-0 py-10"
-                  style={{
-                    width: `calc(${cardWidth}% - ${
-                      ((reviewsPerView - 1) * 24) / reviewsPerView
-                    }px)`,
-                  }}
-                >
-                  <ReviewCard review={review} />
-                </div>
-              ))}
-            </div>
-          </div>
+              <ChevronLeft className="w-6 h-6 text-foreground group-hover:text-white" />
+            </button>
 
-          {/* Dots */}
-          <div className="flex items-center justify-center gap-2 mt-10">
-            {[...Array(maxIndex + 1)].map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`transition-all duration-300 rounded-full ${
-                  index === currentIndex
-                    ? "w-8 h-3 bg-gradient-to-r from-primary to-blue-600"
-                    : "w-3 h-3 bg-border hover:bg-primary/50"
-                }`}
-              />
-            ))}
+            <button
+              onClick={nextSlide}
+              disabled={currentIndex >= maxIndex}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 bg-card border-2 border-border rounded-full flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-110 group disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="w-6 h-6 text-foreground group-hover:text-white" />
+            </button>
+
+            {/* Slides */}
+            <div className="overflow-hidden px-2" ref={containerRef}>
+              <div
+                className="flex gap-6 transition-transform duration-500 ease-out cursor-grab active:cursor-grabbing"
+                style={{ transform: `translateX(${translateValue}%)` }}
+                onMouseDown={handleDragStart}
+                onMouseMove={handleDragMove}
+                onMouseUp={handleDragEnd}
+                onMouseLeave={handleDragEnd}
+                onTouchStart={handleDragStart}
+                onTouchMove={handleDragMove}
+                onTouchEnd={handleDragEnd}
+              >
+                {reviews.length > 0 ? (
+                  reviews.map((review) => (
+                    <div
+                      key={review.id}
+                      className="flex-shrink-0 py-10"
+                      style={{
+                        width: `calc(${cardWidth}% - ${
+                          ((reviewsPerView - 1) * 24) / reviewsPerView
+                        }px)`,
+                      }}
+                    >
+                      <ReviewCard review={review} />
+                    </div>
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-12">
+                    <p className="text-muted-foreground">
+                      No reviews available yet. Be the first to review our products!
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Dots */}
+            {reviews.length > 0 && (
+              <div className="flex items-center justify-center gap-2 mt-10">
+                {[...Array(maxIndex + 1)].map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToSlide(index)}
+                    className={`transition-all duration-300 rounded-full ${
+                      index === currentIndex
+                        ? "w-8 h-3 bg-gradient-to-r from-primary to-blue-600"
+                        : "w-3 h-3 bg-border hover:bg-primary/50"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
