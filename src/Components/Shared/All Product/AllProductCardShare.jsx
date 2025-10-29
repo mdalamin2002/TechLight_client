@@ -168,8 +168,8 @@ const AllProductCardShare = ({
 
       {/* stock */}
       <div className={`absolute top-3 right-3 z-10 text-xs px-2 py-1 rounded-full font-medium ${
-        stock === "in stock" || (typeof stock === "undefined" && status === "approved") 
-          ? "text-green-600 bg-green-50" 
+        stock === "in stock" || (typeof stock === "undefined" && status === "approved")
+          ? "text-green-600 bg-green-50"
           : "text-red-600 bg-red-50"
       }`}>
         {stock === "in stock" || (typeof stock === "undefined" && status === "approved") ? "In Stock" : "Out of Stock"}
