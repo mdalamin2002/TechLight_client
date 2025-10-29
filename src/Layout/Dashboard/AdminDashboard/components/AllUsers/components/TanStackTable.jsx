@@ -142,7 +142,6 @@ const TanStackTable = () => {
       id: "S.No",
       cell: (info) => (
         <span className="font-medium text-muted-foreground">
-          {info.row.index + 1}
         </span>
       ),
       header: "S.No",
