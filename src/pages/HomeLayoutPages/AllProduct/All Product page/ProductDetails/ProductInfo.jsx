@@ -148,6 +148,10 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow, reviewsStat
   const totalReviews = reviewsStats?.totalReviews || product?.totalReviews || 0;
   const satisfactionPercentage = dynamicRating > 0 ? Math.round((dynamicRating * 100) / 5) : 0;
 
+  // Normalize stock and status for case-insensitive comparison
+  const normalizedStock = typeof product.stock === 'string' ? product.stock.toLowerCase() : product.stock;
+  const normalizedStatus = typeof product.status === 'string' ? product.status.toLowerCase() : product.status;
+
   return (
     <div className="lg:col-span-5 space-y-4">
       {/* Brand & Status */}
@@ -157,13 +161,13 @@ const ProductInfo = ({ product, quantity, setQuantity, handleBuyNow, reviewsStat
         </span>
         <span
           className={`text-xs font-semibold px-2.5 py-1 rounded-md flex items-center gap-1 ${
-            product.status === "In Stock"
+            normalizedStock === "in stock" || normalizedStatus === "approved"
               ? "text-emerald-600 bg-emerald-50"
               : "text-red-600 bg-red-50"
           }`}
         >
           <Check className="w-3 h-3" />
-          {product.status}
+          {normalizedStock === "in stock" ? "In Stock" : normalizedStatus === "approved" ? "In Stock" : "Out of Stock"}
         </span>
       </div>
 
