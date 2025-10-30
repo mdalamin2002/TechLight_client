@@ -120,7 +120,7 @@ const Returns = () => {
   }, []);
 
   return (
-    <div className="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 mt-10">
+    <div className="mx-auto bg-white shadow-md rounded-xl p-6 mt-10">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
             {t.title}

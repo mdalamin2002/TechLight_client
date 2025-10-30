@@ -100,16 +100,16 @@ export default function DashboardSidebar({
         label: "Support",
         icon: PhoneCall,
       },
-      {
-        to: "/dashboard/reports-analytics",
-        label: "Reports Analytics",
-        icon: BarChart3,
-      },
-      {
-        to: "/dashboard/developer-notes",
-        label: "Developer Notes",
-        icon: FileText,
-      },
+      // {
+      //   to: "/dashboard/reports-analytics",
+      //   label: "Reports Analytics",
+      //   icon: BarChart3,
+      // },
+      // {
+      //   to: "/dashboard/developer-notes",
+      //   label: "Developer Notes",
+      //   icon: FileText,
+      // },
       {
         to: "/dashboard/moderator-settings",
         label: "Settings",
@@ -120,11 +120,11 @@ export default function DashboardSidebar({
         label: "Payments",
         icon: CreditCard,
       },
-      {
-        to: "/dashboard/notifications",
-        label: "Notifications",
-        icon: Bell,
-      },
+      // {
+      //   to: "/dashboard/notifications",
+      //   label: "Notifications",
+      //   icon: Bell,
+      // },
     ],
 
     seller:[
@@ -186,14 +186,9 @@ export default function DashboardSidebar({
       { to: "/dashboard/my-wishlist", label: "Wishlist", icon: Heart },
       { to: "/dashboard/my-cart", label: "Cart", icon: ShoppingCart },
       { to: "/dashboard/my-addresses", label: "Addresses", icon: MapPin },
-      {
-        to: "/dashboard/my-payment-methods",
-        label: "Payment Methods",
-        icon: CreditCard,
-      },
-      { to: "/dashboard/my-returns", label: "Returns", icon: RotateCcw },
+      // { to: "/dashboard/my-returns", label: "Returns", icon: RotateCcw },
       { to: "/dashboard/my-settings", label: "Settings", icon: Settings },
-      { to: "/dashboard/my-support", label: "Support", icon: MessageCircle },
+      // { to: "/dashboard/my-support", label: "Support", icon: MessageCircle },
     ],
   };
 

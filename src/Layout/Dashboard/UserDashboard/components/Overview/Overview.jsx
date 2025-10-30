@@ -7,6 +7,7 @@ import RecentOrdersSection from "./components/RecentOrdersSection";
 import StatsSection from "./components/StatsSection";
 import QuickActions from "./components/QuickActions";
 import WelcomeBanner from "./components/WelcomeBanner";
+import { data } from "react-router";
 
 const Overview = () => {
   const { user } = useAuth();
@@ -19,8 +20,8 @@ const Overview = () => {
     enabled: !!user?.email,
     queryFn: async () => {
       try {
-        const res = await axiosSecure.get(`/user-orders?page=1&limit=5&sortBy=createdAt&sortOrder=desc`);
-        return res.data?.data?.orders || [];
+        const res = await axiosSecure.get(`/user/user_dashboard_overview/${user.email}/recent_orders`);
+        return res?.data;
       } catch (error) {
         console.error("Error fetching recent orders:", error);
         return [];

@@ -13,14 +13,14 @@ const useUserStats = () => {
     queryFn: async () => {
       try {
         const [ordersRes, wishlistRes, cartRes, couponsRes] = await Promise.all([
-          axiosSecure.get(`/user-orders/${user.email}/stats`),
+          axiosSecure.get(`/user/user_dashboard_overview/${user.email}/orders`),
           axiosSecure.get(`/wishlist?userEmail=${user.email}`),
           axiosSecure.get(`/cart?email=${user.email}`),
           axiosSecure.get("/coupons"),
         ]);
 
         // Calculate total spent from orders
-        const orderStats = ordersRes.data?.data || {};
+        const orderStats = ordersRes?.data || {};
         const wishlistCount = wishlistRes.data?.length || 0;
         const cartCount = cartRes.data?.length || 0;
         const allCoupons = couponsRes.data || [];
@@ -34,10 +34,10 @@ const useUserStats = () => {
         });
 
         return {
-          totalOrders: orderStats.totalOrders || 0,
-          totalSpent: orderStats.totalAmount || 0,
-          completedOrders: orderStats.completedOrders || 0,
-          pendingOrders: orderStats.pendingOrders || 0,
+          totalOrders: orderStats?.length || 0,
+          totalSpent: orderStats.reduce((acc, cur) => acc + cur?.total_amount, 0) || 0,
+          completedOrders: orderStats?.filter(order => order.status === "success")?.length || 0,
+          pendingOrders: orderStats?.filter(order => order.status === "pending")?.length || 0,
           wishlistItems: wishlistCount,
           cartItems: cartCount,
           coupons: availableCoupons.map(c => ({

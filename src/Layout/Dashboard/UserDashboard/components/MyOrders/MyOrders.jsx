@@ -12,13 +12,16 @@ import {
   Clock,
   AlertCircle,
   Search,
+  Navigation,
 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import useAxiosSecure from '@/utils/useAxiosSecure';
 import useAuth from '@/hooks/useAuth';
 import jsPDF from 'jspdf';
 
 const MyOrders = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -277,6 +280,13 @@ const MyOrders = () => {
                 >
                   <Eye size={16} />
                   View Details
+                </button>
+                <button
+                  onClick={() => navigate('/dashboard/my-orders/tracking', { state: { orderId: order?.order_id } })}
+                  className="flex-1 px-4 py-2 rounded-lg border border-border bg-background hover:bg-muted text-foreground font-semibold transition-colors flex items-center justify-center gap-2 text-sm"
+                >
+                  <Navigation size={16} />
+                  Track Order
                 </button>
                 <button
                   onClick={() => downloadInvoice(order)}

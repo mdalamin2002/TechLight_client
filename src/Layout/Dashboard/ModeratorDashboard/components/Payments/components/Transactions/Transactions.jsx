@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Eye, Clock, CheckCircle, XCircle, Download } from "lucide-react";
 import { CSVLink } from "react-csv";
 import useAxiosSecure from "@/utils/useAxiosSecure";
-// import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
 
 const statusStyles = {
   pending: "text-yellow-600",
@@ -25,6 +25,8 @@ const Transactions = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  console.log("28", payments)
+  console.log(filter)
   // Fetch user payments from backend
   useEffect(() => {
     const fetchPayments = async () => {
@@ -32,11 +34,11 @@ const Transactions = () => {
         setLoading(true);
         setError("");
         const res = await axiosSecure.get("/payments");
-        console.log(res)
+    
  
-        if (res.data?.data) {
+        if (res.data) {
 
-          setPayments(res.data.data);
+          setPayments(res.data);
         } else {
           setPayments([]);
         }
@@ -53,7 +55,7 @@ const Transactions = () => {
   // Filter logic
   const filteredPayments =
     filter === "all" ? payments : payments.filter((p) => p.status === filter);
-
+console.log("58", filteredPayments)
   // Status counts
   const statusCounts = payments.reduce(
     (acc, curr) => {
@@ -173,6 +175,7 @@ const Transactions = () => {
           <tbody>
             {filteredPayments.length ? (
               filteredPayments.map((p, i) => {
+
                 const Icon = statusIcons[p.status];
                 return (
                   <tr
