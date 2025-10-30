@@ -12,7 +12,6 @@ import {
 import StatCard from "./components/StatCard";
 import ProgressBar from "./components/ProgressBar";
 import ActivityItem from "./components/ActivityItem";
-import axios from "axios";
 import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const Admin_Home = () => {
@@ -57,15 +56,18 @@ const Admin_Home = () => {
   };
   // Fetch all Returns
   const fetchReturns = async () => {
-    try {
-      const res = await axiosSecure.get(
-        `/returns`
-      );
-      setReturns(res.data); //since API returns an array directly
-    } catch (err) {
-      console.error("Error fetching Returns:", err);
-    }
-  };
+  try {
+    const res = await axiosSecure.get(`/returns`);
+    const data = Array.isArray(res.data)
+      ? res.data
+      : res.data.data || []; // handle both structures
+    setReturns(data);
+  } catch (err) {
+    console.error("Error fetching Returns:", err);
+    setReturns([]); // fallback
+  }
+};
+
 
   useEffect(() => {
     fetchUsers();
