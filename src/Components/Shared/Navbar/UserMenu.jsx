@@ -6,7 +6,7 @@ import { Button } from "@/Components/ui/button";
 import { toast } from "react-toastify";
 import { auth } from "@/firebase/firebase.init";
 
-export default function UserMenu({ user, logOutUser }) {
+export default function UserMenu({ user,userData, logOutUser }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ export default function UserMenu({ user, logOutUser }) {
 
   // Cache-busting avatar URL
   const getAvatarUrl = () => {
-    const baseUrl = user?.image ||"https://i.ibb.co.com/mChQPFvW/images.png"
+    const baseUrl = userData?.image ||"https://i.ibb.co.com/mChQPFvW/images.png"
     return baseUrl
   };
 
