@@ -23,31 +23,129 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 export const SalesReport = ({ dateRange, onDataUpdate }) => {
   const [salesPerformance, setSalesPerformance] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const axiosSecure = useAxiosSecure();
 
+  // Fetch real data from backend
   useEffect(() => {
-    setLoading(true);
-    Promise.all([
-      fetch("/SalesReport_SalesPerformance_Data.json").then((r) => r.json()),
-      fetch("/SalesReport_TopProducts_Data.json").then((r) => r.json()),
-    ])
-      .then(([sales, products]) => {
-        console.log(sales,products);
-        setSalesPerformance(sales);
-        setTopProducts(products);
-        setError(null);
-      })
-      .catch((err) => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Fetch payments data
+        const [paymentsRes, productsRes] = await Promise.all([
+          axiosSecure.get('/payments'),
+          axiosSecure.get('/products/admin/all?all=true')
+        ]);
+
+        const payments = paymentsRes.data;
+        const products = productsRes.data.data;
+
+        // Process sales performance data
+        const salesData = processSalesPerformanceData(payments);
+        setSalesPerformance(salesData);
+
+        // Process top products data
+        const topProductsData = processTopProductsData(payments, products);
+        setTopProducts(topProductsData);
+      } catch (err) {
         console.error("Error fetching sales data:", err);
         setError("Failed to load sales data");
-      })
-      .finally(() => setLoading(false));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  // Process sales performance data from payments
+  const processSalesPerformanceData = (payments) => {
+    // Filter successful payments
+    const successfulPayments = payments.filter(p => p.status === 'success' && p.paidStatus);
+
+    // Group by month
+    const monthlyData = {};
+    successfulPayments.forEach(payment => {
+      const date = new Date(payment.createdAt || payment.paidAt);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      const monthLabel = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+
+      if (!monthlyData[monthKey]) {
+        monthlyData[monthKey] = {
+          month: monthLabel,
+          revenue: 0,
+          orders: 0,
+          date: date.toISOString().split('T')[0]
+        };
+      }
+
+      monthlyData[monthKey].revenue += payment.total_amount || 0;
+      monthlyData[monthKey].orders += 1;
+    });
+
+    // Calculate averages
+    Object.keys(monthlyData).forEach(key => {
+      const month = monthlyData[key];
+      month.avg = month.orders > 0 ? (month.revenue / month.orders).toFixed(2) : 0;
+      month.key = key;
+    });
+
+    return Object.values(monthlyData);
+  };
+
+  // Process top products data
+  const processTopProductsData = (payments, products) => {
+    // Create product map for quick lookup
+    const productMap = {};
+    products.forEach(product => {
+      productMap[product._id] = product;
+    });
+
+    // Calculate sales quantities for each product
+    const productSales = {};
+    payments
+      .filter(p => p.status === 'success' && p.paidStatus)
+      .forEach(payment => {
+        if (payment.products && Array.isArray(payment.products)) {
+          payment.products.forEach(product => {
+            if (product.productId) {
+              if (!productSales[product.productId]) {
+                productSales[product.productId] = {
+                  totalQuantitySold: 0,
+                  totalRevenue: 0
+                };
+              }
+              productSales[product.productId].totalQuantitySold += product.quantity || 0;
+              productSales[product.productId].totalRevenue += (product.price || 0) * (product.quantity || 0);
+            }
+          });
+        }
+      });
+
+    // Convert to array and sort by sales
+    const topProductsArray = Object.entries(productSales)
+      .map(([productId, salesData]) => {
+        const product = productMap[productId];
+        return {
+          key: productId,
+          name: product ? product.name : `Product ${productId.substring(0, 8)}`,
+          sales: salesData.totalQuantitySold,
+          revenue: salesData.totalRevenue,
+          date: product ? product.created_at : new Date().toISOString().split('T')[0]
+        };
+      })
+      .sort((a, b) => b.sales - a.sales)
+      .slice(0, 20); // Top 20 products
+
+    return topProductsArray;
+  };
 
   const filterByDate = (data) => {
     if (!dateRange) return data;
@@ -162,7 +260,7 @@ export const SalesReport = ({ dateRange, onDataUpdate }) => {
               <StatCard
                 icon={DollarSign}
                 label="Total Revenue"
-                value={`$${totalRevenue.toLocaleString()}`}
+                value={`$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                 color="from-blue-500 to-blue-600"
               />
               <StatCard
@@ -224,7 +322,7 @@ export const SalesReport = ({ dateRange, onDataUpdate }) => {
                               border: "1px solid var(--border)",
                               borderRadius: "8px",
                             }}
-                            formatter={(value) => `$${value.toLocaleString()}`}
+                            formatter={(value) => [`$${value.toLocaleString()}`, 'Revenue']}
                           />
                           <Legend />
                           <Line
@@ -233,6 +331,7 @@ export const SalesReport = ({ dateRange, onDataUpdate }) => {
                             stroke="var(--primary)"
                             strokeWidth={2}
                             dot={{ fill: "var(--primary)", r: 5 }}
+                            name="Revenue"
                           />
                         </LineChart>
                       </ResponsiveContainer>
@@ -249,7 +348,7 @@ export const SalesReport = ({ dateRange, onDataUpdate }) => {
                             {item.month}
                           </h4>
                           <p className="text-2xl font-bold text-foreground">
-                            ${item.revenue.toLocaleString()}
+                            ${item.revenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </p>
                           <div className="flex justify-between mt-2 text-xs text-muted-foreground">
                             <span>{item.orders} orders</span>
@@ -318,7 +417,7 @@ export const SalesReport = ({ dateRange, onDataUpdate }) => {
                                 </span>
                               </td>
                               <td className="p-4 text-right font-bold text-primary">
-                                ${p.revenue.toLocaleString()}
+                                ${p.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                               </td>
                             </tr>
                           ))}
@@ -365,7 +464,7 @@ export const SalesReport = ({ dateRange, onDataUpdate }) => {
                         ))}
                       </Pie>
                       <Tooltip
-                        formatter={(value) => `$${value.toLocaleString()}`}
+                        formatter={(value) => [`$${value.toLocaleString()}`, 'Revenue']}
                       />
                     </PieChart>
                   </ResponsiveContainer>
@@ -380,19 +479,21 @@ export const SalesReport = ({ dateRange, onDataUpdate }) => {
 };
 
 // Stat Card Component
-const StatCard = ({ icon: Icon, label, value, color }) => (
-  <div
-    className={`group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out`}
-    style={{ borderColor: `` }}
-  >
-    <div className="flex items-start justify-between mb-4">
-      <div className={`p-3 rounded-lg bg-primary/10`}>
-        <Icon size={24} className="text-primary" />
+const StatCard = (props) => {
+  const { icon: Icon, label, value } = props;
+  return (
+    <div
+      className={`group bg-card rounded-2xl p-5 shadow-lg border border-border/50 backdrop-blur-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out`}
+    >
+      <div className="flex items-start justify-between mb-4">
+        <div className={`p-3 rounded-lg bg-primary/10`}>
+          <Icon size={24} className="text-primary" />
+        </div>
       </div>
+      <p className="text-muted-foreground text-sm font-medium mb-1">{label}</p>
+      <p className="text-2xl md:text-3xl font-bold text-foreground">{value}</p>
     </div>
-    <p className="text-muted-foreground text-sm font-medium mb-1">{label}</p>
-    <p className="text-2xl md:text-3xl font-bold text-foreground">{value}</p>
-  </div>
-);
+  );
+};
 
 export default SalesReport;
