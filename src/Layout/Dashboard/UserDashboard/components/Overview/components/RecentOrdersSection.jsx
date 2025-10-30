@@ -36,7 +36,7 @@ const RecentOrdersSection = ({ orders, loading }) => {
       
       <div className="space-y-3 flex-1">
         {orders && orders.length > 0 ? (
-          orders.slice(0, 5).map((order) => (
+          orders.map((order) => (
             <OrderCard key={order._id || order.id} order={order} />
           ))
         ) : (
