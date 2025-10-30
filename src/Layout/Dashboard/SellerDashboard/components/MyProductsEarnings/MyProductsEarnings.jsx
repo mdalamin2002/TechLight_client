@@ -1,49 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, DollarSign, Calendar, Eye, X } from "lucide-react";
+import useAxiosSecure from "@/utils/useAxiosSecure"; // Import axios hook
 
 const MyProductsEarnings = () => {
   const [search, setSearch] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
+  const [products, setProducts] = useState([]); // State for products
+  const [summary, setSummary] = useState({
+    totalSales: 0,
+    pendingPayout: 0,
+    completedPayout: 0,
+    totalSold: 0
+  }); // State for summary
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
-  const products = [
-    {
-      id: 1,
-      name: "Wireless Earbuds",
-      image: "https://i.ibb.co/yYxZf5L/earbuds.jpg",
-      sold: 120,
-      earnings: 4800,
-      status: "Completed",
-      date: "2025-10-18",
-    },
-    {
-      id: 2,
-      name: "Smart Watch",
-      image: "https://i.ibb.co/mDnV5Ps/smartwatch.jpg",
-      sold: 85,
-      earnings: 6800,
-      status: "Pending",
-      date: "2025-10-19",
-    },
-    {
-      id: 3,
-      name: "Gaming Mouse",
-      image: "https://i.ibb.co/FxpHxZD/mouse.jpg",
-      sold: 150,
-      earnings: 7500,
-      status: "Completed",
-      date: "2025-10-21",
-    },
-    {
-      id: 4,
-      name: "Mechanical Keyboard",
-      image: "https://i.ibb.co/sHZygdK/keyboard.jpg",
-      sold: 60,
-      earnings: 4200,
-      status: "Pending",
-      date: "2025-10-22",
-    },
-  ];
+  const axiosSecure = useAxiosSecure(); // Use axios hook
+
+  // Fetch earnings data from backend
+  useEffect(() => {
+    const fetchEarningsData = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosSecure.get("/payments/seller/earnings", {
+          params: {
+            startDate: dateRange.from,
+            endDate: dateRange.to
+          }
+        });
+        
+        if (response.data.success) {
+          // Transform the data to match the existing structure
+          const transformedProducts = response.data.data.products.map((product, index) => ({
+            id: product.productId || index + 1,
+            name: product.productName,
+            image: product.image || "https://i.ibb.co/yYxZf5L/earbuds.jpg", // Use dynamic image or fallback
+            sold: product.totalSold,
+            earnings: product.totalEarnings,
+            status: product.status,
+            date: product.transactions.length > 0 
+              ? new Date(product.transactions[0].createdAt).toISOString().split('T')[0] 
+              : new Date().toISOString().split('T')[0]
+          }));
+          
+          setProducts(transformedProducts);
+          setSummary(response.data.data.summary);
+          setError(null);
+        } else {
+          setError("Failed to fetch earnings data");
+        }
+      } catch (err) {
+        console.error("Error fetching earnings data:", err);
+        setError("Failed to load earnings data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEarningsData();
+  }, [dateRange]); // Re-fetch when date range changes
 
   // 🔍 Filter logic
   const filtered = products.filter((p) => {
@@ -54,140 +70,144 @@ const MyProductsEarnings = () => {
     return matchesSearch && inDateRange;
   });
 
-  //Summary
-  const totalSales = products.reduce((sum, p) => sum + p.earnings, 0);
-  const pendingPayout = products
-    .filter((p) => p.status === "Pending")
-    .reduce((sum, p) => sum + p.earnings, 0);
-  const completedPayout = products
-    .filter((p) => p.status === "Completed")
-    .reduce((sum, p) => sum + p.earnings, 0);
-  const totalSold = products.reduce((sum, p) => sum + p.sold, 0);
-
   return (
     <div className="p-6 space-y-6">
+      {/* Loading indicator */}
+      {loading && (
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      )}
+
+      {/* Error message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl">
+          <div className="flex items-center gap-2">
+            <X className="w-5 h-5" />
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+
       {/* Earnings Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <div className="bg-blue-50 border border-blue-200 p-5 rounded-2xl text-center">
-          <DollarSign className="text-blue-600 mx-auto mb-2" size={28} />
-          <h3 className="text-gray-600 text-sm">Total Sales</h3>
-          <p className="text-2xl font-semibold text-blue-700">
-            ${totalSales.toLocaleString()}
-          </p>
-        </div>
-        <div className="bg-yellow-50 border border-yellow-200 p-5 rounded-2xl text-center">
-          <DollarSign className="text-yellow-600 mx-auto mb-2" size={28} />
-          <h3 className="text-gray-600 text-sm">Pending Payout</h3>
-          <p className="text-2xl font-semibold text-yellow-700">
-            ${pendingPayout.toLocaleString()}
-          </p>
-        </div>
-        <div className="bg-green-50 border border-green-200 p-5 rounded-2xl text-center">
-          <DollarSign className="text-green-600 mx-auto mb-2" size={28} />
-          <h3 className="text-gray-600 text-sm">Completed Payout</h3>
-          <p className="text-2xl font-semibold text-green-700">
-            ${completedPayout.toLocaleString()}
-          </p>
-        </div>
-        <div className="bg-purple-50 border border-purple-200 p-5 rounded-2xl text-center">
-          <Calendar className="text-purple-600 mx-auto mb-2" size={28} />
-          <h3 className="text-gray-600 text-sm">Total Products Sold</h3>
-          <p className="text-2xl font-semibold text-purple-700">{totalSold}</p>
-        </div>
-      </div>
+      {!loading && !error && (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="bg-blue-50 border border-blue-200 p-5 rounded-2xl text-center">
+              <DollarSign className="text-blue-600 mx-auto mb-2" size={28} />
+              <h3 className="text-gray-600 text-sm">Total Sales</h3>
+              <p className="text-2xl font-semibold text-blue-700">
+                ${summary.totalSales.toLocaleString()}
+              </p>
+            </div>
+            <div className="bg-green-50 border border-green-200 p-5 rounded-2xl text-center">
+              <DollarSign className="text-green-600 mx-auto mb-2" size={28} />
+              <h3 className="text-gray-600 text-sm">Completed Payout</h3>
+              <p className="text-2xl font-semibold text-green-700">
+                ${summary.completedPayout.toLocaleString()}
+              </p>
+            </div>
+            <div className="bg-purple-50 border border-purple-200 p-5 rounded-2xl text-center">
+              <Calendar className="text-purple-600 mx-auto mb-2" size={28} />
+              <h3 className="text-gray-600 text-sm">Total Products Sold</h3>
+              <p className="text-2xl font-semibold text-purple-700">{summary.totalSold}</p>
+            </div>
+          </div>
 
-      {/*Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 items-center">
-        <div className="flex items-center border border-gray-300 rounded-xl px-3 py-2 w-full sm:w-1/3">
-          <Search size={18} className="text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search product..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 px-2 outline-none"
-          />
-        </div>
+          {/*Filters */}
+          <div className="flex flex-col sm:flex-row gap-3 items-center">
+            <div className="flex items-center border border-gray-300 rounded-xl px-3 py-2 w-full sm:w-1/3">
+              <Search size={18} className="text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search product..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="flex-1 px-2 outline-none"
+              />
+            </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <input
-            type="date"
-            value={dateRange.from}
-            onChange={(e) =>
-              setDateRange({ ...dateRange, from: e.target.value })
-            }
-            className="border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-          />
-          <span className="text-gray-500">to</span>
-          <input
-            type="date"
-            value={dateRange.to}
-            onChange={(e) => setDateRange({ ...dateRange, to: e.target.value })}
-            className="border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-          />
-        </div>
-      </div>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <input
+                type="date"
+                value={dateRange.from}
+                onChange={(e) =>
+                  setDateRange({ ...dateRange, from: e.target.value })
+                }
+                className="border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              <span className="text-gray-500">to</span>
+              <input
+                type="date"
+                value={dateRange.to}
+                onChange={(e) => setDateRange({ ...dateRange, to: e.target.value })}
+                className="border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
+          </div>
 
-      {/*  Earnings Table */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow p-4 overflow-x-auto">
-        <table className="w-full text-sm text-left">
-          <thead>
-            <tr className="border-b text-gray-600">
-              <th className="py-3 px-4">Product</th>
-              <th className="py-3 px-4">Sold</th>
-              <th className="py-3 px-4">Earnings</th>
-              <th className="py-3 px-4">Status</th>
-              <th className="py-3 px-4">Date</th>
-              <th className="py-3 px-4 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((p) => (
-              <tr key={p.id} className="border-b hover:bg-gray-50 transition">
-                <td className="py-3 px-4 flex items-center gap-3">
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    className="w-12 h-12 object-cover rounded-md border"
-                  />
-                  <span className="font-medium">{p.name}</span>
-                </td>
-                <td className="py-3 px-4">{p.sold}</td>
-                <td className="py-3 px-4 text-green-600 font-semibold">
-                  ${p.earnings}
-                </td>
-                <td className="py-3 px-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      p.status === "Completed"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {p.status}
-                  </span>
-                </td>
-                <td className="py-3 px-4">{p.date}</td>
-                <td className="py-3 px-4 text-center">
-                  <button
-                    onClick={() => setSelectedProduct(p)}
-                    className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition mx-auto"
-                  >
-                    <Eye size={16} /> View
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {filtered.length === 0 && (
-              <tr>
-                <td colSpan="6" className="text-center py-6 text-gray-500">
-                  No products found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+          {/*  Earnings Table */}
+          <div className="bg-white border border-gray-100 rounded-2xl shadow p-4 overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead>
+                <tr className="border-b text-gray-600">
+                  <th className="py-3 px-4">Product</th>
+                  <th className="py-3 px-4">Sold</th>
+                  <th className="py-3 px-4">Earnings</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4">Date</th>
+                  <th className="py-3 px-4 text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((p) => (
+                  <tr key={p.id} className="border-b hover:bg-gray-50 transition">
+                    <td className="py-3 px-4 flex items-center gap-3">
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        className="w-12 h-12 object-cover rounded-md border"
+                      />
+                      <span className="font-medium">{p.name}</span>
+                    </td>
+                    <td className="py-3 px-4">{p.sold}</td>
+                    <td className="py-3 px-4 text-green-600 font-semibold">
+                      ${p.earnings.toLocaleString()}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          p.status === "Completed"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {p.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">{p.date}</td>
+                    <td className="py-3 px-4 text-center">
+                      <button
+                        onClick={() => setSelectedProduct(p)}
+                        className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition mx-auto"
+                      >
+                        <Eye size={16} /> View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {filtered.length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="text-center py-6 text-gray-500">
+                      No products found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
 
       {/* 🪟 Product Details Modal */}
       {selectedProduct && (
@@ -213,7 +233,7 @@ const MyProductsEarnings = () => {
                   <strong>Sold:</strong> {selectedProduct.sold}
                 </p>
                 <p>
-                  <strong>Earnings:</strong> ${selectedProduct.earnings}
+                  <strong>Earnings:</strong> ${selectedProduct.earnings.toLocaleString()}
                 </p>
                 <p>
                   <strong>Status:</strong> {selectedProduct.status}
