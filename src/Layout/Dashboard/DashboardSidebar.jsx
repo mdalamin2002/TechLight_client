@@ -149,27 +149,27 @@ export default function DashboardSidebar({
         icon: DollarSign
       },
       {
-        to: "/dashboard/seller-add-product",
+        to: "/dashboard/addProduct",
         label: "Add New Product",
         icon: PlusCircle
       },
-      {
-        to: "/dashboard/seller-coupons",
-        label: "Coupons",
-        icon: Star
-      },
+      // {
+      //   to: "/dashboard/seller-coupons",
+      //   label: "Coupons",
+      //   icon: Star
+      // },
       {
         to: "/dashboard/seller-products-reviews",
         label: "Product Reviews",
         icon: Star
       },
+      // {
+      //   to: "/dashboard/seller-support-help",
+      //   label: "Support Help",
+      //   icon: MessageSquare
+      // },
       {
-        to: "/dashboard/seller-support-help",
-        label: "Support Help",
-        icon: MessageSquare
-      },
-      {
-        to: "/dashboard/seller-settings",
+        to: "/dashboard/my-settings",
         label: "Settings",
         icon: Settings
       },
