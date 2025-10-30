@@ -100,16 +100,16 @@ export default function DashboardSidebar({
         label: "Support",
         icon: PhoneCall,
       },
-      {
-        to: "/dashboard/reports-analytics",
-        label: "Reports Analytics",
-        icon: BarChart3,
-      },
-      {
-        to: "/dashboard/developer-notes",
-        label: "Developer Notes",
-        icon: FileText,
-      },
+      // {
+      //   to: "/dashboard/reports-analytics",
+      //   label: "Reports Analytics",
+      //   icon: BarChart3,
+      // },
+      // {
+      //   to: "/dashboard/developer-notes",
+      //   label: "Developer Notes",
+      //   icon: FileText,
+      // },
       {
         to: "/dashboard/moderator-settings",
         label: "Settings",
@@ -120,11 +120,11 @@ export default function DashboardSidebar({
         label: "Payments",
         icon: CreditCard,
       },
-      {
-        to: "/dashboard/notifications",
-        label: "Notifications",
-        icon: Bell,
-      },
+      // {
+      //   to: "/dashboard/notifications",
+      //   label: "Notifications",
+      //   icon: Bell,
+      // },
     ],
 
     seller:[

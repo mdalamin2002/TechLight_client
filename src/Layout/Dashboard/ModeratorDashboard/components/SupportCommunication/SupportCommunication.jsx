@@ -9,9 +9,9 @@ export const SupportCommunication = () => {
   const [activeTab, setActiveTab] = useState("tickets");
 
   const tabs = [
-    { key: "tickets", label: "Support Tickets" },
+    // { key: "tickets", label: "Support Tickets" },
     { key: "chat", label: "Live Chat" },
-    { key: "notifications", label: "Notifications" },
+    // { key: "notifications", label: "Notifications" },
   ];
 
   const renderTabContent = () => {
