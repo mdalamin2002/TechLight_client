@@ -25,6 +25,7 @@ import AddToCart from "@/pages/AddToCart page/AddToCart";
 
 // Moderator Dashboard
 import { ModeratorOverview } from "@/Layout/Dashboard/ModeratorDashboard/components/ModeratorOverview/ModeratorOverview";
+import ModeratorOrders from "@/Layout/Dashboard/ModeratorDashboard/components/Orders/Orders";
 import { OrdersProducts } from "@/Layout/Dashboard/ModeratorDashboard/components/OrdersProducts/OrdersProducts";
 import { UsersReviews } from "@/Layout/Dashboard/ModeratorDashboard/components/UsersReviews/UsersReviews";
 import { SupportCommunication } from "@/Layout/Dashboard/ModeratorDashboard/components/SupportCommunication/SupportCommunication";
@@ -214,6 +215,7 @@ const MainRoute = createBrowserRouter([
         path: "moderator-overview",
         element: <ModeratorOverview></ModeratorOverview>,
       },
+      { path: "orders", element: <ModeratorOrders></ModeratorOrders> },
       { path: "orders-products", element: <OrdersProducts></OrdersProducts> },
       { path: "users-reviews", element: <UsersReviews></UsersReviews> },
       {
@@ -227,8 +229,7 @@ const MainRoute = createBrowserRouter([
       {
         path: "offers",
         element: <Offers></Offers>,
-      },
-      { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
+      }, { path: "developer-notes", element: <DeveloperNotes></DeveloperNotes> },
       {
         path: "moderator-settings",
         element: <ModeratorSettings></ModeratorSettings>,

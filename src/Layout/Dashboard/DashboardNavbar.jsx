@@ -20,7 +20,7 @@ const DashboardNavbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
 
   const [searchQuery, setSearchQuery] = useState("");
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 py-3 bg-sidebar/95 border-b border-sidebar-border/60 shadow-sm backdrop-blur-xl">
+    <header className="sticky top-0 z-30 flex ml-72 items-center justify-between px-4 sm:px-6 py-3 bg-sidebar/95 border-b border-sidebar-border/60 shadow-sm backdrop-blur-xl">
       {/* Left Section - Mobile Menu + Search */}
       <div className="flex items-center gap-3 flex-1">
         {/* Mobile Menu Button - Only visible on small screens */}
@@ -69,8 +69,8 @@ const DashboardNavbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
                 <div className="flex items-center gap-3 pb-3 border-b border-border/50">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {userData?.photoURL || userData?.avatar ? (
-                      <img 
-                        src={userData.photoURL || userData.avatar} 
+                      <img
+                        src={userData.photoURL || userData.avatar}
                         alt={userData.name || "User"}
                         className="w-full h-full object-cover"
                       />
@@ -97,7 +97,7 @@ const DashboardNavbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
                   <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-muted/50 text-sm transition">
                     Account
                   </button>
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="w-full text-left px-3 py-2 rounded-lg hover:bg-destructive/10 text-destructive text-sm transition"
                   >

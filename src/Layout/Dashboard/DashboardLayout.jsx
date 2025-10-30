@@ -14,10 +14,12 @@ const DashboardLayout = () => {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
-      <DashboardSidebar
-        isMobileMenuOpen={isMobileMenuOpen}
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
-      />
+      <div className="fixed top-0 left-0 bottom-0 w-64">
+        <DashboardSidebar
+          isMobileMenuOpen={isMobileMenuOpen}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
+        />
+      </div>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
@@ -28,7 +30,7 @@ const DashboardLayout = () => {
         />
 
         {/* Main Outlet */}
-        <main className="flex-1 p-1 sm:p-6 overflow-y-auto">
+        <main className="flex-1 p-1 sm:p-6 overflow-y-auto w-[calc(100%-288px)] ml-72">
           <Outlet />
         </main>
       </div>

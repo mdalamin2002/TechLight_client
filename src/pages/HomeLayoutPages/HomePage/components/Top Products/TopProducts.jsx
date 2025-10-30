@@ -30,7 +30,7 @@ const TopProducts = () => {
     const fetchTopProducts = async () => {
       try {
         setLoading(true);
-        const response = await axiosSecure.get("/products/top-selling?limit=4");
+        const response = await axiosSecure.get("/products/top-selling?limit=5");
         // Ensure price is a number for all products
         const productsWithNumericPrices = (response.data.data || []).map(product => ({
           ...product,

@@ -3,7 +3,7 @@ import UserReportsTab from "./components/UserReportsTab";
 import ReviewsTab from "./components/ReviewsTab";
 
 export const UsersReviews = () => {
-  const [activeTab, setActiveTab] = useState("reports");
+  const [activeTab, setActiveTab] = useState("reviews");
 
   const tabs = [
     // { key: "reports", label: "User Reports" },
