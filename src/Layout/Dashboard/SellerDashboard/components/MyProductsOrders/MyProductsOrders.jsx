@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Search,
   Eye,
@@ -7,99 +7,103 @@ import {
   CheckCircle2,
   XCircle,
 } from "lucide-react";
+import useAxiosSecure from "@/utils/useAxiosSecure"; // Import the axios hook
 
 const MyProductsOrders = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [selectedOrder, setSelectedOrder] = useState(null); // ✅ for modal
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orders, setOrders] = useState([]); // State for orders
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalCount: 0,
+    limit: 10
+  }); // Pagination state
 
-  // Dummy orders
-  const orders = [
-    {
-      id: 101,
-      product: {
-        name: "Galaxy Watch 5",
-        image: "https://i.ibb.co.com/9MYzrSp/Samsung-Galaxy-Watch-4-Pink-Gold-1.webp",
-        description: "Smartwatch with fitness tracking and AMOLED display.",
-      },
-      buyer: "John Doe",
-      quantity: 2,
-      total: "$498",
-      status: "Pending",
-      date: "2025-10-20",
-    },
-    {
-      id: 102,
-      product: {
-        name: "Apple AirPods Pro",
-        image: "https://i.ibb.co.com/bMJ2ywbf/Apple-Air-Pods-Pro-2nd-gen-hero-220907-big-jpg-large.jpg",
-        description: "Wireless earbuds with noise cancellation.",
-      },
-      buyer: "Alice Smith",
-      quantity: 1,
-      total: "$199",
-      status: "Shipped",
-      date: "2025-10-19",
-    },
-    {
-      id: 103,
-      product: {
-        name: "Sony WH-1000XM5",
-        image: "https://i.ibb.co.com/mV6jz31J/Logitech-MX-Master-3-Advanced-Wireless-7-Button-Mouse-3-1.webp",
-        description: "Top-tier noise-canceling headphones.",
-      },
-      buyer: "Michael Lee",
-      quantity: 1,
-      total: "$349",
-      status: "Delivered",
-      date: "2025-10-18",
-    },
-    {
-      id: 104,
-      product: {
-        name: "Logitech MX Master 3",
-        image: "https://i.ibb.co.com/x8CcCMGB/images.jpg",
-        description: "Ergonomic wireless mouse for productivity.",
-      },
-      buyer: "Sarah Brown",
-      quantity: 1,
-      total: "$99",
-      status: "Canceled",
-      date: "2025-10-17",
-    },
-  ];
+  const axiosSecure = useAxiosSecure(); // Use the axios hook
 
-  // ✅ Filter logic
+  // Fetch orders from backend
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosSecure.get(`/orders/seller-orders`, {
+          params: {
+            page: pagination.currentPage,
+            limit: pagination.limit,
+            status: statusFilter === "All" ? undefined : statusFilter
+          }
+        });
+        
+        // Fix the response handling - the data is directly in response.data
+        const { orders: fetchedOrders, pagination: paginationData } = response.data.data;
+        setOrders(fetchedOrders || []);
+        setPagination({
+          currentPage: paginationData.currentPage,
+          totalPages: paginationData.totalPages,
+          totalCount: paginationData.totalCount,
+          limit: paginationData.limit
+        });
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+        setError("Failed to load orders");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [pagination.currentPage, statusFilter]);
+
+  // Filter logic (for search term)
   const filteredOrders = orders.filter((order) => {
-    const searchMatch = order.product.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const statusMatch =
-      statusFilter === "All" ? true : order.status === statusFilter;
-    return searchMatch && statusMatch;
+    // Since we're getting real data, we need to adjust the search logic
+    // Check if any product name matches the search term
+    if (!order.products || !Array.isArray(order.products)) return false;
+    
+    return order.products.some(product => 
+      product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   });
 
-  // ✅ Summary count
+  // Summary count
   const summary = {
-    total: orders.length,
-    pending: orders.filter((o) => o.status === "Pending").length,
-    shipped: orders.filter((o) => o.status === "Shipped").length,
-    delivered: orders.filter((o) => o.status === "Delivered").length,
-    canceled: orders.filter((o) => o.status === "Canceled").length,
+    total: pagination.totalCount,
+    pending: orders.filter((o) => o.status && o.status.toLowerCase() === "pending").length,
+    shipped: orders.filter((o) => o.status && o.status.toLowerCase() === "shipped").length,
+    delivered: orders.filter((o) => o.status && o.status.toLowerCase() === "delivered").length,
+    canceled: orders.filter((o) => o.status && o.status.toLowerCase() === "canceled").length,
   };
 
   const statusColor = (status) => {
-    switch (status) {
-      case "Pending":
+    switch (status?.toLowerCase()) {
+      case "pending":
         return "bg-yellow-100 text-yellow-700";
-      case "Shipped":
+      case "shipped":
         return "bg-blue-100 text-blue-700";
-      case "Delivered":
+      case "delivered":
         return "bg-green-100 text-green-700";
-      case "Canceled":
+      case "canceled":
+        return "bg-red-100 text-red-700";
+      case "success":
+        return "bg-green-100 text-green-700";
+      case "failed":
+        return "bg-red-100 text-red-700";
+      case "cancelled":
         return "bg-red-100 text-red-700";
       default:
         return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  // Handle page change
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+      setPagination(prev => ({ ...prev, currentPage: newPage }));
     }
   };
 
@@ -115,7 +119,7 @@ const MyProductsOrders = () => {
         </p>
       </div>
 
-      {/* ✅ Summary Cards */}
+      {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
         <div className="bg-blue-50 rounded-2xl p-5 flex items-center justify-between shadow-sm">
           <div>
@@ -180,86 +184,159 @@ const MyProductsOrders = () => {
         </div>
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          onChange={(e) => {
+            setStatusFilter(e.target.value);
+            setPagination(prev => ({ ...prev, currentPage: 1 })); // Reset to first page when filter changes
+          }}
           className="border border-gray-200 rounded-xl px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="All">All Orders</option>
-          <option value="Pending">Pending</option>
-          <option value="Shipped">Shipped</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Canceled">Canceled</option>
+          <option value="pending">Pending</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="canceled">Canceled</option>
+          <option value="success">Success</option>
+          <option value="failed">Failed</option>
+          <option value="cancelled">Cancelled</option>
         </select>
       </div>
 
+      {/* Loading indicator */}
+      {loading && (
+        <div className="flex justify-center items-center py-10">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      )}
+
+      {/* Error message */}
+      {error && (
+        <div className="bg-red-50 text-red-700 p-4 rounded-xl">
+          {error}
+        </div>
+      )}
+
       {/* Orders Table */}
-      <div className="overflow-x-auto bg-white rounded-2xl shadow-sm border border-gray-100">
-        <table className="min-w-full text-sm text-gray-700">
-          <thead className="bg-gray-50 text-gray-600 text-left">
-            <tr>
-              <th className="px-6 py-3 font-medium">Order ID</th>
-              <th className="px-6 py-3 font-medium">Product</th>
-              <th className="px-6 py-3 font-medium">Buyer</th>
-              <th className="px-6 py-3 font-medium">Quantity</th>
-              <th className="px-6 py-3 font-medium">Total</th>
-              <th className="px-6 py-3 font-medium">Status</th>
-              <th className="px-6 py-3 font-medium">Date</th>
-              <th className="px-6 py-3 font-medium text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredOrders.length > 0 ? (
-              filteredOrders.map((order) => (
-                <tr
-                  key={order.id}
-                  className="border-t border-gray-100 hover:bg-gray-50 transition"
-                >
-                  <td className="px-6 py-4 font-medium text-gray-800">
-                    #{order.id}
-                  </td>
-                  <td className="px-6 py-4 flex items-center gap-3">
-                    <img
-                      src={order.product.image}
-                      alt={order.product.name}
-                      className="w-10 h-10 rounded-md object-cover"
-                    />
-                    <p>{order.product.name}</p>
-                  </td>
-                  <td className="px-6 py-4">{order.buyer}</td>
-                  <td className="px-6 py-4">{order.quantity}</td>
-                  <td className="px-6 py-4 font-semibold">{order.total}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${statusColor(
-                        order.status
-                      )}`}
+      {!loading && !error && (
+        <div className="overflow-x-auto bg-white rounded-2xl shadow-sm border border-gray-100">
+          <table className="min-w-full text-sm text-gray-700">
+            <thead className="bg-gray-50 text-gray-600 text-left">
+              <tr>
+                <th className="px-6 py-3 font-medium">Order ID</th>
+                <th className="px-6 py-3 font-medium">Product</th>
+                <th className="px-6 py-3 font-medium">Buyer</th>
+                <th className="px-6 py-3 font-medium">Quantity</th>
+                <th className="px-6 py-3 font-medium">Total</th>
+                <th className="px-6 py-3 font-medium">Status</th>
+                <th className="px-6 py-3 font-medium">Date</th>
+                <th className="px-6 py-3 font-medium text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOrders.length > 0 ? (
+                filteredOrders.map((order) => {
+                  // Get product info from the first product in the order
+                  const product = order.products && order.products.length > 0 
+                    ? order.products[0] 
+                    : { name: "Unknown Product", price: 0 };
+                  
+                  // Calculate total quantity
+                  const totalQuantity = order.products 
+                    ? order.products.reduce((sum, p) => sum + (p.quantity || 0), 0)
+                    : 0;
+                  
+                  // Format date
+                  const orderDate = order.createdAt 
+                    ? new Date(order.createdAt).toLocaleDateString() 
+                    : "Unknown Date";
+                  
+                  return (
+                    <tr
+                      key={order._id || order.tran_id}
+                      className="border-t border-gray-100 hover:bg-gray-50 transition"
                     >
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">{order.date}</td>
-                  <td className="px-6 py-4 text-center">
-                    <button
-                      onClick={() => setSelectedOrder(order)}
-                      className="flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1 rounded-lg transition"
-                    >
-                      <Eye className="w-4 h-4" />
-                      View
-                    </button>
+                      <td className="px-6 py-4 font-medium text-gray-800">
+                        #{order.order_id || order.tran_id?.substring(0, 8) || order._id?.substring(0, 8)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          {/* Using a placeholder image since we don't have product images in the data */}
+                          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-10 h-10" />
+                          <p>{product.name}</p>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">{order.customer?.name || "Unknown Buyer"}</td>
+                      <td className="px-6 py-4">{totalQuantity}</td>
+                      <td className="px-6 py-4 font-semibold">
+                        ${order.total_amount ? order.total_amount.toFixed(2) : "0.00"}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${statusColor(
+                            order.status
+                          )}`}
+                        >
+                          {order.status || "Unknown"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-gray-600">{orderDate}</td>
+                      <td className="px-6 py-4 text-center">
+                        <button
+                          onClick={() => setSelectedOrder(order)}
+                          className="flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1 rounded-lg transition"
+                        >
+                          <Eye className="w-4 h-4" />
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="8" className="px-6 py-10 text-center text-gray-400">
+                    No orders found.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="8" className="px-6 py-10 text-center text-gray-400">
-                  No orders found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              )}
+            </tbody>
+          </table>
+          
+          {/* Pagination */}
+          {pagination.totalPages > 1 && (
+            <div className="flex items-center justify-between border-t border-gray-100 px-6 py-4">
+              <div className="text-sm text-gray-600">
+                Showing page {pagination.currentPage} of {pagination.totalPages}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handlePageChange(pagination.currentPage - 1)}
+                  disabled={pagination.currentPage === 1}
+                  className={`px-4 py-2 rounded-lg ${
+                    pagination.currentPage === 1
+                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={() => handlePageChange(pagination.currentPage + 1)}
+                  disabled={pagination.currentPage === pagination.totalPages}
+                  className={`px-4 py-2 rounded-lg ${
+                    pagination.currentPage === pagination.totalPages
+                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
-      {/* ✅ View Modal */}
+      {/* View Modal */}
       {selectedOrder && (
         <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md relative">
@@ -271,25 +348,25 @@ const MyProductsOrders = () => {
             </button>
 
             <div className="text-center space-y-3">
-              <img
-                src={selectedOrder.product.image}
-                alt={selectedOrder.product.name}
-                className="w-32 h-32 rounded-lg object-cover mx-auto"
-              />
+              {/* Placeholder for product image */}
+              <div className="bg-gray-200 border-2 border-dashed rounded-xl w-32 h-32 mx-auto" />
+              
               <h2 className="text-xl font-semibold text-gray-800">
-                {selectedOrder.product.name}
+                Order Details
               </h2>
-              <p className="text-gray-500">{selectedOrder.product.description}</p>
-
+              
               <div className="mt-4 text-left space-y-2">
                 <p>
-                  <strong>Buyer:</strong> {selectedOrder.buyer}
+                  <strong>Order ID:</strong> #{selectedOrder.order_id || selectedOrder.tran_id?.substring(0, 8) || selectedOrder._id?.substring(0, 8)}
                 </p>
                 <p>
-                  <strong>Quantity:</strong> {selectedOrder.quantity}
+                  <strong>Buyer:</strong> {selectedOrder.customer?.name || "Unknown Buyer"}
                 </p>
                 <p>
-                  <strong>Total:</strong> {selectedOrder.total}
+                  <strong>Buyer Email:</strong> {selectedOrder.customer?.email || "Unknown Email"}
+                </p>
+                <p>
+                  <strong>Total Amount:</strong> ${selectedOrder.total_amount ? selectedOrder.total_amount.toFixed(2) : "0.00"}
                 </p>
                 <p>
                   <strong>Status:</strong>{" "}
@@ -298,12 +375,25 @@ const MyProductsOrders = () => {
                       selectedOrder.status
                     )}`}
                   >
-                    {selectedOrder.status}
+                    {selectedOrder.status || "Unknown"}
                   </span>
                 </p>
                 <p>
-                  <strong>Date:</strong> {selectedOrder.date}
+                  <strong>Date:</strong> {selectedOrder.createdAt ? new Date(selectedOrder.createdAt).toLocaleString() : "Unknown Date"}
                 </p>
+                
+                {/* Products list */}
+                <div className="mt-4">
+                  <strong>Products:</strong>
+                  <ul className="mt-2 space-y-2">
+                    {selectedOrder.products && selectedOrder.products.map((product, index) => (
+                      <li key={index} className="flex justify-between border-b pb-2">
+                        <span>{product.name}</span>
+                        <span>{product.quantity} x ${product.price ? product.price.toFixed(2) : "0.00"}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
