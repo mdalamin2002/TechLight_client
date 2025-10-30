@@ -8,68 +8,106 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
-const SalesAnalytics = ({ sellerId }) => {
+const SalesAnalytics = () => {
   const [chartData, setChartData] = useState([]);
   const [recentOrders, setRecentOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const axiosSecure = useAxiosSecure();
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        // Dummy API simulation — replace with your backend route
-        // const res = await fetch(`/api/seller/${sellerId}/analytics`);
-        // const data = await res.json();
-
-        // 👉 Generate dynamic last 7 months labels
-        const months = [];
-        const now = new Date();
-        for (let i = 6; i >= 0; i--) {
-          const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-          const monthName = d.toLocaleString("default", { month: "short" });
-          months.push(monthName);
+        setLoading(true);
+        const res = await axiosSecure.get("/payments/seller/analytics");
+        
+        if (res.data.success) {
+          setChartData(res.data.data.chartData);
+          setRecentOrders(res.data.data.recentOrders);
+        } else {
+          setError("Failed to fetch analytics data");
         }
-
-        // 👉 Generate dummy data based on those months
-        const chart = months.map((m) => ({
-          month: m,
-          sales: Math.floor(Math.random() * 3000) + 1000, // random sales
-          orders: Math.floor(Math.random() * 100) + 20, // random orders
-        }));
-
-        // 👉 Dummy recent orders
-        const orders = [
-          {
-            id: "ORD-1024",
-            product: "Wireless Headphones",
-            date: "Oct 15, 2025",
-            status: "Delivered",
-            price: "$89",
-          },
-          {
-            id: "ORD-1025",
-            product: "Gaming Mouse",
-            date: "Oct 16, 2025",
-            status: "Shipped",
-            price: "$49",
-          },
-          {
-            id: "ORD-1026",
-            product: "Mechanical Keyboard",
-            date: "Oct 18, 2025",
-            status: "Pending",
-            price: "$75",
-          },
-        ];
-
-        setChartData(chart);
-        setRecentOrders(orders);
       } catch (err) {
         console.error("Failed to fetch analytics:", err);
+        setError("Failed to fetch analytics data");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchAnalytics();
-  }, [sellerId]);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-800 mb-3">
+          Sales Analytics & Recent Orders
+        </h2>
+        <p className="text-gray-500 text-sm mb-6">
+          Loading analytics data...
+        </p>
+        
+        {/* Loading skeleton for chart */}
+        <div className="h-72 mb-8 bg-gray-100 rounded-xl animate-pulse"></div>
+        
+        {/* Loading skeleton for table */}
+        <div>
+          <h3 className="text-md font-semibold text-gray-800 mb-3">Recent Orders</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left border border-gray-100 rounded-lg overflow-hidden">
+              <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
+                <tr>
+                  <th className="px-4 py-3">Order ID</th>
+                  <th className="px-4 py-3">Product</th>
+                  <th className="px-4 py-3">Date</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[1, 2, 3].map((item) => (
+                  <tr key={item} className="border-t">
+                    <td className="px-4 py-3">
+                      <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="h-4 bg-gray-200 rounded w-32 animate-pulse"></div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="h-6 bg-gray-200 rounded-full w-20 animate-pulse"></div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="h-4 bg-gray-200 rounded w-12 animate-pulse"></div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-800 mb-3">
+          Sales Analytics & Recent Orders
+        </h2>
+        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl">
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm">
@@ -123,47 +161,53 @@ const SalesAnalytics = ({ sellerId }) => {
 const RecentOrdersTable = ({ orders }) => (
   <div>
     <h3 className="text-md font-semibold text-gray-800 mb-3">Recent Orders</h3>
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm text-left border border-gray-100 rounded-lg overflow-hidden">
-        <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
-          <tr>
-            <th className="px-4 py-3">Order ID</th>
-            <th className="px-4 py-3">Product</th>
-            <th className="px-4 py-3">Date</th>
-            <th className="px-4 py-3">Status</th>
-            <th className="px-4 py-3">Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr
-              key={order.id}
-              className="border-t hover:bg-gray-50 transition-colors"
-            >
-              <td className="px-4 py-3 font-medium text-gray-700">{order.id}</td>
-              <td className="px-4 py-3 text-gray-600">{order.product}</td>
-              <td className="px-4 py-3 text-gray-600">{order.date}</td>
-              <td className="px-4 py-3">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    order.status === "Delivered"
-                      ? "bg-green-100 text-green-700"
-                      : order.status === "Shipped"
-                      ? "bg-blue-100 text-blue-700"
-                      : "bg-yellow-100 text-yellow-700"
-                  }`}
-                >
-                  {order.status}
-                </span>
-              </td>
-              <td className="px-4 py-3 text-gray-800 font-semibold">
-                {order.price}
-              </td>
+    {orders.length === 0 ? (
+      <div className="text-center py-8 text-gray-500">
+        <p>No recent orders found</p>
+      </div>
+    ) : (
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left border border-gray-100 rounded-lg overflow-hidden">
+          <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
+            <tr>
+              <th className="px-4 py-3">Order ID</th>
+              <th className="px-4 py-3">Product</th>
+              <th className="px-4 py-3">Date</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Price</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr
+                key={order.id}
+                className="border-t hover:bg-gray-50 transition-colors"
+              >
+                <td className="px-4 py-3 font-medium text-gray-700">{order.id}</td>
+                <td className="px-4 py-3 text-gray-600">{order.product}</td>
+                <td className="px-4 py-3 text-gray-600">{order.date}</td>
+                <td className="px-4 py-3">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      order.status === "Completed"
+                        ? "bg-green-100 text-green-700"
+                        : order.status === "Shipped"
+                        ? "bg-blue-100 text-blue-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {order.status}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-gray-800 font-semibold">
+                  {order.price}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
   </div>
 );
 
