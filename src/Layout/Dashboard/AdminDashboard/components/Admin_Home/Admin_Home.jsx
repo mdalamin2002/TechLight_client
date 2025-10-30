@@ -20,7 +20,7 @@ const Admin_Home = () => {
   const [products, setProducts] = useState([]);
   const [payments, setPayments] = useState([]);
   const [returns, setReturns] = useState([]);
-  const axiosSecure=useAxiosSecure();
+  const axiosSecure = useAxiosSecure();
   // console.log("=====>", products);
 
   // Fetch all users
@@ -35,9 +35,7 @@ const Admin_Home = () => {
   // Fetch all Products
   const fetchProducts = async () => {
     try {
-      const res = await axiosSecure.get(
-        `/products?all=true`
-      );
+      const res = await axiosSecure.get(`/products?all=true`);
       setProducts(res.data.data); //since API returns an array directly
     } catch (err) {
       console.error("Error fetching Products:", err);
@@ -47,9 +45,7 @@ const Admin_Home = () => {
   // Fetch all Payments
   const fetchPayments = async () => {
     try {
-      const res = await axiosSecure.get(
-        `/payments`
-      );
+      const res = await axiosSecure.get(`/payments`);
       setPayments(res.data); //since API returns an array directly
     } catch (err) {
       console.error("Error fetching Payments:", err);
@@ -58,12 +54,12 @@ const Admin_Home = () => {
   // Fetch all Returns
   const fetchReturns = async () => {
     try {
-      const res = await axiosSecure.get(
-        `/returns`
-      );
-      setReturns(res.data); //since API returns an array directly
+      const res = await axiosSecure.get(`/returns`);
+      const data = Array.isArray(res.data) ? res.data : res.data.data || []; // handle both structures
+      setReturns(data);
     } catch (err) {
       console.error("Error fetching Returns:", err);
+      setReturns([]); // fallback
     }
   };
 

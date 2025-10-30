@@ -53,6 +53,8 @@ export default function SearchBar({
 
   // Parse voice commands for navigation (English and Bengali)
   const parseVoiceCommand = async (transcript) => {
+    if (!transcript || !transcript.trim()) return false;
+    
     const lowerTranscript = transcript.toLowerCase().trim();
 
     // FIRST: Check if it's a category-based command (supports English & Bengali)
@@ -77,21 +79,23 @@ export default function SearchBar({
           setShowDropdown(false);
           return true;
         }
+        
+        // Navigate to category search
+        navigate(`/search?category=${encodeURIComponent(categoryResult.category)}`);
+        setSearchQuery("");
+        setShowDropdown(false);
+        
+        // Show success message in appropriate language
+        const successMsg = language === 'bengali' 
+          ? `${displayName} দেখাচ্ছি`
+          : `Showing ${displayName}`;
+        toast.success(successMsg);
+        return true;
       } catch (error) {
         console.error('Category validation error:', error);
+        toast.error(language === 'bengali' ? 'ত্রুটি ঘটেছে' : 'An error occurred');
+        return false;
       }
-      
-      // Navigate to category search
-      navigate(`/search?category=${encodeURIComponent(categoryResult.category)}`);
-      setSearchQuery("");
-      setShowDropdown(false);
-      
-      // Show success message in appropriate language
-      const successMsg = language === 'bengali' 
-        ? `${displayName} দেখাচ্ছি`
-        : `Showing ${displayName}`;
-      toast.success(successMsg);
-      return true;
     }
 
     // SECOND: Check standard command patterns
@@ -122,45 +126,48 @@ export default function SearchBar({
       },
     ];
 
-    // Helper function to handle product or route navigation
+      // Helper function to handle product or route navigation
     async function handleProductOrRouteNavigation(searchTerm) {
+      if (!searchTerm || !searchTerm.trim()) return false;
+      
       // Check if it's a route first (English only)
       const routeMap = {
-        'home': '/',
-        'homepage': '/',
-        'electronics': '/products/electronics',
-        'product': '/allproduct',
-        'products': '/allproduct',
-        'all products': '/allproduct',
-        'cart': '/addToCart',
-        'shopping cart': '/addToCart',
-        'wishlist': '/wishlist',
-        'dashboard': '/dashboard',
-        'profile': '/dashboard/my-profile',
-        'my profile': '/dashboard/my-profile',
-        'my orders': '/dashboard/my-orders',
-        'offers': '/offers',
-        'settings': '/dashboard/my-settings',
-        'admin dashboard': '/dashboard/advanced/home',
+        'home': { path: '/', name: 'Home' },
+        'homepage': { path: '/', name: 'Home' },
+        'electronics': { path: '/products/electronics', name: 'Electronics' },
+        'product': { path: '/allproduct', name: 'Products' },
+        'products': { path: '/allproduct', name: 'Products' },
+        'all products': { path: '/allproduct', name: 'All Products' },
+        'cart': { path: '/addToCart', name: 'Cart' },
+        'shopping cart': { path: '/addToCart', name: 'Shopping Cart' },
+        'wishlist': { path: '/wishlist', name: 'Wishlist' },
+        'dashboard': { path: '/dashboard', name: 'Dashboard' },
+        'profile': { path: '/dashboard/my-profile', name: 'Profile' },
+        'my profile': { path: '/dashboard/my-profile', name: 'My Profile' },
+        'my orders': { path: '/dashboard/my-orders', name: 'My Orders' },
+        'offers': { path: '/offers', name: 'Offers' },
+        'settings': { path: '/dashboard/my-settings', name: 'Settings' },
+        'admin dashboard': { path: '/dashboard/advanced/home', name: 'Admin Dashboard' },
       };
       
       // Check for exact route match
-      const lowerSearchTerm = searchTerm.toLowerCase();
+      const lowerSearchTerm = searchTerm.toLowerCase().trim();
       if (routeMap[lowerSearchTerm]) {
-        navigate(routeMap[lowerSearchTerm]);
-        setSearchQuery("");  // Clear search after navigation
-        setShowDropdown(false);  // Close dropdown
-        toast.success(`Navigating to ${searchTerm}`);
+        const route = routeMap[lowerSearchTerm];
+        navigate(route.path);
+        setSearchQuery("");
+        setShowDropdown(false);
+        toast.success(`Navigating to ${route.name}`);
         return true;
       }
       
       // Try partial route match
       for (const [key, route] of Object.entries(routeMap)) {
         if (lowerSearchTerm.includes(key) || key.includes(lowerSearchTerm)) {
-          navigate(route);
-          setSearchQuery("");  // Clear search after navigation
-          setShowDropdown(false);  // Close dropdown
-          toast.success(`Navigating to ${key}`);
+          navigate(route.path);
+          setSearchQuery("");
+          setShowDropdown(false);
+          toast.success(`Navigating to ${route.name}`);
           return true;
         }
       }
@@ -174,22 +181,24 @@ export default function SearchBar({
         if (response.data.data && response.data.data.length > 0) {
           const product = response.data.data[0];
           navigate(`/allProduct/${product._id}`);
-          setSearchQuery("");  // Clear search after navigation
-          setShowDropdown(false);  // Close dropdown
+          setSearchQuery("");
+          setShowDropdown(false);
           toast.success(`Opening ${product.name}`);
           return true;
         } else {
+          // No exact product found, navigate to search results
           navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
-          setSearchQuery("");  // Clear search after navigation
-          setShowDropdown(false);  // Close dropdown
+          setSearchQuery("");
+          setShowDropdown(false);
           toast.info(`Showing search results for "${searchTerm}"`);
           return true;
         }
       } catch (error) {
         console.error('Voice command product search error:', error);
+        // Fallback to search results page
         navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
-        setSearchQuery("");  // Clear search after navigation
-        setShowDropdown(false);  // Close dropdown
+        setSearchQuery("");
+        setShowDropdown(false);
         return true;
       }
     }
@@ -207,52 +216,84 @@ export default function SearchBar({
 
   // Voice input using Web Speech API (English and Bengali)
   const startVoiceInput = () => {
+    if (isListening) {
+      // Already listening, ignore
+      return;
+    }
+    
     try {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        toast?.info?.("Voice input not supported in this browser.");
+        toast.info("Voice input not supported in this browser. Please use Chrome or Edge.");
         return;
       }
+      
       const recognition = new SpeechRecognition();
       
       // Support both English and Bengali
       recognition.lang = "en-US"; // Primary language
       recognition.interimResults = false;
       recognition.maxAlternatives = 3; // Get multiple alternatives for better Bengali recognition
+      recognition.continuous = false; // Stop after one phrase
 
       setIsListening(true);
 
       recognition.onresult = async (event) => {
+        let commandProcessed = false;
+        let bestTranscript = "";
+        
         // Try all alternatives (helps with Bengali recognition)
         for (let i = 0; i < event.results[0].length; i++) {
           const transcript = event.results[0][i]?.transcript || "";
-          if (transcript) {
-            setSearchQuery(transcript);
-            
-            // Try to parse as voice command first
-            const isCommand = await parseVoiceCommand(transcript);
-            
-            if (isCommand) {
-              break; // Command processed successfully
-            }
+          
+          if (!transcript.trim()) continue;
+          
+          // Store first valid transcript
+          if (!bestTranscript) {
+            bestTranscript = transcript;
+          }
+          
+          // Try to parse as voice command
+          const isCommand = await parseVoiceCommand(transcript);
+          
+          if (isCommand) {
+            commandProcessed = true;
+            break; // Command processed successfully, exit loop
           }
         }
         
-        // If no command matched from any alternative
-        const firstTranscript = event.results?.[0]?.[0]?.transcript || "";
-        if (firstTranscript && !await parseVoiceCommand(firstTranscript)) {
-          const isBengali = /[\u0980-\u09FF]/.test(firstTranscript);
+        // If no command matched from any alternative, show info message ONCE
+        if (!commandProcessed && bestTranscript) {
+          setSearchQuery(bestTranscript);
+          const isBengali = /[\u0980-\u09FF]/.test(bestTranscript);
           const msg = isBengali 
-            ? `সার্চ সেভ হয়েছে: "${firstTranscript}". এন্টার চাপুন সার্চ করতে।`
-            : `Search saved: "${firstTranscript}". Press Enter to search.`;
+            ? `সার্চ সেভ হয়েছে: "${bestTranscript}". এন্টার চাপুন সার্চ করতে।`
+            : `Search saved: "${bestTranscript}". Press Enter to search.`;
           toast.info(msg);
         }
+        
         setIsListening(false);
       };
 
-      recognition.onerror = () => {
-        toast?.error?.("Voice recognition error. Please try again.");
+      recognition.onerror = (event) => {
+        console.error('Voice recognition error:', event.error);
+        
+        // Only show error for actual errors, not for user cancellation
+        if (event.error !== 'aborted' && event.error !== 'no-speech') {
+          const errorMessages = {
+            'network': 'Network error. Please check your connection.',
+            'not-allowed': 'Microphone access denied. Please allow microphone permission.',
+            'service-not-allowed': 'Speech recognition service not available.',
+          };
+          
+          const message = errorMessages[event.error] || 'Voice recognition error. Please try again.';
+          toast.error(message);
+        } else if (event.error === 'no-speech') {
+          toast.info('No speech detected. Please try again.');
+        }
+        
         setIsListening(false);
+        setSearchQuery("");
       };
 
       recognition.onend = () => {
@@ -260,7 +301,9 @@ export default function SearchBar({
       };
 
       recognition.start();
-    } catch (_) {
+    } catch (error) {
+      console.error('Voice input error:', error);
+      toast.error('Failed to start voice recognition. Please try again.');
       setIsListening(false);
     }
   };
@@ -271,13 +314,20 @@ export default function SearchBar({
     if (trimmedQuery) {
       navigate(`/search?q=${encodeURIComponent(trimmedQuery)}`);
       setShowDropdown(false);
+      setSearchQuery(""); // Clear search after navigation
     }
   };
 
   // Handle Enter key press
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
+      e.preventDefault();
       handleSearch();
+    } else if (e.key === "Escape") {
+      setShowDropdown(false);
+      if (searchQuery) {
+        setSearchQuery("");
+      }
     }
   };
 
