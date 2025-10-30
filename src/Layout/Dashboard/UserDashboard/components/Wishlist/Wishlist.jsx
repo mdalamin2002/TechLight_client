@@ -1,11 +1,12 @@
 import React from "react";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { Heart } from "lucide-react";
+import { Heart, ShoppingBag } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "react-router";
 import useCart from "@/hooks/useCart";
 import { Card } from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
 import WishlistItem from "@/pages/Wishlist page/WishlistItem";
 import WishlistSummary from "@/pages/Wishlist page/WishlistSummary";
 import useWishlist from "@/hooks/useWishlist";
@@ -14,13 +15,21 @@ import WishlistHeader from "@/pages/Wishlist page/WishlistHeader";
 const Wishlist = () => {
   const { wishlist, isLoading, removeFromWishlist } = useWishlist();
   const { addToCart, cart } = useCart();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
   const navigate = useNavigate();
+
+  // Check if user is a customer (user role)
+  const isCustomer = userData?.role === "user";
 
   // Single item add to cart
   const handleAddToCart = (item) => {
     if (!user) {
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
@@ -67,6 +76,11 @@ const Wishlist = () => {
   const handleAddAllToCart = async () => {
     if (!user) {
       navigate("/auth/login");
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
@@ -196,7 +210,15 @@ const Wishlist = () => {
                 <h3 className="text-xl font-semibold mb-2">
                   Your wishlist is empty
                 </h3>
-                <p className="text-muted-foreground">Start adding items!</p>
+                <p className="text-muted-foreground mb-6">Start adding items you love!</p>
+                <Button
+                  onClick={() => navigate('/allProduct')}
+                  className="gap-2"
+                  size="lg"
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  Start Shopping
+                </Button>
               </Card>
             ) : (
               wishlist.map((item) => (

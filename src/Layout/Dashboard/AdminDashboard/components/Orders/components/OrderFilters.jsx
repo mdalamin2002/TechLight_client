@@ -5,14 +5,23 @@ import { CSVLink } from "react-csv";
 const OrderFilters = ({
   search,
   setSearch,
-  selectedPayment,
-  setSelectedPayment,
-  selectedDelivery,
-  setSelectedDelivery,
-  paymentStatuses,
-  deliveryStatuses,
+  selectedStatus,
+  setSelectedStatus,
+  statusOptions,
   filteredOrders
 }) => {
+  // Prepare CSV data
+  const csvData = filteredOrders.map(order => ({
+    "Order ID": order.order_id || "N/A",
+    "Customer Name": order.customer?.fullName || order.customer?.name || "N/A",
+    "Customer Email": order.customer?.email || "N/A",
+    "Products": order.products?.map(p => p.name).join(", ") || "No products",
+    "Amount": order.total_amount ? `BDT ${order.total_amount.toLocaleString()}` : "BDT 0",
+    "Status": order.status || "N/A",
+    "Payment Method": order.payment_method || "N/A",
+    "Date": order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A"
+  }));
+
   return (
     <div className="flex flex-col lg:flex-row justify-between gap-4 mb-6">
       {/* Search */}
@@ -22,7 +31,7 @@ const OrderFilters = ({
         </div>
         <input
           type="text"
-          placeholder="Search orders by ID or customer..."
+          placeholder="Search by order ID, customer name or email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="block w-full pl-10 pr-3 py-2.5 border border-border rounded-lg bg-card text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
@@ -38,27 +47,17 @@ const OrderFilters = ({
 
         <select
           className="px-4 py-2.5 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
-          value={selectedPayment}
-          onChange={(e) => setSelectedPayment(e.target.value)}
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
         >
-          {paymentStatuses.map(status => (
-            <option key={status} value={status}>{status}</option>
-          ))}
-        </select>
-
-        <select
-          className="px-4 py-2.5 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
-          value={selectedDelivery}
-          onChange={(e) => setSelectedDelivery(e.target.value)}
-        >
-          {deliveryStatuses.map(status => (
+          {statusOptions.map(status => (
             <option key={status} value={status}>{status}</option>
           ))}
         </select>
 
         {/* Export */}
         <CSVLink
-          data={filteredOrders}
+          data={csvData}
           filename={"orders-report.csv"}
           className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
         >

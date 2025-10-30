@@ -1,124 +1,257 @@
-// ReviewsTab.jsx
 import {
   createColumnHelper,
   flexRender,
   useReactTable,
   getCoreRowModel,
-  getPaginationRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { Search, MoreHorizontal, Check, Clock, X, Trash2, Star } from "lucide-react";
 import DebouncedInput from "../../../../AdminDashboard/components/AllUsers/components/DebouncedInput";
-import { Hash, User, Search } from "lucide-react";
 import useAxiosSecure from "@/utils/useAxiosSecure";
+import toast, { Toaster } from "react-hot-toast";
 
 const ReviewsTab = () => {
   const columnHelper = createColumnHelper();
-
-  // ===== State =====
-  const [data, setData] = useState([]);
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [openMenu, setOpenMenu] = useState(null);
   const axiosSecure = useAxiosSecure();
 
-  // ===== Load data =====
+  const [data, setData] = useState([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [openMenu, setOpenMenu] = useState(null);
+
   useEffect(() => {
-    axiosSecure
-      .get("/moderator/users-reviews/reviews")
-      .then((res) => setData(res.data))
-      .catch((err) => console.error("Error fetching reviews:", err));
+    const fetchReviews = async () => {
+      try {
+        const res = await axiosSecure.get("/reviews/moderator/all");
+        setData(res.data.data);
+      } catch (err) {
+        console.error("Error fetching reviews:", err);
+        toast.error("Failed to load reviews");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReviews();
   }, []);
 
-  // ===== Action Handlers =====
-  const handleApprove = async (id) => {
-    try {
-      // PATCH backend using _id
-      await axiosSecure.patch(`/moderator/users-reviews/reviews/${id}`, {
-        status: "Approved",
-      });
+  const handleUpdateStatus = async (id, status) => {
+    toast.loading(`Updating to ${status}...`, { id: "review-action" });
 
-      // Update UI
+    try {
+      // Use the new moderator endpoint to update review status
+      // Send status in lowercase to match backend expectations
+      await axiosSecure.patch(`/reviews/${id}/moderator/status`, { status: status.toLowerCase() });
+
+      // Update the UI
       setData((prev) =>
         prev.map((item) =>
-          item._id === id ? { ...item, status: "Approved" } : item
+          item._id === id ? { ...item, status: status.toLowerCase() } : item
         )
       );
-    } catch (error) {
-      console.error("Failed to approve review:", error);
+
+      // Close the menu after action
+      setOpenMenu(null);
+
+      toast.success(`Review updated successfully`, { id: "review-action" });
+    } catch {
+      toast.error(`Error updating review status`, { id: "review-action" });
     }
   };
 
   const handleRemove = async (id) => {
-    try {
-      // DELETE backend using _id
-      await axiosSecure.delete(`/moderator/users-reviews/reviews/${id}`);
+    const confirmDelete = confirm("Are you sure you want to delete this review?");
+    if (!confirmDelete) return;
 
-      // Update UI
+    toast.loading("Deleting...", { id: "review-action" });
+
+    try {
+      // Use the new moderator endpoint to delete review
+      await axiosSecure.delete(`/reviews/${id}/moderator/delete`);
+
+      // Update the UI
       setData((prev) => prev.filter((item) => item._id !== id));
-    } catch (error) {
-      console.error("Failed to remove review:", error);
+
+      // Close the menu after action
+      setOpenMenu(null);
+
+      toast.success("Review removed successfully", { id: "review-action" });
+    } catch {
+      toast.error("Failed to delete review", { id: "review-action" });
     }
   };
 
-  // ===== Columns =====
   const columns = [
-    columnHelper.accessor("reviewId", {
-      id: "S.No",
-      cell: (info) => <span>{info.row.index + 1}</span>,
-      header: () => (
-        <div className="flex items-center gap-1">
-          <Hash size={16} /> S.No
-        </div>
-      ),
-    }),
-    columnHelper.accessor("user", {
+    columnHelper.display({
+      header: "#",
       cell: (info) => (
-        <span className="font-semibold text-gray-800">{info.getValue()}</span>
-      ),
-      header: () => (
-        <div className="flex items-center gap-1">
-          <User size={16} /> User
-        </div>
-      ),
-    }),
-    columnHelper.accessor("product", {
-      cell: (info) => <span className="text-gray-700">{info.getValue()}</span>,
-      header: "Product",
-    }),
-    columnHelper.accessor("rating", {
-      cell: (info) => (
-        <span className="text-yellow-500 font-semibold">
-          {info.getValue()} ⭐
+        <span className="text-gray-500 font-medium">
+          {info.row.index + 1}
         </span>
       ),
+    }),
+    columnHelper.accessor("userName", {
+      header: "User",
+      cell: (info) => (
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
+            <span className="text-indigo-800 font-semibold text-xs">
+              {info.getValue()?.charAt(0)}
+            </span>
+          </div>
+          <span
+            className="font-medium text-gray-800 max-w-[150px] truncate"
+            title={info.getValue()}
+          >
+            {info.getValue()}
+          </span>
+        </div>
+      ),
+    }),
+    columnHelper.accessor("productName", {
+      header: "Product",
+      cell: (info) => (
+        <span
+          className="font-medium text-gray-700 max-w-[150px] truncate"
+          title={info.getValue()}
+        >
+          {info.getValue()}
+        </span>
+      ),
+    }),
+    columnHelper.accessor("rating", {
       header: "Rating",
-    }),
-    columnHelper.accessor("comment", {
-      cell: (info) => <span className="text-gray-600">{info.getValue()}</span>,
-      header: "Comment",
-    }),
-    columnHelper.accessor("status", {
       cell: (info) => {
-        const status = info.getValue();
-        const color =
-          status === "Pending"
-            ? "bg-yellow-400"
-            : status === "Approved"
-            ? "bg-green-500"
-            : "bg-red-500";
+        const rating = info.getValue();
         return (
-          <div className="flex items-center gap-2">
-            <span className={`w-3 h-3 rounded-full ${color}`}></span>
-            <span className="capitalize text-gray-700">{status}</span>
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                size={16}
+                className={star <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
+              />
+            ))}
+            <span className="font-semibold text-gray-700 ml-1">{rating}</span>
           </div>
         );
       },
-      header: "Status",
     }),
+    columnHelper.accessor("comment", {
+      header: "Comment",
+      cell: (info) => (
+        <div className="max-w-xs truncate text-gray-600" title={info.getValue()}>
+          {info.getValue()}
+        </div>
+      ),
+    }),
+    columnHelper.accessor("status", {
+      header: "Status",
+      cell: (info) => {
+        // Use the actual status from the database
+        const status = info.getValue() || "approved";
+        const statusConfig = {
+          "pending": { color: "bg-yellow-100 text-yellow-800", icon: Clock },
+          "approved": { color: "bg-green-100 text-green-800", icon: Check },
+          "rejected": { color: "bg-red-100 text-red-800", icon: X }
+        };
+
+        // Capitalize the first letter for display
+        const displayStatus = status.charAt(0).toUpperCase() + status.slice(1);
+        const config = statusConfig[status.toLowerCase()] || statusConfig["approved"];
+        const Icon = config.icon;
+
+        return (
+          <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+            <Icon size={12} />
+            <span>{displayStatus}</span>
+          </div>
+        );
+      },
+    }),
+    columnHelper.display({
+      header: "Actions",
+      cell: ({ row }) => {
+        const id = row.original._id;
+        const currentStatus = row.original.status || "approved";
+
+        return (
+          <div className="relative">
+            <button
+              onClick={() => setOpenMenu(openMenu === id ? null : id)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <MoreHorizontal size={18} className="text-gray-600" />
+            </button>
+
+            {openMenu === id && (
+              <div className="absolute right-0 mt-1 w-48 bg-white shadow-lg rounded-md z-10 border border-gray-200 py-1">
+                <button
+                  onClick={() => handleUpdateStatus(id, "approved")}
+                  disabled={currentStatus.toLowerCase() === "approved"}
+                  className={`flex items-center gap-2 w-full text-left px-4 py-2 text-sm ${
+                    currentStatus.toLowerCase() === "approved"
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-green-600 hover:bg-green-50"
+                  }`}
+                >
+                  <Check size={16} />
+                  <span>Approve</span>
+                </button>
+                <button
+                  onClick={() => handleUpdateStatus(id, "pending")}
+                  disabled={currentStatus.toLowerCase() === "pending"}
+                  className={`flex items-center gap-2 w-full text-left px-4 py-2 text-sm ${
+                    currentStatus.toLowerCase() === "pending"
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-yellow-600 hover:bg-yellow-50"
+                  }`}
+                >
+                  <Clock size={16} />
+                  <span>Pending</span>
+                </button>
+                <button
+                  onClick={() => handleUpdateStatus(id, "rejected")}
+                  disabled={currentStatus.toLowerCase() === "rejected"}
+                  className={`flex items-center gap-2 w-full text-left px-4 py-2 text-sm ${
+                    currentStatus.toLowerCase() === "rejected"
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-red-600 hover:bg-red-50"
+                  }`}
+                >
+                  <X size={16} />
+                  <span>Reject</span>
+                </button>
+                <div className="border-t border-gray-200 my-1"></div>
+                <button
+                  onClick={() => handleRemove(id)}
+                  className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
+                >
+                  <Trash2 size={16} />
+                  <span>Remove</span>
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      },
+    }),
+
   ];
 
-  // ===== React Table =====
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (openMenu && !event.target.closest('.relative')) {
+        setOpenMenu(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [openMenu]);
+
   const table = useReactTable({
     data,
     columns,
@@ -129,127 +262,109 @@ const ReviewsTab = () => {
   });
 
   return (
-    <div className="p-6 max-full mx-auto shadow-lg rounded-2xl">
-      {/* Search */}
-      <div className="flex flex-col md:flex-row justify-between mb-6 gap-3 items-center">
-        <div className="relative w-72">
-          <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+    <div className="p-6 rounded-xl shadow-lg bg-white">
+      <Toaster />
+
+      <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
+        <div className="relative max-w-md w-full">
+          <Search size={18} className="absolute left-3 top-3 text-gray-400" />
           <DebouncedInput
             value={globalFilter}
-            onChange={(value) => setGlobalFilter(String(value))}
-            placeholder="Search all columns..."
-            className="py-2 pl-10 pr-3 bg-white shadow-sm border rounded-lg w-full focus:ring-2 focus:ring-indigo-400 outline-none"
+            onChange={setGlobalFilter}
+            placeholder="Search reviews..."
+            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
           />
         </div>
       </div>
 
-      {/*  Table */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-        <table className="min-w-full border-collapse">
-          <thead className="bg-indigo-600 text-white">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="px-4 py-3 text-sm font-semibold text-left"
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </th>
+      {loading ? (
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+      ) : data.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search className="text-gray-400" size={24} />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-1">No reviews found</h3>
+          <p className="text-gray-500">Try adjusting your search query</p>
+        </div>
+      ) : (
+        <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-indigo-600 text-white">
+                {table.getHeaderGroups().map((hg) => (
+                  <tr key={hg.id}>
+                    {hg.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="px-6 py-3 text-left text-sm font-semibold"
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </th>
+                    ))}
+                  </tr>
                 ))}
-                <th className="px-4 py-3 text-sm font-semibold text-left">
-                  Actions
-                </th>
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row, i) => (
-              <tr
-                key={row.id}
-                className={`${
-                  i % 2 === 0 ? "bg-white" : "bg-indigo-50/40"
-                } hover:bg-indigo-100/70 transition-colors`}
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id} className="hover:bg-gray-50 transition-colors">
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className="px-6 py-4 whitespace-nowrap">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className="px-3 py-1.5 text-sm rounded-md bg-white border border-gray-300 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
               >
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="px-4 py-3 text-gray-700 text-sm">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                Previous
+              </button>
+              <button
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className="px-3 py-1.5 text-sm rounded-md bg-white border border-gray-300 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              >
+                Next
+              </button>
+            </div>
+
+            <div className="text-sm text-gray-600">
+              Showing <span className="font-medium">{table.getRowModel().rows.length}</span> of{" "}
+              <span className="font-medium">{data.length}</span> reviews
+            </div>
+
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <span>Rows per page:</span>
+              <select
+                value={table.getState().pagination.pageSize}
+                onChange={(e) => table.setPageSize(Number(e.target.value))}
+                className="px-2 py-1 border border-gray-300 rounded-md text-sm"
+              >
+                {[10, 20, 30, 50].map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
                 ))}
-
-                {/* Actions */}
-                <td className="py-3 px-4 flex gap-2">
-                  <button
-                    onClick={() => handleApprove(row.original._id)}
-                    className="px-3 py-1.5 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() => handleRemove(row.original._id)}
-                    className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600"
-                  >
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/*  Pagination */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mt-6">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className="px-3 py-1.5 rounded-lg bg-indigo-500 text-white disabled:bg-gray-300 hover:bg-indigo-600 transition"
-          >
-            Prev
-          </button>
-          <button
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className="px-3 py-1.5 rounded-lg bg-indigo-500 text-white disabled:bg-gray-300 hover:bg-indigo-600 transition"
-          >
-            Next
-          </button>
+              </select>
+            </div>
+          </div>
         </div>
-
-        <span className="text-gray-700 text-sm">
-          Page <strong>{table.getState().pagination.pageIndex + 1}</strong> of{" "}
-          <strong>{table.getPageCount()}</strong>
-        </span>
-
-        <div className="flex items-center gap-2 text-sm text-gray-700">
-          Go to page:
-          <input
-            type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="w-16 p-1 border rounded-lg shadow-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
-          />
-        </div>
-
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => table.setPageSize(Number(e.target.value))}
-          className="p-2 border rounded-lg shadow-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-400"
-        >
-          {[10, 20, 30, 40, 50].map((size) => (
-            <option key={size} value={size}>
-              Show {size}
-            </option>
-          ))}
-        </select>
-      </div>
+      )}
     </div>
   );
 };

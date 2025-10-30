@@ -1,6 +1,6 @@
 import React from "react";
 import { flexRender } from "@tanstack/react-table";
-import { MoreVertical, Shield, ShieldOff, UserCog, UserX } from "lucide-react";
+import { MoreVertical, Shield, ShieldOff, UserCog, UserX, Store } from "lucide-react";
 
 const UserTable = ({
   table,
@@ -87,7 +87,7 @@ const UserTable = ({
                         )}
                       </button>
 
-                      {row.original.role === "User" && (
+                      {row.original.role.toLowerCase() === "user" && (
                         <button
                           onClick={() =>
                             handleActionWithConfirm(
@@ -102,8 +102,23 @@ const UserTable = ({
                         </button>
                       )}
 
-                      {(row.original.role === "User" ||
-                        row.original.role === "Moderator") && (
+                      {row.original.role.toLowerCase() === "user" && (
+                        <button
+                          onClick={() =>
+                            handleActionWithConfirm(
+                              "makeSeller",
+                              row.original
+                            )
+                          }
+                          className="flex items-center gap-3 w-full px-4 py-3 text-sm hover:bg-gray-50 transition-colors text-left text-gray-700 border-t border-gray-100"
+                        >
+                          <Store size={18} className="text-green-500" />
+                          <span className="font-medium">Make Seller</span>
+                        </button>
+                      )}
+
+                      {(row.original.role.toLowerCase() === "user" ||
+                        row.original.role.toLowerCase() === "moderator") && (
                         <button
                           onClick={() =>
                             handleActionWithConfirm("makeAdmin", row.original)
@@ -115,8 +130,9 @@ const UserTable = ({
                         </button>
                       )}
 
-                      {(row.original.role === "Admin" ||
-                        row.original.role === "Moderator") && (
+                      {(row.original.role.toLowerCase() === "admin" ||
+                        row.original.role.toLowerCase() === "moderator" ||
+                        row.original.role.toLowerCase() === "seller") && (
                         <button
                           onClick={() =>
                             handleActionWithConfirm("removeRole", row.original)

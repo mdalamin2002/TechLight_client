@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CSVLink } from "react-csv";
-import { Bar } from "react-chartjs-2";
+import { Bar } from "recharts";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 ChartJS.register(
   CategoryScale,
@@ -22,19 +22,46 @@ ChartJS.register(
 
 export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
   const [reviews, setReviews] = useState([]);
+  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const axiosSecure = useAxiosSecure();
 
   const itemsPerPage = 5;
 
-  // Load data from JSON file
+  // Load real data from backend
   useEffect(() => {
-    fetch("/ReviewTracking_Data.json")
-      .then((res) => res.json())
-      .then((data) => setReviews(data))
-      .catch((err) => console.error("Error loading reviews:", err));
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Fetch reviews and products
+        const [reviewsRes, productsRes] = await Promise.all([
+          axiosSecure.get('/reviews/homepage?limit=100'),
+          axiosSecure.get('/products/admin/all?all=true')
+        ]);
+
+        setReviews(reviewsRes.data.data || []);
+        setProducts(productsRes.data.data || []);
+      } catch (err) {
+        console.error("Error loading reviews:", err);
+        setError("Failed to load review data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  // Create product map for quick lookup
+  const productMap = {};
+  products.forEach(product => {
+    productMap[product._id] = product;
+  });
 
   // Filter by Date
   const filterByDate = () => {
@@ -63,7 +90,7 @@ export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
     }
 
     return reviews.filter((r) => {
-      const reviewDate = new Date(r.date);
+      const reviewDate = new Date(r.createdAt);
       return reviewDate >= startDate && reviewDate <= now;
     });
   };
@@ -71,8 +98,8 @@ export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
   // Filtered data (date + search)
   const filteredData = filterByDate().filter(
     (r) =>
-      r.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.product.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (r.userName && r.userName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (r.productName && r.productName.toLowerCase().includes(searchTerm.toLowerCase())) ||
       r.rating.toString().includes(searchTerm)
   );
 
@@ -119,6 +146,7 @@ export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
       },
     ],
   };
+
   // 🟩 Send data back to parent for Excel export
   useEffect(() => {
     if (!onDataUpdate) return;
@@ -136,168 +164,252 @@ export const ReviewTraking = ({ dateRange, onDataUpdate }) => {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [filteredData]);
+  }, [filteredData, onDataUpdate, totalReviews, avgRating, positivePercent, negativePercent]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+        <div className="text-red-600 font-medium">{error}</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-md space-y-6">
-      <h3 className="text-xl font-semibold text-gray-800">
-        Review Tracking ({dateRange})
-      </h3>
-
-      {/* Search + Export */}
-      {/* <div className="flex flex-col md:flex-row justify-between gap-3 mb-4">
-        <input
-          type="text"
-          placeholder="Search by user, product, or rating..."
-          className="w-full md:w-1/2 p-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <CSVLink
-          data={filteredData}
-          filename="review-tracking.csv"
-          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm font-medium"
-        >
-          Export CSV
-        </CSVLink>
-      </div> */}
-
-      {/* Summary Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
-        <div className="bg-gray-50 p-4 rounded-lg text-center">
-          <p className="text-gray-500 font-medium">Total Reviews</p>
-          <p className="text-2xl font-bold text-gray-800">{totalReviews}</p>
-        </div>
-        <div className="bg-blue-50 p-4 rounded-lg text-center">
-          <p className="text-blue-700 font-medium">Avg Rating</p>
-          <p className="text-2xl font-bold text-blue-800">{avgRating}</p>
-        </div>
-        <div className="bg-green-50 p-4 rounded-lg text-center">
-          <p className="text-green-700 font-medium">Positive %</p>
-          <p className="text-2xl font-bold text-green-800">
-            {positivePercent}%
+    <div className="bg-gradient-to-br from-background via-background to-primary/5 min-h-screen p-4 md:p-6 lg:p-8">
+      <div className="space-y-6">
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+            Review Tracking
+          </h1>
+          <p className="text-muted-foreground">
+            Monitor customer feedback and product ratings
           </p>
+          {dateRange && (
+            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 w-fit mt-4">
+              <span className="text-sm font-medium text-primary">{dateRange}</span>
+            </div>
+          )}
         </div>
-        <div className="bg-red-50 p-4 rounded-lg text-center">
-          <p className="text-red-700 font-medium">Negative %</p>
-          <p className="text-2xl font-bold text-red-800">{negativePercent}%</p>
+
+        {/* Search */}
+        <div className="flex flex-col md:flex-row justify-between gap-3 mb-4">
+          <input
+            type="text"
+            placeholder="Search by user, product, or rating..."
+            className="w-full md:w-1/2 p-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 bg-card text-foreground border-border"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-      </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-        <table className="min-w-full overflow-hidden">
-          <thead className="bg-indigo-600 border-b border-gray-200">
-            <tr>
-              <th className="p-4 text-white font-medium">Review ID</th>
-              <th className="p-4 text-white font-medium">User</th>
-              <th className="p-4 text-white font-medium">Product</th>
-              <th className="p-4 text-white font-medium">Rating</th>
-              <th className="p-4 text-white font-medium">Date</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {paginatedData.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="p-4 text-center text-gray-500">
-                  No reviews found.
-                </td>
-              </tr>
-            ) : (
-              paginatedData.map((r, index) => (
-                <tr
-                  key={index}
-                  className={`
-              cursor-pointer transition-colors
-              ${
-                index % 2 === 0
-                  ? "bg-white hover:bg-indigo-100/70"
-                  : "bg-indigo-50/40 hover:bg-indigo-100/70"
-              }
-            `}
-                  onClick={() => setSelectedReview(r)}
-                >
-                  <td className="p-4 text-gray-800 font-medium">{r.id}</td>
-                  <td className="p-4 text-gray-700">{r.user}</td>
-                  <td className="p-4 text-gray-700">{r.product}</td>
-                  <td className="p-4 text-yellow-600 font-bold">{r.rating}★</td>
-                  <td className="p-4 text-gray-500">{r.date}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center items-center gap-2 mt-4">
-        <button
-          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-          className="px-3 py-1 border rounded-lg hover:bg-gray-100"
-        >
-          Prev
-        </button>
-        <span className="text-gray-700">
-          {currentPage} / {totalPages}
-        </span>
-        <button
-          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-          className="px-3 py-1 border rounded-lg hover:bg-gray-100"
-        >
-          Next
-        </button>
-      </div>
-
-      {/* Chart */}
-      <div className="bg-gray-50 p-4 rounded-lg mt-6">
-        <h4 className="text-gray-700 font-semibold mb-2">
-          Rating Distribution
-        </h4>
-        <Bar
-          data={chartData}
-          options={{
-            responsive: true,
-            plugins: { legend: { position: "top" } },
-          }}
-        />
-      </div>
-
-      {/* Modal */}
-      {selectedReview && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-xl w-11/12 max-w-md relative">
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl font-bold"
-              onClick={() => setSelectedReview(null)}
-            >
-              ✕
-            </button>
-            <h4 className="text-lg font-semibold mb-2">Review Details</h4>
-            <p>
-              <span className="font-medium">Review ID:</span>{" "}
-              {selectedReview.id}
+        {/* Summary Metrics */}
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
+          <div className="bg-card border border-border/50 rounded-2xl p-5 shadow-sm">
+            <p className="text-muted-foreground text-sm font-medium mb-1">Total Reviews</p>
+            <p className="text-2xl font-bold text-foreground">{totalReviews}</p>
+          </div>
+          <div className="bg-card border border-border/50 rounded-2xl p-5 shadow-sm">
+            <p className="text-muted-foreground text-sm font-medium mb-1">Avg Rating</p>
+            <p className="text-2xl font-bold text-foreground">{avgRating}</p>
+          </div>
+          <div className="bg-card border border-border/50 rounded-2xl p-5 shadow-sm">
+            <p className="text-muted-foreground text-sm font-medium mb-1">Positive %</p>
+            <p className="text-2xl font-bold text-foreground text-green-600">
+              {positivePercent}%
             </p>
-            <p>
-              <span className="font-medium">User:</span> {selectedReview.user}
-            </p>
-            <p>
-              <span className="font-medium">Product:</span>{" "}
-              {selectedReview.product}
-            </p>
-            <p>
-              <span className="font-medium">Rating:</span>{" "}
-              {selectedReview.rating}★
-            </p>
-            <p>
-              <span className="font-medium">Date:</span> {selectedReview.date}
-            </p>
-            <p className="mt-2">
-              <span className="font-medium">Comment:</span>{" "}
-              {selectedReview.comment}
+          </div>
+          <div className="bg-card border border-border/50 rounded-2xl p-5 shadow-sm">
+            <p className="text-muted-foreground text-sm font-medium mb-1">Negative %</p>
+            <p className="text-2xl font-bold text-foreground text-red-600">
+              {negativePercent}%
             </p>
           </div>
         </div>
-      )}
+
+        {/* Table */}
+        <div className="bg-card border border-border/50 rounded-2xl shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-primary/10 to-blue-50 border-b border-border/30 px-6 py-4">
+            <h2 className="text-lg font-bold text-foreground">Review Details</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gradient-to-r from-primary to-blue-600 text-primary-foreground">
+                  <th className="p-4 text-left font-bold">User</th>
+                  <th className="p-4 text-left font-bold">Product</th>
+                  <th className="p-4 text-center font-bold">Rating</th>
+                  <th className="p-4 text-left font-bold">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedData.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="p-8 text-center text-muted-foreground">
+                      No reviews found.
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedData.map((r, index) => (
+                    <tr
+                      key={r._id}
+                      className={`
+                        border-b border-border/30 transition-colors cursor-pointer
+                        ${index % 2 === 0
+                          ? "bg-white hover:bg-primary/5"
+                          : "bg-muted/30 hover:bg-primary/5"
+                        }
+                      `}
+                      onClick={() => setSelectedReview(r)}
+                    >
+                      <td className="p-4 text-foreground font-medium">
+                        {r.userName || "Anonymous"}
+                      </td>
+                      <td className="p-4 text-foreground">
+                        {r.productName || "Unknown Product"}
+                      </td>
+                      <td className="p-4 text-center">
+                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold">
+                          {r.rating}
+                        </span>
+                      </td>
+                      <td className="p-4 text-muted-foreground">
+                        {new Date(r.createdAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric"
+                        })}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            className="px-4 py-2 border rounded-lg hover:bg-muted transition text-foreground border-border"
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+          <span className="text-foreground">
+            {currentPage} / {totalPages || 1}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages || 1))}
+            className="px-4 py-2 border rounded-lg hover:bg-muted transition text-foreground border-border"
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+
+        {/* Chart */}
+        <div className="bg-card border border-border/50 rounded-2xl p-6 shadow-sm">
+          <h2 className="text-lg font-bold text-foreground mb-4">
+            Rating Distribution
+          </h2>
+          {filteredData.length > 0 ? (
+            <div className="h-80">
+              <Bar
+                data={chartData}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: { position: "top" },
+                    tooltip: {
+                      callbacks: {
+                        label: (context) => `${context.dataset.label}: ${context.raw} reviews`
+                      }
+                    }
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      ticks: {
+                        stepSize: 1
+                      }
+                    }
+                  }
+                }}
+              />
+            </div>
+          ) : (
+            <div className="h-80 flex items-center justify-center text-muted-foreground">
+              No data available for chart
+            </div>
+          )}
+        </div>
+
+        {/* Modal */}
+        {selectedReview && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+            <div className="bg-card rounded-xl w-full max-w-md relative border border-border shadow-lg">
+              <button
+                className="absolute top-4 right-4 text-muted-foreground hover:text-foreground text-xl font-bold"
+                onClick={() => setSelectedReview(null)}
+              >
+                ✕
+              </button>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-foreground mb-4">Review Details</h3>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">User</p>
+                    <p className="font-medium text-foreground">
+                      {selectedReview.userName || "Anonymous"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Product</p>
+                    <p className="font-medium text-foreground">
+                      {selectedReview.productName || "Unknown Product"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Rating</p>
+                    <p className="font-medium text-foreground">
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold mr-2">
+                        {selectedReview.rating}
+                      </span>
+                      {selectedReview.rating}/5
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Date</p>
+                    <p className="font-medium text-foreground">
+                      {new Date(selectedReview.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric"
+                      })}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Comment</p>
+                    <p className="font-medium text-foreground">
+                      {selectedReview.comment || selectedReview.title || "No comment provided"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

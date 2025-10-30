@@ -101,14 +101,25 @@ const PaymentSuccess = () => {
 
     // Customer Details
     doc.text("Customer Details:", 20, 90);
-    doc.text(`Name: ${paymentData.customer.name}`, 20, 100);
+    doc.text(`Name: ${paymentData.customer.fullName || paymentData.customer.name}`, 20, 100);
     doc.text(`Email: ${paymentData.customer.email}`, 20, 110);
     doc.text(`Phone: ${paymentData.customer.phone}`, 20, 120);
+    doc.text(`Alt Phone: ${paymentData.customer.altPhone || "N/A"}`, 20, 130);
+    doc.text(`Address: ${paymentData.customer.address}`, 20, 140);
+    doc.text(`City: ${paymentData.customer.city}`, 20, 150);
+    doc.text(`Postal: ${paymentData.customer.postal || "N/A"}`, 20, 160);
+    if (paymentData.customer.landmark) {
+      doc.text(`Landmark: ${paymentData.customer.landmark}`, 20, 170);
+    }
+    if (paymentData.customer.instructions) {
+      doc.text(`Instructions: ${paymentData.customer.instructions}`, 20, 180);
+    }
 
     // Products Table
-    doc.text("Products:", 20, 140);
+    const startY = paymentData.customer.instructions ? 190 : (paymentData.customer.landmark ? 180 : 170);
+    doc.text("Products:", 20, startY);
     paymentData.products.forEach((product, index) => {
-      const y = 150 + index * 10;
+      const y = startY + 10 + index * 10;
       doc.text(
         `- ${product.name} x${product.quantity} - ৳${product.price}`,
         20,
@@ -354,11 +365,22 @@ const PaymentSuccess = () => {
                   <p className="text-sm font-medium text-foreground">
                     {customer.address ? (
                       <>
+                        <div>{customer.fullName}</div>
                         <div>{customer.address}</div>
                         <div className="text-xs text-muted-foreground mt-1">
                           {customer.city}
                           {customer.postal && `, ${customer.postal}`}
                         </div>
+                        {customer.landmark && (
+                          <div className="text-xs text-muted-foreground mt-1">
+                            Landmark: {customer.landmark}
+                          </div>
+                        )}
+                        {customer.instructions && (
+                          <div className="text-xs text-muted-foreground mt-1">
+                            Instructions: {customer.instructions}
+                          </div>
+                        )}
                       </>
                     ) : (
                       "Not provided"

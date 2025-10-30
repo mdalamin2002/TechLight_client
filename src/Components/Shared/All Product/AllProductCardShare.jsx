@@ -22,7 +22,7 @@ const AllProductCardShare = ({
   rating = 0,
   price = 0,
   regularPrice = 0,
-  status = "In Stock",
+  stock = "In Stock",
   buttonText = "Add to Cart",
   variant = "grid",
 }) => {
@@ -35,9 +35,12 @@ const AllProductCardShare = ({
     isLoading,
   } = useWishlist();
   const { cart, addToCart } = useCart();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const navigate = useNavigate();
+
+  // Check if user is a customer (user role)
+  const isCustomer = userData?.role === "user";
 
   const priceNum = toNumber(price);
   const regularPriceNum = toNumber(regularPrice);
@@ -57,7 +60,12 @@ const AllProductCardShare = ({
   // Wishlist handler
   const handleWishlist = () => {
     if (!user) {
-      navigate("/auth/login");
+      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
@@ -69,7 +77,7 @@ const AllProductCardShare = ({
       subcategory,
       price,
       regularPrice,
-      status,
+      stock,
       category,
       model,
       productCode,
@@ -100,7 +108,12 @@ const AllProductCardShare = ({
   // Cart handler
   const handleAddToCart = () => {
     if (!user) {
-      navigate("/auth/login");
+      navigate(`/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+
+    if (!isCustomer) {
+      toast.warning("Only customers can use this feature");
       return;
     }
 
@@ -117,7 +130,7 @@ const AllProductCardShare = ({
       price,
       regularPrice,
       quantity: 1,
-      status,
+      stock,
       userEmail: user.email,
       createdAt: new Date().toISOString(),
     };
@@ -139,6 +152,10 @@ const AllProductCardShare = ({
     }
   };
 
+  // Normalize stock and status for case-insensitive comparison
+  const normalizedStock = typeof stock === 'string' ? stock.toLowerCase() : stock;
+  const normalizedStatus = typeof status === 'string' ? status.toLowerCase() : status;
+
   return (
     <div
       className={[
@@ -153,9 +170,13 @@ const AllProductCardShare = ({
         </div>
       )}
 
-      {/* Status */}
-      <div className="absolute top-3 right-3 z-10 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full font-medium">
-        {status}
+      {/* stock */}
+      <div className={`absolute top-3 right-3 z-10 text-xs px-2 py-1 rounded-full font-medium ${
+        normalizedStock === "in stock" || (typeof normalizedStock === "undefined" && normalizedStatus === "approved")
+          ? "text-green-600 bg-green-50"
+          : "text-red-600 bg-red-50"
+      }`}>
+        {normalizedStock === "in stock" || (typeof normalizedStock === "undefined" && normalizedStatus === "approved") ? "In Stock" : "Out of Stock"}
       </div>
 
       {/* Wishlist Button */}
@@ -178,14 +199,14 @@ const AllProductCardShare = ({
 
       {/* View Button */}
       <Link
-        to={id}
+        to={`/allProduct/${id}`}
         className="absolute cursor-pointer top-28 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 delay-75 hover:bg-blue-100"
       >
         <Eye className="w-5 h-5 text-gray-700 hover:text-blue-600 transition-colors" />
       </Link>
 
       {/* Product Image */}
-      <Link to={id}>
+      <Link to={`/allProduct/${id}`}>
         <div
           className={
             variant === "list"
@@ -214,7 +235,7 @@ const AllProductCardShare = ({
           </span>
         </div>
 
-        <Link to={id}>
+        <Link to={`/allProduct/${id}`}>
           <h4 className="font-semibold cursor-pointer text-foreground text-base leading-tight line-clamp-2 min-h-[2.5rem] group-hover:text-primary/90 transition-colors">
             {name}
           </h4>
