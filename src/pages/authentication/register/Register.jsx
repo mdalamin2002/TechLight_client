@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import RegisterForm from "./RegisterForm";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import useAuth from "@/hooks/useAuth";
@@ -12,10 +12,11 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const { registerWithEmailPass,updateUser,logOutUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const onSubmit = async (data) => {
     const { name, email, password, confirmPassword } = data;
-    
+
     try {
       // Valid password
       const passwordValidation = await validPass(password, confirmPassword);
@@ -35,8 +36,13 @@ const Register = () => {
       await SaveUserInDb(updatedUser);
       logOutUser().then(() => {
         toast.success("Register successfully")
-        navigate("/auth/login");
-          });
+
+        // Preserve redirect parameter when navigating to login
+        const urlParams = new URLSearchParams(location.search);
+        const redirectParam = urlParams.get('redirect');
+        const loginPath = redirectParam ? `/auth/login?redirect=${encodeURIComponent(redirectParam)}` : "/auth/login";
+        navigate(loginPath);
+      });
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -65,13 +71,16 @@ const Register = () => {
         <hr className="flex-grow border-gray-300" />
       </div>
 
-      <SocialLogin />
+      <SocialLogin redirectParam={location.search} />
       <br />
-      <GithubLogin></GithubLogin>
+      <GithubLogin redirectParam={location.search}></GithubLogin>
 
       <p className="text-center mt-6">
         Already have an account?{" "}
-        <a href="/auth/login" className="text-black font-medium underline">
+        <a
+          href={`/auth/login${location.search}`}
+          className="text-black font-medium underline"
+        >
           Login
         </a>
       </p>

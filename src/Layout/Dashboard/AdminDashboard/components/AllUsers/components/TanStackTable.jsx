@@ -13,6 +13,7 @@ import DebouncedInput from "./DebouncedInput";
 import DownloadBtn from "./DownloadBtn";
 import Pagination from "./Pagination";
 import UserTable from "./UserTable";
+import useAxiosSecure from "@/utils/useAxiosSecure";
 
 const TanStackTable = () => {
   const columnHelper = createColumnHelper();
@@ -21,13 +22,21 @@ const TanStackTable = () => {
   const [data, setData] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [openMenu, setOpenMenu] = useState(null);
+  const axiosSecure = useAxiosSecure();
 
-  // ===== Load data from JSON =====
+  // console.log(" ", data);
+  // Fetch all users
+  const fetchUsers = async () => {
+    try {
+      const res = await axiosSecure.get(`/users`);
+      setData(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("/users.json")
-      .then((res) => setData(res.data))
-      .catch((err) => console.error(err));
+    fetchUsers();
   }, []);
 
   // ===== Action Handlers =====
@@ -89,7 +98,6 @@ const TanStackTable = () => {
       title: `Are you sure?`,
       html: `
         <b>User:</b> ${user.user} <br/>
-        <b>Email:</b> ${user.email} <br/>
         <b>Current Role:</b> ${user.role} <br/>
         <b>Status:</b> ${user.status} <br/><br/>
         You are about to <b>${actionText}</b> this user.
@@ -139,17 +147,18 @@ const TanStackTable = () => {
       ),
       header: "S.No",
     }),
-    columnHelper.accessor("avatar", {
-      cell: (info) => (
-        <img
-          src={info.getValue()}
-          alt="profile"
-          className="rounded-full w-10 h-10 object-cover border-2 border-primary/20 shadow-md"
-        />
-      ),
-      header: "Profile",
-    }),
-    columnHelper.accessor("user", {
+  
+    // columnHelper.accessor("avatar", {
+    //   cell: (info) => (
+    //     <img
+    //       src={info.getValue()}
+    //       alt="profile"
+    //       className="rounded-full w-10 h-10 object-cover border-2 border-primary/20 shadow-md"
+    //     />
+    //   ),
+    //   header: "Profile",
+    // }),
+    columnHelper.accessor("name", {
       cell: (info) => (
         <span className="font-semibold text-foreground">{info.getValue()}</span>
       ),
@@ -202,10 +211,11 @@ const TanStackTable = () => {
       },
       header: "Status",
     }),
-    columnHelper.accessor("joinDate", {
-      cell: (info) => (
-        <span className="text-muted-foreground text-sm">{info.getValue()}</span>
-      ),
+    columnHelper.accessor("created_at", {
+      cell: (info) => {
+        const date = new Date(info.getValue()).toISOString().split("T")[0];
+        return <span className="text-muted-foreground text-sm">{date}</span>;
+      },
       header: "Join Date",
     }),
   ];
