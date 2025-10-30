@@ -93,7 +93,8 @@ export default function DashboardSidebar({
 
     moderator: [
       { to: "/dashboard/moderator-overview", label: "Dashboard", icon: Home },
-      { to: "/dashboard/orders-products", label: "Orders Products", icon: Box },
+      { to: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
+      { to: "/dashboard/orders-products", label: "Products", icon: Box },
       { to: "/dashboard/users-reviews", label: "Users Reviews", icon: Star },
       {
         to: "/dashboard/support-communication",

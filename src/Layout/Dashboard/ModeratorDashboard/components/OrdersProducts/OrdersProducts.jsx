@@ -1,21 +1,17 @@
 import React, { useState } from "react";
-import OrdersTab from "./components/OrdersTab";
 import ProductsTab from "./components/ProductsTab";
 import InventoryAlertsTab from "./components/InventoryAlertsTab";
 
 export const OrdersProducts = () => {
-  const [activeTab, setActiveTab] = useState("orders");
+  const [activeTab, setActiveTab] = useState("products");
 
   const tabs = [
-    { key: "orders", label: "Orders" },
     { key: "products", label: "Products" },
     { key: "inventory", label: "Inventory Alerts" },
   ];
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "orders":
-        return <OrdersTab />;
       case "products":
         return <ProductsTab />;
       case "inventory":
@@ -49,5 +45,3 @@ export const OrdersProducts = () => {
     </div>
   );
 };
-
-

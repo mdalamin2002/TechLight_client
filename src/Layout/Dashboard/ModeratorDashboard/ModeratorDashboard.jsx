@@ -8,6 +8,7 @@ import DeveloperNotes from "./components/DeveloperNotes/DeveloperNotes";
 import ModeratorSettings from "./components/ModeratorSettings/ModeratorSettings";
 import Payments from "./components/Payments/Payments";
 import Notifications from "./components/Notifications/Notifications";
+import Orders from "./components/Orders/Orders";
 
 const ModeratorDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
@@ -16,7 +17,9 @@ const ModeratorDashboard = () => {
     switch (activeSection) {
       case "overview":
         return <ModeratorOverview />;
-      case "orders-products":
+      case "orders":
+        return <Orders />;
+      case "products":
         return <OrdersProducts />;
       case "users-reviews":
         return <UsersReviews />;
@@ -39,7 +42,8 @@ const ModeratorDashboard = () => {
 
   const menuItems = [
     { id: "overview", label: "Overview" },
-    { id: "orders-products", label: "Orders & Products" },
+    { id: "orders", label: "Orders" },
+    { id: "products", label: "Products" },
     { id: "users-reviews", label: "Users & Reviews" },
     { id: "support-communication", label: "Support & Communication" },
     { id: "reports-analytics", label: "Reports & Analytics" },
