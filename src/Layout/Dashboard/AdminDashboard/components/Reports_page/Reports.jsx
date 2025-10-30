@@ -39,7 +39,7 @@ export const Reports = () => {
       case "fraud":
         return <FraudReport dateRange={dateRange} onDataUpdate={data => safeSetData(setFraudData, data)} />;
       default:
-        return <div>Coming Soon 🚀</div>;
+        return <div>Coming Soon </div>;
     }
   };
 

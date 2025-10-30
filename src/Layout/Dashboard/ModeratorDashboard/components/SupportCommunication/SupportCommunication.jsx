@@ -6,22 +6,22 @@ import LiveChatTab from "./components/LiveChatTab";
 import NotificationsTab from "./components/NotificationsTab";
 
 export const SupportCommunication = () => {
-  const [activeTab, setActiveTab] = useState("tickets");
+  const [activeTab, setActiveTab] = useState("chat");
 
   const tabs = [
-    { key: "tickets", label: "Support Tickets" },
+    // { key: "tickets", label: "Support Tickets" },
     { key: "chat", label: "Live Chat" },
-    { key: "notifications", label: "Notifications" },
+    // { key: "notifications", label: "Notifications" },
   ];
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "tickets":
-        return <SupportTicketsTab />;
+      // case "tickets":
+      //   return <SupportTicketsTab />;
       case "chat":
         return <LiveChatTab />;
-      case "notifications":
-        return <NotificationsTab />;
+      // case "notifications":
+      //   return <NotificationsTab />;
       default:
         return null;
     }
