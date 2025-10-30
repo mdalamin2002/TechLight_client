@@ -51,7 +51,6 @@ import MyProductsOrders from "@/Layout/Dashboard/SellerDashboard/components/MyPr
 import MyProductsList from "@/Layout/Dashboard/SellerDashboard/components/MyProductsList/MyProductsList";
 import SellerProfile from "@/Layout/Dashboard/SellerDashboard/components/SellerProfileSettings/components/SellerProfile";
 import SellerSettings from "@/Layout/Dashboard/SellerDashboard/components/SellerProfileSettings/SellerSettings";
-import AddNewProduct from "@/Layout/Dashboard/SellerDashboard/components/AddNewProduct/AddNewProduct";
 import CouponManagement from "@/Layout/Dashboard/SellerDashboard/components/CouponManagement/CouponManagement";
 import MyProductsEarnings from "@/Layout/Dashboard/SellerDashboard/components/MyProductsEarnings/MyProductsEarnings";
 import ProductReviews from "@/Layout/Dashboard/SellerDashboard/components/ProductReviews/ProductReviews";
@@ -246,7 +245,6 @@ const MainRoute = createBrowserRouter([
       {path: "seller-products-list", element: <MyProductsList/> },
       {path: "seller-profile", element: <SellerProfile/> },
       {path: "seller-settings", element: <SellerSettings/> },
-      {path: "seller-add-product", element: <AddNewProduct/>},
       {path: "seller-coupons", element: <CouponManagement/>},
       {path: "seller-earnings", element: <MyProductsEarnings/>},
       {path: "seller-products-reviews", element: <ProductReviews/>},
