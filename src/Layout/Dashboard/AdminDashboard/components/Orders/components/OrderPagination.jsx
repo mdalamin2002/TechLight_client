@@ -2,15 +2,18 @@ import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const OrderPagination = ({ pageIndex, setPageIndex, pageSize, setPageSize, pageCount }) => {
+  // Calculate the range of items being displayed
+  const startItem = pageIndex * pageSize + 1;
+  const endItem = Math.min((pageIndex + 1) * pageSize, pageCount * pageSize);
+  const totalItems = pageCount * pageSize;
+
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-6 border-t border-border/50">
       {/* Page info */}
       <div className="text-sm text-muted-foreground">
-        Showing <span className="font-medium text-foreground">{pageIndex * pageSize + 1}</span> to{" "}
-        <span className="font-medium text-foreground">
-          {Math.min((pageIndex + 1) * pageSize, pageCount * pageSize)}
-        </span>{" "}
-        of <span className="font-medium text-foreground">{pageCount * pageSize}</span> results
+        Showing <span className="font-medium text-foreground">{startItem}</span> to{" "}
+        <span className="font-medium text-foreground">{endItem}</span>{" "}
+        of <span className="font-medium text-foreground">{totalItems}</span> results
       </div>
 
       <div className="flex items-center gap-2">
@@ -58,7 +61,7 @@ const OrderPagination = ({ pageIndex, setPageIndex, pageSize, setPageSize, pageC
           disabled={pageIndex >= pageCount - 1}
           className="relative inline-flex items-center px-3 py-2 text-sm font-medium text-foreground bg-card border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          Next <ChevronLeft size={16} className="ml-1 rotate-180" />
+          Next <ChevronRight size={16} className="ml-1" />
         </button>
       </div>
 
