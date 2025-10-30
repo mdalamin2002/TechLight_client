@@ -112,15 +112,15 @@ export default function DashboardSidebar({
       //   icon: FileText,
       // },
       {
-        to: "/dashboard/moderator-settings",
+        to: "/dashboard/my-settings",
         label: "Settings",
         icon: Settings,
       },
-      {
-        to: "/dashboard/payments",
-        label: "Payments",
-        icon: CreditCard,
-      },
+      // {
+      //   to: "/dashboard/payments",
+      //   label: "Payments",
+      //   icon: CreditCard,
+      // },
       // {
       //   to: "/dashboard/notifications",
       //   label: "Notifications",
