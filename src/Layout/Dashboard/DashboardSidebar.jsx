@@ -35,12 +35,12 @@ export default function DashboardSidebar({
   isMobileMenuOpen,
   setIsMobileMenuOpen,
 }) {
- 
+
   const { userData } = useAuth();
   const role = userData?.role; // "admin", "moderator", or "user"
   console.log(role);
- 
-  
+
+
 
   const NavItem = ({ to, label, icon: Icon, onClick }) => (
     <NavLink
@@ -75,10 +75,10 @@ export default function DashboardSidebar({
     admin: [
       { to: "/dashboard/home", label: "Dashboard", icon: Home },
       { to: "/dashboard/users", label: "Users", icon: Users },
-      { to: "/dashboard/sellers", label: "Sellers", icon: Store },
+      // { to: "/dashboard/sellers", label: "Sellers", icon: Store },
       { to: "/dashboard/products", label: "Products", icon: Box },
       { to: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
-      { to: "/dashboard/finance", label: "Finance", icon: DollarSign },
+      // { to: "/dashboard/finance", label: "Finance", icon: DollarSign },
       {
         to: "/dashboard/communication",
         label: "Communication",
@@ -88,7 +88,7 @@ export default function DashboardSidebar({
       { to: "/dashboard/reports", label: "Reports", icon: BarChart3 },
       { to: "/dashboard/offers", label: "Offers", icon: BadgePercent },
       { to: "/dashboard/settings", label: "Settings", icon: Settings },
-      { to: "/dashboard/advanced", label: "Advanced", icon: Zap },
+      // { to: "/dashboard/advanced", label: "Advanced", icon: Zap },
     ],
 
     moderator: [
@@ -129,48 +129,48 @@ export default function DashboardSidebar({
 
     seller:[
       {
-        to: "/dashboard/seller-overview", 
-        label: "Overview", 
+        to: "/dashboard/seller-overview",
+        label: "Overview",
         icon: LayoutDashboard
       },
       {
-        to: "/dashboard/seller-products-orders", 
-        label: "All Orders", 
+        to: "/dashboard/seller-products-orders",
+        label: "All Orders",
         icon: Box
       },
       {
-        to: "/dashboard/seller-products-list", 
-        label: "Products List", 
+        to: "/dashboard/seller-products-list",
+        label: "Products List",
         icon: Store
       },
       {
-        to: "/dashboard/seller-earnings", 
-        label: "Earnings", 
+        to: "/dashboard/seller-earnings",
+        label: "Earnings",
         icon: DollarSign
       },
       {
-        to: "/dashboard/addProduct", 
-        label: "Add New Product", 
+        to: "/dashboard/seller-add-product",
+        label: "Add New Product",
         icon: PlusCircle
       },
       {
-        to: "/dashboard/seller-coupons", 
-        label: "Coupons", 
+        to: "/dashboard/seller-coupons",
+        label: "Coupons",
         icon: Star
       },
       {
-        to: "/dashboard/seller-products-reviews", 
-        label: "Product Reviews", 
+        to: "/dashboard/seller-products-reviews",
+        label: "Product Reviews",
         icon: Star
       },
       {
-        to: "/dashboard/seller-support-help", 
-        label: "Support Help", 
+        to: "/dashboard/seller-support-help",
+        label: "Support Help",
         icon: MessageSquare
       },
       {
-        to: "/dashboard/seller-settings", 
-        label: "Settings", 
+        to: "/dashboard/seller-settings",
+        label: "Settings",
         icon: Settings
       },
     ],

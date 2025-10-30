@@ -9,52 +9,31 @@ import {
   CheckCircle2,
   XCircle,
   User,
-  Calendar,
   RefreshCw,
   ArrowRight,
   Loader2,
   Users,
   MessageSquare,
   Activity,
-  TrendingUp,
   UserCheck,
+  Search,
+  Filter,
+  TrendingUp,
+  Zap,
+  Eye,
+  Sparkles,
   BarChart3,
 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Badge } from "@/Components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/Components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/Components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/Components/ui/table";
 
 const SupportManagement = () => {
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
   const { userData } = useAuth();
   const [conversations, setConversations] = useState([]);
-  const [allMessages, setAllMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("conversations");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState({
     total: 0,
@@ -68,13 +47,10 @@ const SupportManagement = () => {
   const fetchConversations = async () => {
     try {
       setRefreshing(true);
-      const response = await axiosSecure.get(
-        `/support/conversations/allConversations`
-      );
+      const response = await axiosSecure.get(`/support/conversations/allConversations`);
       const allConvs = response.data.conversations || [];
       setConversations(allConvs);
-      
-      // Calculate stats
+
       setStats({
         total: allConvs.length,
         open: allConvs.filter((c) => c.status === "open").length,
@@ -91,41 +67,10 @@ const SupportManagement = () => {
     }
   };
 
-  // Fetch all messages
-  const fetchAllMessages = async () => {
-    try {
-      const messagesData = [];
-      for (const conv of conversations) {
-        const response = await axiosSecure.get(
-          `/support/messages/${conv._id}`
-        );
-        if (response.data.messages) {
-          messagesData.push(
-            ...response.data.messages.map((msg) => ({
-              ...msg,
-              conversationSubject: conv.subject,
-              conversationStatus: conv.status,
-            }))
-          );
-        }
-      }
-      setAllMessages(messagesData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    }
-  };
-
   useEffect(() => {
     fetchConversations();
   }, []);
 
-  useEffect(() => {
-    if (activeTab === "messages" && conversations.length > 0) {
-      fetchAllMessages();
-    }
-  }, [activeTab, conversations]);
-
-  // Format timestamp
   const formatTime = (timestamp) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -135,74 +80,62 @@ const SupportManagement = () => {
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
-    if (days > 7) {
-      return date.toLocaleDateString();
-    } else if (days > 0) {
-      return `${days}d ago`;
-    } else if (hours > 0) {
-      return `${hours}h ago`;
-    } else if (minutes > 0) {
-      return `${minutes}m ago`;
-    } else {
-      return "Just now";
-    }
+    if (days > 7) return date.toLocaleDateString();
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    return "Just now";
   };
 
-  // Get status configuration
   const getStatusConfig = (status) => {
-    switch (status) {
-      case "open":
-        return {
-          color: "bg-green-500",
-          bgLight: "bg-green-50",
-          textColor: "text-green-700",
-          icon: <MessageCircle className="w-4 h-4" />,
-          label: "Open",
-        };
-      case "in-progress":
-        return {
-          color: "bg-blue-500",
-          bgLight: "bg-blue-50",
-          textColor: "text-blue-700",
-          icon: <Clock className="w-4 h-4" />,
-          label: "In Progress",
-        };
-      case "resolved":
-        return {
-          color: "bg-gray-500",
-          bgLight: "bg-gray-50",
-          textColor: "text-gray-700",
-          icon: <CheckCircle2 className="w-4 h-4" />,
-          label: "Resolved",
-        };
-      case "closed":
-        return {
-          color: "bg-red-500",
-          bgLight: "bg-red-50",
-          textColor: "text-red-700",
-          icon: <XCircle className="w-4 h-4" />,
-          label: "Closed",
-        };
-      default:
-        return {
-          color: "bg-gray-500",
-          bgLight: "bg-gray-50",
-          textColor: "text-gray-700",
-          icon: <MessageCircle className="w-4 h-4" />,
-          label: status,
-        };
-    }
+    const configs = {
+      open: {
+        gradient: "from-emerald-500 to-emerald-600",
+        bg: "bg-emerald-500/10",
+        border: "border-emerald-500/30",
+        text: "text-emerald-700 dark:text-emerald-400",
+        icon: MessageCircle,
+        label: "Open",
+        dotColor: "bg-emerald-500"
+      },
+      "in-progress": {
+        gradient: "from-blue-500 to-blue-600",
+        bg: "bg-blue-500/10",
+        border: "border-blue-500/30",
+        text: "text-blue-700 dark:text-blue-400",
+        icon: Clock,
+        label: "In Progress",
+        dotColor: "bg-blue-500"
+      },
+      resolved: {
+        gradient: "from-violet-500 to-violet-600",
+        bg: "bg-violet-500/10",
+        border: "border-violet-500/30",
+        text: "text-violet-700 dark:text-violet-400",
+        icon: CheckCircle2,
+        label: "Resolved",
+        dotColor: "bg-violet-500"
+      },
+      closed: {
+        gradient: "from-slate-500 to-slate-600",
+        bg: "bg-slate-500/10",
+        border: "border-slate-500/30",
+        text: "text-slate-700 dark:text-slate-400",
+        icon: XCircle,
+        label: "Closed",
+        dotColor: "bg-slate-500"
+      }
+    };
+    return configs[status] || configs.open;
   };
 
-  // Handle status update
-    const handleStatusUpdate = async (conversationId, newStatus) => {
-      console.log(newStatus,conversationId);
+  const handleStatusUpdate = async (conversationId, newStatus) => {
     try {
       const response = await axiosSecure.patch(
         `/support/conversations/${conversationId}`,
-        { 
+        {
           status: newStatus,
-          userRole: userData?.role || "admin" // Send user role for backend validation
+          userRole: userData?.role || "admin"
         }
       );
 
@@ -216,19 +149,20 @@ const SupportManagement = () => {
     }
   };
 
-  // Navigate to conversation
   const openConversation = (conversation) => {
     navigate(`/support-chat/${conversation._id}`, {
       state: { conversation },
     });
   };
 
-  // Filter conversations
-  const filteredConversations = statusFilter === "all" 
-    ? conversations 
-    : conversations.filter((c) => c.status === statusFilter);
+  const filteredConversations = conversations.filter((c) => {
+    const matchesStatus = statusFilter === "all" || c.status === statusFilter;
+    const matchesSearch = searchQuery === "" ||
+      c.subject?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.userName?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
 
-  // Group conversations by moderator
   const conversationsByModerator = conversations.reduce((acc, conv) => {
     if (conv.assignedToName) {
       if (!acc[conv.assignedToName]) {
@@ -245,234 +179,250 @@ const SupportManagement = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
         <div className="text-center">
-          <Loader2 className="w-16 h-16 text-blue-500 animate-spin mx-auto mb-4" />
-          <p className="text-slate-600">Loading support management...</p>
+          <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading support management...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 space-y-6 bg-gradient-to-br from-slate-50 to-blue-50/30 min-h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Support Management
-          </h1>
-          <p className="text-slate-600 mt-1">
-            Monitor and manage all customer support conversations
-          </p>
-        </div>
-        <Button
-          onClick={fetchConversations}
-          variant="outline"
-          disabled={refreshing}
-          className="gap-2"
-        >
-          <RefreshCw
-            className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
-          />
-          Refresh
-        </Button>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card className="border-l-4 border-l-slate-500 hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-slate-600">
-                Total Chats
-              </CardTitle>
-              <Activity className="w-5 h-5 text-slate-500" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-slate-900">{stats.total}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-green-500 hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-green-600">
-                Open
-              </CardTitle>
-              <MessageCircle className="w-5 h-5 text-green-500" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-green-700">{stats.open}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-blue-500 hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-blue-600">
-                In Progress
-              </CardTitle>
-              <Clock className="w-5 h-5 text-blue-500" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-blue-700">{stats.inProgress}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-gray-500 hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                Resolved
-              </CardTitle>
-              <CheckCircle2 className="w-5 h-5 text-gray-500" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-700">{stats.resolved}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-red-500 hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-red-600">
-                Closed
-              </CardTitle>
-              <XCircle className="w-5 h-5 text-red-500" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-red-700">{stats.closed}</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Content Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-white p-1">
-          <TabsTrigger value="conversations" className="gap-2">
-            <MessageSquare className="w-4 h-4" />
-            Conversations
-          </TabsTrigger>
-          <TabsTrigger value="messages" className="gap-2">
-            <MessageCircle className="w-4 h-4" />
-            All Messages
-          </TabsTrigger>
-          <TabsTrigger value="moderators" className="gap-2">
-            <Users className="w-4 h-4" />
-            Moderator Assignments
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Conversations Tab */}
-        <TabsContent value="conversations" className="mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Conversations</CardTitle>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="open">Open</SelectItem>
-                    <SelectItem value="in-progress">In Progress</SelectItem>
-                    <SelectItem value="resolved">Resolved</SelectItem>
-                    <SelectItem value="closed">Closed</SelectItem>
-                  </SelectContent>
-                </Select>
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background p-6">
+      <div className=" space-y-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
+                <MessageSquare className="w-6 h-6 text-primary-foreground" />
               </div>
-            </CardHeader>
-            <CardContent>
+              <div>
+                <h1 className="text-3xl font-bold text-foreground">Support Management</h1>
+              </div>
+            </div>
+            <p className="text-muted-foreground ml-15">Monitor and manage all customer conversations</p>
+          </div>
+          <button
+            onClick={fetchConversations}
+            disabled={refreshing}
+            className="px-4 py-2.5 bg-card border border-border hover:bg-muted rounded-xl transition-all flex items-center gap-2 text-foreground font-medium hover:shadow-md disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+            Refresh
+          </button>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Activity className="w-6 h-6 text-primary" />
+              </div>
+              <TrendingUp className="w-5 h-5 text-emerald-500" />
+            </div>
+            <p className="text-sm text-muted-foreground mb-1">Total Conversations</p>
+            <p className="text-3xl font-bold text-foreground">{stats.total}</p>
+          </div>
+
+          <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <MessageCircle className="w-6 h-6 text-emerald-600" />
+              </div>
+              <span className="px-2 py-1 bg-emerald-500/10 text-emerald-600 text-xs font-semibold rounded-full">
+                Active
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground mb-1">Open</p>
+            <p className="text-3xl font-bold text-emerald-600">{stats.open}</p>
+          </div>
+
+          <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Clock className="w-6 h-6 text-blue-600" />
+              </div>
+              <Zap className="w-5 h-5 text-blue-500" />
+            </div>
+            <p className="text-sm text-muted-foreground mb-1">In Progress</p>
+            <p className="text-3xl font-bold text-blue-600">{stats.inProgress}</p>
+          </div>
+
+          <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-violet-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <CheckCircle2 className="w-6 h-6 text-violet-600" />
+              </div>
+              <Sparkles className="w-5 h-5 text-violet-500" />
+            </div>
+            <p className="text-sm text-muted-foreground mb-1">Resolved</p>
+            <p className="text-3xl font-bold text-violet-600">{stats.resolved}</p>
+          </div>
+
+          <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-500/20 to-slate-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <XCircle className="w-6 h-6 text-slate-600" />
+              </div>
+              <BarChart3 className="w-5 h-5 text-slate-500" />
+            </div>
+            <p className="text-sm text-muted-foreground mb-1">Closed</p>
+            <p className="text-3xl font-bold text-slate-600">{stats.closed}</p>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="bg-card border border-border rounded-2xl shadow-lg">
+          <div className="border-b border-border">
+            <div className="flex gap-2 p-2">
+              <button
+                onClick={() => setActiveTab("conversations")}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+                  activeTab === "conversations"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                <MessageSquare className="w-4 h-4" />
+                Conversations
+              </button>
+              <button
+                onClick={() => setActiveTab("moderators")}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+                  activeTab === "moderators"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                <Users className="w-4 h-4" />
+                Moderator Assignments
+              </button>
+            </div>
+          </div>
+
+          {/* Conversations Tab */}
+          {activeTab === "conversations" && (
+            <div className="p-6">
+              {/* Search & Filter */}
+              <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Search conversations..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/30 outline-none transition"
+                  />
+                </div>
+                <div className="relative">
+                  <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="pl-12 pr-8 py-3 bg-background border border-border rounded-xl text-foreground focus:ring-2 focus:ring-primary/30 outline-none transition appearance-none cursor-pointer min-w-[200px]"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="open">Open</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Conversations List */}
               {filteredConversations.length === 0 ? (
-                <div className="text-center py-12">
-                  <MessageCircle className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-slate-700 mb-2">
+                <div className="text-center py-16">
+                  <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                    <MessageCircle className="w-10 h-10 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
                     No conversations found
                   </h3>
-                  <p className="text-slate-500">
-                    No conversations match the selected filter
+                  <p className="text-muted-foreground">
+                    {searchQuery ? "Try adjusting your search" : "No conversations match the selected filter"}
                   </p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {filteredConversations.map((conversation) => {
                     const statusConfig = getStatusConfig(conversation.status);
+                    const StatusIcon = statusConfig.icon;
                     return (
                       <div
                         key={conversation._id}
-                        className="border rounded-lg p-4 hover:shadow-md transition-all bg-white border-l-4"
-                        style={{ borderLeftColor: statusConfig.color.replace("bg-", "#") }}
+                        className="border border-border rounded-xl p-5 hover:shadow-lg hover:border-primary/30 transition-all bg-card group"
                       >
-                        <div className="flex items-start justify-between">
+                        <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h3 className="text-lg font-semibold text-slate-800">
+                            <div className="flex items-center gap-3 mb-3">
+                              <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
                                 {conversation.subject}
                               </h3>
-                              <Badge
-                                className={`${statusConfig.color} text-white border-none flex items-center gap-1`}
-                              >
-                                {statusConfig.icon}
-                                {statusConfig.label}
-                              </Badge>
+                              <div className={`flex items-center gap-1.5 px-3 py-1 ${statusConfig.bg} border ${statusConfig.border} rounded-full`}>
+                                <StatusIcon className={`w-3.5 h-3.5 ${statusConfig.text}`} />
+                                <span className={`text-xs font-semibold ${statusConfig.text}`}>
+                                  {statusConfig.label}
+                                </span>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-4 text-sm text-slate-600 mb-3">
-                              <span className="flex items-center gap-1">
-                                <User className="w-3 h-3" />
+
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                              <span className="flex items-center gap-1.5">
+                                <User className="w-4 h-4" />
                                 {conversation.userName}
                               </span>
-                              <span>•</span>
+                              <span className="w-1 h-1 rounded-full bg-muted-foreground" />
                               <span className="capitalize">{conversation.category}</span>
-                              <span>•</span>
-                              <span>ID: {conversation._id?.slice(-8).toUpperCase()}</span>
+                              <span className="w-1 h-1 rounded-full bg-muted-foreground" />
+                              <span className="font-mono text-xs">#{conversation._id?.slice(-6).toUpperCase()}</span>
                             </div>
+
                             {conversation.assignedToName && (
-                              <div className="flex items-center gap-2 text-sm">
-                                <Badge variant="outline" className="flex items-center gap-1">
-                                  <UserCheck className="w-3 h-3" />
-                                  Handled by: {conversation.assignedToName} ({conversation.assignedToRole})
-                                </Badge>
+                              <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 px-3 py-1.5 bg-muted/50 border border-border rounded-lg">
+                                  <UserCheck className="w-3.5 h-3.5 text-primary" />
+                                  <span className="text-xs font-medium text-foreground">
+                                    {conversation.assignedToName}
+                                  </span>
+                                  <span className="px-1.5 py-0.5 bg-primary/10 text-primary text-xs font-semibold rounded">
+                                    {conversation.assignedToRole}
+                                  </span>
+                                </div>
                               </div>
                             )}
                           </div>
-                          <div className="flex flex-col items-end gap-2">
-                            <div className="flex items-center gap-2 text-sm text-slate-600">
+
+                          <div className="flex flex-col items-end gap-3">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
                               <Clock className="w-4 h-4" />
                               <span>{formatTime(conversation.lastMessageAt)}</span>
                             </div>
+
                             <div className="flex items-center gap-2">
                               {userData?.role === "admin" && (
-                                <Select
+                                <select
                                   value={conversation.status}
-                                  onValueChange={(value) =>
-                                    handleStatusUpdate(conversation._id, value)
-                                  }
+                                  onChange={(e) => handleStatusUpdate(conversation._id, e.target.value)}
+                                  className="px-3 py-2 bg-background border border-border rounded-lg text-sm font-medium text-foreground focus:ring-2 focus:ring-primary/30 outline-none transition cursor-pointer"
                                 >
-                                  <SelectTrigger className="w-[140px]">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="open">Open</SelectItem>
-                                    <SelectItem value="in-progress">In Progress</SelectItem>
-                                    <SelectItem value="resolved">Resolved</SelectItem>
-                                    <SelectItem value="closed">Closed</SelectItem>
-                                  </SelectContent>
-                                </Select>
+                                  <option value="open">Open</option>
+                                  <option value="in-progress">In Progress</option>
+                                  <option value="resolved">Resolved</option>
+                                  <option value="closed">Closed</option>
+                                </select>
                               )}
-                              <Button
+                              <button
                                 onClick={() => openConversation(conversation)}
-                                size="sm"
+                                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all flex items-center gap-2 font-medium text-sm shadow-md hover:shadow-lg"
                               >
+                                <Eye className="w-4 h-4" />
                                 View Chat
-                                <ArrowRight className="w-4 h-4 ml-2" />
-                              </Button>
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -481,137 +431,76 @@ const SupportManagement = () => {
                   })}
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          )}
 
-        {/* All Messages Tab */}
-        <TabsContent value="messages" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>All Messages Timeline</CardTitle>
-              <CardDescription>
-                View all messages across all conversations
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Time</TableHead>
-                    <TableHead>Conversation</TableHead>
-                    <TableHead>Sender</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Message</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {allMessages.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8">
-                        <MessageCircle className="w-12 h-12 text-slate-300 mx-auto mb-2" />
-                        <p className="text-slate-500">No messages found</p>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    allMessages.map((msg, idx) => (
-                      <TableRow key={idx} className="hover:bg-slate-50">
-                        <TableCell className="whitespace-nowrap">
-                          {formatTime(msg.timestamp)}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {msg.conversationSubject}
-                        </TableCell>
-                        <TableCell>{msg.senderName}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="capitalize">
-                            {msg.senderRole}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="max-w-md truncate">
-                          {msg.message}
-                        </TableCell>
-                        <TableCell>
-                          {getStatusConfig(msg.conversationStatus).icon}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Moderator Assignments Tab */}
-        <TabsContent value="moderators" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Moderator Assignments</CardTitle>
-              <CardDescription>
-                View which moderators are handling which conversations
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          {/* Moderators Tab */}
+          {activeTab === "moderators" && (
+            <div className="p-6">
               {Object.keys(conversationsByModerator).length === 0 ? (
-                <div className="text-center py-12">
-                  <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-slate-700 mb-2">
+                <div className="text-center py-16">
+                  <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                    <Users className="w-10 h-10 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
                     No assignments yet
                   </h3>
-                  <p className="text-slate-500">
+                  <p className="text-muted-foreground">
                     Conversations will appear here once moderators engage
                   </p>
                 </div>
               ) : (
                 <div className="space-y-6">
                   {Object.values(conversationsByModerator).map((moderator, idx) => (
-                    <div key={idx} className="border rounded-lg p-4 bg-white">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold text-lg">
+                    <div key={idx} className="border border-border rounded-xl p-6 bg-card hover:shadow-lg transition-all">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-foreground font-bold text-xl shadow-lg">
                           {moderator.moderatorName[0].toUpperCase()}
                         </div>
-                        <div>
-                          <h3 className="font-semibold text-lg text-slate-800">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-lg text-foreground mb-1">
                             {moderator.moderatorName}
                           </h3>
-                          <Badge variant="outline" className="capitalize">
-                            {moderator.moderatorRole}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-semibold rounded capitalize">
+                              {moderator.moderatorRole}
+                            </span>
+                            <span className="px-2 py-1 bg-muted text-muted-foreground text-xs font-medium rounded">
+                              {moderator.conversations.length} conversations
+                            </span>
+                          </div>
                         </div>
-                        <Badge className="ml-auto">
-                          {moderator.conversations.length} conversations
-                        </Badge>
                       </div>
-                      <div className="space-y-2">
+
+                      <div className="space-y-3">
                         {moderator.conversations.map((conv) => {
                           const statusConfig = getStatusConfig(conv.status);
+                          const StatusIcon = statusConfig.icon;
                           return (
                             <div
                               key={conv._id}
-                              className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                              className="flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-all border border-border"
                             >
-                              <div className="flex items-center gap-3">
-                                <Badge className={`${statusConfig.color} text-white`}>
-                                  {statusConfig.icon}
-                                </Badge>
-                                <div>
-                                  <p className="font-medium text-slate-800">
+                              <div className="flex items-center gap-3 flex-1">
+                                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${statusConfig.gradient} flex items-center justify-center`}>
+                                  <StatusIcon className="w-5 h-5 text-white" />
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-medium text-foreground mb-1">
                                     {conv.subject}
                                   </p>
-                                  <p className="text-sm text-slate-600">
+                                  <p className="text-sm text-muted-foreground">
                                     User: {conv.userName}
                                   </p>
                                 </div>
                               </div>
-                              <Button
-                                size="sm"
-                                variant="outline"
+                              <button
                                 onClick={() => openConversation(conv)}
+                                className="px-4 py-2 bg-background border border-border hover:bg-muted rounded-lg text-sm font-medium text-foreground transition-all flex items-center gap-2"
                               >
                                 View
-                              </Button>
+                                <ArrowRight className="w-4 h-4" />
+                              </button>
                             </div>
                           );
                         })}
@@ -620,10 +509,10 @@ const SupportManagement = () => {
                   ))}
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

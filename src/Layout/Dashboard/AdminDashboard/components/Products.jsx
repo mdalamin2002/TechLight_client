@@ -8,8 +8,10 @@ import {
   ChevronRight,
   Filter as FilterIcon,
   RefreshCw,
+  ChevronDown,
 } from "lucide-react";
 import { CSVLink } from "react-csv";
+import { toast } from "react-toastify";
 import Filter from "./Products/Filter";
 import Searching from "./Products/Searching";
 import FilledButton from "@/Components/Shared/Buttots/FilledButton";
@@ -23,6 +25,7 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
+  const [statusFilter, setStatusFilter] = useState(""); // Add status filter state
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -30,14 +33,20 @@ const Products = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [selectCategory, axiosSecure]);
+  }, [selectCategory, statusFilter, axiosSecure]);
 
   const fetchProducts = () => {
     setLoading(true);
+    // Use the admin endpoint to get all products without pagination
     axiosSecure
-      .get(`${selectCategory ? `/products/${selectCategory}` : "/products"}`)
-      .then((res) => setProducts(res.data.data))
-      .catch((error) => console.log(error))
+      .get(`/products/admin/all?all=true`)
+      .then((res) => {
+        setProducts(res.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Failed to fetch products");
+      })
       .finally(() => setLoading(false));
   };
 
@@ -48,12 +57,13 @@ const Products = () => {
         setCategory(res.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
+        toast.error("Failed to fetch categories");
       }
     };
     fetchCategories();
   }, [axiosSecure]);
 
-  // Pagination Logic
+  // Pagination Logic (for display purposes only)
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem);
@@ -61,8 +71,42 @@ const Products = () => {
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleProductAction = (action, productId, data) => {
-    if (["delete", "archive"].includes(action)) fetchProducts();
+  const handleProductAction = (action, productId) => {
+    if (action === "delete") {
+      // Call the hard delete API
+      axiosSecure
+        .delete(`/products/admin/hard-delete/${productId}`)
+        .then(() => {
+          toast.success("Product permanently deleted!");
+          // Refresh the product list
+          fetchProducts();
+        })
+        .catch((error) => {
+          console.error("Error deleting product:", error);
+          toast.error("Failed to delete product");
+        });
+    }
+  };
+
+  // Function to update product status
+  const updateProductStatus = (productId, newStatus) => {
+    axiosSecure
+      .patch(`/products/status/${productId}`, { status: newStatus })
+      .then(() => {
+        toast.success(`Product status updated to ${newStatus}`);
+        // Update the product in the local state
+        setProducts(prevProducts =>
+          prevProducts.map(product =>
+            product._id === productId
+              ? { ...product, status: newStatus }
+              : product
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error updating product status:", error);
+        toast.error("Failed to update product status");
+      });
   };
 
   const getStockBadge = (stock) => {
@@ -91,23 +135,47 @@ const Products = () => {
     );
   };
 
-  const getStatusBadge = (status) => {
-    const statusConfig = {
-      "in stock": "bg-green-50 text-green-600 border border-green-100",
-      "out of stock": "bg-red-50 text-red-600 border border-red-100",
-      pending: "bg-amber-50 text-amber-600 border border-amber-100",
-      active: "bg-primary/10 text-primary border border-primary/20",
-      inactive: "bg-slate-50 text-slate-600 border border-slate-100",
-      discontinued: "bg-rose-50 text-rose-600 border border-rose-100",
+  // Status change dropdown component
+  const StatusChangeDropdown = ({ productId, currentStatus }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleStatusChange = (newStatus) => {
+      if (newStatus !== currentStatus) {
+        updateProductStatus(productId, newStatus);
+      }
+      setIsOpen(false);
     };
-    const bgClass =
-      statusConfig[status?.toLowerCase()] || statusConfig["inactive"];
+
     return (
-      <span
-        className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-semibold ${bgClass}`}
-      >
-        {status}
-      </span>
+      <div className="relative">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="px-3 py-1 rounded-lg bg-card border border-border hover:bg-muted text-foreground text-xs font-medium flex items-center gap-1"
+        >
+          {currentStatus?.charAt(0).toUpperCase() + currentStatus?.slice(1)}
+          <ChevronDown size={14} />
+        </button>
+
+        {isOpen && (
+          <div className="absolute z-10 mt-1 w-32 rounded-lg bg-card border border-border shadow-lg">
+            <div className="py-1">
+              {['pending', 'approved', 'rejected'].map((status) => (
+                <button
+                  key={status}
+                  onClick={() => handleStatusChange(status)}
+                  className={`block w-full text-left px-4 py-2 text-xs ${
+                    status === currentStatus
+                      ? 'bg-primary/10 text-primary'
+                      : 'hover:bg-muted'
+                  }`}
+                >
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     );
   };
 
@@ -151,7 +219,8 @@ const Products = () => {
               <FilterIcon size={18} className="text-muted-foreground" />
               <Filter
                 category={category}
-                setSelectCategory={setSelectCategory}
+                setSelectCategory={(value) => setSelectCategory(value === "all" ? "" : value)}
+                setStatusFilter={(value) => setStatusFilter(value === "all-status" ? "" : value)} // Pass the setStatusFilter prop
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
@@ -162,18 +231,12 @@ const Products = () => {
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 justify-end mb-6 w-full">
-          <FilledButton
-            onClick={() => navigate("/dashboard/products/addProduct")}
-            className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto"
-          >
-            <Plus size={18} />
-            Add Product
-          </FilledButton>
-
           <FilledButton className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
             <CSVLink
               data={products}
-              filename={`products-${new Date().toISOString().split("T")[0]}.csv`}
+              filename={`products-${
+                new Date().toISOString().split("T")[0]
+              }.csv`}
               className="flex items-center justify-center gap-2 w-full sm:w-auto"
             >
               <Download size={18} />
@@ -225,9 +288,7 @@ const Products = () => {
                       <th
                         key={i}
                         className={`px-4 py-3 ${
-                          heading === "ACTIONS"
-                            ? "text-center"
-                            : "text-left"
+                          heading === "ACTIONS" ? "text-center" : "text-left"
                         } font-bold tracking-wide`}
                       >
                         {heading}
@@ -274,7 +335,12 @@ const Products = () => {
                           <span className="text-muted-foreground">—</span>
                         )}
                       </td>
-                      <td className="px-4 py-3">{getStatusBadge(p.status)}</td>
+                      <td className="px-4 py-3">
+                        <StatusChangeDropdown
+                          productId={p._id || p.id}
+                          currentStatus={p.status}
+                        />
+                      </td>
                       <td className="px-4 py-3 text-center">
                         <div className="flex justify-center">
                           <ProductActions

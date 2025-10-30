@@ -18,30 +18,30 @@ const CommunicationCenter = () => {
   const [activeTab, setActiveTab] = useState("Announcements");
 
   const tabs = [
-    {
-      name: "Announcements",
-      icon: Megaphone,
-      color: "from-blue-500 to-blue-600",
-      description: "Manage system announcements",
-    },
-    {
-      name: "Support Tickets",
-      icon: Mail,
-      color: "from-blue-500 to-blue-600",
-      description: "Handle customer support",
-    },
+    // {
+    //   name: "Announcements",
+    //   icon: Megaphone,
+    //   color: "from-blue-500 to-blue-600",
+    //   description: "Manage system announcements",
+    // },
+    // {
+    //   name: "Support Tickets",
+    //   icon: Mail,
+    //   color: "from-blue-500 to-blue-600",
+    //   description: "Handle customer support",
+    // },
     {
       name: "Notifications",
       icon: Bell,
       color: "from-blue-500 to-blue-600",
       description: "Send mass notifications",
     },
-    {
-      name: "Coupons",
-      icon: Tag,
-      color: "from-blue-500 to-blue-600",
-      description: "Manage discount coupons",
-    },
+    // {
+    //   name: "Coupons",
+    //   icon: Tag,
+    //   color: "from-blue-500 to-blue-600",
+    //   description: "Manage discount coupons",
+    // },
     {
       name: "Banner offer",
       icon: Gift,

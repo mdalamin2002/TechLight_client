@@ -5,6 +5,5 @@ export  const tabs = [
   { id: "users", label: "User Report", icon: Users },
   { id: "review", label: "Review Tracking", icon: MessageCircle},
   { id: "orders", label: "Order Report", icon: ShoppingCart },
-  { id: "moderator", label: "Moderator Activity", icon: ShieldAlert },
   { id: "fraud", label: "Fraud Detection", icon: ShieldAlert },
 ];

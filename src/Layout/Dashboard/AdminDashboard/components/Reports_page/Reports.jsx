@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
@@ -39,7 +39,10 @@ export const Reports = () => {
       case "fraud":
         return <FraudReport dateRange={dateRange} onDataUpdate={data => safeSetData(setFraudData, data)} />;
       default:
-        return <div>Coming Soon </div>;
+        return <div className="bg-card border border-border/50 rounded-2xl p-12 flex flex-col items-center justify-center text-center">
+          <h3 className="text-xl font-bold text-foreground mb-2">Coming Soon 🚀</h3>
+          <p className="text-muted-foreground">This report type is not yet available.</p>
+        </div>;
     }
   };
 
@@ -51,10 +54,21 @@ export const Reports = () => {
         const { salesPerformance, topProducts } = salesData;
         dataToExport = [
           { Section: "Sales Performance" },
-          ...salesPerformance,
+          ...salesPerformance.map(item => ({
+            "Month": item.month,
+            "Revenue": item.revenue,
+            "Orders": item.orders,
+            "Average": item.avg,
+            "Date": item.date
+          })),
           {},
           { Section: "Top Products" },
-          ...topProducts,
+          ...topProducts.map(item => ({
+            "Product": item.name,
+            "Sales": item.sales,
+            "Revenue": item.revenue,
+            "Date": item.date
+          })),
         ];
         break;
       }
@@ -62,10 +76,20 @@ export const Reports = () => {
         const { summary, topProducts } = usersData;
         dataToExport = [
           { Section: "User Summary" },
-          ...summary,
+          ...summary.map(item => ({
+            "Metric": item.title,
+            "Value": item.value,
+            "Change": item.change.value
+          })),
           {},
           { Section: "User Analytics" },
-          ...topProducts,
+          ...topProducts.map(item => ({
+            "Date": item.date,
+            "New Registrations": item.newRegistrations,
+            "Active Users": item.activeUsers,
+            "Retention %": item.userRetention,
+            "Avg Session": `${Math.floor(item.averageSession)}m ${Math.round((item.averageSession % 1) * 60)}s`
+          })),
         ];
         break;
       }
@@ -73,26 +97,58 @@ export const Reports = () => {
         const { summary, reviews } = reviewData;
         dataToExport = [
           { Section: "Review Summary" },
-          summary,
+          {
+            "Total Reviews": summary.totalReviews,
+            "Average Rating": summary.avgRating,
+            "Positive %": summary.positivePercent,
+            "Negative %": summary.negativePercent
+          },
           {},
           { Section: "Reviews" },
-          ...reviews,
+          ...reviews.map(review => ({
+            "User": review.userName,
+            "Product": review.productName,
+            "Rating": review.rating,
+            "Date": new Date(review.createdAt).toLocaleDateString(),
+            "Comment": review.comment || review.title
+          })),
         ];
         break;
       }
       case "orders": {
         const { orders } = ordersData;
-        dataToExport = [{ Section: "Orders" }, ...orders];
+        dataToExport = [
+          { Section: "Orders" },
+          ...orders.map(order => ({
+            "Order ID": order.tran_id ? order.tran_id.substring(0, 8) : "N/A",
+            "Customer": order.customer ? (order.customer.name || order.customer.email) : "Unknown",
+            "Amount": order.total_amount,
+            "Status": order.status,
+            "Date": order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A"
+          }))
+        ];
         break;
       }
       case "fraud": {
         const { summary, cases } = fraudData;
         dataToExport = [
           { Section: "Summary" },
-          summary,
+          {
+            "Total Cases": summary.totalCases,
+            "Resolved %": summary.resolvedPercent,
+            "Investigating %": summary.investigatingPercent,
+            "Pending %": summary.pendingPercent
+          },
           {},
           { Section: "Fraud Cases" },
-          ...cases,
+          ...cases.map(item => ({
+            "Case ID": item.id,
+            "User": item.user,
+            "Type": item.type,
+            "Status": item.status,
+            "Date": item.date,
+            "Details": item.details
+          })),
         ];
         break;
       }
@@ -107,7 +163,7 @@ export const Reports = () => {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
 
-    const fileName = `${activeTab.toUpperCase()}_Report_${dateRange.replace(/\s+/g, "_")}.xlsx`;
+    const fileName = `${activeTab.toUpperCase()}_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
     const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
     const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(blob, fileName);

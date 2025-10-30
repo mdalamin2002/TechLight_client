@@ -6,7 +6,6 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { Search, Download } from "lucide-react";
 import DebouncedInput from "./DebouncedInput";
@@ -29,9 +28,20 @@ const TanStackTable = () => {
   const fetchUsers = async () => {
     try {
       const res = await axiosSecure.get(`/users`);
-      setData(Array.isArray(res.data) ? res.data : []);
+      // Transform the data to match the expected structure
+      const transformedData = Array.isArray(res.data) ? res.data.map(user => ({
+        ...user,
+        id: user._id,
+        name: user.name || user.user || 'Unknown',
+        user: user.name || user.user || 'Unknown',
+        role: user.role || 'user',
+        status: user.status || 'active',
+        created_at: user.created_at || user.joinDate || new Date().toISOString()
+      })) : [];
+      setData(transformedData);
     } catch (err) {
       console.error("Error fetching users:", err);
+      setData([]);
     }
   };
 
@@ -40,55 +50,76 @@ const TanStackTable = () => {
   }, []);
 
   // ===== Action Handlers =====
-  const handleToggleBan = (id) => {
-    setData((prevData) =>
-      prevData.map((user) =>
-        user.id === id
-          ? { ...user, status: user.status === "active" ? "banned" : "active" }
-          : user
-      )
-    );
+  const handleToggleBan = async (id, currentStatus) => {
+    try {
+      const newStatus = currentStatus === "active" ? "blocked" : "active";
+      const response = await axiosSecure.patch(`/users/status/${id}`, { status: newStatus });
+
+      if (response.data.success) {
+        // Update local state
+        setData((prevData) =>
+          prevData.map((user) =>
+            user._id === id
+              ? { ...user, status: newStatus }
+              : user
+          )
+        );
+        return { success: true };
+      } else {
+        throw new Error(response.data.message || "Failed to update user status");
+      }
+    } catch (err) {
+      console.error("Error updating user status:", err);
+      return { success: false, error: err.message };
+    }
   };
 
-  const handleMakeModerator = (id) => {
-    setData((prevData) =>
-      prevData.map((user) =>
-        user.id === id ? { ...user, role: "Moderator" } : user
-      )
-    );
-  };
+  const handleUpdateRole = async (id, newRole) => {
+    try {
+      const response = await axiosSecure.patch(`/users/role/${id}`, { newRole });
 
-  const handleMakeAdmin = (id) => {
-    setData((prevData) =>
-      prevData.map((user) =>
-        user.id === id ? { ...user, role: "Admin" } : user
-      )
-    );
-  };
-
-  const handleRemoveRole = (id) => {
-    setData((prevData) =>
-      prevData.map((user) =>
-        user.id === id ? { ...user, role: "User" } : user
-      )
-    );
+      if (response.data.success) {
+        // Update local state
+        setData((prevData) =>
+          prevData.map((user) =>
+            user._id === id ? { ...user, role: newRole } : user
+          )
+        );
+        return { success: true };
+      } else {
+        throw new Error(response.data.message || "Failed to update user role");
+      }
+    } catch (err) {
+      console.error("Error updating user role:", err);
+      return { success: false, error: err.message };
+    }
   };
 
   // ===== SweetAlert Wrapper =====
-  const handleActionWithConfirm = (actionType, user) => {
+  const handleActionWithConfirm = async (actionType, user) => {
     let actionText = "";
+    let actionPromise = null;
+
     switch (actionType) {
       case "toggleBan":
         actionText = user.status === "active" ? "ban" : "unban";
+        actionPromise = handleToggleBan(user._id, user.status);
         break;
       case "makeModerator":
         actionText = "make Moderator";
+        actionPromise = handleUpdateRole(user._id, "moderator");
         break;
       case "makeAdmin":
         actionText = "make Admin";
+        actionPromise = handleUpdateRole(user._id, "admin");
+        break;
+      case "makeSeller":
+        actionText = "make Seller";
+        actionPromise = handleUpdateRole(user._id, "seller");
         break;
       case "removeRole":
         actionText = "remove Role";
+        actionPromise = handleUpdateRole(user._id, "user");
         break;
       default:
         actionText = actionType;
@@ -97,7 +128,7 @@ const TanStackTable = () => {
     Swal.fire({
       title: `Are you sure?`,
       html: `
-        <b>User:</b> ${user.user} <br/>
+        <b>User:</b> ${user.name || user.user} <br/>
         <b>Current Role:</b> ${user.role} <br/>
         <b>Status:</b> ${user.status} <br/><br/>
         You are about to <b>${actionText}</b> this user.
@@ -108,29 +139,27 @@ const TanStackTable = () => {
       cancelButtonText: "Cancel",
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        switch (actionType) {
-          case "toggleBan":
-            handleToggleBan(user.id);
-            break;
-          case "makeModerator":
-            handleMakeModerator(user.id);
-            break;
-          case "makeAdmin":
-            handleMakeAdmin(user.id);
-            break;
-          case "removeRole":
-            handleRemoveRole(user.id);
-            break;
+        const response = await actionPromise;
+
+        if (response.success) {
+          Swal.fire({
+            title: "Success!",
+            text: `User updated successfully.`,
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        } else {
+          Swal.fire({
+            title: "Error!",
+            text: response.error || "Failed to update user.",
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
         }
-        Swal.fire({
-          title: "Success!",
-          text: `User updated successfully.`,
-          icon: "success",
-          timer: 1500,
-          showConfirmButton: false,
-        });
         setOpenMenu(null);
       }
     });
@@ -147,7 +176,7 @@ const TanStackTable = () => {
       ),
       header: "S.No",
     }),
-  
+
     // columnHelper.accessor("avatar", {
     //   cell: (info) => (
     //     <img
@@ -174,17 +203,18 @@ const TanStackTable = () => {
       cell: (info) => {
         const role = info.getValue();
         const colors = {
-          Admin: "bg-purple-100 text-purple-700 border-purple-200",
-          Moderator: "bg-blue-100 text-blue-700 border-blue-200",
-          User: "bg-gray-100 text-gray-700 border-gray-200",
+          admin: "bg-purple-100 text-purple-700 border-purple-200",
+          moderator: "bg-blue-100 text-blue-700 border-blue-200",
+          seller: "bg-green-100 text-green-700 border-green-200",
+          user: "bg-gray-100 text-gray-700 border-gray-200",
         };
         return (
           <span
             className={`px-3 py-1 rounded-full text-xs font-semibold border ${
-              colors[role] || colors.User
+              colors[role] || colors.user
             }`}
           >
-            {role}
+            {role.charAt(0).toUpperCase() + role.slice(1)}
           </span>
         );
       },
@@ -196,12 +226,12 @@ const TanStackTable = () => {
         const colors = {
           active: "bg-green-500",
           pending: "bg-yellow-400",
-          banned: "bg-red-500",
+          blocked: "bg-red-500",
         };
         return (
           <div className="flex items-center gap-2">
             <span
-              className={`w-2.5 h-2.5 rounded-full ${colors[status]} animate-pulse`}
+              className={`w-2.5 h-2.5 rounded-full ${colors[status] || colors.pending} animate-pulse`}
             ></span>
             <span className="capitalize text-foreground text-sm font-medium">
               {status}
