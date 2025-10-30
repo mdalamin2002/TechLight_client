@@ -35,7 +35,6 @@ const MyProductsEarnings = () => {
           const transformedProducts = response.data.data.products.map((product, index) => ({
             id: product.productId || index + 1,
             name: product.productName,
-            image: product.image || "https://i.ibb.co/yYxZf5L/earbuds.jpg", // Use dynamic image or fallback
             sold: product.totalSold,
             earnings: product.totalEarnings,
             status: product.status,
@@ -59,7 +58,7 @@ const MyProductsEarnings = () => {
     };
 
     fetchEarningsData();
-  }, [dateRange]); // Re-fetch when date range changes
+  }, [dateRange, axiosSecure]); // Re-fetch when date range or axiosSecure changes
 
   // 🔍 Filter logic
   const filtered = products.filter((p) => {
@@ -162,12 +161,7 @@ const MyProductsEarnings = () => {
               <tbody>
                 {filtered.map((p) => (
                   <tr key={p.id} className="border-b hover:bg-gray-50 transition">
-                    <td className="py-3 px-4 flex items-center gap-3">
-                      <img
-                        src={p.image}
-                        alt={p.name}
-                        className="w-12 h-12 object-cover rounded-md border"
-                      />
+                    <td className="py-3 px-4">
                       <span className="font-medium">{p.name}</span>
                     </td>
                     <td className="py-3 px-4">{p.sold}</td>
@@ -220,11 +214,6 @@ const MyProductsEarnings = () => {
               <X size={20} />
             </button>
             <div className="flex flex-col items-center space-y-3">
-              <img
-                src={selectedProduct.image}
-                alt={selectedProduct.name}
-                className="w-24 h-24 rounded-xl object-cover border"
-              />
               <h2 className="text-lg font-semibold">
                 {selectedProduct.name}
               </h2>
