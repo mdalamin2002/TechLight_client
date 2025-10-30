@@ -149,7 +149,7 @@ export default function DashboardSidebar({
         icon: DollarSign
       },
       {
-        to: "/dashboard/seller-add-product", 
+        to: "/dashboard/addProduct", 
         label: "Add New Product", 
         icon: PlusCircle
       },
