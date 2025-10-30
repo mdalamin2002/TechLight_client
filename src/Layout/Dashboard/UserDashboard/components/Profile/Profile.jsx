@@ -3,6 +3,7 @@ import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Skeleton } from "@/Components/ui/skeleton";
 import { Badge } from "@/Components/ui/badge";
+import { Card } from "@/Components/ui/card";
 import { Pencil, Save, X, Upload, Mail, Phone, User, Calendar, Shield } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import useAxiosSecure from "@/utils/useAxiosSecure";
@@ -192,21 +193,23 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="bg-gradient-to-r from-primary/20 via-primary/10 to-background h-48 rounded-t-lg" />
-        <div className="px-6 pb-8 -mt-16">
-          <div className="flex flex-col items-center">
-            <Skeleton className="h-32 w-32 rounded-full mb-4" />
-            <Skeleton className="h-6 w-48 mb-2" />
-            <Skeleton className="h-4 w-32" />
-          </div>
-          <div className="mt-8 space-y-6 max-w-2xl mx-auto">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="space-y-2">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-            ))}
+      <div className="mx-auto">
+        <div className="space-y-6">
+          <div className="bg-gradient-to-r from-primary/20 via-primary/10 to-background h-48 rounded-t-lg" />
+          <div className="px-6 pb-8 -mt-16">
+            <div className="flex flex-col items-center">
+              <Skeleton className="h-32 w-32 rounded-full mb-4" />
+              <Skeleton className="h-6 w-48 mb-2" />
+              <Skeleton className="h-4 w-32" />
+            </div>
+            <div className="mt-8 space-y-6 max-w-2xl mx-auto">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -218,136 +221,138 @@ const Profile = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="space-y-6"
+      className="mx-auto"
     >
-      {/* Header with gradient background */}
-      <div className="bg-gradient-to-r from-primary/20 via-primary/10 to-background h-48 rounded-t-lg" />
-      
-      <div className="px-6 pb-8 -mt-16">
-        <div className="flex flex-col items-center text-center">
-          {/* Avatar */}
-          <div className="relative group mb-4">
-            <img
-              src={formData.avatar || user.avatar}
-              alt="User Avatar"
-              className="rounded-full w-32 h-32 object-cover border-4 border-background shadow-xl"
-            />
-            {editing && (
-              <label className="absolute bottom-0 right-0 p-2 bg-primary text-primary-foreground rounded-full cursor-pointer hover:bg-primary/90 transition-all shadow-lg">
-                <Upload className="w-4 h-4" />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarChange}
-                  className="hidden"
-                />
-              </label>
-            )}
-          </div>
-
-          {/* Name & Role */}
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold">{user.name || "User"}</h2>
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <Badge variant="secondary" className="capitalize px-3 py-1">
-                <Shield className="w-4 h-4 mr-1" />
-                {user.role || "User"}
-              </Badge>
-              <Badge variant="outline" className="px-3 py-1">
-                {getMemberSince(user.createdAt)}
-              </Badge>
+      <Card className="overflow-hidden">
+        {/* Header with gradient background */}
+        <div className="h-32 bg-gradient-to-r from-primary/20 via-primary/10 to-background" />
+        
+        <div className="relative pb-0 -mt-16 px-6 pb-8">
+          <div className="flex flex-col items-center text-center">
+            {/* Avatar */}
+            <div className="relative group mb-4">
+              <img
+                src={formData?.avatar || user?.avatar}
+                alt="User Avatar"
+                className="rounded-full w-32 h-32 object-cover border-4 border-card shadow-xl"
+              />
+              {editing && (
+                <label className="absolute bottom-0 right-0 p-2 bg-primary text-primary-foreground rounded-full cursor-pointer hover:bg-primary/90 transition-all shadow-lg">
+                  <Upload className="w-4 h-4" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                    className="hidden"
+                  />
+                </label>
+              )}
             </div>
-            {user.createdAt && (
-              <p className="text-sm text-muted-foreground flex items-center justify-center gap-1 mt-2">
-                <Calendar className="w-4 h-4" />
-                Member since {formatDate(user.createdAt)}
-              </p>
-            )}
-          </div>
-        </div>
 
-        {/* Profile Information Section */}
-        <div className="mt-12 max-w-2xl mx-auto">
-          <div className="border rounded-lg bg-card shadow-sm">
-            <div className="p-6">
-              <h3 className="text-xl font-semibold mb-6">Profile Information</h3>
+            {/* Name & Role */}
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold">{user?.name || "User"}</h2>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <Badge variant="secondary" className="capitalize px-3 py-1">
+                  <Shield className="w-4 h-4 mr-1" />
+                  {user?.role || "User"}
+                </Badge>
+                <Badge variant="outline" className="px-3 py-1">
+                  {getMemberSince(user?.createdAt)}
+                </Badge>
+              </div>
+              {user?.createdAt && (
+                <p className="text-sm text-muted-foreground flex items-center justify-center gap-1 mt-2">
+                  <Calendar className="w-4 h-4" />
+                  Member since {formatDate(user?.createdAt)}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Profile Information Section */}
+          <div className="mt-12 max-w-2xl mx-auto">
+            <div className="border rounded-lg bg-card shadow-sm">
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-6">Profile Information</h3>
+                
+                <div className="space-y-6">
+                  {/* Name */}
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="flex items-center gap-2 text-base">
+                      <User className="w-4 h-4 text-muted-foreground" />
+                      Full Name
+                    </Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      disabled={!editing}
+                      className="disabled:opacity-70 py-5"
+                    />
+                  </div>
+
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="flex items-center gap-2 text-base">
+                      <Mail className="w-4 h-4 text-muted-foreground" />
+                      Email Address
+                    </Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      disabled
+                      className="disabled:opacity-70 bg-muted py-5"
+                    />
+                    <p className="text-xs text-muted-foreground">Email cannot be changed</p>
+                  </div>
+
+                  {/* Phone */}
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="flex items-center gap-2 text-base">
+                      <Phone className="w-4 h-4 text-muted-foreground" />
+                      Phone Number
+                    </Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      disabled={!editing}
+                      placeholder="+1 (555) 000-0000"
+                      className="disabled:opacity-70 py-5"
+                    />
+                  </div>
+                </div>
+              </div>
               
-              <div className="space-y-6">
-                {/* Name */}
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="flex items-center gap-2 text-base">
-                    <User className="w-4 h-4 text-muted-foreground" />
-                    Full Name
-                  </Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    disabled={!editing}
-                    className="disabled:opacity-70 py-5"
-                  />
-                </div>
-
-                {/* Email */}
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="flex items-center gap-2 text-base">
-                    <Mail className="w-4 h-4 text-muted-foreground" />
-                    Email Address
-                  </Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    disabled
-                    className="disabled:opacity-70 bg-muted py-5"
-                  />
-                  <p className="text-xs text-muted-foreground">Email cannot be changed</p>
-                </div>
-
-                {/* Phone */}
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="flex items-center gap-2 text-base">
-                    <Phone className="w-4 h-4 text-muted-foreground" />
-                    Phone Number
-                  </Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    disabled={!editing}
-                    placeholder="+1 (555) 000-0000"
-                    className="disabled:opacity-70 py-5"
-                  />
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-6 border-t bg-muted/30 rounded-b-lg">
-              <div className="flex justify-center gap-3">
-                {editing ? (
-                  <>
-                    <Button onClick={handleSave} className="gap-2 px-6 py-2">
-                      <Save className="w-4 h-4" /> Save Changes
+              <div className="p-6 border-t bg-muted/30 rounded-b-lg">
+                <div className="flex justify-center gap-3">
+                  {editing ? (
+                    <>
+                      <Button onClick={handleSave} className="gap-2 px-6 py-2">
+                        <Save className="w-4 h-4" /> Save Changes
+                      </Button>
+                      <Button variant="outline" onClick={handleCancel} className="gap-2 px-6 py-2">
+                        <X className="w-4 h-4" /> Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <Button onClick={handleEditToggle} className="gap-2 px-6 py-2">
+                      <Pencil className="w-4 h-4" /> Edit Profile
                     </Button>
-                    <Button variant="outline" onClick={handleCancel} className="gap-2 px-6 py-2">
-                      <X className="w-4 h-4" /> Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <Button onClick={handleEditToggle} className="gap-2 px-6 py-2">
-                    <Pencil className="w-4 h-4" /> Edit Profile
-                  </Button>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </Card>
     </motion.div>
   );
 };

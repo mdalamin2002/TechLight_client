@@ -29,29 +29,13 @@ const AccountManagement = () => {
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDeactivateAccount = async () => {
-    try {
-      // TODO: Implement account deactivation API when backend is ready
-      // await axiosSecure.patch(`/users/${user?.email}/deactivate`);
-      
-      toast.info("Account deactivation feature coming soon!");
-      // After implementation, log out user
-      // await logOutUser(auth);
-      // navigate("/");
-    } catch (error) {
-      console.error("Deactivation error:", error);
-      toast.error("Failed to deactivate account");
-    }
-  };
 
   const handleDeleteAccount = async () => {
     if (deleteConfirmation !== "DELETE") {
       toast.error('Please type "DELETE" to confirm');
       return;
     }
-
     setIsDeleting(true);
-
     try {
       const currentUser = auth.currentUser;
       
@@ -62,7 +46,8 @@ const AccountManagement = () => {
 
       // 1. Delete user data from backend
       try {
-        await axiosSecure.delete(`/users/${encodeURIComponent(user?.email)}`);
+        const res = await axiosSecure.put(`/users/account/${user?.email}/delete`);
+        console.log("Backend deletion response:", res.data);
       } catch (err) {
         console.error("Backend deletion error:", err);
         // Continue even if backend deletion fails
@@ -101,46 +86,6 @@ const AccountManagement = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Deactivate Account */}
-        <div className="p-4 border border-primary/50 bg-primary/10 rounded-lg">
-          <div className="flex items-start gap-3 mb-4">
-            <Pause className="w-5 h-5 text-primary dark:text-primary mt-0.5" />
-            <div>
-              <h3 className="font-semibold text-primary dark:text-primary">
-                Deactivate Account
-              </h3>
-              <p className="text-sm text-primary dark:text-primary mt-1">
-                Temporarily disable your account. You can reactivate it anytime by logging back in. 
-                Your data will be preserved.
-              </p>
-            </div>
-          </div>
-          
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" className="border-primary text-primary hover:bg-primary-foreground dark:text-primary dark:hover:bg-primary-foreground">
-                <Pause className="w-4 h-4 mr-2" />
-                Deactivate Account
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Deactivate Your Account?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Your account will be temporarily disabled. You can reactivate it by logging in again.
-                  All your data, orders, and preferences will remain intact.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDeactivateAccount}>
-                  Deactivate
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-
         {/* Delete Account */}
         <div className="p-4 border border-destructive bg-destructive/10 rounded-lg">
           <div className="flex items-start gap-3 mb-4">

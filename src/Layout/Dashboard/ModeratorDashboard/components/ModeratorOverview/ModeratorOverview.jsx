@@ -38,15 +38,14 @@ export const ModeratorOverview = () => {
         
         // Format stats data
         const formattedStats = [
-          { title: "Pending Orders", count: statsData.pendingOrders || 0, icon: <ShoppingCart />, bgColor: "bg-indigo-500" },
-          { title: "Shipped Orders", count: statsData.shippedOrders || 0, icon: <Package />, bgColor: "bg-green-500" },
-          { title: "Delivered Orders", count: statsData.deliveredOrders || 0, icon: <CheckCircle />, bgColor: "bg-blue-500" },
-          { title: "Pending Product Approvals", count: statsData.pendingProductApprovals || 0, icon: <Package />, bgColor: "bg-yellow-500" },
-          { title: "User Reports", count: statsData.userReports || 0, icon: <AlertTriangle />, bgColor: "bg-red-500" },
-          { title: "Reviews Flagged", count: statsData.flaggedReviews || 0, icon: <AlertTriangle />, bgColor: "bg-pink-500" },
-          { title: "Open Support Tickets", count: statsData.openSupportTickets || 0, icon: <MessageCircle />, bgColor: "bg-purple-500" },
+          { title: "Pending Orders", count: statsData?.pendingOrders || 0, icon: <ShoppingCart />, bgColor: "bg-indigo-500" },
+          { title: "Shipped Orders", count: statsData?.shippedOrders || 0, icon: <Package />, bgColor: "bg-green-500" },
+          { title: "Delivered Orders", count: statsData?.deliveredOrders || 0, icon: <CheckCircle />, bgColor: "bg-blue-500" },
+          { title: "Pending Product Approvals", count: statsData?.pendingProductApprovals || 0, icon: <Package />, bgColor: "bg-yellow-500" },
+          { title: "User Reports", count: statsData?.userReports || 0, icon: <AlertTriangle />, bgColor: "bg-red-500" },
+          { title: "Reviews Flagged", count: statsData?.flaggedReviews || 0, icon: <AlertTriangle />, bgColor: "bg-pink-500" },
+          { title: "Open Support Tickets", count: statsData?.openSupportTickets || 0, icon: <MessageCircle />, bgColor: "bg-purple-500" },
         ];
-        
         setStats(formattedStats);
         
         // Fetch recent activities
@@ -55,7 +54,7 @@ export const ModeratorOverview = () => {
         
         // Fetch progress data
         const progressResponse = await axiosSecure.get("/moderator/orders-products/dashboard/progress");
-        setProgress(progressResponse.data.progress || 0);
+        setProgress(progressResponse.data || 0);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
         // Use static data as fallback

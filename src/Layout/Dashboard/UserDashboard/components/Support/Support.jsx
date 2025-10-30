@@ -125,7 +125,7 @@ const Support = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 mx-auto">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">
         Support Ticket Form
       </h2>

@@ -1,21 +1,22 @@
 import React, { useState } from "react";
-import Transactions from "./components/Transactions/Transactions";
+// import Transactions from "./components/Transactions/Transactions";
 import Reports from "./components/Payments_Reports/Reports";
 import Settings from "./components/Settings/Settings";
 import Analytics from "./components/Analytics/Analytics";
 import Disputes from "./components/Disputes/Disputes";
 import Refunds from "./components/Refunds/Refunds";
+import Transactions from "./components/Transactions/Transactions";
 
 export const Payments = () => {
   const [activeTab, setActiveTab] = useState("transactions");
 
   const tabs = [
     { key: "transactions", label: "Transactions" },
-    { key: "refunds", label: "Refunds" },
-    { key: "disputes", label: "Disputes" },
-    { key: "analytics", label: "Analytics" },
-    { key: "settings", label: "Settings" },
-    { key: "reports", label: "Reports" },
+    // { key: "refunds", label: "Refunds" },
+    // { key: "disputes", label: "Disputes" },
+    // { key: "analytics", label: "Analytics" },
+    // { key: "settings", label: "Settings" },
+    // { key: "reports", label: "Reports" },
   ];
 
   const renderTabContent = () => {
