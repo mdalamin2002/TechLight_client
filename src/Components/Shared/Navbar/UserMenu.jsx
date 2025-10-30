@@ -36,16 +36,12 @@ export default function UserMenu({ user, logOutUser }) {
 
   // Cache-busting avatar URL
   const getAvatarUrl = () => {
-    const baseUrl = user?.photoURL || user?.avatar || 
-      `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || user?.email || "U")}`;
-    
-    // Add cache-busting parameter
-    const separator = baseUrl.includes('?') ? '&' : '?';
-    return `${baseUrl}${separator}t=${Date.now()}`;
+    const baseUrl = user?.image ||"https://i.ibb.co.com/mChQPFvW/images.png"
+    return baseUrl
   };
 
   const getUserDisplayName = () => {
-    return user?.displayName || user?.email || "User";
+    return user?.name || user?.email || "User";
   };
 
   if (!user) {
@@ -69,8 +65,13 @@ export default function UserMenu({ user, logOutUser }) {
         onMouseLeave={() => setProfileOpen(false)}
       >
         <img
-          src={getAvatarUrl()}
-          alt="User Avatar"
+           src={getAvatarUrl()}
+                alt="Profile Photo"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://i.ibb.co/9kW3szMD/vector-flat-illustration-grayscale-avatar-600nw-2264922221.webp"
+                }}
           className="w-8 h-8 rounded-full object-cover ring-2 ring-border"
         />
         <ChevronDown size={16} className="hidden lg:block" />

@@ -239,7 +239,7 @@ export default function Navbar() {
               )}
 
               {/* Profile / Account */}
-              <UserMenu user={user} logOutUser={logOutUser} />
+              <UserMenu user={userData} logOutUser={logOutUser} />
             </div>
           </div>
         </div>

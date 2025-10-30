@@ -38,7 +38,7 @@ const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
     (product.images && product.images.gallery && product.images.gallery[0]) ||
     (product.images && product.images.main) ||
     product.image ||
-    "https://via.placeholder.com/400x300?text=No+Image";
+    "https://i.ibb.co.com/bMJ2ywbf/Apple-Air-Pods-Pro-2nd-gen-hero-220907-big-jpg-large.jpg";
 
   const productName = product.name || "Unnamed Product";
   const productDescription = product.description || "No description available";
@@ -67,7 +67,7 @@ const AllFeatureProductShare = ({ product, onAddToCart, onAddToFavorites }) => {
           className="w-full h-full object-cover cursor-pointer transition-transform duration-300 group-hover:scale-110"
           onError={(e) => {
             e.target.src =
-              "https://via.placeholder.com/400x300?text=Image+Error";
+              "https://i.ibb.co.com/bMJ2ywbf/Apple-Air-Pods-Pro-2nd-gen-hero-220907-big-jpg-large.jpg";
           }}
         />
 
