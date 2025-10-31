@@ -63,7 +63,7 @@ export default function TechLightChatbot() {
     setIsTyping(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/ai/chat", {
+      const res = await axios.post("https://techlight-server-1.onrender.com/api/ai/chat", {
         message: input,
       });
 
